@@ -9,7 +9,10 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../../img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.png">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <!-- Normalize CSS -->
     <link rel="stylesheet" href="../css/normalize.css">
     <!-- Main CSS -->
@@ -26,11 +29,12 @@
     <link rel="stylesheet" href="../css/animate.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body>
+<body onload="loadSideNav('index')">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -110,91 +114,216 @@
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
             <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+
+
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
                         <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
                     </div>
                 </div>
-                <div class="sidebar-menu-content">
-                    <ul class="nav nav-sidebar-menu sidebar-toggle-view">
-                        <li class="nav-item">
-                            <a href="index.html" class="nav-link menu-active"><i
-                                    class="flaticon-dashboard"></i><span>Dashboard</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="learning-hub.html" class="nav-link"><i
-                                    class="flaticon-open-book"></i><span>Learning Hub</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="timetable.html" class="nav-link"><i
-                                    class="flaticon-calendar"></i><span>Timetable</span></a>
-                        </li>
+                <div id="side_nav" class="sidebar-menu-content">
 
-                        <li class="nav-item">
-                            <a href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
-                                    Results</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
-                                    and History</span></a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="change-password.html" class="nav-link"><i
-                                    class="flaticon-settings"></i><span>Change Password</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../index.html" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
-                                    Out</span></a>
-                        </li>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <!-- <li class="nav-item">
-                            <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        </li> -->
-
-
-                    </ul>
                 </div>
             </div>
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
+                <div class="breadcrumbs-area">
+                    <h3>Student Dashboard</h3>
+                    <ul>
+                        <li>
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li>Dashboard</li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <!-- STATISTIC -->
+                    <div class="col-8-xxxl col-12">
+                        <div class="row">
+                            <!-- Summery Area Start Here -->
+                            <div class="col-lg-4">
+                                <div class="dashboard-summery-one">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="item-icon bg-light-magenta">
+                                                <i class="flaticon-shopping-list text-magenta"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="item-content">
+                                                <div class="item-title"><b>No of Term</b></div>
+                                                <div class="item-number"><span class="counter"
+                                                        data-num="12"><b>12</b></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="col-lg-4">
+                                <div class="dashboard-summery-one">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="item-icon bg-light-yellow">
+                                                <i class="flaticon-percentage-discount text-orange"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="item-content">
+                                                <div class="item-title"><b>Attendance</b></div>
+                                                <div class="item-number"><span class="counter"
+                                                        data-num="94"><b>94</b></span><span>%</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="dashboard-summery-one">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="item-icon bg-light-yellow">
+                                                <i class="flaticon-money text-red"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="item-content">
+                                                <div class="item-title text-blue"><b>Due balance</b></div>
+                                                <p onclick="makePayment()" class="text-green"><b>Click to pay
+                                                        now</b></p>
+                                                <!-- <div class="item-number"><span class="counter" data-num="₦25,000"><b>₦25,000</b></span></div> -->
+                                                <div class="item-number"><b>₦25,000</b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Summery Area End Here -->
 
+                            <!-- Exam Result Area End Here -->
+                        </div>
+                    </div>
+
+                    <!-- Student Info Area Start Here -->
+                    <div class="col-4-xxxl col-12">
+                        <div class="card dashboard-card-ten">
+                            <div class="card-body">
+                                <div class="heading-layout1">
+                                    <div class="item-title">
+                                        <h3><b>About Me</b></h3>
+                                    </div>
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                                            aria-expanded="false">...</a>
+
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-times text-orange-red"></i>Close</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="student-info">
+                                    <div class="media media-none--xs">
+                                        <div class="item-img">
+                                            <img src="../img/figure/student.png" class="media-img-auto" alt="student">
+                                        </div>
+                                        <div class="media-body">
+                                            <h3 class="item-title">Jessia Rose</h3>
+                                            <p>Aliquam erat volutpat. Curabiene natis massa
+                                                sedde lacustiquen sodale word moun taiery.</p>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive info-table">
+                                        <table class="table text-nowrap">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Name:</td>
+                                                    <td class="font-medium text-dark-medium">Jessia Rose</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Gender:</td>
+                                                    <td class="font-medium text-dark-medium">Female</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father Name:</td>
+                                                    <td class="font-medium text-dark-medium">Fahim Rahman</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mother Name:</td>
+                                                    <td class="font-medium text-dark-medium">Jannatul Kazi</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date Of Birth:</td>
+                                                    <td class="font-medium text-dark-medium">07.08.2006</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Religion:</td>
+                                                    <td class="font-medium text-dark-medium">Islam</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Father Occupation:</td>
+                                                    <td class="font-medium text-dark-medium">Graphic Designer</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>E-Mail:</td>
+                                                    <td class="font-medium text-dark-medium">jessiarose@gmail.com</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Admission Date:</td>
+                                                    <td class="font-medium text-dark-medium">05.01.2019</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Class:</td>
+                                                    <td class="font-medium text-dark-medium">2</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Section:</td>
+                                                    <td class="font-medium text-dark-medium">Pink</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Roll:</td>
+                                                    <td class="font-medium text-dark-medium">10005</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Adress:</td>
+                                                    <td class="font-medium text-dark-medium">House #10, Road #6,
+                                                        Australia</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Phone:</td>
+                                                    <td class="font-medium text-dark-medium">+ 88 9856418</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Student Info Area End Here -->
+
+                </div>
+                <footer class="footer-wrap-layout1">
+                    <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
+                        reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
+                </footer>
             </div>
             <!-- Social Media End Here -->
             <!-- Footer Area Start Here -->
-            <footer class="footer-wrap-layout1">
-                <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
-                    reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
-            </footer>
+
             <!-- Footer Area End Here -->
         </div>
     </div>
     <!-- Page Area End Here -->
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
     <!-- jquery-->
     <script src="../js/jquery-3.3.1.min.js"></script>
     <!-- Plugins js -->
@@ -217,6 +346,9 @@
     <script src="../js/Chart.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
+    <script src="../js/myscript.js"></script>
+    <script src="./js/student.js"></script>
+
 
 </body>
 

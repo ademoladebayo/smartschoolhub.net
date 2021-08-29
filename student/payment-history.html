@@ -2,14 +2,16 @@
 <html class="no-js" lang="">
 
 
+<!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/all-fees.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:26 GMT -->
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SSHUB | Student Dashboard</title>
+    <title>SSHUB | Payment</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
     <!-- Normalize CSS -->
     <link rel="stylesheet" href="../css/normalize.css">
     <!-- Main CSS -->
@@ -20,17 +22,17 @@
     <link rel="stylesheet" href="../css/all.min.css">
     <!-- Flaticon CSS -->
     <link rel="stylesheet" href="../fonts/flaticon.css">
-    <!-- Full Calender CSS -->
-    <link rel="stylesheet" href="../css/fullcalendar.min.css">
     <!-- Animate CSS -->
     <link rel="stylesheet" href="../css/animate.min.css">
+    <!-- Data Table CSS -->
+    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body>
+<body onload="loadSideNav('payment')">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -115,85 +117,90 @@
                         <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
                     </div>
                 </div>
-                <div class="sidebar-menu-content">
-                    <ul class="nav nav-sidebar-menu sidebar-toggle-view">
-                        <li class="nav-item">
-                            <a href="index.html" class="nav-link menu-active"><i
-                                    class="flaticon-dashboard"></i><span>Dashboard</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="learning-hub.html" class="nav-link"><i
-                                    class="flaticon-open-book"></i><span>Learning Hub</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="timetable.html" class="nav-link"><i
-                                    class="flaticon-calendar"></i><span>Timetable</span></a>
-                        </li>
+                <div id="side_nav" class="sidebar-menu-content">
 
-                        <li class="nav-item">
-                            <a href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
-                                    Results</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
-                                    and History</span></a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="change-password.html" class="nav-link"><i
-                                    class="flaticon-settings"></i><span>Change Password</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../index.html" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
-                                    Out</span></a>
-                        </li>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        <!-- <li class="nav-item">
-                            <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="" class="nav-link"><i class=""></i><span></span></a>
-                        </li> -->
-
-
-                    </ul>
                 </div>
             </div>
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
+                <!-- Breadcubs Area Start Here -->
+                <div class="breadcrumbs-area">
+                    <h3>Payment</h3>
+                    <ul>
+                        <li>
+                            <a href="index-2.html">Home</a>
+                        </li>
+                        <li>Payment History</li>
+                    </ul>
+                </div>
+                <!-- Breadcubs Area End Here -->
+                <!-- Fees Table Area Start Here -->
+                <div class="card height-auto">
+                    <div class="card-body">
+                        <div class="heading-layout1">
+                            <div class="item-title">
+                                <h3><b>Payments</b></h3>
+                            </div>
+
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table data-table text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th><b>S/N</b></th>
+                                        <th><b>CLASS</b></th>
+                                        <th><b>CLASS SECTION</b></th>
+                                        <th><b>SESSION</b></th>
+                                        <th><b>TERM</b></th>
+                                        <th><b>DESCRIPTION</b></th>
+                                        <th><b>AMOUNT</b></th>
+                                        <th><b>STATUS</b></th>
+                                        <th><b>ACTION</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" class="odd">
+                                        <td><b>1. </b></td>
+                                        <td>JSS1</td>
+                                        <td>JUNIOR SECONDARY</td>
+                                        <td>2020/2021</td>
+                                        <td>1ST</td>
+                                        <td>SCHOOL FEES</td>
+                                        <td><b>₦ </b>2,0000.00</td>
+                                        <td class="text-white"><span class="badge bg-danger"><b>NOT PAID</b></span></td>
+                                        <td onclick="" class="text-white"><button type="button"
+                                                class="btn btn-primary btn-lg"><b>PAY NOW</b></button>
+                                        </td>
+
+                                    </tr>
+                                    <tr role="row" class="even">
+                                        <td><b>2. </b></td>
+                                        <td>JSS1</td>
+                                        <td>JUNIOR SECONDARY</td>
+                                        <td>2020/2021</td>
+                                        <td>1ST</td>
+                                        <td>SCHOOL FEES</td>
+                                        <td><b>₦ </b>5,0000.00</td>
+                                        <td class="text-white"><span class="badge bg-success"><b>PAID</b></td>
+                                        <td class="text-white"></td>
+
+                                    </tr>
 
 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fees Table Area End Here -->
+                <footer class="footer-wrap-layout1">
+                    <div class="copyright">© Copyrights <a href="#"><b>Smart School Hub</b></a> 2021. All rights
+                        reserved. Designed by <a href="#"><b>Dextroux Technologies</b></a></div>
+                </footer>
             </div>
-            <!-- Social Media End Here -->
-            <!-- Footer Area Start Here -->
-            <footer class="footer-wrap-layout1">
-                <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
-                    reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
-            </footer>
-            <!-- Footer Area End Here -->
         </div>
-    </div>
-    <!-- Page Area End Here -->
+        <!-- Page Area End Here -->
     </div>
     <!-- jquery-->
     <script src="../js/jquery-3.3.1.min.js"></script>
@@ -203,24 +210,18 @@
     <script src="../js/popper.min.js"></script>
     <!-- Bootstrap js -->
     <script src="../js/bootstrap.min.js"></script>
-    <!-- Counterup Js -->
-    <script src="../js/jquery.counterup.min.js"></script>
-    <!-- Moment Js -->
-    <script src="../js/moment.min.js"></script>
-    <!-- Waypoints Js -->
-    <script src="../js/jquery.waypoints.min.js"></script>
+    <!-- Data Table Js -->
+    <script src="../js/jquery.dataTables.min.js"></script>
     <!-- Scroll Up Js -->
     <script src="../js/jquery.scrollUp.min.js"></script>
-    <!-- Full Calender Js -->
-    <script src="../js/fullcalendar.min.js"></script>
-    <!-- Chart Js -->
-    <script src="../js/Chart.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
+    <script src="./js/student.js"></script>
+    <script src="./js/student.js"></script>
 
 </body>
 
 
-<!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:04 GMT -->
+<!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/all-fees.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:26 GMT -->
 
 </html>
