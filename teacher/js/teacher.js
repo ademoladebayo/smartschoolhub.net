@@ -5,30 +5,38 @@ function loadSideNav(page) {
         <a id="index" href="index.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
+
     <li class="nav-item">
-        <a  id="learning-hub" href="learning-hub.html" class="nav-link"><i
-                class="flaticon-open-book"></i><span>Learning Hub</span></a>
-    </li>
-    <li class="nav-item">
-        <a  id="timetable" href="timetable.html" class="nav-link"><i
-                class="flaticon-calendar"></i><span>Timetable</span></a>
+        <a   id="my-profile" href="my-profile.html" class="nav-link"><i class="far fa-address-card"></i><span>My profile</span></a>
     </li>
 
     <li class="nav-item">
-    <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
-    <span>My Attendance</span></a>
+        <a  id="my-student" href="my-student.html" class="nav-link"> <i class="fas fa-users"></i>
+        <span>My Students</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+                class="flaticon-open-book"></i><span>Learning Hub Materials</span></a>
+    </li>
+
+
+    <li class="nav-item">
+        <a  id="timetable" href="timetable.html" class="nav-link"><i
+                class="flaticon-calendar"></i><span>My Timetable</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
+        <span>Mark Attendance</span></a>
     </li>
 
     <li class="nav-item">
         <a   id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
     </li>
+
     <li class="nav-item">
-        <a   id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
-                Results</span></a>
-    </li>
-    <li class="nav-item">
-        <a  id="payment" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
-                and History</span></a>
+        <a  id="result" href="upload-result.html" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
     </li>
 
     <li class="nav-item">

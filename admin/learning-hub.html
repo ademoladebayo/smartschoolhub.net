@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SSHUB | Results</title>
+    <title>SSHUB | Learning Hub</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -27,14 +27,12 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/result-style.css">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/frame_style.css">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('result')">
+<body onload="loadSideNav('learning-hub')">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -125,18 +123,29 @@
             </div>
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
+                <div class="breadcrumbs-area">
+                    <h3>Learning Hub</h3>
+                    <ul>
+                        <li>
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li>Assigned Subject</li>
+                    </ul>
+                </div>
+
                 <div class="frame-div">
-                    <iframe id="iframe" src="./transcript.html" title="description" style="border:none;" title="Iframe Example"
-                        scrolling="no"></iframe>
+                    <iframe id="iframe" src="./subject-registered.html" title="description"
+                        style="border: none; margin-top: 5px;" title="Iframe Example" scrolling="no"></iframe>
                 </div>
                 <footer class="footer-wrap-layout1">
                     <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
                         reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
                 </footer>
             </div>
+            <!-- Social Media End Here -->
+            <!-- Footer Area Start Here -->
 
-
-
+            <!-- Footer Area End Here -->
         </div>
     </div>
     <!-- Page Area End Here -->
@@ -163,11 +172,13 @@
     <script src="../js/Chart.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
-    <!-- Custom Js -->
-    <script src="../js/student.js"></script>
     <script src="./js/student.js"></script>
+
+    <script src="./js/teacher.js"></script>
     <script src="../js/iframeSizer.min.js"></script>
     <script src="../js/frame_script.js"></script>
+
+
 
 </body>
 

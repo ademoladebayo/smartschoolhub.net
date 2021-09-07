@@ -5,30 +5,37 @@ function loadSideNav(page) {
         <a id="index" href="index.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
+
     <li class="nav-item">
-        <a  id="learning-hub" href="learning-hub.html" class="nav-link"><i
-                class="flaticon-open-book"></i><span>Learning Hub</span></a>
-    </li>
-    <li class="nav-item">
-        <a  id="timetable" href="timetable.html" class="nav-link"><i
-                class="flaticon-calendar"></i><span>Timetable</span></a>
+        <a   id="student-payment" href="student-payment.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span>Student's Payments</span></a>
     </li>
 
     <li class="nav-item">
-    <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
-    <span>My Attendance</span></a>
+        <a  id="online-payment" href="online-payment.html" class="nav-link"> <i class="fas fa-globe"></i>
+        <span>Online Payments</span></a>
     </li>
 
     <li class="nav-item">
-        <a   id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
+        <a  id="online-payment" href="online-payment.html" class="nav-link"><i class="far fa-money-bill-alt"></i><span>Manual Payments</span></a>
     </li>
+
+
     <li class="nav-item">
-        <a   id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
-                Results</span></a>
+        <a  id="creditors" href="creditors.html" class="nav-link"><i
+        class="fas fa-check-circle"></i><span>Creditors</span></a>
     </li>
+
     <li class="nav-item">
-        <a  id="payment" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
-                and History</span></a>
+        <a  id="debitors" href="debitors.html" class="nav-link"><i class="fas fa-times-circle"></i>
+        <span>Debitors</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a   id="new-fee" href="new-fee.html" class="nav-link"><i class="fas fa-plus"></i><span>Create New Fee</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="expense" href="expense.html" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Expenses</span></a>
     </li>
 
     <li class="nav-item">

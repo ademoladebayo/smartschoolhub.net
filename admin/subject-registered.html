@@ -11,6 +11,10 @@
     <link rel="icon" href="">
 
     <title> Courses </title>
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="../css/all.min.css">
+    <!-- Flaticon CSS -->
+    <link rel="stylesheet" href="../fonts/flaticon.css">
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -22,8 +26,8 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    
+    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -62,7 +66,7 @@
                                             <td style="text-align: right;">
                                                 <button type="button" class="btn btn-primary btn-block"
                                                     data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                   
+
                                                     Materials
                                                 </button>
                                             </td>
@@ -389,6 +393,22 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
+                                                                        <td>1</td>
+                                                                        <td><small>Accounting treatment of pension
+                                                                                fund</small></td>
+                                                                        <td><small>Thursday 25-Feb-2021 11:00am</small>
+                                                                        </td>
+                                                                        <td>
+                                                                            <a href="recordings2.php?id=1406"
+                                                                                target="_blank"
+                                                                                class="btn btn-sm btn-primary btn-block"><i
+                                                                                    class="fas fa-video"></i> Start
+                                                                                Live</a>
+
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
                                                                         <td colspan="4">
                                                                             <center>No scheduled class yet.</center>
                                                                         </td>
@@ -495,6 +515,13 @@
                                             </div>
                                             <div class="tab-pane fade" id="notes-content" role="tabpanel"
                                                 aria-labelledby="pills-notes-tab">
+                                                <div class="card shadow mb-1">
+                                                    <a onclick="" href="#" class="btn btn-primary"><i
+                                                            class="far fa-sticky-note"></i> Upload New Note</a>
+                                                </div>
+                                                <br />
+
+
 
                                                 <div class="card shadow mb-3">
                                                     <div class="card-header">
@@ -505,7 +532,8 @@
                                                     <div class="card-body text-dark bg-light">
                                                         <div class="p-2"
                                                             style="overflow: auto; height: 65vh; border:1px solid black"
-                                                            onmouseover="takeattendance(3114, 1)">
+                                                            onmouseover="takeattendance(3114, 1)"
+                                                            contenteditable="true">
                                                             <p>On 30th September 2008, the premises of Longman biscuits
                                                                 Ltd, was
                                                                 severely damaged by fire and the company’s business
@@ -1388,34 +1416,46 @@
                                             </div>
                                             <div class="tab-pane fade" id="slides-content" role="tabpanel"
                                                 aria-labelledby="pills-slides-tab">
+                                                <div class="card shadow mb-1">
+                                                    <a onclick="" href="#" class="btn btn-primary"><i
+                                                            class="fab fa-slideshare"></i> Upload New Slide</a>
+                                                </div>
+                                                <br />
+
 
                                                 <div class="card shadow mb-3">
                                                     <div class="card-header">
                                                         <small class="m-0 text-primary">2021-01-19 10:48:39</small>
-                                                        <a href="https://bowenstaff.bowen.edu.ng//lectureslides/1611049719.docx"
-                                                            target="_blank"
-                                                            class="btn btn-primary btn-circle btn-sm float-right">
-                                                            <i class="fas fa-file-download"></i>
+                                                        <a href="url" target="_blank"
+                                                            class="btn  btn-circle btn-sm float-right">
+                                                            <i style="color:green;" class="fas fa-file-download"></i>
+                                                        </a>
+
+                                                        <a href="url" target="_blank"
+                                                            class="btn  btn-circle btn-sm float-right">
+                                                            <i style="color:red;" class="fas fa-trash-alt"></i></i>
                                                         </a>
                                                         <br>
                                                         <span class="m-0 text-primary">Investment and Unit Trust
                                                             Account</span>
                                                     </div>
                                                     <div class="card-body">
-                                                        <object
-                                                            data="https://bowenstaff.bowen.edu.ng//lectureslides/1611049719.docx"
-                                                            type="application/pdf" class="img-fluid"
+                                                        <object data="url" type="application/pdf" class="img-fluid"
                                                             style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey"
                                                             onmouseover="takeattendance(3683, 2)">
-                                                            <embed
-                                                                src="https://bowenstaff.bowen.edu.ng//lectureslides/1611049719.docx"
-                                                                type="application/pdf" class="img-fluid">
+                                                            <embed src="url" type="application/pdf" class="img-fluid">
                                                         </object>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="audios-content" role="tabpanel"
                                                 aria-labelledby="pills-audios-tab">
+
+                                                <div class="card shadow mb-1">
+                                                    <a onclick="" href="#" class="btn btn-primary"><i
+                                                            class="fas fa-microphone-alt"></i> Upload New Audio</a>
+                                                </div>
+                                                <br />
                                                 <div class="card shadow mb-1">
                                                     <div class="card-body">No Audio Here</div>
                                                 </div>
@@ -1423,11 +1463,21 @@
                                             <div class="tab-pane fade" id="videos-content" role="tabpanel"
                                                 aria-labelledby="pills-videos-tab">
                                                 <div class="card shadow mb-1">
+                                                    <a onclick="" href="#" class="btn btn-primary"><i
+                                                            class="fas fa-video"></i></i> Upload New Vidoe</a>
+                                                </div>
+                                                <br />
+                                                <div class="card shadow mb-1">
                                                     <div class="card-body">No Video Here</div>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="assignments-content" role="tabpanel"
                                                 aria-labelledby="pills-assignments-tab">
+                                                <div class="card shadow mb-1">
+                                                    <a onclick="" href="#" class="btn btn-primary"><i
+                                                            class="far fa-clipboard"></i> Upload New Assignment</a>
+                                                </div>
+                                                <br />
                                                 <div class="card shadow mb-1">
                                                     <div class="card-body">No Assignment Here</div>
                                                 </div>
@@ -1460,15 +1510,15 @@
     <!-- End of Page Wrapper -->
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
-    <script src="./js/iframeSizer.contentWindow.min.js"></script>
+    <script src="../js/sb-admin-2.min.js"></script>
+    <script src="../js/iframeSizer.contentWindow.min.js"></script>
 
 
 

@@ -5,11 +5,23 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SSHUB | Learning Hub</title>
+    <title>SSHUB | Mark Attendance</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Barcode+128&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nova+Flat&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nova+Square&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rhodium+Libre&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rowdies&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Scope+One&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&amp;display=swap">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <!-- Normalize CSS -->
     <link rel="stylesheet" href="../css/normalize.css">
     <!-- Main CSS -->
@@ -26,13 +38,14 @@
     <link rel="stylesheet" href="../css/animate.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/frame_style.css">
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+    <!-- Data Table CSS -->
+    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('learning-hub')">
+<body onload="loadSideNav('attendance')">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -112,6 +125,8 @@
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
             <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+
+
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
                         <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
@@ -124,18 +139,97 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3>Learning Hub</h3>
                     <ul>
                         <li>
-                            <a href="index.html">Home</a>
+                            <a style="font-weight: bold;font-family: Rowdies, serif;" href="index.html">Home</a>
                         </li>
-                        <li>Registered Subject</li>
+                        <li style="font-weight: bold;font-family: Rowdies, serif;">Class Attendance</li>
                     </ul>
                 </div>
 
-                <div class="frame-div">
-                    <iframe id="iframe" src="./subject-registered.html" title="description"
-                        style="border: none; margin-top: 5px;" title="Iframe Example" scrolling="no"></iframe>
+                <div class="row">
+                    <div class="card height-auto">
+                        <div class="card-body">
+                            <div class="heading-layout1">
+                                <div class="item-title">
+                                    <h3 style="font-weight: bold;font-family: Rowdies, serif;">ATTENDANCE</h3>
+                                </div>
+
+                            </div>
+                            <div class="row gutters-8 ">
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input type="text" placeholder="Search by Student ID or Name" class="form-control">
+                                </div>
+
+                                <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                    <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table display data-table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>Student Fullname</th>
+                                            <th>Class</th>
+                                            <th>Gender</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>Mark Willy</td>
+                                            <td>JSS 2</td>
+                                            <td>Male</td>
+                                            <td><span class="badge bg-danger"><b>ABSENT</b></span></td>
+                                            <td>
+                                                <a onclick="" href="#" class="btn btn-success"><i
+                                                        class="fas fa-check-circle"></i> Present</a>
+
+                                                <a onclick="" href="#" class="btn btn-danger"><i
+                                                        class="fas fa-times-circle"></i>
+                                                    Absent</a>
+                                            </td>
+
+                                        <tr>
+                                            <td>2.</td>
+                                            <td>Jegede Funsho</td>
+                                            <td>JSS 2</td>
+                                            <td>Female</td>
+                                            <td><span class="badge bg-success"><b>PRESENT</b></span></td>
+                                            <td>
+                                                <a onclick="" href="#" class="btn btn-success"><i
+                                                        class="fas fa-check-circle"></i> Present</a>
+
+                                                <a onclick="" href="#" class="btn btn-danger"><i
+                                                        class="fas fa-times-circle"></i>
+                                                    Absent</a>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>3.</td>
+                                            <td>Kemi Badmus</td>
+                                            <td>JSS 2</td>
+                                            <td>Female</td>
+                                            <td><span class="badge bg-warning"><b>NO RECORD</b></span></td>
+                                            <td>
+                                                <a onclick="" href="#" class="btn btn-success"><i
+                                                        class="fas fa-check-circle"></i> Present</a>
+
+                                                <a onclick="" href="#" class="btn btn-danger"><i
+                                                        class="fas fa-times-circle"></i>
+                                                    Absent</a>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <footer class="footer-wrap-layout1">
                     <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
@@ -150,6 +244,9 @@
     </div>
     <!-- Page Area End Here -->
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
     <!-- jquery-->
     <script src="../js/jquery-3.3.1.min.js"></script>
     <!-- Plugins js -->
@@ -170,17 +267,21 @@
     <script src="../js/fullcalendar.min.js"></script>
     <!-- Chart Js -->
     <script src="../js/Chart.min.js"></script>
+    <!-- Data Table Js -->
+    <script src="../js/jquery.dataTables.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
-    <script src="./js/student.js"></script>
-
-    <script src="./js/student.js"></script>
-    <script src="../js/iframeSizer.min.js"></script>
-    <script src="../js/frame_script.js"></script>
-
+    <script src="../js/myscript.js"></script>
+    <script src="./js/teacher.js"></script>
 
 
 </body>
+
+<style>
+    .table>:not(:last-child)>:last-child>* {
+        border-bottom-color: #e1e1e1;
+    }
+</style>
 
 
 <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:04 GMT -->
