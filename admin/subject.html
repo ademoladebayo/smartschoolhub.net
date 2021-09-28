@@ -43,7 +43,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('subject');">
+<body onload="loadSideNav('subject');getAllSubjectForTable()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -178,13 +178,13 @@
                                         <tr>
                                             <th>S/N</th>
                                             <th>Subject Name</th>
-                                            <th>Teacher</th>
-                                            <th>Gender</th>
                                             <th>Class</th>
+                                            <th>Teacher</th>
+                                            <th>No of Registration</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="subject_table">
                                         <tr>
 
                                             <td>1.</td>
@@ -243,7 +243,7 @@
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
                                     <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
-                                        id="exampleModalLabel">CREATE NEW STUDENT</h5>
+                                        id="exampleModalLabel">CREATE NEW SUBJECT</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -252,7 +252,7 @@
                                 <div class="modal-body mb-0 p-0">
 
                                     <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                        <iframe class="embed-responsive-item" src="./add-student.html"
+                                        <iframe class="embed-responsive-item" src="./add-subject.html"
                                             allowfullscreen></iframe>
                                     </div>
 

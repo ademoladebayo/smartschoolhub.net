@@ -28,13 +28,15 @@
     <link rel="stylesheet" href="../css/select2.min.css">
     <!-- Date Picker CSS -->
     <link rel="stylesheet" href="../css/datepicker.min.css">
+    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="editClassDetails()">
+<body onload="getAllTeacherForClass();editClassDetails();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -55,29 +57,29 @@
                                     </div>
 
                                 </div>
-                                <form class="new-added-form">
-                                    <div class="row">
-                                        <div class="col-xl-3 col-lg-6 col-12 form-group">
-                                            <label>Class Name *</label>
-                                            <input id="class_name" type="text" placeholder="" class="form-control">
-                                        </div>
-                                        
-                                        <div class="col-xl-3 col-lg-6 col-12 form-group">
-                                            <label>Class Teacher *</label>
-                                            <select id="class_teacher" class="select2">
-                                                <option value="">Please Select Teacher *</option>
-                                                <option value="1">Mr Seun</option>
-                                                <option value="2">Mrs Obaja</option>
-                                            </select>
-                                        </div>
-                                      
-                                        <div class="col-12 form-group mg-t-8">
-                                            <button type="submit"
-                                                class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
 
-                                        </div>
+                                <div class="row">
+                                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                        <label>Class Name *</label>
+                                        <input id="class_name" type="text" placeholder="" class="form-control">
                                     </div>
-                                </form>
+
+                                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                        <label>Class Teacher *</label>
+                                        <select onclick="getAllTeacherForClass()" id="class_teacher" class="select2">
+                                            <option value="">Please Select Teacher *</option>
+
+
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12 form-group mg-t-8">
+                                        <button onclick="updateClass()"
+                                            class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
+
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -107,6 +109,12 @@
     <script src="../js/main.js"></script>
     <script src="../js/iframeSizer.contentWindow.min.js"></script>
     <script src="./js/admin.js"></script>
+
+    <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+    <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+
 
 </body>
 

@@ -17,6 +17,18 @@ class TeacherRepository
     public function getAllTeacher()
     {
         $TeacherModel =  new TeacherModel();
-        return  $TeacherModel->with('class')->get();
+        return  $TeacherModel->with('assigned_class')->get();
+    }
+    public function updateTeacherClass($teacher_id, $class_id)
+    {
+        $TeacherModel = TeacherModel::find($teacher_id);
+        $TeacherModel->assigned_class = $class_id;
+        $TeacherModel->save();
+    }
+    public function removeClassFromTeacher($class_id)
+    {
+        $TeacherModel =  TeacherModel::where('assigned_class', $class_id)->first();
+        $TeacherModel->assigned_class = "";
+        $TeacherModel->save();
     }
 }

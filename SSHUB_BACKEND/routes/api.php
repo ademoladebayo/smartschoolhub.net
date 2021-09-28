@@ -21,31 +21,47 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-// STUDENT ROUTE
-Route::post('create-student', 'StudentController@createStudent', function () {
-})->middleware(Cors::class);
 
 
-// TEACHER ROUTE
-Route::post('create-teacher', 'TeacherController@createTeacher', function () {
-})->middleware(Cors::class);
-Route::get('all-teacher', 'TeacherController@getAllTeacher', function () {
+
+// =============================================================================
+//               BEGINNING OF ADMIN ROUTE
+// =============================================================================
+// ADMIN {CLASS}
+Route::post('create-class', 'AdminController@createClass', function () {
 })->middleware(Cors::class);
 
-
-//ClASS ROUTE
-Route::post('create-class', 'ClassController@createClass', function () {
+Route::post('edit-class', 'AdminController@editClass', function () {
 })->middleware(Cors::class);
 
-Route::get('all-class', 'ClassController@getAllClass', function () {
+Route::get('delete-class/{class_id}', 'AdminController@deleteClass', function () {
 })->middleware(Cors::class);
 
-//SUBJECT ROUTE
-Route::post('create-subject', 'SubjectController@createSubject', function () {
+Route::get('all-class', 'AdminController@getAllClass', function () {
 })->middleware(Cors::class);
 
-Route::get('all-subject', 'SubjectController@getAllSubject', function () {
+Route::get('search-class/{class_name}', 'AdminController@searchClass', function () {
 })->middleware(Cors::class);
+
+// ADMIN {SUBJECT}
+Route::post('create-subject', 'AdminController@createSubject', function () {
+})->middleware(Cors::class);
+
+Route::get('all-subject', 'AdminController@getAllSubject', function () {
+})->middleware(Cors::class);
+
+// ADMIN {STUDENT}
+Route::post('create-student', 'AdminController@createStudent', function () {
+})->middleware(Cors::class);
+
+// ADMIN {TEACHER}
+Route::post('create-teacher', 'AdminController@createTeacher', function () {
+})->middleware(Cors::class);
+Route::get('all-teacher', 'AdminController@getAllTeacher', function () {
+})->middleware(Cors::class);
+// =============================================================================
+//               END OF ADMIN ROUTE
+// =============================================================================
 
 //RESULT ROUTE
 Route::post('save-result', 'ResultController@saveResult', function () {

@@ -94,7 +94,16 @@ function loadSideNav(page) {
   document.getElementById(page).className += " menu-active";
 }
 
-function getAllTeacher() {
+function reloadEditFrame() {
+  var iframe = document.getElementById("edit_frame");
+  temp = iframe.src;
+  iframe.src = "";
+  iframe.src = temp;
+}
+
+// TEACHER
+// NAME CONVENTION IS SET TO KNOW IF TEACHER AS BEEN ASSIGNED PREVIOUSLY TO A CLASS
+function getAllTeacherForClass() {
   fetch(ip + "/api/all-teacher", {
     method: "GET",
     headers: {
@@ -109,10 +118,8 @@ function getAllTeacher() {
     .then((res) => res.json())
 
     .then((data) => {
-      console.log(data);
-
       for (i in data) {
-        if (data[i].class == null) {
+        if (data[i].assigned_class == null) {
           document.getElementById(
             "class_teacher"
           ).innerHTML += `<option value="${data[i].id}">${
@@ -122,22 +129,39 @@ function getAllTeacher() {
           document.getElementById(
             "class_teacher"
           ).innerHTML += `<option value="${data[i].id}">${
-            data[i].title +
-            " " +
-            data[i].first_name +
-            " " +
-            data[i].last_name +
-            " (" +
-            data[i].class.class_name +
-            ")"
-          }</option>`;
+            data[i].title + " " + data[i].first_name + " " + data[i].last_name
+          }<p style='color:green'> (${data[i].assigned_class.class_name}
+            Already Assigned)</p></option>`;
         }
       }
     })
     .catch((err) => console.log(err));
 }
 
-function getAllClass() {
+function getAllTeacherForDropDown() {
+  fetch(ip + "/api/all-teacher", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+
+    .then((data) => {
+      for (i in data) {
+        document.getElementById("teacher").innerHTML += `<option value="${
+          data[i].id
+        }">${
+          data[i].title + " " + data[i].first_name + " " + data[i].last_name
+        }</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// CLASS
+function getAllClassForTable() {
   fetch(ip + "/api/all-class", {
     method: "GET",
     headers: {
@@ -172,15 +196,21 @@ function getAllClass() {
             }</td>
             <td>25</td>
             <td>
-                <a onclick="editClass(${data[i].id},${data[i].class_name},${
+            <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+              data[i].id
+            }~${data[i].class_name}~${
               data[i].class_teacher.title +
               " " +
               data[i].class_teacher.first_name +
               " " +
               data[i].class_teacher.last_name
-            })" href="#" class="btn btn-warning" data-bs-toggle="modal"
-                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="" href="#" class="btn btn-danger"><i
+            }~${
+              data[i].class_teacher.id
+            }')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                <a onclick="deleteClass(${
+                  data[i].id
+                })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -195,15 +225,9 @@ function getAllClass() {
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>25</td>
             <td>
-                <a onclick="editClass(${data[i].id},${data[i].class_name},${
-              data[i].class_teacher.title +
-              " " +
-              data[i].class_teacher.first_name +
-              " " +
-              data[i].class_teacher.last_name
-            })" href="#" class="btn btn-warning" data-bs-toggle="modal"
-                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="" href="#" class="btn btn-danger"><i
+            <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -215,7 +239,7 @@ function getAllClass() {
             document.getElementById("class_table").innerHTML += `
             <tr class="odd">
   
-            <td>${data[i].id}.</td>
+            <td>${c}.</td>
             <td>${data[i].class_name}</td>
             <td>${
               data[i].class_teacher.title +
@@ -226,15 +250,21 @@ function getAllClass() {
             }</td>
             <td>25</td>
             <td>
-                <a onclick="editClass(${data[i].id},${data[i].class_name},${
+            <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+              data[i].id
+            }~${data[i].class_name}~${
               data[i].class_teacher.title +
               " " +
               data[i].class_teacher.first_name +
               " " +
               data[i].class_teacher.last_name
-            })" href="#" class="btn btn-warning" data-bs-toggle="modal"
-                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="" href="#" class="btn btn-danger"><i
+            }~${
+              data[i].class_teacher.id
+            }')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                <a onclick="deleteClass(${
+                  data[i].id
+                })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -244,14 +274,14 @@ function getAllClass() {
             document.getElementById("class_table").innerHTML += `
             <tr class="odd">
   
-            <td>${data[i].id}.</td>
+            <td>${c}.</td>
             <td>${data[i].class_name}</td>
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>25</td>
             <td>
-                <a onclick="editClass(${data[i].id},${data[i].class_name},'')"   class="btn btn-warning" data-bs-toggle="modal"
+                <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="alert('Hello')" href="#" class="btn btn-danger"><i
+                <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -266,6 +296,26 @@ function getAllClass() {
     .catch((err) => console.log(err));
 }
 
+function getAllClassForDropDown() {
+  fetch(ip + "/api/all-class", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+
+    .then((data) => {
+      for (i in data) {
+        document.getElementById(
+          "class"
+        ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
 function editClass(id, class_name, class_teacher) {
   console.log("STORED...");
   localStorage.setItem(
@@ -273,16 +323,25 @@ function editClass(id, class_name, class_teacher) {
     id + "~" + class_name + "~" + class_teacher
   );
 }
+
 function editClassDetails() {
-  localStorage["editClass"].split("~")
-  document.getElementById("class_name").value = localStorage["editClass"].slit("~")[1];
-  document.getElementById("class_teacher").value = localStorage["editClass"].slit("~")[2];
+  console.log(localStorage["editClass"]);
+  localStorage["editClass"].split("~");
+  document.getElementById("class_name").value =
+    localStorage["editClass"].split("~")[1];
+
+  document.getElementById("class_teacher").innerHTML =
+    localStorage["editClass"].split("~")[2] == ""
+      ? document.getElementById("class_teacher").innerHTML
+      : `<option value="${localStorage["editClass"].split("~")[3]}">${
+          localStorage["editClass"].split("~")[2]
+        }</option>`;
 }
 
 function createClass() {
   var class_name = document.getElementById("class_name").value;
   var class_teacher = document.getElementById("class_teacher").value;
-  if (class_name != "" && class_teacher != "") {
+  if (class_name != "") {
     // PUSH TO API
     warningtoast("<b>Processing ... Please wait</b>");
     fetch(ip + "/api/create-class", {
@@ -302,8 +361,9 @@ function createClass() {
         toastr.remove();
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
-          document.getElementById("class_name").value = "";
-          document.getElementById("class_teacher").value = "";
+          setTimeout(function () {
+            window.parent.location.reload();
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -314,6 +374,383 @@ function createClass() {
   }
 }
 
+function updateClass() {
+  var class_name = document.getElementById("class_name").value;
+  var class_teacher = document.getElementById("class_teacher").value;
+  if (class_name != "" ) {
+    // PUSH TO API
+    warningtoast("<b>Processing ... Please wait</b>");
+    fetch(ip + "/api/edit-class", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        class_id: localStorage["editClass"].split("~")[0],
+        class_name: class_name,
+        class_teacher: class_teacher,
+      }),
+    })
+      .then((res) => res.json())
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>" + data.message + "</b>");
+          setTimeout(function () {
+            window.parent.location.reload();
+          }, 1000);
+        } else {
+          errortoast("<b>" + data.message + "</b>");
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
+function deleteClass(class_id) {
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/delete-class/" + class_id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast("<b>" + data.message + "</b>");
+        setTimeout(function () {
+          location.reload();
+        }, 1000);
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function searchClass(class_name) {
+  fetch(ip + "/api/search-class/" + class_name, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+
+    .then((data) => {
+      console.log(data);
+
+      var c = 1;
+
+      if (data.length > 0) {
+        document.getElementById("class_table").innerHTML = ``;
+        for (i in data) {
+          if (c % 2 == 0) {
+            if (data[i].class_teacher != null) {
+              document.getElementById("class_table").innerHTML += `
+              <tr class="even">
+    
+              <td>${c}.</td>
+              <td>${data[i].class_name}</td>
+              <td>${
+                data[i].class_teacher.title +
+                " " +
+                data[i].class_teacher.first_name +
+                " " +
+                data[i].class_teacher.last_name
+              }</td>
+              <td>25</td>
+              <td>
+              <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+                data[i].id
+              }~${data[i].class_name}~${
+                data[i].class_teacher.title +
+                " " +
+                data[i].class_teacher.first_name +
+                " " +
+                data[i].class_teacher.last_name
+              }~${
+                data[i].class_teacher.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
+              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                  <a onclick="deleteClass(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
+                          class="fas fa-trash"></i>
+                      Delete</a>
+              </td>
+    
+          <tr>`;
+            } else {
+              document.getElementById("class_table").innerHTML += `
+              <tr class="even">
+    
+              <td>${c}.</td>
+              <td>${data[i].class_name}</td>
+              <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+              <td>25</td>
+              <td>
+              <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
+              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                  <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
+                          class="fas fa-trash"></i>
+                      Delete</a>
+              </td>
+    
+          <tr>`;
+            }
+          } else {
+            if (data[i].class_teacher != null) {
+              document.getElementById("class_table").innerHTML += `
+              <tr class="odd">
+    
+              <td>${c}.</td>
+              <td>${data[i].class_name}</td>
+              <td>${
+                data[i].class_teacher.title +
+                " " +
+                data[i].class_teacher.first_name +
+                " " +
+                data[i].class_teacher.last_name
+              }</td>
+              <td>25</td>
+              <td>
+              <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+                data[i].id
+              }~${data[i].class_name}~${
+                data[i].class_teacher.title +
+                " " +
+                data[i].class_teacher.first_name +
+                " " +
+                data[i].class_teacher.last_name
+              }~${
+                data[i].class_teacher.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
+              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                  <a onclick="deleteClass(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
+                          class="fas fa-trash"></i>
+                      Delete</a>
+              </td>
+    
+          <tr>`;
+            } else {
+              document.getElementById("class_table").innerHTML += `
+              <tr class="odd">
+    
+              <td>${c}.</td>
+              <td>${data[i].class_name}</td>
+              <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+              <td>25</td>
+              <td>
+                  <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
+                      data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                  <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
+                          class="fas fa-trash"></i>
+                      Delete</a>
+              </td>
+    
+          <tr>`;
+            }
+          }
+
+          c = c + 1;
+        }
+      } else {
+        errortoast("<b>Class not found</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// SUBJECT
+function createSubject() {
+  var subject_name = document.getElementById("subject_name").value;
+  var class_id = document.getElementById("class").value;
+  var teacher = document.getElementById("teacher").value;
+  if (subject_name != "" && class_id != "") {
+    // PUSH TO API
+    warningtoast("<b>Processing ... Please wait</b>");
+    fetch(ip + "/api/create-subject", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        class_id: class_id,
+        subject_name: subject_name,
+        teacher: teacher,
+      }),
+    })
+      .then((res) => res.json())
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>" + data.message + "</b>");
+          setTimeout(function () {
+            window.parent.location.reload();
+          }, 1000);
+        } else {
+          errortoast("<b>" + data.message + "</b>");
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that compulsory field is not empty.</b>");
+  }
+}
+function getAllSubjectForTable() {
+  fetch(ip + "/api/all-subject", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+
+    .then((data) => {
+      console.log("DEBUG =>   RESULT: " + data);
+      document.getElementById("subject_table").innerHTML = ``;
+      var c = 1;
+      for (i in data) {
+        if (c % 2 == 0) {
+          if (data[i].teacher != null) {
+            console.log("DEBUG not null: " + data[i].teacher);
+            console.log(data[i].teacher);
+            document.getElementById("subject_table").innerHTML += `
+            <tr class="even">
+  
+            <td>${c}.</td>
+            <td>${data[i].subject_name}</td>
+            <td>${data[i].class.class_name}</td>
+            <td>${
+              data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
+            }</td>
+            <td>25</td>
+            <td>
+            <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~${
+              data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
+            }~${
+              data[i].teacher.id
+            }')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                <a onclick="deleteSubject(${
+                  data[i].id
+                })" class="btn btn-danger text-white"><i
+                        class="fas fa-trash"></i>
+                    Delete</a>
+            </td>
+  
+        <tr>`;
+          } else {
+            console.log("DEBUG null: " + data[i].teacher);
+            console.log(data[i].teacher);
+            document.getElementById("subject_table").innerHTML += `
+            <tr class="even">
+  
+            <td>${c}.</td>
+            <td>${data[i].subject_name}</td>
+            <td>${data[i].class.class_name}</td>
+            <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+            <td>25</td>
+            <td>
+            <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].subject_name}~')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
+                        class="fas fa-trash"></i>
+                    Delete</a>
+            </td>
+  
+        <tr>`;
+          }
+        } else {
+          if (data[i].teacher != null) {
+            document.getElementById("subject_table").innerHTML += `
+            <tr class="odd">
+  
+            <td>${c}.</td>
+            <td>${data[i].subject_name}</td>
+            <td>${data[i].class.class_name}</td>
+            <td>${
+              data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
+            }</td>
+            <td>25</td>
+            <td>
+            <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~${
+              data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
+            }~${
+              data[i].teacher.id
+            }')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                <a onclick="deleteSubject(${
+                  data[i].id
+                })" class="btn btn-danger text-white"><i
+                        class="fas fa-trash"></i>
+                    Delete</a>
+            </td>
+  
+        <tr>`;
+          } else {
+            document.getElementById("subject_table").innerHTML += `
+            <tr class="odd">
+  
+            <td>${c}.</td>
+            <td>${data[i].subject_name}</td>
+            <td>${data[i].class.class_name}</td>
+            <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+            <td>25</td>
+            <td>
+                <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id}~${data[i].subject_name}~')" class="btn btn-warning" data-bs-toggle="modal"
+                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                <a onclick="deleteSubject(${data[i].id})" class="btn btn-danger text-white"><i
+                        class="fas fa-trash"></i>
+                    Delete</a>
+            </td>
+  
+        <tr>`;
+          }
+        }
+
+        c = c + 1;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// TOAST
 function successtoast(message, time) {
   toastr.success(message, "", {
     timeOut: time,
