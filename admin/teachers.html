@@ -43,7 +43,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('teachers');">
+<body onload="loadSideNav('teachers'); getAllTeacherForTable()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -127,7 +127,7 @@
 
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
-                        <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
+                        <a href="dashboard.html"><img src="../img/logo1.png" alt="logo"></a>
                     </div>
                 </div>
                 <div id="side_nav" class="sidebar-menu-content">
@@ -140,7 +140,7 @@
                     <h3 style="font-weight: bold; font-family: Rowdies;">TEACHERS</h3>
                     <ul>
                         <li>
-                            <a style="font-weight: bold; font-family: Rowdies;" href="index.html">Home</a>
+                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
                         </li>
                         <li style="font-weight: bold; font-family: Rowdies;">Teachers</li>
                     </ul>
@@ -165,7 +165,8 @@
                                 </div>
 
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input type="text" placeholder="Search by Teacher ID or Name" class="form-control">
+                                    <input oninput="searchTeacher(this.value)" type="text"
+                                        placeholder="Search by Teacher ID or Name" class="form-control">
                                 </div>
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
@@ -180,24 +181,24 @@
                                             <th>Teacher ID</th>
                                             <th>Teacher Fullname</th>
                                             <th>Gender</th>
-                                            <th>Class</th>
+                                            <th>Profile Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="teacher_table">
                                         <tr>
 
                                             <td>1.</td>
-                                            <td>#0022</td>
-                                            <td>Mark Willy</td>
-                                            <td>Male</td>
-                                            <td>JSS 2</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
                                             <td>
 
                                                 <a onclick="" href="#" class="btn btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
                                                 <a onclick="" href="#" class="btn btn-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                                                    data-bs-target="#"><i class="fas fa-edit"></i> Edit</a>
                                                 <a onclick="" href="#" class="btn gradient-orange-peel"><i
                                                         class="fas fa-ban"></i> Disable</a>
                                                 <a onclick="" href="#" class="btn btn-danger"><i
@@ -206,24 +207,7 @@
 
                                             </td>
 
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>#0062</td>
-                                            <td>Samson Kelvin</td>
-                                            <td>Male</td>
-                                            <td>JSS 2</td>
-                                            <td>
-                                                <a onclick="" href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-                                                <a onclick="" href="#" class="btn btn-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                                                <a onclick="" href="#" class="btn gradient-orange-peel"><i
-                                                        class="fas fa-ban"></i> Disable</a>
-                                                <a onclick="" href="#" class="btn btn-danger"><i
-                                                        class="fas fa-trash"></i>
-                                                    Delete</a>
 
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -289,6 +273,11 @@
                                                     </div>
                                                     <form class="new-added-form">
                                                         <div class="row">
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Title</label>
+                                                                <input id="title" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
                                                             <div class="col-xl-3 col-lg-6 col-12 form-group">
                                                                 <label>First Name</label>
                                                                 <input id="first_name" type="text" placeholder=""
@@ -393,7 +382,7 @@
                                 <div class="modal-body mb-0 p-0">
 
                                     <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                        <iframe class="embed-responsive-item" src="./edit-teacher.html"
+                                        <iframe id="edit_frame" class="embed-responsive-item" src="./edit-teacher.html"
                                             allowfullscreen></iframe>
                                     </div>
 

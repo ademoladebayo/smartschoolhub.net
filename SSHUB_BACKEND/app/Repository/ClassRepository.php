@@ -13,7 +13,9 @@ class ClassRepository
     {
         $AdminService = new AdminService();
         $ClassModel->save();
-        $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->id);
+        if ($ClassModel->class_teacher != "-") {
+            $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->class_id);
+        }
         return response()->json(['success' => true, 'message' => 'Class was created successfully.']);
     }
 
@@ -25,11 +27,12 @@ class ClassRepository
         $ClassModel->class_name =  $request->class_name;
         $ClassModel->class_teacher =  $request->class_teacher;
         // REMOVE CLASS FROM PREVIOUS TEACHER
-        $AdminService->removeClassFromTeacher($request->class_id);
+        if ($request->class_teacher != "-") {
+            $AdminService->removeClassFromTeacher($request->class_id);
+        }
         $ClassModel->save();
         // UPDATE THE TEACHER ASSIGNED CLASS
-        Log::alert("ABOUT TO UPDATE ...");
-        if ($request->class_teacher !="-") {
+        if ($request->class_teacher != "-") {
             $AdminService->updateTeacherClass($request->class_teacher, $request->class_id);
         }
 

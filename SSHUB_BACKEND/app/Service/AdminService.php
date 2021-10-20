@@ -10,12 +10,13 @@ use App\Repository\ClassRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
+use App\Repository\SessionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class AdminService
 {
-    
+
     // CLASS
     public function createClass(Request $request)
     {
@@ -63,6 +64,12 @@ class AdminService
         }
     }
 
+    public function editSubject(Request $request)
+    {
+        $SubjectRepository = new SubjectRepository();
+        return  $SubjectRepository->editSubject($request);
+    }
+
     // STUDENT
     public function createStudent(Request $request)
     {
@@ -71,18 +78,42 @@ class AdminService
 
         $studentModel->first_name =  $request->first_name;
         $studentModel->last_name =  $request->last_name;
+        $studentModel->middle_name =  $request->middle_name;
         $studentModel->gender =  $request->gender;
         $studentModel->dob =  $request->dob;
-        $studentModel->soo =  $request->soo;
-        $studentModel->address =  $request->address;
-        $studentModel->class =  $request->class;
-        $studentModel->parent_phone =  $request->parent_phone;
+        $studentModel->religion =  $request->religion;
+        $studentModel->state =  $request->state;
+        $studentModel->home_address =  $request->home_address;
+        $studentModel->joining_date =  $request->joining_date;
+        $studentModel->joining_session =  $request->joining_session;
+        $studentModel->class =  $request->student_class;
 
-        if ($studentModel->first_name != '' && $studentModel->last_name != '' && $studentModel->gender != '' && $studentModel->dob != '' && $studentModel->soo != ''  && $studentModel->address != '' && $studentModel->class != '' && $studentModel->parent_phone != '') {
-            return  $studentRepository->createStudent($studentModel);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Please check that no field is left empty.']);
-        }
+
+        $studentModel->guardian_name =  $request->guardian_name;
+        $studentModel->guardian_phone =  $request->guardian_phone;
+        $studentModel->guardian_email =  $request->guardian_email;
+        $studentModel->guardian_address =  $request->guardian_address;
+
+
+        return  $studentRepository->createStudent($studentModel);
+    }
+
+    public function editStudent($request)
+    {
+        $StudentRepository = new StudentRepository();
+        return  $StudentRepository->editStudent($request);
+    }
+
+    public function updateStudentClass($student_id, $class_name)
+    {
+        $StudentRepository = new StudentRepository();
+        return $StudentRepository->updateStudentClass($student_id, $class_name);
+    }
+
+    public function getAllStudent()
+    {
+        $StudentRepository = new StudentRepository();
+        return $StudentRepository->getAllStudent();
     }
 
     // TEACHER
@@ -91,20 +122,27 @@ class AdminService
         $TeacherModel = new TeacherModel();
         $TeacherRepository = new TeacherRepository();
 
+        $TeacherModel->title =  $request->title;
         $TeacherModel->first_name =  $request->first_name;
         $TeacherModel->last_name =  $request->last_name;
+        $TeacherModel->middle_name = $request->middle_name == "" ? "" : $request->middle_name;
         $TeacherModel->gender =  $request->gender;
-        $TeacherModel->address =  $request->address;
-        $TeacherModel->phone =  $request->phone;
-        $TeacherModel->email =  $request->email;
+        $TeacherModel->phone =  $request->teacher_phone;
+        $TeacherModel->email =  $request->teacher_email == "" ? "" : $request->teacher_email;
+        $TeacherModel->dob =  $request->dob;
+        $TeacherModel->religion =  $request->religion;
+        $TeacherModel->joining_date =  $request->joining_date == "" ? "" : $request->joining_date;
+        $TeacherModel->home_address =  $request->home_address;
+        $TeacherModel->state =  $request->state;
 
-        if ($TeacherModel->first_name != '' && $TeacherModel->last_name != '' && $TeacherModel->gender != '' && $TeacherModel->address != '' && $TeacherModel->phone != '' && $TeacherModel->email != '') {
-            return  $TeacherRepository->createTeacher($TeacherModel);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Please check that no field is left empty.']);
-        }
+        return  $TeacherRepository->createTeacher($TeacherModel);
     }
 
+    public function editTeacher($request)
+    {
+        $TeacherRepository = new TeacherRepository();
+        return  $TeacherRepository->editTeacher($request);
+    }
 
     public function updateTeacherClass($teacher_id, $class_name)
     {
@@ -116,5 +154,18 @@ class AdminService
     {
         $TeacherRepository = new TeacherRepository();
         return $TeacherRepository->getAllTeacher();
+    }
+
+    // SESSION
+    public function createSession(Request $request)
+    {
+        $SessionRepository = new SessionRepository();
+        return $SessionRepository->createSession($request);
+    }
+
+    public function editSession(Request $request)
+    {
+        $SessionRepository = new SessionRepository();
+        return $SessionRepository->editSession($request);
     }
 }

@@ -127,7 +127,7 @@
 
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
-                        <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
+                        <a href="dashboard.html"><img src="../img/logo1.png" alt="logo"></a>
                     </div>
                 </div>
                 <div id="side_nav" class="sidebar-menu-content">
@@ -140,7 +140,7 @@
                     <h3 style="font-weight: bold; font-family: Rowdies;">SUBJECT</h3>
                     <ul>
                         <li>
-                            <a style="font-weight: bold; font-family: Rowdies;" href="index.html">Home</a>
+                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
                         </li>
                         <li style="font-weight: bold; font-family: Rowdies;">Subject</li>
                     </ul>
@@ -165,7 +165,8 @@
                                 </div>
 
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input type="text" placeholder="Search by Subject Name" class="form-control">
+                                    <input oninput="searchSubject(this.value)" type="text"
+                                        placeholder="Search by Subject Name" class="form-control">
                                 </div>
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
@@ -185,45 +186,21 @@
                                         </tr>
                                     </thead>
                                     <tbody id="subject_table">
-                                        <tr>
-
+                                        <tr class="odd">
+  
                                             <td>1.</td>
-                                            <td>#0022</td>
-                                            <td>Mark Willy</td>
-                                            <td>Male</td>
-                                            <td>JSS 2</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
                                             <td>
-
-                                                <a onclick="" href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-                                                <a onclick="" href="#" class="btn btn-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                                                <a onclick="" href="#" class="btn gradient-orange-peel"><i
-                                                        class="fas fa-ban"></i> Disable</a>
-                                                <a onclick="" href="#" class="btn btn-danger"><i
-                                                        class="fas fa-trash"></i>
+                                            <a onmouseover="" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#"><i class="fas fa-edit"></i> Edit</a>
+                                                <a onclick="" class="btn btn-danger text-white"><i class="fas fa-trash"></i>
                                                     Delete</a>
-
                                             </td>
-
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>#0062</td>
-                                            <td>Samson Kelvin</td>
-                                            <td>Male</td>
-                                            <td>JSS 2</td>
-                                            <td>
-                                                <a onclick="" href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-                                                <a onclick="" href="#" class="btn btn-warning" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                                                <a onclick="" href="#" class="btn gradient-orange-peel"><i
-                                                        class="fas fa-ban"></i> Disable</a>
-                                                <a onclick="" href="#" class="btn btn-danger"><i
-                                                        class="fas fa-trash"></i>
-                                                    Delete</a>
-
+                                  
                                         </tr>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -399,7 +376,7 @@
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
                                     <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
-                                        id="exampleModalLabel">EDIT STUDENT DETAILS</h5>
+                                        id="exampleModalLabel">EDIT SUBJECT</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -408,7 +385,7 @@
                                 <div class="modal-body mb-0 p-0">
 
                                     <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                        <iframe class="embed-responsive-item" src="./edit-student.html"
+                                        <iframe id="edit_frame" class="embed-responsive-item" src="./edit-subject.html"
                                             allowfullscreen></iframe>
                                     </div>
 
