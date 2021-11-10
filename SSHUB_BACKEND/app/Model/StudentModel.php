@@ -2,11 +2,17 @@
 
 namespace App\Model;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class StudentModel extends Model
+class StudentModel extends Authenticatable
 {
+    use  Notifiable, HasApiTokens;
+
     protected $table = 'student';
     protected $primaryKey = 'id';
     public $timestamps = false;
@@ -16,4 +22,6 @@ class StudentModel extends Model
     {
         return $this->hasOne(ClassModel::class, 'id', 'class');
     }
+
+    protected $hidden = ['password'];
 }

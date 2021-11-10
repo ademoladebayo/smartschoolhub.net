@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
 
 
-<head>
+<head id="common-library">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>SSHUB | Class Students</title>
@@ -32,11 +32,18 @@
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <!-- Data Table CSS -->
     <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
+    <!-- Select 2 CSS -->
+    <link rel="stylesheet" href="../css/select2.min.css">
+    <!-- Date Picker CSS -->
+    <link rel="stylesheet" href="../css/datepicker.min.css">
+    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="../css/frame_style.css"> -->
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('my-student')">
+<body onload="loadSideNav('my-student'); getAllStudentForTable(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -44,13 +51,13 @@
         <!-- Header Menu Area Start Here -->
         <div class="navbar navbar-expand-md header-menu-one bg-light">
             <div class="nav-bar-header-one">
-                <div class="header-logo">
-                    <a href="../index-2.html">
-                        <img src="../img/logo.png" alt="logo">
-                    </a>
-                </div>
+                <b style="margin-left: 5px; margin-top: 5px;" id="logo">
+                    <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                        <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                    </h1>
+                </b>
                 <div class="toggle-button sidebar-toggle">
-                    <button type="button" class="item-link">
+                    <button onclick="changeLogo()" type="button" class="item-link">
                         <span class="btn-icon-wrap">
                             <span></span>
                             <span></span>
@@ -83,25 +90,27 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="navbar-item dropdown header-admin">
-                        <a class="navbar-nav-link dropdown-toggle" href="../#" role="button" data-toggle="dropdown"
+                        <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="admin-title">
-                                <h5 class="item-title">Stevne Zone</h5>
-                                <span>Admin</span>
+                                <h5 id="user_name" class="item-title"></h5>
+                                <span id="user_type">TEACHER</span>
                             </div>
-                            <div class="admin-img">
+                            <div id="user_img" class="admin-img">
                                 <img src="../img/figure/admin.jpg" alt="Admin">
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">
-                                <h6 class="item-title">Steven Zone</h6>
+                                <h6 id="user_name1" class="item-title"></h6>
                             </div>
                             <div class="item-content">
                                 <ul class="settings-list">
-                                    <li><a href="../#"><i class="flaticon-user"></i>My Profile</a></li>
-                                    <li><a href="../#"><i class="flaticon-gear-loading"></i>Account Settings</a></li>
-                                    <li><a href="../login.html"><i class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a href="my-profile.html"><i class="flaticon-user"></i>My Profile</a></li>
+                                    <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
+                                            Settings</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i
+                                                class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -120,7 +129,11 @@
 
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
-                        <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
+                        <a href="dashboard.html"><b id="logo">
+                                <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                                    <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                                </h1>
+                            </b></a>
                     </div>
                 </div>
                 <div id="side_nav" class="sidebar-menu-content">
@@ -130,12 +143,12 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3>Students</h3>
+                    <h3 style="font-weight: bold; font-family: Rowdies;">STUDENTS</h3>
                     <ul>
                         <li>
-                            <a href="index.html">Home</a>
+                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
                         </li>
-                        <li>Class Student</li>
+                        <li style="font-weight: bold; font-family: Rowdies;">Students</li>
                     </ul>
                 </div>
 
@@ -144,13 +157,21 @@
                         <div class="card-body">
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h3>Class Student</h3>
+                                    <h3 style="font-weight: bold; font-family: Rowdies;">ALL STUDENT</h3>
                                 </div>
 
                             </div>
                             <div class="row gutters-8 ">
+                                <div style="margin-right: 10px; margin-top: 5px;"
+                                    class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                    <button type="button" style="box-shadow: 10px;" class="btn-lg btn-primary"
+                                        data-bs-toggle="modal" data-bs-target="#modalYT"><i class="fas fa-plus"></i>
+                                        <b>Add
+                                            Student</b></button>
+                                </div>
+
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input type="text" placeholder="Search by Student ID or Name" class="form-control">
+                                    <input oninput="searchStudent(this.value)" type="text" placeholder="Search by Student ID or Name" class="form-control">
                                 </div>
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
@@ -165,66 +186,241 @@
                                             <th>Student ID</th>
                                             <th>Student Fullname</th>
                                             <th>Gender</th>
+                                            <th>Profile Status</th>
                                             <th>Class</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="student_table">
                                         <tr>
 
                                             <td>1.</td>
-                                            <td>#0022</td>
-                                            <td>Mark Willy</td>
-                                            <td>Male</td>
-                                            <td>JSS 2</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
                                             <td>
 
-
-                                                <a onclick="" href="#" class="btn btn-primary"><i
-                                                        class="fas fa-eye"></i> View Profile</a>
-
-                                                <a onclick="" href="#" class="btn btn-warning"><i
-                                                        class="fas fa-eye"></i> Check Result</a>
-
-                                                <!-- <a onclick="" href="#" class="btn btn-danger"><i
-                                                        class="fas fa-trash-alt"></i> Delete</a> -->
-
-
+                                                <a onclick="" href="#" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
+                                                <a onclick="" href="#" class="btn btn-warning" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                                                <a onclick="" href="#" class="btn gradient-orange-peel"><i
+                                                        class="fas fa-ban"></i> Disable</a>
+                                                <a onclick="" href="#" class="btn btn-danger"><i
+                                                        class="fas fa-trash"></i>
+                                                    Delete</a>
 
                                             </td>
-
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>#0062</td>
-                                            <td>Samson Kelvin</td>
-                                            <td>Male</td>
-                                            <td>JSS 2</td>
-                                            <td>
-                                                <a onclick="" href="#" class="btn btn-primary"><i
-                                                        class="fas fa-eye"></i> View Profile</a>
-
-                                                <a onclick="" href="#" class="btn btn-warning"><i
-                                                        class="fas fa-eye"></i> Check Result</a>
-
                                         </tr>
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+                <div class="page-modal">
+                    <!-- CREATE MODAL -->
+                    <div class="modal fade" id="modalYT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                        aria-hidden="true">
+
+                        <div class="modal-dialog modal-lg">
+
+                            <!--Content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                        id="exampleModalLabel">CREATE NEW STUDENT</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <!--Body-->
+                                <div class="modal-body mb-0 p-0">
+
+                                    <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                        <iframe class="embed-responsive-item" src="./my-student/add-student.html"
+                                            allowfullscreen></iframe>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <!--/.Content-->
+
+                        </div>
+                    </div>
+
+                    <!-- VIEW MODAL -->
+                    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                        id="exampleModalLabel">Student Information</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="heading-layout1">
+                                                        <div class="item-title">
+                                                            <!-- <h3>Add New User</h3> -->
+                                                        </div>
+
+                                                    </div>
+                                                    <form class="new-added-form">
+                                                        <div class="row">
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>First Name</label>
+                                                                <input id="first_name" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Middle Name</label>
+                                                                <input id="middle_name" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Last Name</label>
+                                                                <input id="last_name" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Gender</label>
+                                                                <input id="gender" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Religion</label>
+                                                                <input id="religion" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Date Of Birth</label>
+                                                                <input id="dob" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                                <i class="far fa-calendar-alt"></i>
+                                                            </div>
+
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Joining Date</label>
+                                                                <input id="joining_date" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                                <i class="far fa-calendar-alt"></i>
+                                                            </div>
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Joining Session</label>
+                                                                <input id="joining_session" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+
+                                                            </div>
+                                                            <div class="col-lg-6 col-12 form-group">
+                                                                <label>Home Address</label>
+                                                                <textarea id="home_address"
+                                                                    class="textarea form-control" name="message"
+                                                                    id="form-message" cols="10" rows="4"
+                                                                    readonly></textarea>
+                                                            </div>
+                                                            <div class="col-lg-6  col-12 form-group">
+                                                                <label>State</label>
+                                                                <input id="state" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Class</label>
+                                                                <input id="student_class" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Guardian's Name</label>
+                                                                <input id="guardian_name" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Guardian's Phone</label>
+                                                                <input id="guardian_phone" type="text" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                                <label>Guardian's E-Mail</label>
+                                                                <input id="guardian_email" type="email" placeholder=""
+                                                                    class="form-control" readonly>
+                                                            </div>
+                                                            <div class="col-lg-6 col-12 form-group">
+                                                                <label>Guardian's Address</label>
+                                                                <textarea id="guardian_address"
+                                                                    class="textarea form-control" name="message"
+                                                                    id="form-message" cols="10" rows="4"
+                                                                    readonly></textarea>
+                                                            </div>
+
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EDIT MODAL -->
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                        aria-hidden="true">
+
+                        <div class="modal-dialog modal-lg">
+
+                            <!--Content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                        id="exampleModalLabel">EDIT STUDENT DETAILS</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+
+                                <!--Body-->
+                                <div class="modal-body mb-0 p-0">
+
+                                    <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                        <iframe id="edit_frame" class="embed-responsive-item" src="./my-student/edit-student.html"
+                                            allowfullscreen></iframe>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <!--/.Content-->
+
+                        </div>
+                    </div>
+
+
+                </div>
                 <footer class="footer-wrap-layout1">
                     <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
                         reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
                 </footer>
             </div>
-            <!-- Social Media End Here -->
-            <!-- Footer Area Start Here -->
-
-            <!-- Footer Area End Here -->
         </div>
-    </div>
-    <!-- Page Area End Here -->
+        <!-- Page Area End Here -->
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
@@ -255,15 +451,34 @@
     <script src="../js/main.js"></script>
     <script src="../js/myscript.js"></script>
     <script src="./js/teacher.js"></script>
+    <script src="../common-library.js"></script>
+    <!-- Select 2 Js -->
+    <script src="../js/select2.min.js"></script>
+    <!-- Date Picker Js -->
+    <script src="../js/datepicker.min.js"></script>
+    <!-- <script src="../js/iframeSizer.min.js"></script>
+    <script src="../js/frame_script.js"></script> -->
 
+    <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+    <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+
+
+
+    <style>
+        .table>:not(:last-child)>:last-child>* {
+            border-bottom-color: #e1e1e1;
+        }
+    </style>
+
+    <script>
+
+    </script>
 
 </body>
 
-<style>
-    .table>:not(:last-child)>:last-child>* {
-        border-bottom-color: #e1e1e1;
-    }
-</style>
+
 
 
 <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:04 GMT -->

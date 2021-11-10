@@ -31,6 +31,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('admin/signin', 'AdminController@signIn', function () {
 })->middleware(Cors::class);
 
+Route::get('test/all-class', 'AdminController@getAllClass', function () {
+})->middleware(Cors::class);
+
+
 Route::middleware('auth:sanctum')->group(function () {
     // ADMIN {CLASS}
     Route::post('admin/create-class', 'AdminController@createClass', function () {
@@ -129,92 +133,69 @@ Route::post('teacher/signin', 'TeacherController@signIn', function () {
 })->middleware(Cors::class);
 
 Route::middleware('auth:sanctum')->group(function () {
-    // TEACHER {CLASS}
-    Route::post('teacher/create-class', 'TeacherController@createClass', function () {
-    })->middleware(Cors::class);
-
-    Route::post('teacher/edit-class', 'TeacherController@editClass', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/delete-class/{class_id}', 'TeacherController@deleteClass', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/all-class', 'TeacherController@getAllClass', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/search-class/{class_name}', 'TeacherController@searchClass', function () {
-    })->middleware(Cors::class);
-
     // TEACHER {SUBJECT}
-    Route::post('teacher/create-subject', 'TeacherController@createSubject', function () {
+    Route::post('teacher/register-subject', 'TeacherController@registerSubject', function () {
     })->middleware(Cors::class);
 
-    Route::get('teacher/all-subject', 'TeacherController@getAllSubject', function () {
+    Route::post('teacher/registered-subject', 'TeacherController@getRegisteredSubject', function () {
     })->middleware(Cors::class);
 
-    Route::post('teacher/edit-subject', 'TeacherController@editSubject', function () {
+    Route::post('teacher/assigned-subject', 'TeacherController@getAssignedSubject', function () {
     })->middleware(Cors::class);
 
-    Route::get('teacher/delete-subject/{subject_id}', 'TeacherController@deleteSubject', function () {
+    // TEACHER {CBT}
+    Route::post('teacher/create-cbt', 'TeacherController@createCBT', function () {
     })->middleware(Cors::class);
 
-    Route::get('teacher/search-subject/{subject_name}', 'TeacherController@searchSubject', function () {
+    Route::post('teacher/edit-cbt', 'TeacherController@editCBT', function () {
     })->middleware(Cors::class);
 
-    // TEACHER {STUDENT}
-    Route::post('teacher/create-student', 'TeacherController@createStudent', function () {
+    Route::post('teacher/all-cbt', 'TeacherController@allCBT', function () {
     })->middleware(Cors::class);
 
-    Route::post('teacher/edit-student', 'TeacherController@editStudent', function () {
+    Route::get('teacher/delete-cbt/{cbt_id}', 'TeacherController@deleteCBT', function () {
     })->middleware(Cors::class);
 
-    Route::get('teacher/all-student', 'TeacherController@getAllStudent', function () {
+    Route::get('teacher/cbt-result/{cbt_id}', 'TeacherController@getCBTResult', function () {
     })->middleware(Cors::class);
 
-    Route::get('teacher/delete-student/{student_id}', 'TeacherController@deleteStudent', function () {
+    // TEACHER {RESULT-UPLOAD}
+    Route::post('teacher/student-registered', 'TeacherController@getStudentRegistered', function () {
     })->middleware(Cors::class);
 
-    Route::get('teacher/update-student-profilestatus/{id}', 'TeacherController@updateStudentProfileStatus', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/search-student/{search_data}', 'TeacherController@searchStudent', function () {
-    })->middleware(Cors::class);
-
-
-    // TEACHER {TEACHER}
-    Route::post('teacher/create-teacher', 'TeacherController@createTeacher', function () {
-    })->middleware(Cors::class);
-
-    Route::post('teacher/edit-teacher', 'TeacherController@editTeacher', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/all-teacher', 'TeacherController@getAllTeacher', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/delete-teacher/{teacher_id}', 'TeacherController@deleteTeacher', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/update-teacher-profilestatus/{id}', 'TeacherController@updateTeacherProfileStatus', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/search-teacher/{search_data}', 'TeacherController@searchTeacher', function () {
-    })->middleware(Cors::class);
-
-
-    // TEACHER {SESSION MANAGEMENT}
-    Route::post('teacher/create-session', 'TeacherController@createSession', function () {
-    })->middleware(Cors::class);
-
-    Route::post('teacher/edit-session', 'TeacherController@editSession', function () {
-    })->middleware(Cors::class);
-
-    Route::get('teacher/all-session', 'TeacherController@getAllSession', function () {
+    Route::post('teacher/upload-result', 'TeacherController@uploadResult', function () {
     })->middleware(Cors::class);
 });
 
-
 // =============================================================================
 //               END OF TEACHER ROUTE
+// =============================================================================
+
+
+// =============================================================================
+//               BEGINNING OF STUDENT ROUTE
+// =============================================================================
+// STUDENT {SIGNIN}
+Route::post('student/signin', 'StudentController@signIn', function () {
+})->middleware(Cors::class);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // STUDENT {SUBJECT}
+    Route::post('student/register-subject', 'StudentController@registerSubject', function () {
+    })->middleware(Cors::class);
+
+    Route::post('student/registered-subject', 'StudentController@getRegisteredSubject', function () {
+    })->middleware(Cors::class);
+
+    Route::get('student/taken-cbt/{cbt_id}/{student_id}', 'StudentController@checkIfStudenHasTakenCBT', function () {
+    })->middleware(Cors::class);
+
+    Route::post('student/submit-cbt', 'StudentController@submitCBT', function () {
+    })->middleware(Cors::class);
+});
+
+// =============================================================================
+//               END OF STUDENT ROUTE
 // =============================================================================
 
 

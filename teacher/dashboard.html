@@ -33,9 +33,9 @@
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
-<!-- getCurrentSession() -->
+<!--  -->
 
-<body onload="loadSideNav('dashboard'); loadDashBoardInformation(); ">
+<body onload="loadSideNav('dashboard'); getCurrentSession(); loadDashBoardInformation(); ">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -101,7 +101,7 @@
                                     <li><a href="my-profile.html"><i class="flaticon-user"></i>My Profile</a></li>
                                     <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
                                             Settings</a></li>
-                                    <li><a onclick="localStorage.removeItem('token')" href="index.html"><i
+                                    <li><a onclick="goTo('')" href="#"><i
                                                 class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
@@ -212,7 +212,7 @@
                         <div class="card dashboard-card-three pd-b-20">
                             <div class="card-body">
                                 <div class="heading-layout1">
-                                    <div  class="item-title">
+                                    <div class="item-title">
                                         <h3 style="font-weight: bold; font-family: Rowdies;">Students</h3>
                                     </div>
 

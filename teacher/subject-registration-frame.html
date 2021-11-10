@@ -16,8 +16,6 @@
     <!-- Flaticon CSS -->
     <link rel="stylesheet" href="../fonts/flaticon.css">
 
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"> -->
 
@@ -25,12 +23,16 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
+    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+
+
     <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
-<body id="page-top">
+<body id="page-top" onload="getAllSubjectForTable(); getTermAndSession()">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -44,14 +46,18 @@
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">First Semester Course Registration</h6>
+                        <h6 id="term_registration" class="m-0 font-weight-bold text-primary">Subject
+                            Registration</h6>
+                        <p id="info" class="m-0 font-weight-bold " style="color: red;">Please note that all selected
+                            subject will
+                            be registered as Compulsory for all student in </p>
                         <div class="row mt-2">
-                            <div class="col-auto">
+                            <!-- <div class="col-auto">
                                 <a href="#" class="btn btn-light btn-circle btn-sm" style="cursor: default;">
                                     <i class="fa fa-hourglass"></i>
                                 </a>
                                 <span class="pt-2">Pending</span>
-                            </div>
+                            </div> -->
                             <div class="col-auto">
                                 <a href="#" class="btn btn-light btn-circle btn-sm" style="cursor: default;">
                                     <i class="fa fa-check"></i>
@@ -62,7 +68,7 @@
                                 <a href="#" class="btn btn-light btn-circle btn-sm" style="cursor: default;">
                                     <i class="fa fa-star"></i>
                                 </a>
-                                <span class="pt-2">Core</span>
+                                <span class="pt-2">Compulsory</span>
                             </div>
                             <div class="col-auto">
                                 <a href="#" class="btn btn-light btn-circle btn-sm" style="cursor: default;">
@@ -70,40 +76,42 @@
                                 </a>
                                 <span class="pt-2">Elective</span>
                             </div>
-                            <div class="col-auto">
+                            <!-- <div class="col-auto">
                                 <a href="#" class="btn btn-light btn-circle btn-sm" style="cursor: default;">
                                     <i class="fa fa-retweet"></i>
                                 </a>
                                 <span class="pt-2">Outstanding</span>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
                     <div class="card-body">
                         <div>
-                            <form id="first">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>_</th>
-                                                <th>Course Code</th>
-                                                <th>Course Title</th>
-                                                <th>Units</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><input type="checkbox" class="form-check-input ml-0" name="course0"
-                                                        value="CIT 410" id="c4977" checked="">
-                                                </td>
-                                                <td><small><i class="fa fa-star" aria-hidden="true"></i></small>
-                                                    CIT 410</td>
-                                                <td> <label class="form-check-label" for="c4977">Introduction To
-                                                        Software Engineering</label> </td>
-                                                <td>3</td>
-                                            </tr>
-                                            <tr>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>_</th>
+                                            <th>S/N</th>
+                                            <th>Subject Name</th>
+                                            <th>Teacher</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="subject_table">
+                                        <tr>
+                                            <td><input type="checkbox" class="form-check-input ml-0" name="course0"
+                                                    value="CIT 410" id="c4977" checked="">
+                                            </td>
+                                            <td>
+                                                1.</td>
+                                            <td> <label class="form-check-label" for="c4977"> Loading ...</label>
+                                            </td>
+                                            <td>
+                                                Loading ...</td>
+
+                                        </tr>
+                                        <!-- <tr>
                                                 <td><input type="checkbox" class="form-check-input ml-0" name="course1"
                                                         value="CIT 411" id="c4978" checked="">
                                                 </td>
@@ -281,26 +289,21 @@
                                                 <td> <label class="form-check-label" for="c10026">Global
                                                         Leadership Seminar </label> </td>
                                                 <td>1</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="text-right">Total units registered: 0</div>
+                                            </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div  id="number_registered" class="text-right">Total registered: </div>
 
-                                <input name="sem" value="0" hidden="">
-                                <input name="ses" value="2020/2021" hidden="">
-                                <input name="matric" value="SSE/016/17037" hidden="">
-                                <input name="prog" value="CIT" hidden="">
-                                <input name="level" value="400" hidden="">
-                                <input name="spill" value="1" hidden="">
-                                <button class="btn btn-primary" type="submit" id="firstSubmit">
-                                    <span class="" role="status" aria-hidden="true" id="firstSpinner"></span>
-                                    Register</button>
 
-                                <button class="btn btn-outline-primary" type="button"
-                                    onclick="popUpWindow('./printcoursereg.php?sem=0','BowenSSHub','700','600');">Print</button>
+                            <button onclick="registerSubject()" class="btn btn-primary" id="register_subject">
+                                <span class="" role="status" aria-hidden="true" id="firstSpinner"></span>
+                                Register</button>
 
-                            </form>
+                            <button class="btn btn-outline-primary" type="button"
+                                onclick="popUpWindow('./printcoursereg.php?sem=0','BowenSSHub','700','600');">Print</button>
+
+
                         </div>
                     </div>
                 </div>
@@ -340,9 +343,12 @@
         integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
         crossorigin="anonymous"></script>
 
-    <script>
 
-    </script>
+    <script src="./js/teacher.js"></script>
+    <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+    <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
 
 
 </body>

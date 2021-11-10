@@ -1,5 +1,10 @@
 // DEVELOPMENT IP
 var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.ng";
+
+// REMOTE ACCESS
+// var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
+// var domain = "http://192.168.42.168/smartschoolhub.ng";
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
@@ -173,8 +178,8 @@ function getAllTeacherForClass() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -211,8 +216,8 @@ function getAllTeacherForDropDown() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -240,8 +245,8 @@ function getAllTeacherForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -639,8 +644,8 @@ function updateTeacherProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -671,8 +676,8 @@ function deleteTeacher(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -702,8 +707,8 @@ function searchTeacher(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -918,8 +923,8 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+          //  window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
     .then((data) => {
@@ -1341,8 +1346,8 @@ function updateStudentProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -1373,8 +1378,8 @@ function deleteStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -1404,8 +1409,8 @@ function searchStudent(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -1599,8 +1604,8 @@ function getAllClassForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -1737,8 +1742,8 @@ function getAllClassForDropDown() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+          //  window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -1874,8 +1879,8 @@ function deleteClass(class_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -1905,8 +1910,8 @@ function searchClass(class_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -2094,8 +2099,8 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -2319,8 +2324,8 @@ function deleteSubject(subject_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -2350,8 +2355,8 @@ function searchSubject(subject_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 
@@ -2546,8 +2551,8 @@ function getAllSessionForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
-      }
+           window.parent.location.assign(domain +"/admin/");
+          }
       return res.json();
     })
 

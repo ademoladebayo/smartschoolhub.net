@@ -2,14 +2,14 @@
 <html class="no-js" lang="">
 
 
-<head>
+<head id="common-library">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>SSHUB | CBT</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href=".../img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.png">
     <!-- Normalize CSS -->
     <link rel="stylesheet" href="../css/normalize.css">
     <!-- Main CSS -->
@@ -32,7 +32,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('cbt')"> 
+<body onload="loadSideNav('cbt'); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -40,13 +40,13 @@
         <!-- Header Menu Area Start Here -->
         <div class="navbar navbar-expand-md header-menu-one bg-light">
             <div class="nav-bar-header-one">
-                <div class="header-logo">
-                    <a href="../index-2.html">
-                        <img src="../img/logo.png" alt="logo">
-                    </a>
-                </div>
+                <b style="margin-left: 5px; margin-top: 5px;" id="logo">
+                    <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                        <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                    </h1>
+                </b>
                 <div class="toggle-button sidebar-toggle">
-                    <button type="button" class="item-link">
+                    <button onclick="changeLogo()" type="button" class="item-link">
                         <span class="btn-icon-wrap">
                             <span></span>
                             <span></span>
@@ -79,25 +79,28 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="navbar-item dropdown header-admin">
-                        <a class="navbar-nav-link dropdown-toggle" href="../#" role="button" data-toggle="dropdown"
+                        <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="admin-title">
-                                <h5 class="item-title">Stevne Zone</h5>
-                                <span>Admin</span>
+                                <h5 id="user_name" class="item-title"></h5>
+                                <span id="user_type">TEACHER</span>
                             </div>
-                            <div class="admin-img">
+                            <div id="user_img" class="admin-img">
                                 <img src="../img/figure/admin.jpg" alt="Admin">
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">
-                                <h6 class="item-title">Steven Zone</h6>
+                                <h6 id="user_name1" class="item-title"></h6>
                             </div>
                             <div class="item-content">
                                 <ul class="settings-list">
-                                    <li><a href="../#"><i class="flaticon-user"></i>My Profile</a></li>
-                                    <li><a href="../#"><i class="flaticon-gear-loading"></i>Account Settings</a></li>
-                                    <li><a href="../login.html"><i class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a href="dashboard.html?#my-profile"><i class="flaticon-user"></i>My Profile</a>
+                                    </li>
+                                    <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
+                                            Settings</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i
+                                                class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -112,9 +115,15 @@
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
             <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+
+
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
-                        <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
+                        <a href="dashboard.html"><b id="logo">
+                                <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                                    <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                                </h1>
+                            </b></a>
                     </div>
                 </div>
                 <div id="side_nav" class="sidebar-menu-content">
@@ -123,21 +132,29 @@
             </div>
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
-                <!-- style="--aspect-ratio: 16/9;" -->
-                <div class="frame-div" >
-                    <iframe id="iframe" src="../exam.html" title="description" style="border: none; margin-top: 15px;" title="Iframe Example"
-                        scrolling="no"></iframe>
+                <div class="breadcrumbs-area">
+                    <h3 style="font-weight: bold; font-family: Rowdies;">COMPUTER BASED TEST</h3>
+                    <ul>
+                        <li>
+                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
+                        </li>
+                        <li style="font-weight: bold; font-family: Rowdies;">My CBT</li>
+                    </ul>
                 </div>
 
-                <!-- Footer Area Start Here -->
+                <div class="frame-div">
+                    <iframe id="iframe" src="./cbt/cbt-subjects.html" title="description"
+                        style="border: none; margin-top: 5px;" title="Iframe Example" scrolling="no"></iframe>
+                </div>
                 <footer class="footer-wrap-layout1">
                     <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
                         reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
                 </footer>
-                <!-- Footer Area End Here -->
             </div>
+            <!-- Social Media End Here -->
+            <!-- Footer Area Start Here -->
 
-
+            <!-- Footer Area End Here -->
         </div>
     </div>
     <!-- Page Area End Here -->
@@ -164,10 +181,13 @@
     <script src="../js/Chart.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
-    <script src="./js/student.js"></script>
-    <!-- <script src="./js/iframeSizer.contentWindow.min.js"></script> -->
+    <script src="./js/teacher.js"></script>
+
+    <script src="../common-library.js"></script>
     <script src="../js/iframeSizer.min.js"></script>
     <script src="../js/frame_script.js"></script>
+
+
 
 </body>
 

@@ -101,4 +101,9 @@ class StudentRepository
         $female =  DB::select('select count(class) as female from student where class =' . $class_id . ' and gender = "FEMALE"')[0]->female;
         return [$class_no, $male, $female];
     }
+
+    public function getPassword($id)
+    {
+        return DB::select("select password from student where student_id ='" . $id . "'")[0]->password;
+    }
 }

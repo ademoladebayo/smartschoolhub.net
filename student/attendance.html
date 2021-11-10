@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
 
 
-<head>
+<head id="common-library">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>SSHUB | Attendance</title>
@@ -32,7 +32,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('attendance')">
+<body onload="loadSideNav('attendance'); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -40,13 +40,13 @@
         <!-- Header Menu Area Start Here -->
         <div class="navbar navbar-expand-md header-menu-one bg-light">
             <div class="nav-bar-header-one">
-                <div class="header-logo">
-                    <a href="../index-2.html">
-                        <img src="../img/logo.png" alt="logo">
-                    </a>
-                </div>
+                <b style="margin-left: 5px; margin-top: 5px;" id="logo">
+                    <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                        <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                    </h1>
+                </b>
                 <div class="toggle-button sidebar-toggle">
-                    <button type="button" class="item-link">
+                    <button onclick="changeLogo()" type="button" class="item-link">
                         <span class="btn-icon-wrap">
                             <span></span>
                             <span></span>
@@ -79,25 +79,28 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="navbar-item dropdown header-admin">
-                        <a class="navbar-nav-link dropdown-toggle" href="../#" role="button" data-toggle="dropdown"
+                        <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="admin-title">
-                                <h5 class="item-title">Stevne Zone</h5>
-                                <span>Admin</span>
+                                <h5 id="user_name" class="item-title"></h5>
+                                <span id="user_type">STUDENT</span>
                             </div>
-                            <div class="admin-img">
+                            <div id="user_img" class="admin-img">
                                 <img src="../img/figure/admin.jpg" alt="Admin">
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">
-                                <h6 class="item-title">Steven Zone</h6>
+                                <h6 id="user_name1" class="item-title"></h6>
                             </div>
                             <div class="item-content">
                                 <ul class="settings-list">
-                                    <li><a href="../#"><i class="flaticon-user"></i>My Profile</a></li>
-                                    <li><a href="../#"><i class="flaticon-gear-loading"></i>Account Settings</a></li>
-                                    <li><a href="../login.html"><i class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a href="dashboard.html?#my-profile"><i class="flaticon-user"></i>My Profile</a>
+                                    </li>
+                                    <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
+                                            Settings</a></li>
+                                    <li><a onclick="localStorage.removeItem('token')" href="index.html"><i
+                                                class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -112,9 +115,15 @@
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
             <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+
+
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
-                        <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
+                        <a href="dashboard.html"><b id="logo">
+                                <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                                    <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                                </h1>
+                            </b></a>
                     </div>
                 </div>
                 <div id="side_nav" class="sidebar-menu-content">
@@ -124,113 +133,21 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3>Attendance</h3>
+                    <h3 style="font-weight: bold; font-family: Rowdies;">Attendance</h3>
                     <ul>
                         <li>
-                            <a href="index.html">Home</a>
+                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
                         </li>
-                        <li>Attendance</li>
+                        <li style="font-weight: bold; font-family: Rowdies;">My Attendance</li>
                     </ul>
                 </div>
 
-                <div class="">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="heading-layout1">
-                                <div class="item-title">
-                                    <h3>Attendence Sheet for 1st term 2020/21</h3>
-                                </div>
-
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table bs-table table-striped table-bordered text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-left">DATES </th>
-                                            <th>1</th>
-                                            <th>2</th>
-                                            <th>3</th>
-                                            <th>4</th>
-                                            <th>5</th>
-                                            <th>6</th>
-                                            <th>7</th>
-                                            <th>8</th>
-                                            <th>9</th>
-                                            <th>10</th>
-                                            <th>11</th>
-                                            <th>12</th>
-                                            <th>13</th>
-                                            <th>14</th>
-                                            <th>15</th>
-                                            <th>16</th>
-                                            <th>17</th>
-                                            <th>18</th>
-                                            <th>19</th>
-                                            <th>20</th>
-                                            <th>21</th>
-                                            <th>22</th>
-                                            <th>23</th>
-                                            <th>24</th>
-                                            <th>25</th>
-                                            <th>26</th>
-                                            <th>27</th>
-                                            <th>28</th>
-                                            <th>29</th>
-                                            <th>30</th>
-                                            <th>31</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-left">Michele Johnson</td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-times text-danger"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td>-</td>
-                                            <td><i class="fas fa-times text-danger"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-times text-danger"></i></td>
-                                            <td>-</td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-times text-danger"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td>-</td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-times text-danger"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td>-</td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td><i class="fas fa-check text-success"></i></td>
-                                            <td>-</td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                <div class="frame-div">
+                    <iframe id="iframe" src="./attendance-frame.html" title="description"
+                        style="border: none; margin-top: 5px;" title="Iframe Example" scrolling="no"></iframe>
                 </div>
-
-
-
-
-
-
                 <footer class="footer-wrap-layout1">
-                    <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All
-                        rights
+                    <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
                         reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
                 </footer>
             </div>
@@ -266,7 +183,7 @@
     <script src="../js/main.js"></script>
     <script src="./js/student.js"></script>
 
-    <script src="./js/student.js"></script>
+    <script src="../common-library.js"></script>
     <script src="../js/iframeSizer.min.js"></script>
     <script src="../js/frame_script.js"></script>
 
