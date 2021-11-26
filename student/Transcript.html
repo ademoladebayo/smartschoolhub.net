@@ -15,840 +15,225 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Scope+One&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&amp;display=swap">
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <!-- QR CDN -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
 
 </head>
 
-<body style="background: #ffffff;">
+<body style="background: #ffffff;" onload="getTranscript()">
 
 
     <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
-    <section
-        style="border-top: 5px solid #ffffff;border-right: 1px solid #ffffff;border-bottom: 5px solid #ffffff;border-left: 1px solid #ffffff;padding-top: 20px;padding-bottom: 20px;">
+    <section>
+        <div style="float: right;" class="header-inline item-header">
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 col-lg-3">
-
-                </div>
-                <div class="col-md-4 col-lg-6">
-                    <div class="text-center" style="margin-top: 10px;margin-bottom: 10px;"><img
-                            src="../assets/img/sample_logo.png" width="320" height="250"></div>
-
-                </div>
-                <div class="col-md-4 col-lg-3">
-
-                </div>
-            </div>
         </div>
 
+        <div style="border: 2px solid black;margin: 0%;" class="result-page">
+            <!-- SCHOOL LOGO-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3">
 
-
-        <div class="container">
-
-            <div class="row">
-                <div class="col-md-4">
-
-                </div>
-                <div class="col-md-4">
-                    <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 50px;">
-                        <h5 style="font-weight: bold;font-family: Rowdies, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
                     </div>
-                </div>
+                    <div class="col-md-4 col-lg-6">
+                        <div class="text-center" style="margin-top: 10px;margin-bottom: 10px;"><img
+                                src="../assets/img/sample_logo.png" width="320" height="250"></div>
 
-                <div class="w-100" style="margin-bottom: 30px;"></div>
-                <div class="col-md-4">
-                    <div style="margin-left: 50px;margin-top: 30px;">
-                        <p style="font-size: 14px;font-weight: bold;">STUDENT NAME: </p>
-                        <p style="font-size: 14px;font-weight: bold;">STUDENT NUMBER: </p>
-                        <p style="font-size: 14px;font-weight: bold;">SCHOOL SECTOR: </p>
-                        <p style="font-size: 14px;font-weight: bold;">CLASS: </p>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div style="margin-top: 30px;">
-                        <p style="font-size: 14px;"><b>ADEBAYO </b>ADEMOLA AYOBAMI</p>
-                        <p style="font-size: 14px;font-family: Quicksand, sans-serif;">2021/2022-001 </p>
-                        <p style="font-size: 14px;font-family: Quicksand, sans-serif;">PRE/PRIMARY/JUNIOR
-                            SECONDARY/SENIOR SECONDARY</p>
-                        <p style="font-size: 14px;font-family: Quicksand, sans-serif;">SS1
-                        </p>
+                    <div class="col-md-4 col-lg-3">
+
                     </div>
-                </div>
-                <div class="col-md-4"><br>
-                    <img src="../assets/img/sample_image.png" width="150px">
                 </div>
             </div>
-        </div>
 
 
+            <!-- RESULT HEADER -->
+            <div class="container">
 
+                <div class="row">
+                    <div class="col-md-4">
 
-
-        <hr style="color: #0099da;">
-        <div class="container" style="margin-bottom: 30px;">
-            <div class="row">
-                <div class="col-md-4">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">STUDENT NO: <strong>2021/2022-001</strong></h6>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">SESSION: <strong>2021/2022</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">CLASS: <strong>SS1</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">TERM: <strong>First Term</strong></h6>
-                    </div>
-                </div>
-
-                <div class="col-md-12 col-lg-12 col-xl-12">
-                    <div style="margin-top: 30px;">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th style="font-size: 14px;">S/No</th>
-                                                <th style="font-size: 14px;">Subject</th>
-                                                <th style="font-size: 14px;">1<sup>st</sup> CA</th>
-                                                <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
-                                                <th style="font-size: 14px;">Examination</th>
-                                                <th style="font-size: 14px;">Mark Obtained</th>
-                                                <th style="font-size: 14px;">Grade</th>
-                                                <th style="font-size: 14px;">Remark</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    1</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    ENGLISH</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    2</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    MATHEMATICS</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    3</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    CHEMISTRY</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    4</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    PHYSICS</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    5</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    BIOLOGY</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th style="font-size: 13px;font-style: italic;">POSITION</th>
-                                                <th style="font-size: 13px;font-style: italic;">PERCENTAGE</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody style="font-size: 13px;">
-                                            <tr style="font-size: 13px;">
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    1<sup>st</sup></td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    98%</td>
-
-                                            <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Class Teacher Comment:
-                                                    </span>
-                                                    Good Standing</td>
-                                            </tr>
-
-
-                                            <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Principal's Comment
-                                                    </span>
-                                                    <font color="green">A very good result.</font>
-                                                </td>
-                                            </tr>
-
-                                            <!-- <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Class of Degree:
-                                                    </span>Second Class Lower</td>
-                                            </tr> -->
-
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
+                    <div class="col-md-4">
+                        <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 50px;">
+                            <h5 style="font-weight: bold;font-family: Rowdies, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <hr style="color: #0099da;">
-        <div class="container" style="margin-bottom: 30px;">
-            <div class="row">
-                <div class="col-md-4">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">STUDENT NO: <strong>2021/2022-001</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">SESSION: <strong>2021/2022</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">CLASS: <strong>SS1</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">TERM: <strong>Second Term</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-12 col-lg-12 col-xl-12">
-                    <div style="margin-top: 30px;">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th style="font-size: 14px;">S/No</th>
-                                                <th style="font-size: 14px;">Subject</th>
-                                                <th style="font-size: 14px;">1<sup>st</sup> CA</th>
-                                                <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
-                                                <th style="font-size: 14px;">Examination</th>
-                                                <th style="font-size: 14px;">Mark Obtained</th>
-                                                <th style="font-size: 14px;">Grade</th>
-                                                <th style="font-size: 14px;">Remark</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    1</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    ENGLISH</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    2</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    MATHEMATICS</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
 
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    3</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    CHEMISTRY</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
+                    <div class="w-100" style="margin-bottom: 30px;"></div>
 
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    4</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    PHYSICS</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
+                    <div class="col-md-4">
+                        <div id="verificationQR" style="margin-left: 50px;margin-top: 30px;">
 
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    5</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    BIOLOGY</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th style="font-size: 13px;font-style: italic;">POSITION</th>
-                                                <th style="font-size: 13px;font-style: italic;">PERCENTAGE</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody style="font-size: 13px;">
-                                            <tr style="font-size: 13px;">
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    1<sup>st</sup></td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    98%</td>
-
-                                            <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Class Teacher Comment:
-                                                    </span>
-                                                    Good Standing</td>
-                                            </tr>
-
-
-                                            <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Principal's Comment
-                                                    </span>
-                                                    <font color="green">A very good result.</font>
-                                                </td>
-                                            </tr>
-
-                                            <!-- <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Class of Degree:
-                                                    </span>Second Class Lower</td>
-                                            </tr> -->
-
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <hr style="color: #0099da;">
-        <div class="container" style="margin-bottom: 30px;">
-            <div class="row">
-                <div class="col-md-4">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">STUDENT NO: <strong>2021/2022-001</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">SESSION: <strong>2021/2022</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">CLASS: <strong>SS1</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                        <h6 style="font-size: 15px;">TERM: <strong>Third Term</strong></h6>
-                    </div>
-                </div>
-                <div class="col-md-12 col-lg-12 col-xl-12">
-                    <div style="margin-top: 30px;">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th style="font-size: 14px;">S/No</th>
-                                                <th style="font-size: 14px;">Subject</th>
-                                                <th style="font-size: 14px;">1<sup>st</sup> CA</th>
-                                                <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
-                                                <th style="font-size: 14px;">Examination</th>
-                                                <th style="font-size: 14px;">Mark Obtained</th>
-                                                <th style="font-size: 14px;">Grade</th>
-                                                <th style="font-size: 14px;">Remark</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    1</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    ENGLISH</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    2</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    MATHEMATICS</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
 
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    3</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    CHEMISTRY</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    4</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    PHYSICS</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    5</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    BIOLOGY</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    13</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    12</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    58</td>
-
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    83</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    A</td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-                                                    EXCELLENT</td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th style="font-size: 13px;font-style: italic;">POSITION</th>
-                                                <th style="font-size: 13px;font-style: italic;">PERCENTAGE</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody style="font-size: 13px;">
-                                            <tr style="font-size: 13px;">
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    1<sup>st</sup></td>
-                                                <td
-                                                    style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                                    98%</td>
-
-                                            <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Class Teacher Comment:
-                                                    </span>
-                                                    Good Standing</td>
-                                            </tr>
-
-
-                                            <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Principal's Comment
-                                                    </span>
-                                                    <font color="green">A very good result.</font>
-                                                </td>
-                                            </tr>
-
-                                            <!-- <tr style="font-size: 13px;">
-                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                    colspan="6"><span style="font-weight: bold;">Class of Degree:
-                                                    </span>Second Class Lower</td>
-                                            </tr> -->
-
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
+                    <div class="col-md-4">
+                        <div style="margin-top: 30px;">
+                            <p style="font-size: 14px;"><b>ADEBAYO </b>ADEMOLA AYOBAMI</p>
+                            <p style="font-size: 14px;font-family: Quicksand, sans-serif;">2021-STD-001</p>
+                            <p style="font-size: 14px;font-family: Quicksand, sans-serif;">SECONDARY</p>
+                            <p style="font-size: 14px;font-family: Rowdies;"><b>Community Secondary School , Imode Kwara
+                                    State.</b></p>
                         </div>
                     </div>
+                    <div class="col-md-4"><br>
+                        <img src="../assets/img/sample_image.png" width="150px">
+                    </div>
                 </div>
             </div>
-        </div>
-        <hr style="color: #0099da;">
 
-        </tbody>
 
-        </table>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        </div>
-        <hr style="color: #0099da;">
+            <div class="result-div">
+
+
+                <hr style="color: black; border: 1px solid black">
+                <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+                <hr style="color: black; border: 1px solid black">
 
 
 
 
 
+            </div>
+
+
+
+            <!-- RATING & GRADING SYSTEM -->
+            <div class="container">
+                <p><b>RATING & GRADING SYSTEM</b></p>
+                <div class="row">
+
+                    <div class="col-md-6">
+
+
+                        <table style="justify-self: center;" class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="font-size: 14px;">Mark Scored</th>
+                                    <th style="font-size: 14px;">Letter Grade</th>
+                                    <th style="font-size: 14px;">Grade Point</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">70
+                                        -
+                                        100 %</td>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">A
+                                    </td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">60
+                                        -
+                                        69 %</td>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">B
+                                    </td>
+                                    <td>4</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">50
+                                        -
+                                        59 %</td>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">C
+                                    </td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">40
+                                        -
+                                        49 %</td>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">D
+                                    </td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">0
+                                        - 39
+                                        %</td>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">F
+                                    </td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
 
 
 
+                    </div>
 
-        <hr style="color: var(--bs-blue);">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-6">
+                    <div class="col-md-6">
 
 
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th style="font-size: 14px;">Mark Scored</th>
-                                <th style="font-size: 14px;">Letter Grade</th>
-                                <th style="font-size: 14px;">Grade Point</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">70 -
-                                    100 %</td>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">A</td>
-                                <td>5</td>
-                            </tr>
-                            <tr>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">60 -
-                                    69 %</td>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">B</td>
-                                <td>4</td>
-                            </tr>
-                            <tr>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">50 -
-                                    59 %</td>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">C</td>
-                                <td>3</td>
-                            </tr>
-                            <tr>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">40 -
-                                    49 %</td>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">D</td>
-                                <td>2</td>
-                            </tr>
-                            <tr>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">0 - 39
-                                    %</td>
-                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">F</td>
-                                <td>0</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <table style="justify-self: center;" class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="font-size: 14px;">Rate</th>
+                                    <th style="font-size: 14px;">Remark</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        5</td>
+
+                                    <td>Excellent degree of observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        4</td>
+
+                                    <td>Good level of observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        3</td>
+
+                                    <td>Fair in observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        2</td>
+
+                                    <td>Poor in observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        1</td>
+
+                                    <td>No observable trait</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
 
+
+
+                    </div>
 
 
                 </div>
+            </div>
 
+
+
+
+            <!-- RESULT FOOTER -->
+            <div class="container">
+                <div class="alert alert-primary" role="alert"
+                    style="padding-top: 5px;padding-bottom: 5px;background: #ade7ff;">
+                    <div class="text-center"><span
+                            style="font-size: 12px;color: #006089;font-family: Rowdies, serif;"><strong>ANY OFFICIAL
+                                TRANSCRIPT MUST BE SIGNED BY THE PRINCIPAL</strong></span></div>
+                </div>
 
             </div>
         </div>
@@ -856,7 +241,6 @@
 
 
 
-        <hr style="color: var(--bs-blue);">
 
 
 
@@ -867,24 +251,27 @@
 
 
 
-
-        <hr style="color: var(--bs-blue);">
-        <div class="container">
-            <div class="alert alert-primary" role="alert"
-                style="padding-top: 5px;padding-bottom: 5px;background: #ade7ff;">
-                <div class="text-center"><span
-                        style="font-size: 12px;color: #006089;font-family: Rowdies, serif;"><strong>ANY OFFICIAL
-                            TRANSCRIPT MUST BE SIGNED BY THE PRINCIPAL</strong></span></div>
-            </div>
-
-        </div>
         <div class="text-center" style="height: 5px;background: #ffffff;margin-bottom: 15px;">
             <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
         </div>
     </section>
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/iframeSizer.contentWindow.min.js"></script>
+    <script src="./js/qrcode.min.js"></script>
+    <script src="./js/student.js"></script>
+    <style>
+        table,
+        th,
+        td,
+        tr {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
 
+        .table {
+            border: black;
+        }
+    </style>
 
 
 </body>

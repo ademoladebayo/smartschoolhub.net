@@ -165,6 +165,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('teacher/upload-result', 'TeacherController@uploadResult', function () {
     })->middleware(Cors::class);
+
+     // TEACHER {ATTENDANCE}
+     Route::post('teacher/take-attendance', 'TeacherController@takeAttendance', function () {
+    })->middleware(Cors::class);
+
+    Route::post('teacher/get-attendance', 'TeacherController@getAttendance', function () {
+    })->middleware(Cors::class);
+
+   
 });
 
 // =============================================================================

@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
 
 
-<head>
+<head id="header">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>SSHUB | Mark Attendance</title>
@@ -41,11 +41,21 @@
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <!-- Data Table CSS -->
     <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
+    <!-- Date Picker CSS -->
+    <link rel="stylesheet" href="../css/datepicker.min.css">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
+    <!-- QR LIBRARY -->
+    <script type="text/javascript" src="./js/adapter.min.js"></script>
+
+    <script type="text/javascript" src="./js/vue.min.js"></script>
+
+    <script type="text/javascript" src="./js/instascan.min.js"></script>
+
+
 </head>
 
-<body onload="loadSideNav('attendance')">
+<body onload="loadSideNav('attendance'); takeAttendance(); getAttendance()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -139,6 +149,7 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
+                    <h3 id="date" style="font-weight: bold; font-family: Rowdies;">ATTENDANCE FOR </h3>
                     <ul>
                         <li>
                             <a style="font-weight: bold;font-family: Rowdies, serif;" href="dashboard.html">Home</a>
@@ -150,22 +161,46 @@
                 <div class="row">
                     <div class="card height-auto">
                         <div class="card-body">
+                            <div style="float: right;" class="header-inline item-header">
+                                <div class="header-elements">
+                                    <ul>
+                                        <!-- <li><a href="#"><i class="far fa-edit"></i></a></li> -->
+                                        <li><a onclick="print()" href="#"><i class="fas fa-print"></i></a></li>
+                                        <!-- <li><a href="#"><i class="fas fa-download"></i></a></li> -->
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h3 style="font-weight: bold;font-family: Rowdies, serif;">ATTENDANCE</h3>
+                                    <h3 id="attendance_class" style="font-weight: bold;font-family: Rowdies, serif;">
+                                        TAKE ATTENDANCE FOR </h3> <a href="#">
+
+
                                 </div>
 
                             </div>
-                            <div class="row gutters-8 ">
+                            <div class="row gutters-8 new-added-form">
+
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input type="text" placeholder="Search by Student ID or Name" class="form-control">
+                                    <video id="preview" width="100%"></video>
+                                </div>
+                                <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input oninput="verifyID(this.value)" id="student_id" type="text"
+                                        placeholder="Student ID" class="form-control">
+                                </div> -->
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input autocomplete="off" id="attendance_date" type="text" placeholder="dd/mm/yyyy"
+                                        value="" class="form-control air-datepicker" data-position='bottom right'>
+                                    <!-- <i class="far fa-calendar-alt"></i> -->
                                 </div>
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
-                                    <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
+                                    <button onclick="getAttendance()" type="submit"
+                                        class="fw-btn-fill btn-gradient-yellow">GET ATTENDANCE</button>
                                 </div>
                             </div>
-                            <div class="table-responsive">
+                            <div id="attendance_table" class="table-responsive">
+
                                 <table class="table display data-table text-nowrap">
                                     <thead>
                                         <tr>
@@ -173,56 +208,20 @@
                                             <th>Student Fullname</th>
                                             <th>Class</th>
                                             <th>Gender</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
                                             <th>Status</th>
-                                            <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="student_attendance">
                                         <tr>
                                             <td>1.</td>
-                                            <td>Mark Willy</td>
-                                            <td>JSS 2</td>
-                                            <td>Male</td>
-                                            <td><span class="badge bg-danger"><b>ABSENT</b></span></td>
-                                            <td>
-                                                <a onclick="" href="#" class="btn btn-success"><i
-                                                        class="fas fa-check-circle"></i> Present</a>
-
-                                                <a onclick="" href="#" class="btn btn-danger"><i
-                                                        class="fas fa-times-circle"></i>
-                                                    Absent</a>
-                                            </td>
-
-                                        <tr>
-                                            <td>2.</td>
-                                            <td>Jegede Funsho</td>
-                                            <td>JSS 2</td>
-                                            <td>Female</td>
-                                            <td><span class="badge bg-success"><b>PRESENT</b></span></td>
-                                            <td>
-                                                <a onclick="" href="#" class="btn btn-success"><i
-                                                        class="fas fa-check-circle"></i> Present</a>
-
-                                                <a onclick="" href="#" class="btn btn-danger"><i
-                                                        class="fas fa-times-circle"></i>
-                                                    Absent</a>
-                                            </td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>3.</td>
-                                            <td>Kemi Badmus</td>
-                                            <td>JSS 2</td>
-                                            <td>Female</td>
-                                            <td><span class="badge bg-warning"><b>NO RECORD</b></span></td>
-                                            <td>
-                                                <a onclick="" href="#" class="btn btn-success"><i
-                                                        class="fas fa-check-circle"></i> Present</a>
-
-                                                <a onclick="" href="#" class="btn btn-danger"><i
-                                                        class="fas fa-times-circle"></i>
-                                                    Absent</a>
-                                            </td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
+                                            <td>Loading ...</td>
 
                                         </tr>
                                     </tbody>
@@ -253,6 +252,8 @@
     <script src="../js/plugins.js"></script>
     <!-- Popper js -->
     <script src="../js/popper.min.js"></script>
+    <!-- Date Picker Js -->
+    <script src="../js/datepicker.min.js"></script>
     <!-- Bootstrap js -->
     <script src="../js/bootstrap.min.js"></script>
     <!-- Counterup Js -->
@@ -273,6 +274,7 @@
     <script src="../js/main.js"></script>
     <script src="../js/myscript.js"></script>
     <script src="./js/teacher.js"></script>
+    <script src="js/qrcode.min.js"></script>
 
 
 </body>

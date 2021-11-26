@@ -43,12 +43,18 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
+    <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
+    <span>My ID Card</span></a>
+    </li>
+
+    <li class="nav-item">
         <a   id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
     </li>
     <li class="nav-item">
         <a   id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
                 Results</span></a>
     </li>
+   
     <li class="nav-item">
         <a  id="payment" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
                 and History</span></a>
@@ -593,35 +599,35 @@ function submitCBT(timeup) {
       clearInterval(timeInterval);
       document.getElementById("submitCBT").innerHTML = `<i
         class="fa fa-spinner fa-spin"></i> Submitting ...`;
-         // SUBMIT CBT
-    fetch(ip + "/api/student/submit-cbt", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: "Bearer " + localStorage["token"],
-      },
-      body: JSON.stringify({
-        cbt_id: JSON.parse(localStorage["cbt_detail"]).id,
-        student_id: JSON.parse(localStorage["user_data"]).data.id,
-        student_answer: answer,
-      }),
-    })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          window.parent.location.assign(domain + "/student/");
-        }
-        return res.json();
+      // SUBMIT CBT
+      fetch(ip + "/api/student/submit-cbt", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+        body: JSON.stringify({
+          cbt_id: JSON.parse(localStorage["cbt_detail"]).id,
+          student_id: JSON.parse(localStorage["user_data"]).data.id,
+          student_answer: answer,
+        }),
       })
+        .then(function (res) {
+          console.log(res.status);
+          if (res.status == 401) {
+            window.parent.location.assign(domain + "/student/");
+          }
+          return res.json();
+        })
 
-      .then((data) => {
-        document.getElementById("submitCBT").innerHTML = `Submitted`;
-        //  CALL RESULT MODAL
-        $("#resultModal").modal("show");
-        document.getElementById("result").innerHTML = data.result;
-      })
-      .catch((err) => console.log(err));
+        .then((data) => {
+          document.getElementById("submitCBT").innerHTML = `Submitted`;
+          //  CALL RESULT MODAL
+          $("#resultModal").modal("show");
+          document.getElementById("result").innerHTML = data.result;
+        })
+        .catch((err) => console.log(err));
     }
   }
 }
@@ -1012,6 +1018,73 @@ function getRegisteredSubjectForTableCBT() {
         document.getElementById("number_registered").innerHTML + (c - 1);
     })
     .catch((err) => console.log(err));
+}
+
+// RESULT
+function getTranscript() {
+  // sessions = getSessions();
+  sessions = ["2021/20", "2012/27", "21/20"];
+  terms = ["FIRST TERM", "SECOND TERM", "THIRD TERM"];
+  var qrcode = new QRCode("verificationQR", {
+    text: "STUDENT NUMBER",
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+
+  // LOOP THROUGH EACH SESSION AND TERM
+  for (i in sessions) {
+    for (j in terms) {
+      console.log(sessions[i] + "-" + terms[j]);
+    }
+  }
+}
+
+function getSessions() {
+  return 0;
+}
+
+// ID
+function getIDCard() {
+  var qrcode = new QRCode("IDQR", {
+    text: "2~12~LANRE",
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+}
+
+// PRINT
+function print() {
+  var divContents = document.getElementById("iframe").innerHTML;
+  var head = document.getElementById("head").innerHTML;
+  console.log(divContents);
+  var a = window.open("", "", "height=1000, width=100");
+  a.document.write("<html>");
+  a.document.write(head);
+  a.document.write("<body>");
+  a.document
+    .write(`<iframe id="iframe" src="./transcript.html" title="description" style="border:none;"
+  title="Iframe Example" scrolling="no"></iframe>`);
+  a.document.write(`
+  </body>
+  
+  <script src="../js/iframeSizer.min.js"></script>
+  <script src="../js/frame_script.js"></script>
+  
+  </html>`);
+  a.print();
+  a.document.close();
+
+  // originalPage = document.body.innerHTML;
+  // document.body.innerHTML =
+  //   "<html><head><title></title></head><body>" + printData + "</body>";
+  /// window.print();
+  // document.body.innerHTML = originalData;
 }
 
 // TOAST

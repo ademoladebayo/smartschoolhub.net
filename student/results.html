@@ -2,7 +2,7 @@
 <html class="no-js" lang="">
 
 
-<head>
+<head id="head">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>SSHUB | Results</title>
@@ -125,9 +125,19 @@
             </div>
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
+
                 <div class="frame-div">
-                    <iframe id="iframe" src="./transcript.html" title="description" style="border:none;" title="Iframe Example"
-                        scrolling="no"></iframe>
+                    <div style="float: right;" class="header-inline item-header">
+                        <div class="header-elements">
+                            <ul>
+                                <!-- <li><a href="#"><i class="far fa-edit"></i></a></li> -->
+                                <li><a onclick="print()" href="#"><i class="fas fa-print"></i></a></li>
+                                <!-- <li><a href="#"><i class="fas fa-download"></i></a></li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <iframe id="iframe" src="./transcript.html" title="description" style="border:none;"
+                        title="Iframe Example" scrolling="no"></iframe>
                 </div>
                 <footer class="footer-wrap-layout1">
                     <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights

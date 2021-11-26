@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\TeacherModel;
-use App\Repository\CBTRepository;
+use App\Repository\StudentAttendanceRepository;
 use App\Service\TeacherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -80,5 +80,19 @@ class TeacherController extends Controller
     {
         $TeacherService = new TeacherService();
         return $TeacherService->uploadResult($request);
+    }
+
+
+    // ATTENDANCE
+    public function takeAttendance(Request $request)
+    {
+        $StudentAttendanceRepository = new StudentAttendanceRepository();
+        return $StudentAttendanceRepository->takeAttendance($request);
+    }
+
+    public function getAttendance(Request $request)
+    {
+        $StudentAttendanceRepository = new StudentAttendanceRepository();
+        return $StudentAttendanceRepository->getAttendance($request);
     }
 }

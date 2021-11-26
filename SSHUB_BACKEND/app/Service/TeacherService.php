@@ -14,6 +14,7 @@ use App\Repository\StudentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class TeacherService
 {
@@ -184,7 +185,12 @@ class TeacherService
     // RESULT UPLOAD
     public function getStudentRegistered(Request $request)
     {
-        return SubjectRegistrationModel::where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
+        $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', 'grade', 'remark', 'total')->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
+        $avg =  SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
+        $min =  SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
+        $max =  SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
+
+        return response()->json(['result' => $result, 'avg' => $avg, 'min' => $min, 'max' => $max]);
     }
 
     public function uploadResult(Request $request)
@@ -195,11 +201,21 @@ class TeacherService
             $result->first_ca = $request->score;
         } else if ($request->result_type == "second_ca") {
             $result->second_ca = $request->score;
-        } else {
+        } else if ($request->result_type == "examination") {
             $result->examination = $request->score;
+        } else if ($request->result_type == "grade") {
+            $result->grade = $request->score;
+        } else if ($request->result_type == "remark") {
+            $result->remark = $request->score;
         }
 
+        $result->total =  $result->first_ca +  $result->second_ca +  $result->examination;
         $result->save();
         return response()->json(['success' => true, 'message' => 'Result updated']);
+    }
+
+    // ATTENDANCE
+    public function takeAttendance(Request $request)
+    {
     }
 }

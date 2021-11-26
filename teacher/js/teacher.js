@@ -1,3 +1,7 @@
+// SOUND VARIABLES
+var successSound = new Audio("../asset/sound/verified.mp3");
+var errorSound = new Audio("../asset/sound/error1.mp3");
+
 // DEVELOPMENT IP
 var ip = "http://127.0.0.1:8000";
 var domain = "http://localhost/smartschoolhub.ng";
@@ -2214,12 +2218,13 @@ function showResultUpload(subject_name, subject_id, class_name, class_id) {
   localStorage.setItem("result_upload_class_id", class_id);
 }
 
-function getAllstudentForSubjectResultUpload() {
-  document.getElementById("result_subject_class").innerHTML +=
-    localStorage["result_upload_subject_name"] +
-    " " +
-    localStorage["result_upload_subject_class"];
-
+function getAllstudentForSubjectResultUpload(refresh) {
+  if (!refresh) {
+    document.getElementById("result_subject_class").innerHTML +=
+      localStorage["result_upload_subject_name"] +
+      " " +
+      localStorage["result_upload_subject_class"];
+  }
   fetch(ip + "/api/teacher/student-registered", {
     method: "POST",
     headers: {
@@ -2243,32 +2248,96 @@ function getAllstudentForSubjectResultUpload() {
     .then((data) => {
       console.log(data);
       document.getElementById("student_registered").innerHTML = ``;
+      // RESULT SUMMARY
+      document.getElementById("ave").innerHTML = parseFloat(data.avg).toFixed(
+        0
+      );
+      document.getElementById("min").innerHTML = data.min;
+      document.getElementById("max").innerHTML = data.max;
       var c = 1;
-      if (data.length > 0) {
-        for (i in data) {
+      if (data.result.length > 0) {
+        for (i in data.result) {
           document.getElementById("student_registered").innerHTML += `
           <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
 
           <td>${c}.</td>
           <td>${
-            data[i].student.first_name + " " + data[i].student.last_name
+            data.result[i].student.first_name +
+            " " +
+            data.result[i].student.last_name
           }</td>
           
           <td class="allownumeric" oninput="uploadResult('${
-            data[i].id
+            data.result[i].id
           }','first_ca',this.innerHTML)" contenteditable="true" >${
-            data[i].first_ca
+            data.result[i].first_ca
           }</td>
           <td oninput="uploadResult('${
-            data[i].id
+            data.result[i].id
           }','second_ca',this.innerHTML)" contenteditable="true">${
-            data[i].second_ca
+            data.result[i].second_ca
           }</td>
           <td oninput="uploadResult('${
-            data[i].id
+            data.result[i].id
           }','examination',this.innerHTML)" contenteditable="true">${
-            data[i].examination
+            data.result[i].examination
           }</td>
+          <td style="font-size:20px; font-style:bold;"><b>${
+            data.result[i].total
+          }</b></td>
+          <td> 
+            <div class="select">
+                <select onChange="uploadResult('${
+                  data.result[i].id
+                }','grade',this.value)" id="standard-select" id="grade" value="${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }" class="select2">
+                <option value="<b>${
+                  data.result[i].grade == `-` ? `-` : `${data.result[i].grade}`
+                }</b>">${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                </select>
+           
+               <span class="focus"></span>
+            <div>
+          </td>
+          <td> 
+          <div class="select">
+              <select onChange="uploadResult('${
+                data.result[i].id
+              }','remark',this.value)" id="standard-select" id="remark" value="<b>${
+            data.result[i].grade == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</b>" class="select2">
+              <option value="${
+                data.result[i].remark == `-` ? `-` : `${data.result[i].remark}`
+              }">${
+            data.result[i].remark == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</option>
+              <option value="EXCELLENT">EXCELLENT</option>
+              <option value="VERY GOOD">VERY GOOD</option>
+              <option value="GOOD">GOOD</option>
+              <option value="FAIR">FAIR</option>
+              <option value="POOR">POOR</option>
+              <option value="VERY POOR">VERY POOR</option>
+              </select>
+              <span class="focus"></span>
+            <div>
+          </td>
           
           
 
@@ -2285,11 +2354,21 @@ function getAllstudentForSubjectResultUpload() {
 }
 
 function uploadResult(id, result_type, score) {
-  document.getElementById("result_upload_style").innerHTML = `
-[contenteditable] {
+  if (result_type == "grade" || result_type == "remark") {
+    document.getElementById("result_upload_style_grade_remark").innerHTML = `
+    :root {
+      --select-border: #777;
+      --select-focus: #fc8c03;
+      --select-arrow: var(--select-border);
+  }`;
+  } else {
+    document.getElementById("result_upload_style").innerHTML = `
+    [contenteditable] {
 
-  outline-color: #fc8c03;
-}`;
+      outline-color: #fc8c03;
+    }`;
+  }
+
   fetch(ip + "/api/teacher/upload-result", {
     method: "POST",
     headers: {
@@ -2312,16 +2391,213 @@ function uploadResult(id, result_type, score) {
     })
     .then((data) => {
       if (data.success) {
-        document.getElementById("result_upload_style").innerHTML = `
-        [contenteditable] {
-        
-          outline-color: #105c05;
+        if (result_type == "grade" || result_type == "remark") {
+          document.getElementById(
+            "result_upload_style_grade_remark"
+          ).innerHTML = `
+          :root {
+            --select-border: #777;
+            --select-focus: #105c05;
+            --select-arrow: var(--select-border);
         }`;
+        } else {
+          document.getElementById("result_upload_style").innerHTML = `
+          [contenteditable] {
+          
+            outline-color: #105c05;
+          }`;
+          getAllstudentForSubjectResultUpload(true);
+        }
       }
     })
     .catch((err) => console.log(err));
 
   console.log(score);
+}
+
+// ATTENDANCE
+function takeAttendance() {
+  document.getElementById("date").innerHTML += Date("DD-MM-YYYY").toUpperCase();
+  document.getElementById("attendance_class").innerHTML += JSON.parse(
+    localStorage["user_data"]
+  ).data.assigned_class.class_name;
+
+  let scanner = new Instascan.Scanner({
+    video: document.getElementById("preview"),
+  });
+  Instascan.Camera.getCameras()
+    .then(function (cameras) {
+      if (cameras.length > 0) {
+        scanner.start(cameras[0]);
+      } else {
+        alert("No cameras found");
+      }
+    })
+    .catch(function (e) {
+      console.error(e);
+    });
+
+  scanner.addListener("scan", function (qr_data) {
+    // document.getElementById("student_id").value = qr_data; //id~class_id~first_name
+
+    // CHECK IF STUDENT CLASS IS SAME AS TEACHER CLASS
+    if (
+      qr_data.split("~")[1] !=
+      JSON.parse(localStorage["user_data"]).data.assigned_class.id
+    ) {
+      errorSound.play();
+      setTimeout(function () {
+        say(qr_data.split("~")[2] + " does not belong to your class!");
+      }, 1000);
+
+      return 0;
+    }
+
+    // PASS ATTENDANCE DETAILS TO API
+    fetch(ip + "/api/teacher/take-attendance", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        student_id: qr_data.split("~")[0],
+        class_id: qr_data.split("~")[1],
+        date: getDate().split("~")[1],
+        time: getDate().split("~")[0],
+        session: localStorage["current_session"],
+        term: localStorage["current_term"],
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          window.parent.location.assign(domain + "/teacher/");
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        if (data.success) {
+          getAttendance();
+          successSound.play();
+          setTimeout(function () {
+            say("Verified!");
+          }, 1000);
+          getAttendance();
+        } else {
+          errorSound.play();
+          setTimeout(function () {
+            say("Attendance as already been taken!");
+          }, 1000);
+          getAttendance();
+        }
+      })
+      .catch((err) => console.log(err));
+  });
+}
+
+function getAttendance() {
+  console.log(document.getElementById("attendance_date").value);
+  fetch(ip + "/api/teacher/get-attendance", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      date:
+        document.getElementById("attendance_date").value != ""
+          ? document.getElementById("attendance_date").value
+          : getDate().split("~")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/teacher/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("student_attendance").innerHTML = ``;
+      if (data.length != 0) {
+        for (i in data) {
+          document.getElementById("student_attendance").innerHTML += `
+              <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
+      
+                    <td>${c}.</td>
+                    <td>${
+                      data[i].student.first_name +
+                      " " +
+                      data[i].student.last_name
+                    }</td>
+                    <td>${data[i].class.class_name}</td>
+                    <td>${data[i].student.gender}</td>
+                    <td>${data[i].date}</td>
+                    <td>${data[i].time}</td>
+                    <td><span class="badge bg-success"><b>PRESENT</b></span></td>
+                    
+                  
+          
+                <tr>`;
+
+          c = c + 1;
+        }
+      } else {
+        document.getElementById(
+          "student_attendance"
+        ).innerHTML = `NO ATTENDANCE`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+
+
+// TEXT TO SPEECH
+function say(text) {
+  let speech = new SpeechSynthesisUtterance();
+  voices = speechSynthesis.getVoices();
+  speech.lang = "en-US";
+  speech.text = text;
+  // speech.voice = voices[1];
+  speech.volume = 1;
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
+}
+
+// GET TODAY'S DATE
+function getDate() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, "0");
+  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  var yyyy = today.getFullYear();
+  time = today.getHours() + ":" + today.getMinutes();
+  date = dd + "/" + mm + "/" + yyyy;
+
+  return time + "~" + date;
+}
+
+// PRINT
+function print() {
+  var divContents = document.getElementById("attendance_table").innerHTML;
+  var header = document.getElementById("header").innerHTML;
+  console.log(divContents);
+  var a = window.open("", "", "height=500, width=500");
+  a.document.write("<html>");
+  a.document.write(header);
+  a.document.write("<body > <h1>Div contents are <br>");
+  a.document.write(divContents);
+  a.document.write("</body></html>");
+  a.document.close();
+  a.print();
 }
 
 // TOAST
