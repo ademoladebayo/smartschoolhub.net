@@ -3,8 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-var ip = "http://127.0.0.1:8000";
-var domain = "http://localhost/smartschoolhub.ng";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.ng";
+
+// LIVE IP
+var ip = "https://demo-api.smartschoolhub.net";
+var domain = "https://demo.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -1045,7 +1049,7 @@ function getAllSubjectForTable() {
   registered_subject = getPreviousSubjectRegistration();
 
   console.log(registered_subject);
-
+  c = 1;
   fetch(ip + "/api/admin/all-subject", {
     method: "GET",
     headers: {
@@ -2556,8 +2560,6 @@ function getAttendance() {
     })
     .catch((err) => console.log(err));
 }
-
-
 
 // TEXT TO SPEECH
 function say(text) {

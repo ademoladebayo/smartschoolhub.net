@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Model\StudentModel;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
+use App\Model\StudentResultCommentModel;
+use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
 use App\Model\SubjectModel;
 use App\Model\TeacherModel;
@@ -52,6 +54,7 @@ class TeacherService
         return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null];
     }
 
+    // SUBJECT REGISTRATION
     public function registerSubject(Request $request)
     {
         // GET ID OF ALL STUDENT IN THE CLASS
@@ -79,6 +82,9 @@ class TeacherService
         Log::debug(count($request->subject_to_register));
 
         for ($i = 0; $i < count($students_id); $i++) {
+            $StudentResultCommentModel = new StudentResultCommentModel();
+            $StudentResultRatingModel = new StudentResultRatingModel();
+
 
             for ($j = 0; $j < count($request->subject_to_register); $j++) {
                 $SubjectRegistrationModel = new SubjectRegistrationModel();
@@ -90,7 +96,25 @@ class TeacherService
                 $SubjectRegistrationModel->term = $request->term;
                 $SubjectRegistrationModel->save();
             }
+
+            Log::alert(StudentResultCommentModel::where('student_id', $students_id[$i])->where('session', $request->session)->where('term', $request->term)->exists());
+            // CHECK IF IT HAS BEEN CREATED FOR CURRENT STUDENT
+            if (!StudentResultCommentModel::where('student_id', $students_id[$i])->where('session', $request->session)->where('term', $request->term)->exists()) {
+
+                // COMMENT
+                $StudentResultCommentModel->student_id = $students_id[$i];
+                $StudentResultCommentModel->session =  $request->session;
+                $StudentResultCommentModel->term = $request->term;
+                $StudentResultCommentModel->save();
+
+                // RATINGS 
+                $StudentResultRatingModel->student_id = $students_id[$i];
+                $StudentResultRatingModel->session =  $request->session;
+                $StudentResultRatingModel->term = $request->term;
+                $StudentResultRatingModel->save();
+            }
         }
+
 
 
 

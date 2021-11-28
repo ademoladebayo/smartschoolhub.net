@@ -1,10 +1,16 @@
 // DEVELOPMENT IP
-var ip = "http://127.0.0.1:8000";
-var domain = "http://localhost/smartschoolhub.ng";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.ng";
+
+// LIVE IP
+var ip = "https://demo-api.smartschoolhub.net";
+var domain = "https://demo.smartschoolhub.net";
 
 // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
+
+
 
 // CBT VARIABLE
 answer = [];
@@ -1063,7 +1069,7 @@ function print() {
   var divContents = document.getElementById("iframe").innerHTML;
   var head = document.getElementById("head").innerHTML;
   console.log(divContents);
-  var a = window.open("", "", "height=1000, width=100");
+  var a = window.open("", "", "height=1000, width=1000");
   a.document.write("<html>");
   a.document.write(head);
   a.document.write("<body>");
@@ -1085,6 +1091,22 @@ function print() {
   //   "<html><head><title></title></head><body>" + printData + "</body>";
   /// window.print();
   // document.body.innerHTML = originalData;
+}
+
+function print1(section) {
+  var divContents = document.getElementById(section).innerHTML;
+  var head = document.getElementById("common-library").innerHTML;
+  console.log(divContents);
+  var a = window.open("", "", "height=1000, width=1000");
+  a.document.write("<html>");
+  a.document.write(head);
+  a.document.write("<body>");
+  a.document.write(divContents);
+  a.document.write(`
+  </body>
+  </html>`);
+  a.print();
+  a.document.close();
 }
 
 // TOAST
