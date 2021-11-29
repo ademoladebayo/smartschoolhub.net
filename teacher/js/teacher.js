@@ -4,7 +4,7 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
 // var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.ng";
+// var domain = "http://localhost/smartschoolhub.net";
 
 // LIVE IP
 var ip = "https://demo-api.smartschoolhub.net";
