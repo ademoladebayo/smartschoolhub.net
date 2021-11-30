@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 // var domain = "http://localhost/smartschoolhub.net";
 
 // LIVE IP
-var ip = "https://demo-api.smartschoolhub.net";
-var domain = "https://demo.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/imode-backend";
+var domain = "https://imode.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
