@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
+
 class TeacherService
 {
 
@@ -233,7 +234,12 @@ class TeacherService
             $result->remark = $request->score;
         }
 
-        $result->total =  $result->first_ca +  $result->second_ca +  $result->examination;
+        $first_ca = $result->first_ca != "-" ? $result->first_ca : 0;
+        $second_ca = $result->second_ca != "-" ? $result->second_ca : 0;
+        $examination = $result->examination != "-" ? $result->examination : 0;
+        
+
+        $result->total =  $first_ca +  $second_ca +  $examination;
         $result->save();
         return response()->json(['success' => true, 'message' => 'Result updated']);
     }
