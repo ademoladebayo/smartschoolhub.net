@@ -1,10 +1,10 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/imode-backend";
-var domain = "https://imode.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/imode-backend";
+// var domain = "https://imode.smartschoolhub.net";
 
 // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -54,6 +54,8 @@ function signIn() {
         toastr.remove();
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
           setTimeout(function () {
             window.location.href = "dashboard.html";
           }, 1000);
@@ -927,7 +929,7 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-          //  window.parent.location.assign(domain +"/admin/");
+           window.parent.location.assign(domain +"/admin/");
           }
       return res.json();
     })

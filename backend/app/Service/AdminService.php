@@ -5,9 +5,11 @@ namespace App\Service;
 use App\Model\ClassModel;
 use App\Model\SubjectModel;
 use App\Model\StudentModel;
+use App\Model\AdminModel;
 use App\Model\TeacherModel;
 use App\Repository\ClassRepository;
 use App\Repository\SubjectRepository;
+use App\Repository\AdminRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SessionRepository;
@@ -16,6 +18,23 @@ use Illuminate\Support\Facades\Log;
 
 class AdminService
 {
+    // SIGNIN
+    public function signIn(Request $request)
+    {
+        $AdminRepository = new AdminRepository();
+        $admin = AdminModel::where('username', $request->id)->get()->first();
+        if ($admin == null) {
+            return  response(['success' => false, 'message' => "Invalid Admin!"]);
+        } else {
+
+            if ($AdminRepository->getPassword($request->id) == $request->password) {
+                $token = $admin->createToken('token')->plainTextToken;
+                return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, Admin', 'data' => $admin, 'dashboard_information' => ""]);
+            } else {
+                return  response(['success' => false, 'message' => "Invalid Password"]);
+            }
+        }
+    }
 
     // CLASS
     public function createClass(Request $request)

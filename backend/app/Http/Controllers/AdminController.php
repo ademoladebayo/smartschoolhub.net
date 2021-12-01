@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\AdminModel;
 use App\Repository\ClassRepository;
 use App\Service\AdminService;
 use App\Repository\SubjectRepository;
@@ -18,13 +19,8 @@ class AdminController extends Controller
     // SIGNIN
     public function signIn(Request $request)
     {
-        $user = TeacherModel::where('teacher_id', $request->id)->get()->first();
-        $token = $user->createToken('token')->plainTextToken;
-        $cookie = cookie('jwt', $token, 1);
-        return  response(['success' => true, 'token' => $token])->withCookie($cookie);
-
-        // $cookie = Cookie::forget('jwt');
-        // return  response(['success' => true])->withCookie($cookie);
+        $AdminService = new AdminService();
+        return $AdminService->signIn($request);
     }
 
 
