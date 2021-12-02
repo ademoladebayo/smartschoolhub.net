@@ -2728,7 +2728,7 @@ function successtoast(message, time) {
 function warningtoast(message, time) {
   toastr.warning(message, "", {
     positionClass: "toast-top-center",
-    timeOut: time,
+    timeOut: 60 * 60,
     closeButton: true,
     debug: false,
     newestOnTop: true,

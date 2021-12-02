@@ -1570,7 +1570,10 @@ function saveQuestion(number, question_text) {
 }
 
 function saveAnswer(text) {
-  answer[text.charAt(1)] = text.charAt(0);
+  answer_value = text.charAt(0);
+  answer_index = text.replace(text.charAt(0), "");
+  answer[answer_index] = answer_value;
+  console.log(answer);
 }
 
 function saveOptions(number) {
@@ -1632,10 +1635,10 @@ function saveCBT() {
         start_time: localStorage["start_time"],
         cbt_duration: localStorage["cbt_duration"],
         cbt_instruction: localStorage["cbt_instruction"],
-        cbt_question: question.toString(),
-        cbt_options: options.toString(),
-        cbt_answer: answer.toString(),
-        cbt_questions_number: questions_number.toString(),
+        cbt_question: question.toString().trim(),
+        cbt_options: options.toString().trim(),
+        cbt_answer: answer.toString().trim(),
+        cbt_questions_number: questions_number.toString().trim(),
         subject_id: localStorage["cbt_subject_id"],
         class_id: localStorage["cbt_subject_class_id"],
         session: localStorage["current_session"],
@@ -2053,10 +2056,10 @@ function updateCBT() {
         start_time: localStorage["start_time"],
         cbt_duration: localStorage["cbt_duration"],
         cbt_instruction: localStorage["cbt_instruction"],
-        cbt_question: question.toString(),
-        cbt_options: options.toString(),
-        cbt_answer: answer.toString(),
-        cbt_questions_number: questions_number.toString(),
+        cbt_question: question.toString().trim(),
+        cbt_options: options.toString().trim(),
+        cbt_answer: answer.toString().trim(),
+        cbt_questions_number: questions_number.toString().trim(),
         subject_id: localStorage["cbt_subject_id"],
         class_id: localStorage["cbt_subject_class_id"],
         session: localStorage["current_session"],
@@ -2626,7 +2629,7 @@ function successtoast(message, time) {
 function warningtoast(message, time) {
   toastr.warning(message, "", {
     positionClass: "toast-top-center",
-    timeOut: time,
+    timeOut: 60 * 60,
     closeButton: true,
     debug: false,
     newestOnTop: true,

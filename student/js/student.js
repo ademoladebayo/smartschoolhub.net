@@ -10,8 +10,6 @@ var domain = "https://imode.smartschoolhub.net";
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
 
-
-
 // CBT VARIABLE
 answer = [];
 
@@ -403,7 +401,7 @@ function startCBT(cbt) {
       } else {
         // LOAD CBT PAGE
         localStorage.setItem("cbt_detail", JSON.stringify(cbt));
-        window.parent.location.assign(domain + "/student/cbt-questions.html");
+        window.parent.location.assign(domain + "/student/frame-cbt-questions.html");
       }
     })
     .catch((err) => console.log(err));
@@ -565,7 +563,9 @@ function getCBTdetails() {
   }
 }
 function saveAnswer(text) {
-  answer[text.charAt(1)] = text.charAt(0);
+  answer_value = text.charAt(0);
+  answer_index = text.replace(text.charAt(0), "");
+  answer[answer_index] = answer_value;
   console.log(answer);
 }
 
@@ -629,6 +629,8 @@ function submitCBT(timeup) {
 
         .then((data) => {
           document.getElementById("submitCBT").innerHTML = `Submitted`;
+          // SCROLL TO CENTER
+          document.getElementById("cbt_view").scrollIntoView({block: "center"});
           //  CALL RESULT MODAL
           $("#resultModal").modal("show");
           document.getElementById("result").innerHTML = data.result;
@@ -1133,7 +1135,7 @@ function successtoast(message, time) {
 function warningtoast(message, time) {
   toastr.warning(message, "", {
     positionClass: "toast-top-center",
-    timeOut: time,
+    timeOut: 60 * 60,
     closeButton: true,
     debug: false,
     newestOnTop: true,

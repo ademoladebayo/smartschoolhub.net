@@ -14,4 +14,7 @@ class AdminModel extends Authenticatable
     protected $primaryKey = 'id';
     public $timestamps = false;
 
+
+
+    protected $hidden = ['password'];
 }

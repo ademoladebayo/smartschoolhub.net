@@ -22,6 +22,8 @@ let timeInterval = setInterval(() => {
     clearInterval(timeInterval);
     $("#endExamModalCenter").modal("show");
     setTimeout(function () {
+      // SCROLL TO CENTER
+      document.getElementById("cbt_view").scrollIntoView({ block: "center" });
       submitCBT(true);
     }, 1000);
   }
