@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/imode-backend";
-var domain = "https://imode.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/imode-backend";
+// var domain = "https://imode.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -1448,8 +1448,14 @@ function getCBTdetails() {
 
   // PRE INPUT QUESTIONS
   for (i = 0; i < localStorage["question_no"]; i++) {
-    question.push("Type question " + (i + 1) + " here   ");
-    options.push("Option A ~ Option B ~ Option C ~ Option D");
+    question.push(
+      "Type question " +
+        (i + 1) +
+        " here &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+    );
+    options.push(
+      "Option A &nbsp;&nbsp;&nbsp;&nbsp;~ Option B &nbsp;&nbsp;&nbsp;&nbsp;~ Option C &nbsp;&nbsp;&nbsp;&nbsp;~ Option D &nbsp;&nbsp;&nbsp;&nbsp;"
+    );
     questions_number.push(i);
     answer.push("");
   }
@@ -2156,10 +2162,44 @@ function getResultForCBT() {
               <td>${data[i].score}</td>
         </tr>
         `;
+          c = c + 1;
         }
       } else {
         document.getElementById("cbt_result").innerHTML = `No Result found.`;
       }
+    })
+    .catch((err) => console.log(err));
+}
+
+function useCBTResultFor() {
+  // PUSH TO API
+  fetch(
+    ip +
+      "/api/teacher/use-cbt-result/" +
+      localStorage["cbt_result_cbt_id"] +
+      "/" +
+      document.getElementById("use_result_for").value +
+      "/" +
+      localStorage["cbt_subject_id"],
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+    }
+  )
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/teacher/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      alert(data.message);
     })
     .catch((err) => console.log(err));
 }

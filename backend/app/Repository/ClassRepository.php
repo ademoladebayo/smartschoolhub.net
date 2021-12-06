@@ -13,8 +13,10 @@ class ClassRepository
     {
         $AdminService = new AdminService();
         $ClassModel->save();
+        
+        // UPDATE THE TEACHER ASSIGNED CLASS
         if ($ClassModel->class_teacher != "-") {
-            $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->class_id);
+            $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->id);
         }
         return response()->json(['success' => true, 'message' => 'Class was created successfully.']);
     }

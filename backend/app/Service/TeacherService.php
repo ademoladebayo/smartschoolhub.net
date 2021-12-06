@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Model\StudentModel;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
+use App\Model\SessionModel;
 use App\Model\StudentResultCommentModel;
 use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
@@ -206,6 +207,23 @@ class TeacherService
     {
         return CBTResultModel::where("cbt_id", $cbt_id)->with("student")->get();
     }
+
+    public function useCBTResultFor($cbt_id, $use_result_for, $subject_id)
+    {
+        // GET CURRENT SESSION AND TERM
+        $session =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
+        $term =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
+
+
+        $cbt_result = CBTResultModel::select('student_id', 'score',)->where('cbt_id', $cbt_id)->get();
+        foreach ($cbt_result as $data) {
+            // GET EACH DATA AND UPDATE THE STUDENT RESULT
+            SubjectRegistrationModel::where('student_id', $data->student_id)->where('subject_id', $subject_id)->where('session', $session)->where('term', $term)->update(array($use_result_for => $data->score));
+        }
+
+        return response()->json(['success' => true, 'message' => 'Process was successful']); 
+    }
+
 
     // RESULT UPLOAD
     public function getStudentRegistered(Request $request)

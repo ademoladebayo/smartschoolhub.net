@@ -159,6 +159,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('teacher/cbt-result/{cbt_id}', 'TeacherController@getCBTResult', function () {
     })->middleware(Cors::class);
 
+    Route::get('teacher/use-cbt-result/{cbt_id}/{use_result_for}/{subject_id}', 'TeacherController@useCBTResultFor', function () {
+    })->middleware(Cors::class);
+
     // TEACHER {RESULT-UPLOAD}
     Route::post('teacher/student-registered', 'TeacherController@getStudentRegistered', function () {
     })->middleware(Cors::class);

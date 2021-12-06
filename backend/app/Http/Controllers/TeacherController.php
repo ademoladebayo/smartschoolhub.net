@@ -69,6 +69,14 @@ class TeacherController extends Controller
         return $TeacherService->getCBTResult($cbt_id);
     }
 
+
+    public function useCBTResultFor($cbt_id, $use_result_for, $subject_id)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->useCBTResultFor($cbt_id, $use_result_for, $subject_id);
+    }
+
+
     // RESULT UPLOAD
     public function getStudentRegistered(Request $request)
     {

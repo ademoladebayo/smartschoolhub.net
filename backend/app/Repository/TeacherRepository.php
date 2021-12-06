@@ -46,7 +46,7 @@ class TeacherRepository
         $TeacherModel =  TeacherModel::where('assigned_class', $class_id)->first();
         if ($TeacherModel != "") {
             log::debug($TeacherModel);
-            $TeacherModel->assigned_class = "";
+            $TeacherModel->assigned_class = "-";
             $TeacherModel->save();
         }
     }
