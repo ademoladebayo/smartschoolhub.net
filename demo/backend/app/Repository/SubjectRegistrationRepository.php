@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Model\ClassModel;
 use App\Service\AdminService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\db;
+use Illuminate\Support\Facades\DB;
 
 class SubjectRegistrationRepository
 {
