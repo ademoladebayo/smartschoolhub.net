@@ -3,8 +3,8 @@
 // var domain = "http://localhost/smartschoolhub.net";
 
 // // LIVE IP
-var ip = "https://smartschoolhub.net/backend/imode";
-var domain = "https://imode.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/demo";
+var domain = "https://demo.smartschoolhub.net";
 
 // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
