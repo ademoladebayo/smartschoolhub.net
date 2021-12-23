@@ -1,11 +1,11 @@
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/demo";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/demo";
-var domain = "https://demo.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/demo";
+// var domain = "https://demo.smartschoolhub.net";
 
 // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -1062,7 +1062,7 @@ function getSessions() {
 // ID
 function getIDCard() {
   var qrcode = new QRCode("IDQR", {
-    text: "2~12~LANRE",
+    text: "2~1~Dominion",
     width: 128,
     height: 128,
     colorDark: "#000000",
