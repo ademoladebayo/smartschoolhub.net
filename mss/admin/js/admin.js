@@ -111,6 +111,11 @@ function getCurrentSession() {
         localStorage.setItem("current_session", data.session);
         localStorage.setItem("current_term", data.term);
       } else {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >Session not set !</span></div>`;
+
         alert(data.message);
       }
     })
