@@ -102,13 +102,17 @@ function getCurrentSession() {
     })
 
     .then((data) => {
-      document.getElementById(
-        "session_term"
-      ).innerHTML = `<div id="" class="item-number"><span class="counter"
-          >${data.session} - ${data.term}</span></div>`;
+      if (data.success) {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >${data.session} - ${data.term}</span></div>`;
 
-      localStorage.setItem("current_session", data.session);
-      localStorage.setItem("current_term", data.term);
+        localStorage.setItem("current_session", data.session);
+        localStorage.setItem("current_term", data.term);
+      } else {
+        alert(data.message);
+      }
     })
     .catch((err) => console.log(err));
 }
