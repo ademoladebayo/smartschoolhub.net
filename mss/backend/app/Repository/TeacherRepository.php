@@ -7,7 +7,7 @@ use App\Model\UserProfileModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\hash;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherRepository
 {
@@ -16,7 +16,7 @@ class TeacherRepository
     {
 
         $TeacherModel->profile_status = 'ENABLED';
-        $TeacherModel->password = hash::make(strtolower($TeacherModel->first_name + "." + $TeacherModel->last_name));
+        $TeacherModel->password = Hash::make(strtolower($TeacherModel->first_name . "." . $TeacherModel->last_name));
         $TeacherModel->save();
 
         // CREATE TEACHER ID
@@ -100,7 +100,12 @@ class TeacherRepository
     public function updatePassword($teacher_id, $password)
     {
         DB::table('teacher')
-                ->where('teacher_id', $teacher_id)
-                ->update(['password' => $password]);
+            ->where('teacher_id', $teacher_id)
+            ->update(['password' => $password]);
+    }
+
+    public function allTeacherCount()
+    {
+        return DB::select('select count(id) as teacher_no from teacher')[0]->teacher_no;
     }
 }

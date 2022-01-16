@@ -42,7 +42,7 @@ class SessionRepository
         if (count(SessionModel::where("session_status", "CURRENT")->get()) == 0) {
             return response()->json(['success' => false, 'message' => 'Welcome Admin, Please set you session first.']);
         } else {
-            return SessionModel::where("session_status", "CURRENT")->get()[0];
+            return response()->json(['success' => true, 'session' => SessionModel::where("session_status", "CURRENT")->get()[0]]);
         }
     }
 }

@@ -138,14 +138,22 @@ function getCurrentSession() {
     })
 
     .then((data) => {
-      //   document.getElementById(
-      //     "session_term"
-      //   ).innerHTML = `<div id="" class="item-number"><span class="counter"
-      //       >${data.session}</span></div>
-      //       <div class="item-title">${data.term}</div>`;
+      if (data.success) {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >${data['session'].session} - ${data['session'].term}</span></div>`;
 
-      localStorage.setItem("current_session", data.session);
-      localStorage.setItem("current_term", data.term);
+        localStorage.setItem("current_session", data['session'].session);
+        localStorage.setItem("current_term", data['session'].term);
+      } else {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >Session not set !</span></div>`;
+
+        alert(data.message);
+      }
     })
     .catch((err) => console.log(err));
 }
@@ -1069,7 +1077,7 @@ function getTranscript() {
 
   document.getElementById("student_id").innerHTML = user_data.data.student_id;
   document.getElementById("class_sector").innerHTML = user_data.data.class.class_sector;
-  document.getElementById("school_details").innerHTML = localStorage['SCHOOL_NAME'] +", "+ localStorage['SCHOOL_ADDRESS']
+  document.getElementById("school_details").innerHTML = localStorage['SCHOOL_NAME'] +"<br> "+ localStorage['SCHOOL_ADDRESS']
 
   // sessions = getSessions();
   sessions = ["2021/20", "2012/27", "21/20"];

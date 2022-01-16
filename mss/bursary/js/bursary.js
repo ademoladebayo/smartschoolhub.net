@@ -176,13 +176,22 @@ function getCurrentSession() {
     })
 
     .then((data) => {
-      document.getElementById(
-        "session_term"
-      ).innerHTML = `<div id="" class="item-number"><span class="counter"
-          >${data.session} - ${data.term}</span></div>`;
+      if (data.success) {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >${data["session"].session} - ${data["session"].term}</span></div>`;
 
-      localStorage.setItem("current_session", data.session);
-      localStorage.setItem("current_term", data.term);
+        localStorage.setItem("current_session", data["session"].session);
+        localStorage.setItem("current_term", data["session"].term);
+      } else {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >Session not set !</span></div>`;
+
+        alert(data.message);
+      }
     })
     .catch((err) => console.log(err));
 }
@@ -1086,6 +1095,30 @@ function debounce(func, timeout = 2000) {
       func.apply(this, args);
     }, timeout);
   };
+}
+
+function getDashboardInfo() {
+  fetch(ip + "/api/admin/dashboard-information", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("student_no").innerHTML = `<span class="counter"
+      data-num="${data.student_no}">${data.student_no}</span>`;
+    })
+    .catch((err) => console.log(err));
 }
 
 // TOAST

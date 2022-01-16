@@ -6,7 +6,7 @@ use App\Model\StudentModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\hash;
+use Illuminate\Support\Facades\Hash;
 
 class StudentRepository
 {
@@ -106,5 +106,10 @@ class StudentRepository
     public function getPassword($id)
     {
         return DB::select("select password from student where student_id ='" . $id . "'")[0]->password;
+    }
+
+    public function allStudentCount()
+    {
+        return DB::select('select count(id) as student_no from student')[0]->student_no;
     }
 }

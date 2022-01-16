@@ -106,10 +106,10 @@ function getCurrentSession() {
         document.getElementById(
           "session_term"
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
-            >${data.session} - ${data.term}</span></div>`;
+            >${data['session'].session} - ${data['session'].term}</span></div>`;
 
-        localStorage.setItem("current_session", data.session);
-        localStorage.setItem("current_term", data.term);
+        localStorage.setItem("current_session", data['session'].session);
+        localStorage.setItem("current_term", data['session'].term);
       } else {
         document.getElementById(
           "session_term"
@@ -3252,6 +3252,35 @@ function getTeacherAttendance() {
           "teacher_attendance"
         ).innerHTML = `NO ATTENDANCE`;
       }
+    })
+    .catch((err) => console.log(err));
+}
+
+
+function getDashboardInfo(){
+  fetch(ip + "/api/admin/dashboard-information", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById('student_no').innerHTML = `<span class="counter"
+      data-num="${data.student_no}">${data.student_no}</span>`
+
+      document.getElementById('teacher_no').innerHTML = `<span class="counter"
+      data-num="${data.teacher_no}">${data.teacher_no}</span>`
+      
     })
     .catch((err) => console.log(err));
 }

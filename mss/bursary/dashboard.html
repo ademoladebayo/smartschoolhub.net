@@ -34,7 +34,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('index');getCurrentSession(); loadDashBoardInformation()">
+<body onload="loadSideNav('index');getCurrentSession(); getDashboardInfo(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -159,7 +159,7 @@
                                     <div class="item-content">
                                         <div style="font-family: Rowdies; color: black;" class="item-title">Students
                                         </div>
-                                        <div class="student_count"><span class="counter" data-num="150000">150000</span>
+                                        <div id="student_no" style="font-family: Rowdies; color: black;"><span class="counter" data-num="0">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -178,7 +178,7 @@
                                     <div class="item-content">
                                         <div style="font-family: Rowdies; color: black;" class="item-title">Online
                                             Payment</div>
-                                        <div class="online_payment"><span class="counter" data-num="2250">2250</span>
+                                        <div id="online_payment" style="font-family: Rowdies; color: black;"><span class="counter" data-num="0">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -197,7 +197,7 @@
                                     <div class="item-content">
                                         <div style="font-family: Rowdies; color: black;" class="item-title">Manual
                                             Payment</div>
-                                        <div class="manual_payment"><span class="counter" data-num="5690">5690</span>
+                                        <div id="manual_payment" style="font-family: Rowdies; color: black;"><span class="counter" data-num="0">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -215,8 +215,8 @@
                                 <div class="col-6">
                                     <div class="item-content">
                                         <div style="font-family: Rowdies; color: black;" class="item-title">Expense</div>
-                                        <div class="expense"><span>₦</span><span class="counter"
-                                                data-num="193000">193000</span></div>
+                                        <div id="expense" style="font-family: Rowdies; color: black;"><span>₦</span><span class="counter"
+                                                data-num="0">0</span></div>
                                     </div>
                                 </div>
                             </div>

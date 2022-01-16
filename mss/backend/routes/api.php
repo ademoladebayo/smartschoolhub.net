@@ -144,6 +144,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admin/get-teacher-attendance', 'AdminController@getTeacherAttendance', function () {
     })->middleware(Cors::class);
 
+     // ADMIN {DASHBOARD INFO}
+     Route::get('admin/dashboard-information', 'AdminController@getDashboardInfo', function () {
+    })->middleware(Cors::class);
+
 
     // =============================================================================
     //               END OF ADMIN ROUTE

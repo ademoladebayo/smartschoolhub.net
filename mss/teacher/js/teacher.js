@@ -56,20 +56,28 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        window.parent.location.assign(domain + "/bursary/");
       }
       return res.json();
     })
 
     .then((data) => {
-      document.getElementById(
-        "session_term"
-      ).innerHTML = `<div id="" class="item-number"><span class="counter"
-        >${data.session}</span></div>
-        <div class="item-title">${data.term}</div>`;
+      if (data.success) {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >${data['session'].session} - ${data['session'].term}</span></div>`;
 
-      localStorage.setItem("current_session", data.session);
-      localStorage.setItem("current_term", data.term);
+        localStorage.setItem("current_session", data['session'].session);
+        localStorage.setItem("current_term", data['session'].term);
+      } else {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >Session not set !</span></div>`;
+
+        alert(data.message);
+      }
     })
     .catch((err) => console.log(err));
 }

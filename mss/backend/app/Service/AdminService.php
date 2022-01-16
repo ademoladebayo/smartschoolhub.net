@@ -240,4 +240,12 @@ class AdminService
         $TeacherAttendanceModel =  new TeacherAttendanceModel();
         return  $TeacherAttendanceModel->with('teacher')->where('date', $request->date)->get();
     }
+
+    public function getDashboardInfo()
+    {
+        $StudentRepository = new StudentRepository();
+        $TeacherRepository = new TeacherRepository();
+
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount()]);
+    }
 }
