@@ -96,7 +96,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/bursary/");
+        window.parent.location.assign(domain + "/admin/");
       }
       return res.json();
     })
@@ -106,10 +106,10 @@ function getCurrentSession() {
         document.getElementById(
           "session_term"
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
-            >${data['session'].session} - ${data['session'].term}</span></div>`;
+            >${data["session"].session} - ${data["session"].term}</span></div>`;
 
-        localStorage.setItem("current_session", data['session'].session);
-        localStorage.setItem("current_term", data['session'].term);
+        localStorage.setItem("current_session", data["session"].session);
+        localStorage.setItem("current_term", data["session"].term);
       } else {
         document.getElementById(
           "session_term"
@@ -190,9 +190,14 @@ function loadSideNav(page) {
         <a  id="change-password" href="#?change-password.html" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
+
     <li class="nav-item">
         <a href="../index.html" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
+    </li>
+
+    <li class="nav-item">
+      <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + '/bursary/dashboard.html'}')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
     </li>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
@@ -233,7 +238,7 @@ function goTo(page) {
   if (page == "") {
     localStorage.clear();
   }
-  window.parent.location.assign(domain + "/teacher/" + page);
+  window.parent.location.assign(domain + "/admin/" + page);
 }
 
 function reloadEditFrame() {
@@ -3256,15 +3261,14 @@ function getTeacherAttendance() {
     .catch((err) => console.log(err));
 }
 
-
-function getDashboardInfo(){
+function getDashboardInfo() {
   fetch(ip + "/api/admin/dashboard-information", {
     method: "GET",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
-    }
+    },
   })
     .then(function (res) {
       console.log(res.status);
@@ -3275,12 +3279,11 @@ function getDashboardInfo(){
     })
 
     .then((data) => {
-      document.getElementById('student_no').innerHTML = `<span class="counter"
-      data-num="${data.student_no}">${data.student_no}</span>`
+      document.getElementById("student_no").innerHTML = `<span class="counter"
+      data-num="${data.student_no}">${data.student_no}</span>`;
 
-      document.getElementById('teacher_no').innerHTML = `<span class="counter"
-      data-num="${data.teacher_no}">${data.teacher_no}</span>`
-      
+      document.getElementById("teacher_no").innerHTML = `<span class="counter"
+      data-num="${data.teacher_no}">${data.teacher_no}</span>`;
     })
     .catch((err) => console.log(err));
 }

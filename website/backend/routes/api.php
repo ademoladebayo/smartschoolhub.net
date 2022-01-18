@@ -23,4 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('website/save-visitor', 'VisitorController@saveVisitor', function () {
 })->middleware(Cors::class);
 
+Route::post('website/create-affilate', 'AffilateController@createAffilate', function () {
+})->middleware(Cors::class);
+
 

@@ -152,7 +152,7 @@ function getCurrentSession() {
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >Session not set !</span></div>`;
 
-        alert(data.message);
+        alert('Admin has not set session.');
       }
     })
     .catch((err) => console.log(err));

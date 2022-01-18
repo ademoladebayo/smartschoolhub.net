@@ -7,7 +7,7 @@
 <head id="common-library">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>SSHUB | SMARTSCHOOLHUB.NET</title>
+    <title id="title"> SMARTSCHOOLHUB.NET</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
     <!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600,700" rel="stylesheet"> -->
@@ -200,6 +200,7 @@
                 localStorage.setItem('SCHOOL_NAME', data[0].school_name)
                 localStorage.setItem('SCHOOL_ADDRESS', data[0].school_address)
                 document.getElementById("school_name").innerHTML = "Welcome , <br>" + localStorage['SCHOOL_NAME'];
+                document.getElementById("title").innerHTML += " | " + localStorage['SCHOOL_NAME'];
             })
             .catch((err) => console.log(err));
     }

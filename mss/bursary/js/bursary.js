@@ -54,6 +54,10 @@ function loadSideNav(page) {
         <a onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
+
+    <li class="nav-item">
+       <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + '/admin/dashboard.html'}')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
+    </li>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
@@ -190,7 +194,7 @@ function getCurrentSession() {
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >Session not set !</span></div>`;
 
-        alert(data.message);
+        alert("Admin has not set session.");
       }
     })
     .catch((err) => console.log(err));
