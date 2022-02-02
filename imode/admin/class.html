@@ -43,7 +43,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('class'); getAllClassForTable()">
+<body onload="loadSideNav('class'); getAllClassForTable(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -51,13 +51,13 @@
         <!-- Header Menu Area Start Here -->
         <div class="navbar navbar-expand-md header-menu-one bg-light">
             <div class="nav-bar-header-one">
-                <div class="header-logo">
-                    <a href="../index-2.html">
-                        <img src="../img/logo.png" alt="logo">
-                    </a>
-                </div>
+                <b style="margin-left: 5px; margin-top: 5px;" id="logo">
+                    <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                        <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                    </h1>
+                </b>
                 <div class="toggle-button sidebar-toggle">
-                    <button type="button" class="item-link">
+                    <button onclick="changeLogo()" type="button" class="item-link">
                         <span class="btn-icon-wrap">
                             <span></span>
                             <span></span>
@@ -90,25 +90,27 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="navbar-item dropdown header-admin">
-                        <a class="navbar-nav-link dropdown-toggle" href="../#" role="button" data-toggle="dropdown"
+                        <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="admin-title">
-                                <h5 class="item-title">Stevne Zone</h5>
-                                <span>Admin</span>
+                                <h5 id="user_name" class="item-title"></h5>
+                                <span id="user_type">ADMIN</span>
                             </div>
-                            <div class="admin-img">
+                            <div id="user_img" class="admin-img">
                                 <img src="../img/figure/admin.jpg" alt="Admin">
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">
-                                <h6 class="item-title">Steven Zone</h6>
+                                <h6 id="user_name1" class="item-title"></h6>
                             </div>
                             <div class="item-content">
                                 <ul class="settings-list">
-                                    <li><a href="../#"><i class="flaticon-user"></i>My Profile</a></li>
-                                    <li><a href="../#"><i class="flaticon-gear-loading"></i>Account Settings</a></li>
-                                    <li><a href="../login.html"><i class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a href="my-profile.html"><i class="flaticon-user"></i>My Profile</a></li>
+                                    <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
+                                            Settings</a></li>
+                                    <li><a onclick="localStorage.removeItem('token')" href="index.html"><i
+                                                class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -127,7 +129,11 @@
 
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
-                        <a href="dashboard.html"><img src="../img/logo1.png" alt="logo"></a>
+                        <a href="dashboard.html"><b id="logo">
+                                <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                                    <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                                </h1>
+                            </b></a>
                     </div>
                 </div>
                 <div id="side_nav" class="sidebar-menu-content">
@@ -137,7 +143,7 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Rowdies;">CLASS</h3>
+                    <h3 style="font-weight: bold; font-family: Rowdies;">CLASS MANAGEMENT</h3>
                     <ul>
                         <li>
                             <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
@@ -179,6 +185,7 @@
                                         <tr>
                                             <th>S/N</th>
                                             <th>Class Name</th>
+                                            <th>Class Sector</th>
                                             <th>Class Teacher</th>
                                             <th>No of Student</th>
                                             <th>Actions</th>
@@ -188,6 +195,7 @@
                                         <tr class="odd">
 
                                             <td>1.</td>
+                                            <td>Loading ...</td>
                                             <td>Loading ...</td>
                                             <td>Loading ...</td>
                                             <td>Loading ...</td>

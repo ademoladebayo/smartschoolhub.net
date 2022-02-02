@@ -6,7 +6,7 @@ use App\Repository\SessionRepository;
 use App\Service\TeacherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class GeneralController extends Controller
 {
@@ -15,5 +15,17 @@ class GeneralController extends Controller
     {
         $SessionRepository = new SessionRepository();
         return $SessionRepository->getCurrentSession();
+    }
+
+    // SCHOOL DETAILS
+    function getSchoolDetails()
+    {
+        return DB::table('school_details')->get();
+    }
+
+    // ALL SESSION
+    function allSession()
+    {
+        return DB::table('session')->select('session')->get();
     }
 }

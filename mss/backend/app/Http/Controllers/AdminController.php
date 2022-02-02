@@ -123,6 +123,14 @@ class AdminController extends Controller
         return $StudentRepository->updateStudentProfileStatus($id);
     }
 
+    // STUDENT IMAGE
+    public function uploadStudentImage(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->uploadStudentImage($request);
+    }
+
+
 
     // TEACHER
     public function createTeacher(Request $request)

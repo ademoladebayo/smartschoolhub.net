@@ -7,14 +7,16 @@ use App\Model\SubjectModel;
 use App\Model\StudentModel;
 use App\Model\AdminModel;
 use App\Model\TeacherModel;
+use App\Model\TeacherAttendanceModel;
 use App\Repository\ClassRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\AdminRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SessionRepository;
+use App\Repository\GradeSettingsRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AdminService
 {
@@ -43,6 +45,7 @@ class AdminService
         $ClassRepository = new ClassRepository();
 
         $ClassModel->class_name =  $request->class_name;
+        $ClassModel->class_sector =  $request->class_sector;
         $ClassModel->class_teacher =  $request->class_teacher;
 
 
@@ -104,7 +107,6 @@ class AdminService
         $studentModel->state =  $request->state;
         $studentModel->home_address =  $request->home_address;
         $studentModel->joining_date =  $request->joining_date;
-        $studentModel->joining_session =  $request->joining_session;
         $studentModel->class =  $request->student_class;
 
 
@@ -133,6 +135,22 @@ class AdminService
     {
         $StudentRepository = new StudentRepository();
         return $StudentRepository->getAllStudent();
+    }
+
+    // STUDENT IMAGE
+    public function uploadStudentImage(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            // GET FILENAME
+            $file_name = $_FILES['file']['name'];
+
+            $storage_path =  $request->file->storeAs('public/fileupload', $request->student_id . ".png");
+            $file_url = '/storage/fileupload/' . $request->student_id . ".png";
+
+            return response()->json(['success' => true, 'message' => 'file sent', 'url' => $file_url]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No File found.']);
+        }
     }
 
     // TEACHER
@@ -186,5 +204,64 @@ class AdminService
     {
         $SessionRepository = new SessionRepository();
         return $SessionRepository->editSession($request);
+    }
+
+    // GRADE SETTINGS
+    public function createGrade(Request $request)
+    {
+        $GradeSettingsRepository = new GradeSettingsRepository();
+        return $GradeSettingsRepository->createGrade($request);
+    }
+
+    public function editGrade(Request $request)
+    {
+        $GradeSettingsRepository = new GradeSettingsRepository();
+        return $GradeSettingsRepository->editGrade($request);
+    }
+
+    // ATTENDANCE
+    // public function takeStudentAttendance(Request $request)
+    // {
+    //     $AdminService = new AdminService();
+    //     return $AdminService->takeStudentAttendance($request);
+    // }
+
+    // public function getStudentAttendance(Request $request)
+    // {
+    //     $AdminService = new AdminService();
+    //     return $AdminService->getStudentAttendance($request);
+    // }
+
+    public function takeTeacherAttendance(Request $request)
+    {
+        $TeacherAttendanceModel = new TeacherAttendanceModel();
+
+        // CHECK IF ALREADY TAKEN
+        $alreadytaken = DB::table('teacher_attendance')->where("teacher_id", $request->teacher_id)->where('date', $request->date)->exists();
+
+        if ($alreadytaken) {
+            return response()->json(['success' => false, 'message' => 'Attendance has already been taken.']);
+        }
+
+        $TeacherAttendanceModel->teacher_id = $request->teacher_id;
+        $TeacherAttendanceModel->date = $request->date;
+        $TeacherAttendanceModel->time = $request->time;
+        $TeacherAttendanceModel->session = $request->session;
+        $TeacherAttendanceModel->term = $request->term;
+        $TeacherAttendanceModel->save();
+        return response()->json(['success' => true, 'message' => 'Attendance was successfully.']);
+    }
+    public function getTeacherAttendance(Request $request)
+    {
+        $TeacherAttendanceModel =  new TeacherAttendanceModel();
+        return  $TeacherAttendanceModel->with('teacher')->where('date', $request->date)->get();
+    }
+
+    public function getDashboardInfo()
+    {
+        $StudentRepository = new StudentRepository();
+        $TeacherRepository = new TeacherRepository();
+
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount()]);
     }
 }

@@ -1,10 +1,10 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
-var domain = "https://mss.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/mss";
+// var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -56,7 +56,9 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-       <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + '/admin/dashboard.html'}')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
+       <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+         domain + "/admin/dashboard.html"
+       }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
     </li>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
@@ -1121,6 +1123,31 @@ function getDashboardInfo() {
     .then((data) => {
       document.getElementById("student_no").innerHTML = `<span class="counter"
       data-num="${data.student_no}">${data.student_no}</span>`;
+    })
+    .catch((err) => console.log(err));
+}
+
+// GET SCHOOL DETAILS
+function getSchoolDetails() {
+  fetch(ip + "/api/general/school-details", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then(function (res) {
+      return res.json();
+    })
+
+    .then((data) => {
+      console.log(data);
+      localStorage.setItem("SCHOOL_NAME", data[0].school_name);
+      localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
+      document.getElementById("school_name").innerHTML =
+        "Welcome , <br>" + localStorage["SCHOOL_NAME"];
+      document.getElementById("title").innerHTML +=
+        " | " + localStorage["SCHOOL_NAME"];
     })
     .catch((err) => console.log(err));
 }

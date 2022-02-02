@@ -8,8 +8,9 @@ use App\Service\AdminService;
 use App\Repository\SubjectRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\StudentRepository;
+use App\Repository\GradeSettingsRepository;
 use App\Model\SessionModel;
-use App\Model\TeacherModel;
+use App\Model\GradeSettingsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
@@ -122,6 +123,14 @@ class AdminController extends Controller
         return $StudentRepository->updateStudentProfileStatus($id);
     }
 
+    // STUDENT IMAGE
+    public function uploadStudentImage(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->uploadStudentImage($request);
+    }
+
+
 
     // TEACHER
     public function createTeacher(Request $request)
@@ -176,5 +185,62 @@ class AdminController extends Controller
     {
         $SessionModel = new SessionModel();
         return $SessionModel->get();
+    }
+
+    // GRADE SETTINGS
+    public function createGrade(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->createGrade($request);
+    }
+
+    public function editGrade(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->editGrade($request);
+    }
+
+    public function getAllGrade()
+    {
+        $GradeSettingsModel = new GradeSettingsModel();
+        return $GradeSettingsModel->get();
+    }
+
+    public function deleteGrade($grade_id)
+    {
+        $GradeSettingsRepository = new GradeSettingsRepository();
+        return $GradeSettingsRepository->deleteGrade($grade_id);
+    }
+
+
+    // ATTENDANCE
+    // public function takeStudentAttendance(Request $request)
+    // {
+    //     $AdminService = new AdminService();
+    //     return $AdminService->takeStudentAttendance($request);
+    // }
+
+    // public function getStudentAttendance(Request $request)
+    // {
+    //     $AdminService = new AdminService();
+    //     return $AdminService->getStudentAttendance($request);
+    // }
+
+    public function takeTeacherAttendance(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->takeTeacherAttendance($request);
+    }
+
+    public function getTeacherAttendance(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->getTeacherAttendance($request);
+    }
+
+    public function getDashboardInfo()
+    {
+        $AdminService = new AdminService();
+        return $AdminService->getDashboardInfo();
     }
 }

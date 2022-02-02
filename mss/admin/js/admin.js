@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
-var domain = "https://mss.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/mss";
+// var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -197,7 +197,9 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-      <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + '/bursary/dashboard.html'}')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
+      <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+        domain + "/bursary/dashboard.html"
+      }')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
     </li>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
@@ -1047,6 +1049,13 @@ function getAllStudentForTable() {
               data[i].id
             })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1084,6 +1093,13 @@ function getAllStudentForTable() {
             <a onclick="updateStudentProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1124,6 +1140,13 @@ function getAllStudentForTable() {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1161,6 +1184,13 @@ function getAllStudentForTable() {
             <a onclick="updateStudentProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1247,6 +1277,14 @@ function editStudent(json) {
 }
 
 function createStudent() {
+  // CHECK IMAGE
+  const input = document.getElementById("imageUpload");
+  console.log(input.files);
+  image = input.files;
+  if (image.length < 1) {
+    return alert("Please upload student picture !");
+  }
+
   var first_name = document.getElementById("first_name").value;
   var middle_name = document.getElementById("middle_name").value;
   var last_name = document.getElementById("last_name").value;
@@ -1305,18 +1343,15 @@ function createStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          window.parent.location.assign(domain + "/admin/");
         }
         return res.json();
       })
 
       .then((data) => {
-        toastr.remove();
         if (data.success) {
-          successtoast("<b>" + data.message + "</b>");
-          setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+          //UPLOAD IMAGE WITH STUDENT ID RESPONSE
+          uploadImage(image[0], data.student_id);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -1326,6 +1361,25 @@ function createStudent() {
     warningtoast("<b>Please check that no field is empty.</b>");
   }
 }
+
+//STUDENT UPLOAD IMAGE
+function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      $("#imagePreview").css(
+        "background-image",
+        "url(" + e.target.result + ")"
+      );
+      $("#imagePreview").hide();
+      $("#imagePreview").fadeIn(650);
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+$("#imageUpload").change(function () {
+  readURL(this);
+});
 
 function updateStudent() {
   var first_name = document.getElementById("first_name").value;
@@ -1529,6 +1583,13 @@ function searchStudent(search_data) {
               data[i].id
             })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1566,6 +1627,13 @@ function searchStudent(search_data) {
             <a onclick="updateStudentProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1606,6 +1674,13 @@ function searchStudent(search_data) {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1643,6 +1718,13 @@ function searchStudent(search_data) {
             <a onclick="updateStudentProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteStudent(${
               data[i].id
@@ -1662,6 +1744,88 @@ function searchStudent(search_data) {
       }
     })
     .catch((err) => console.log(err));
+}
+
+function viewStudentIDCard(data) {
+  localStorage.setItem("student_id_card", JSON.stringify(data));
+  window.parent.location.assign(domain + "/admin/student-id-card.html");
+}
+
+function uploadImage(image, student_id) {
+  const formData = new FormData();
+
+  formData.append("file", image);
+  formData.append("student_id", student_id);
+  // Select your input type file and store it in a variable
+
+  // This will upload the file after having read it
+  return fetch(ip + "/api/admin/upload-student-image", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: formData,
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        toastr.remove();
+        successtoast("<b>" + student_id + " was created successfully. </b>");
+        setTimeout(function () {
+          window.parent.location.reload();
+        }, 1000);
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+  // // Event handler executed when a file is selected
+  // const onSelectFile = () => upload(input.files[0]);
+
+  // // Add a listener on your input
+  // // It will be triggered when a file will be selected
+  // input.addEventListener("change", onSelectFile, false);
+}
+
+// STUDENT ID CARD
+function getIDCard() {
+  student_id = localStorage["student_id_card"];
+
+  // FILL CARD DETAILS
+  document.getElementById("full_name").innerHTML =
+    JSON.parse(student_id).first_name + " " + JSON.parse(student_id).last_name;
+
+  document.getElementById("id").innerHTML = JSON.parse(student_id).student_id;
+
+  document.getElementById("gender").innerHTML = JSON.parse(student_id).gender;
+
+  document.getElementById("school_address").innerHTML =
+    localStorage["SCHOOL_ADDRESS"];
+
+  //StudentATDCard~id~class_id~first_name
+  var qrcode = new QRCode("IDQR", {
+    text:
+      "StudentATDCard~" +
+      JSON.parse(student_id).id +
+      "~" +
+      JSON.parse(student_id).class.id +
+      "~" +
+      JSON.parse(student_id).first_name,
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
 }
 
 // CLASS
@@ -2988,8 +3152,11 @@ function deleteGrade(id) {
 }
 
 // ATTENDANCE
-function takeAttendance() {
+function getAttendanceDate() {
   document.getElementById("date").innerHTML += Date("DD-MM-YYYY").toUpperCase();
+}
+
+function takeAttendance() {
   // document.getElementById("attendance_class").innerHTML += JSON.parse(
   //   localStorage["user_data"]
   // ).data.assigned_class.class_name;
@@ -3010,6 +3177,7 @@ function takeAttendance() {
     });
 
   scanner.addListener("scan", function (qr_data) {
+    // say("Card scanned , Please wait ...");
     // document.getElementById("student_id").value = qr_data; //StudentATDCard~id~class_id~first_name
 
     // CHECK IF CARD IS VALID
@@ -3049,7 +3217,6 @@ function takeAttendance() {
 
       .then((data) => {
         if (data.success) {
-          getAttendance();
           successSound.play();
           setTimeout(function () {
             say("Verified!");
@@ -3058,13 +3225,61 @@ function takeAttendance() {
         } else {
           errorSound.play();
           setTimeout(function () {
-            say("Attendance as already been taken!");
+            say(data.message);
           }, 1000);
           getAttendance();
         }
       })
       .catch((err) => console.log(err));
   });
+}
+
+function takeAttendanceByStudentID() {
+  if (document.getElementById("student_id").value == "") {
+    return alert("INPUT STUDENT ID");
+  }
+
+  // PASS ATTENDANCE DETAILS TO API
+  fetch(ip + "/api/teacher/take-attendance", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: document.getElementById("student_id").value,
+      class_id: "",
+      date: getDate().split("~")[1],
+      time: getDate().split("~")[0],
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      if (data.success) {
+        successSound.play();
+        setTimeout(function () {
+          say("Verified!");
+        }, 1000);
+        getAttendance();
+      } else {
+        errorSound.play();
+        setTimeout(function () {
+          say(data.message);
+        }, 1000);
+        getAttendance();
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 function getAttendance() {
@@ -3312,6 +3527,31 @@ function say(text) {
   speech.pitch = 1;
 
   window.speechSynthesis.speak(speech);
+}
+
+// GET SCHOOL DETAILS
+function getSchoolDetails() {
+  fetch(ip + "/api/general/school-details", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then(function (res) {
+      return res.json();
+    })
+
+    .then((data) => {
+      console.log(data);
+      localStorage.setItem("SCHOOL_NAME", data[0].school_name);
+      localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
+      document.getElementById("school_name").innerHTML =
+        "Welcome , <br>" + localStorage["SCHOOL_NAME"];
+      document.getElementById("title").innerHTML +=
+        " | " + localStorage["SCHOOL_NAME"];
+    })
+    .catch((err) => console.log(err));
 }
 
 // TOAST

@@ -87,6 +87,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/search-student/{search_data}', 'AdminController@searchStudent', function () {
     })->middleware(Cors::class);
 
+    //  STUDENT IMAGE
+    Route::post('admin/upload-student-image', 'AdminController@uploadStudentImage', function () {
+    })->middleware(Cors::class);
+
+    
+
 
     // ADMIN {TEACHER}
     Route::post('admin/create-teacher', 'AdminController@createTeacher', function () {
@@ -116,6 +122,36 @@ Route::middleware('auth:sanctum')->group(function () {
     })->middleware(Cors::class);
 
     Route::get('admin/all-session', 'AdminController@getAllSession', function () {
+    })->middleware(Cors::class);
+
+    // ADMIN {GRADING SYSTEM}
+    Route::post('admin/create-grade', 'AdminController@createGrade', function () {
+    })->middleware(Cors::class);
+
+    Route::post('admin/edit-grade', 'AdminController@editGrade', function () {
+    })->middleware(Cors::class);
+
+    Route::get('admin/all-grade', 'AdminController@getAllGrade', function () {
+    })->middleware(Cors::class);
+
+    Route::get('admin/delete-grade/{grade_id}', 'AdminController@deleteGrade', function () {
+    })->middleware(Cors::class);
+
+    // ADMIN {ATTENDANCE}
+    // Route::post('admin/take-student-attendance', 'AdminController@takeStudentAttendance', function () {
+    // })->middleware(Cors::class);
+
+    // Route::post('admin/get-student-attendance', 'AdminController@getStudentAttendance', function () {
+    // })->middleware(Cors::class);
+
+    Route::post('admin/take-teacher-attendance', 'AdminController@takeTeacherAttendance', function () {
+    })->middleware(Cors::class);
+
+    Route::post('admin/get-teacher-attendance', 'AdminController@getTeacherAttendance', function () {
+    })->middleware(Cors::class);
+
+    // ADMIN {DASHBOARD INFO}
+    Route::get('admin/dashboard-information', 'AdminController@getDashboardInfo', function () {
     })->middleware(Cors::class);
 
 
@@ -156,6 +192,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('teacher/delete-cbt/{cbt_id}', 'TeacherController@deleteCBT', function () {
     })->middleware(Cors::class);
 
+    Route::get('teacher/cbt-change-status/{cbt_id}/{status}', 'TeacherController@changeCBTStatus', function () {
+    })->middleware(Cors::class);
+
     Route::get('teacher/cbt-result/{cbt_id}', 'TeacherController@getCBTResult', function () {
     })->middleware(Cors::class);
 
@@ -169,14 +208,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('teacher/upload-result', 'TeacherController@uploadResult', function () {
     })->middleware(Cors::class);
 
-     // TEACHER {ATTENDANCE}
-     Route::post('teacher/take-attendance', 'TeacherController@takeAttendance', function () {
+    Route::post('teacher/upload-comment-rating', 'TeacherController@uploadCommentAndRating', function () {
+    })->middleware(Cors::class);
+    
+
+    // TEACHER {ATTENDANCE}
+    Route::post('teacher/take-attendance', 'TeacherController@takeAttendance', function () {
     })->middleware(Cors::class);
 
     Route::post('teacher/get-attendance', 'TeacherController@getAttendance', function () {
     })->middleware(Cors::class);
 
-   
+    // TEACHER {CHANGE PASSWORD}
+    Route::post('teacher/change-password', 'TeacherController@changePassword', function () {
+    })->middleware(Cors::class);
 });
 
 // =============================================================================
@@ -199,10 +244,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('student/registered-subject', 'StudentController@getRegisteredSubject', function () {
     })->middleware(Cors::class);
 
+    //STUDENT {CBT}
     Route::get('student/taken-cbt/{cbt_id}/{student_id}', 'StudentController@checkIfStudenHasTakenCBT', function () {
     })->middleware(Cors::class);
 
     Route::post('student/submit-cbt', 'StudentController@submitCBT', function () {
+    })->middleware(Cors::class);
+
+    // STUDENT {PAYMENT}
+    Route::post('student/all-fee', 'StudentController@allFee', function () {
+    })->middleware(Cors::class);
+
+    Route::post('student/payment-history', 'StudentController@paymentHistory', function () {
+    })->middleware(Cors::class);
+
+    // STUDENT {RESULT}
+    Route::post('student/result', 'StudentController@getResult', function () {
+    })->middleware(Cors::class);
+
+    Route::post('student/comments-psycho', 'StudentController@getCommentsAndPsycho', function () {
+    })->middleware(Cors::class);
+
+    // STUDENT {ATTENDANCE}
+    Route::post('student/attendance-summary', 'StudentController@attendanceSummary', function () {
     })->middleware(Cors::class);
 });
 
@@ -211,42 +275,88 @@ Route::middleware('auth:sanctum')->group(function () {
 // =============================================================================
 
 
-//RESULT ROUTE
-Route::post('save-result', 'ResultController@saveResult', function () {
+
+
+
+// =============================================================================
+//               BEGINNING OF BURSARY ROUTE
+// =============================================================================
+// BURSARY {SIGNIN}
+Route::post('bursary/signin', 'BursaryController@signIn', function () {
 })->middleware(Cors::class);
 
-Route::get('result/{student_id}', 'ResultController@getAllresult', function () {
-})->middleware(Cors::class);
+Route::middleware('auth:sanctum')->group(function () {
+    // BURSARY {FEE MANAGEMENT}
+    Route::post('bursary/create-fee', 'BursaryController@createFee', function () {
+    })->middleware(Cors::class);
 
-Route::get('result/{student_id}/{term}', 'ResultController@getAllresult', function () {
-})->middleware(Cors::class);
+    Route::post('bursary/edit-fee', 'BursaryController@editFee', function () {
+    })->middleware(Cors::class);
 
-Route::get('result/{subject_id}/{term}', 'ResultController@getAllresult', function () {
-})->middleware(Cors::class);
+    Route::get('bursary/delete-fee/{fee_id}', 'BursaryController@deleteFee', function () {
+    })->middleware(Cors::class);
+
+    Route::post('bursary/all-fee', 'BursaryController@allFee', function () {
+    })->middleware(Cors::class);
+
+    // BURSARY {EXPENSE MANAGEMENT}
+    Route::post('bursary/create-expense', 'BursaryController@createExpense', function () {
+    })->middleware(Cors::class);
+
+    Route::post('bursary/edit-expense', 'BursaryController@editExpense', function () {
+    })->middleware(Cors::class);
+
+    Route::get('bursary/delete-expense/{expense_id}', 'BursaryController@deleteExpense', function () {
+    })->middleware(Cors::class);
+
+    Route::post('bursary/all-expense', 'BursaryController@allExpense', function () {
+    })->middleware(Cors::class);
+
+
+    // BURSARY {MANUAL PAYMENT MANAGEMENT}
+    Route::post('bursary/create-manual-payment', 'BursaryController@createManualPayment', function () {
+    })->middleware(Cors::class);
+
+    Route::post('bursary/edit-manual-payment', 'BursaryController@editManualPayment', function () {
+    })->middleware(Cors::class);
+
+    Route::get('bursary/delete-manual-payment/{manual_payment_id}', 'BursaryController@deleteManualPayment', function () {
+    })->middleware(Cors::class);
+
+    Route::post('bursary/all-manual-payment', 'BursaryController@allManualPayment', function () {
+    })->middleware(Cors::class);
+
+
+    // BURSARY {PAYMENT HISTORY}
+    Route::post('bursary/all-payment-history', 'BursaryController@allPaymentHistory', function () {
+    })->middleware(Cors::class);
+
+    Route::post('bursary/search-payment-history', 'BursaryController@searchPayment', function () {
+    })->middleware(Cors::class);
+});
+
+// =============================================================================
+//               END OF BURSARY ROUTE
+// =============================================================================
 
 
 
-
-
-
-Route::get('getstatisticsdata', 'statisticscontroller\statisticscontroller@getallstatistics', function () {
-    //
-})->middleware(Cors::class);
-
-
-
-Route::post('signup', 'ChatContoller\chatcontroller@signup', function () {
-})->middleware(Cors::class);
-
-Route::get('notify/{notify_amount}/{budget}/{id}', 'ExpenseTrackerController\ETcontroller@notify', function () {
-    //
-})->middleware(Cors::class);
 
 // ===================================================================
 // GENERAL ROUTE
 // ===================================================================
+
+Route::get('general/school-details', 'GeneralController@getSchoolDetails', function () {
+})->middleware(Cors::class);
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('general/current-session', 'GeneralController@getCurrentSession', function () {
+    })->middleware(Cors::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('general/all-session', 'GeneralController@allSession', function () {
     })->middleware(Cors::class);
 });
 // ===================================================================

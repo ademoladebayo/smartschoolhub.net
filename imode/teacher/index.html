@@ -19,7 +19,7 @@
     <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
 </head>
 
-<body>
+<body onload="getSchoolDetails()">
     <div class="container-fluid">
         <div class="container">
             <div class="col-xl-10 col-lg-11 login-container">
@@ -45,13 +45,19 @@
 
                             <label for=""><i class="fas fa-user"></i> Staff ID</label>
                             <div class="login-row row no-margin">
-                                <input oninput="this.value = this.value.toUpperCase()" id="id" type="text"
-                                    placeholder="2021-STF-000" class="form-control form-control-sm">
+                                <input oninput="this.value = this.value.toUpperCase()" value="" id="id"
+                                    type="text" placeholder="2021-STF-000" class="form-control form-control-sm">
                             </div>
                             <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
                             <div class="login-row row no-margin">
-                                <input id="password" type="password" class="form-control form-control-sm">
+                                <input id="password" type="password" value=""
+                                    class="form-control form-control-sm"><i id="togglePassword" class="fas fa-eye"
+                                    style="margin-left: -35px; cursor: pointer; margin-bottom: 15px"></i>
                             </div>
+
+                            <br>
+                            <a style="float: right; color: blue;" href="../index.html">Switch User</a>
+
 
 
                             <div class="login-row btnroo row no-margin">
@@ -89,6 +95,19 @@
 <script src="../assets/js/lib/toastr/toastr.init.js"></script>
 <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
 <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function (e) {
+        // toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        // toggle the eye slash icon
+        this.classList.toggle('fa-eye-slash');
+    })
+</script>
 
 <!-- Mirrored from www.smarteyeapps.com/demo/html5-template-login-page/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 15 Oct 2021 08:09:14 GMT -->
 

@@ -15,13 +15,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Scope+One&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&amp;display=swap">
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <!-- QR CDN -->
-    <script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+    <!-- QR LIBRARY -->
+    <script type="text/javascript" src="./js/adapter.min.js"></script>
 
+    <script type="text/javascript" src="./js/vue.min.js"></script>
+
+    <script type="text/javascript" src="./js/instascan.min.js"></script>
 </head>
 
 <body style="background: #ffffff;" onload="getTranscript()">
@@ -81,7 +80,8 @@
                             <p id="class_sector" style="font-size: 14px;font-family: Quicksand, sans-serif;">
                                 _____________________________</p>
                             <p id="school_details" style="font-size: 14px;font-family: Rowdies;">
-                                <b>_____________________________</b></p>
+                                <b>_____________________________</b>
+                            </p>
                         </div>
                     </div>
                     <div class="col-md-4"><br>
@@ -91,13 +91,13 @@
             </div>
 
 
-            <div class="result-div">
+            <div id="result_div">
 
 
                 <hr style="color: black; border: 1px solid black">
                 <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
                 <hr style="color: black; border: 1px solid black">
-           
+
 
 
 

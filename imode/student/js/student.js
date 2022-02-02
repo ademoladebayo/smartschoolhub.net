@@ -1,13 +1,13 @@
-
 // DEVELOPMENT IP
 // var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net";
+// var domain = "http://localhost/smartschoolhub.net/imode";
 
 // LIVE IP
 var ip = "https://smartschoolhub.net/backend/imode";
 var domain = "https://imode.smartschoolhub.net";
 
-// REMOTE ACCESS
+
+// // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
 
@@ -49,7 +49,7 @@ function loadSideNav(page) {
 
     <li class="nav-item">
     <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
-    <span>My ID Card</span></a>
+    <span>Attendance Card</span></a>
     </li>
 
     <li class="nav-item">
@@ -61,14 +61,19 @@ function loadSideNav(page) {
     </li>
    
     <li class="nav-item">
-        <a  id="payment" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
+        <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
                 and History</span></a>
     </li>
 
-    <li class="nav-item">
-        <a  id="change-password" href="change-password.html" class="nav-link"><i
-                class="flaticon-settings"></i><span>Change Password</span></a>
-    </li>
+    ${
+      // <li class="nav-item">
+      //   <a id="change-password" href="change-password.html" class="nav-link">
+      //     <i class="flaticon-settings"></i>
+      //     <span>Change Password</span>
+      //   </a>
+      // </li>
+      ""
+    }
     <li class="nav-item">
         <a href="../index.html" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
@@ -115,6 +120,7 @@ function changeLogo() {
       : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
         <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
+
 function getCurrentSession() {
   fetch(ip + "/api/general/current-session", {
     method: "GET",
@@ -133,16 +139,60 @@ function getCurrentSession() {
     })
 
     .then((data) => {
-      //   document.getElementById(
-      //     "session_term"
-      //   ).innerHTML = `<div id="" class="item-number"><span class="counter"
-      //       >${data.session}</span></div>
-      //       <div class="item-title">${data.term}</div>`;
+      if (data.success) {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >${data["session"].session} - ${data["session"].term}</span></div>`;
 
-      localStorage.setItem("current_session", data.session);
-      localStorage.setItem("current_term", data.term);
+        localStorage.setItem("current_session", data["session"].session);
+        localStorage.setItem("current_term", data["session"].term);
+      } else {
+        document.getElementById(
+          "session_term"
+        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            >Session not set !</span></div>`;
+
+        alert("Admin has not set session.");
+      }
     })
     .catch((err) => console.log(err));
+}
+
+function allSession() {
+  session = [];
+  fetch(ip + "/api/general/all-session", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      data.forEach((sessions) => {
+        session.push(sessions.session);
+      });
+      return session;
+    })
+    .catch((err) => console.log(err));
+}
+
+function formatNumber(number) {
+  console.log("NUMBER: " + number);
+  return number.toLocaleString(
+    undefined, // leave undefined to use the visitor's browser
+    // locale or a string like 'en-US' to override it.
+    { minimumFractionDigits: 0 }
+  );
 }
 
 function loadDashBoardInformation() {
@@ -208,6 +258,13 @@ function getProfileData() {
   }
 }
 
+function reloadBreakdownFrame() {
+  var iframe = document.getElementById("breakdown");
+  temp = iframe.src;
+  iframe.src = "";
+  iframe.src = temp;
+}
+
 function getTermAndSession() {
   document.getElementById("term_registration").innerHTML =
     localStorage["current_session"] +
@@ -216,7 +273,7 @@ function getTermAndSession() {
     document.getElementById("term_registration").innerHTML;
   document.getElementById("info").innerHTML =
     document.getElementById("info").innerHTML +
-    JSON.parse(localStorage["user_data"]).data.assigned_class.class_name;
+    JSON.parse(localStorage["user_data"]).data.class.class_name;
 }
 
 function goTo(page) {
@@ -291,9 +348,9 @@ function getCBTForSubject() {
 function getCBTForSubject() {
   document.getElementById("infoo").innerHTML =
     document.getElementById("infoo").innerHTML +
-    localStorage["cbt_subject_name"] +
-    " " +
-    localStorage["cbt_subject_class"];
+    localStorage["cbt_subject_name"];
+  // " " +
+  // localStorage["cbt_subject_class"];
 
   // GET CBT
   fetch(ip + "/api/teacher/all-cbt", {
@@ -422,8 +479,7 @@ function getCBTdetails() {
     JSON.parse(localStorage["cbt_detail"]).start_time;
 
   document.getElementById("school_name").innerHTML =
-    "Community Secondary School, Imode Kwara State.";
-  //   localStorage["school_name"];
+    localStorage["SCHOOL_NAME"] + "<br/>" + localStorage["SCHOOL_ADDRESS"];
 
   // GETTING PREVIOUS DETAILS
 
@@ -482,7 +538,8 @@ function getCBTdetails() {
 <hr>
 `;
   for (n = 0; n < questions_number.length; n++) {
-    document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
+    // carousel-item
+    document.getElementById("cbt_view").innerHTML += ` <div class="mb-3 ">
    <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
       questions_number[n]
     }" >${question[questions_number[n]].replace(/⌑/g, ",")}</span></p>
@@ -674,12 +731,12 @@ function getPreviousSubjectRegistration() {
       data.forEach((i) => {
         registered_subject.push(i);
       });
+
+      document.getElementById("number_registered").innerHTML =
+        document.getElementById("number_registered").innerHTML +
+        countDistinct(registered_subject, registered_subject.length);
     })
     .catch((err) => console.log(err));
-
-  document.getElementById("number_registered").innerHTML =
-    document.getElementById("number_registered").innerHTML +
-    registered_subject.length;
 
   return registered_subject;
 }
@@ -1035,9 +1092,24 @@ function getRegisteredSubjectForTableCBT() {
 
 // RESULT
 function getTranscript() {
-  // sessions = getSessions();
-  sessions = ["2021/20", "2012/27", "21/20"];
-  terms = ["FIRST TERM", "SECOND TERM", "THIRD TERM"];
+  user_data = JSON.parse(localStorage["user_data"]);
+  // POPULATE STUDENTS INFORMATION
+  document.getElementById("full_name").innerHTML =
+    "<b>" +
+    user_data.data.last_name +
+    "</b>" +
+    " " +
+    user_data.data.first_name +
+    " " +
+    user_data.data.middle_name;
+
+  document.getElementById("student_id").innerHTML = user_data.data.student_id;
+  document.getElementById("class_sector").innerHTML =
+    user_data.data.class.class_sector;
+  document.getElementById("school_details").innerHTML =
+    localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+
+  // QR Generator
   var qrcode = new QRCode("verificationQR", {
     text: "STUDENT NUMBER",
     width: 128,
@@ -1047,28 +1119,649 @@ function getTranscript() {
     correctLevel: QRCode.CorrectLevel.H,
   });
 
-  // LOOP THROUGH EACH SESSION AND TERM
-  for (i in sessions) {
-    for (j in terms) {
-      console.log(sessions[i] + "-" + terms[j]);
-    }
-  }
+  var sessions = [];
+  var terms = ["FIRST TERM", "SECOND TERM", "THIRD TERM"];
+
+  // CALL API THAT GET ALL SESSION
+  fetch(ip + "/api/general/all-session", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      // STORE IN SESSIONS ARRAY
+      data.forEach((data) => {
+        sessions.push(data.session);
+      });
+      // CREATE RESULT TEMPLATE
+      if (sessions.length > 0) {
+        document.getElementById("result_div").innerHTML = ``;
+        // LOOP THROUGH EACH SESSION AND TERM
+        sessions.forEach((session) => {
+          terms.forEach((term) => {
+            // CREATE RESULT TEMPLATE
+            document.getElementById("result_div").innerHTML += `
+            <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
+            <div style="border:1px solid black; padding-bottom: 15px;" class="row">
+
+                <div class="col-md-4">
+                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                        <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                        <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                        <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
+                    </div>
+                </div>
+
+                <!-- ATTTENDANCE -->
+                <div style="margin-top: 15px;" class="container">
+                    <p><b>(A) ATTTENDANCE</b></p>
+                    <div class="row">
+                        <div class="col-md-12 table-responsive">
+                            <table style="padding: 0%;" class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            No of times school
+                                            opened
+                                        </td>
+                                        <td  id="opened_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            No of times present
+                                        </td>
+                                        <td id="present_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ACADEMIC PERFORMANCE -->
+                <div style="margin-top: 15px;" class="col-md-12 col-lg-12 col-xl-12">
+                    <p><b>(B) ACADEMIC PERFORMANCE</b></p>
+                    <div style="margin-top: 0px;">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- SCORE TABLE -->
+                                <div class="table-responsive">
+                                    <table style="padding: 0%;" class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-size: 14px;">S/No</th>
+                                                <th style="font-size: 14px;">Subject</th>
+                                                <th style="font-size: 14px;">1<sup>st</sup> CA</th>
+                                                <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
+                                                <th style="font-size: 14px;">Exam</th>
+                                                <th style="font-size: 14px;">Total</th>
+                                                <th style="font-size: 14px;">Class Average</th>
+                                                <th style="font-size: 14px;">Class Lowest</th>
+                                                <th style="font-size: 14px;">Class Highest</th>
+                                                <th style="font-size: 14px;">Position</th>
+                                                <th style="font-size: 14px;">Grade</th>
+                                                <th style="font-size: 14px;">Remark</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="scores_${session}_${term}">
+
+                                        
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- POSITION AND PERCENTAGE -->
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-size: 13px;font-style: italic;">NO IN CLASS :
+                                                    <span id="no_student_${session}_${term}"></span>
+                                                </th>
+                                                <th style="font-size: 13px;font-style: italic;">GRADE POSITION :
+                                                    <span id="grade_position_${session}_${term}"></span>
+                                                </th>
+                                                <th style="font-size: 13px;font-style: italic;">PERCENTAGE :
+                                                    <span id="percentage_${session}_${term}"></span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="font-size: 13px;">
+
+                                            <tr style="font-size: 13px;">
+                                                <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
+                                                    colspan="6">
+                                                    <span style="font-weight: bold;">Class Teacher's
+                                                        Comment :
+                                                    </span>
+                                                    <font color="black"><b id="teacher_comment_${session}_${term}"></b></font>
+                                                </td>
+                                            </tr>
+
+                                            
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AFFECTIVE & PSYCHO MOTOR REPORT -->
+                <div style="margin-top: 5px;" class="container">
+                    <p><b>(C) AFFECTIVE & PSYCHO MOTOR REPORT</b></p>
+                    <div class="row">
+                        <div class="col-md-6 table-responsive">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Hand Writing
+                                        </td>
+                                        <td id="handwriting_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td 
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Games
+                                        </td>
+                                        <td id="games_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Handing Tools
+                                        </td>
+                                        <td id="handing_tools_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Drawing and Painting
+                                        </td>
+                                        <td id="drawing_painting_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6 table-responsive">
+                            <table class="table table-sm">
+                                <tbody>
+
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Neatness
+                                        </td>
+                                        <td id="neatness_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Politeness
+                                        </td>
+                                        <td id="politeness_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Co-operation with others
+                                        </td>
+                                        <td id="cooperation_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+                                    
+                              
+                                    <tr>
+                                        <td
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            Health
+                                        </td>
+                                        <td id="health_${session}_${term}"
+                                            style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                            </td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            </div>
+
+`;
+          });
+        });
+      } else {
+        document.getElementById(
+          "result_div"
+        ).innerHTML = `<hr style="color: black; border: 1px solid black">
+      <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+      <hr style="color: black; border: 1px solid black">`;
+      }
+
+      // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
+      result_containers = document.getElementsByClassName("result_container");
+
+      for (i = 0; i < result_containers.length; i++) {
+        container_name = result_containers[i].attributes[0].nodeValue;
+        // ATTENDANCE
+        getAttendanceSummary(container_name);
+        //ACADEMIC PERFORMANCE
+        getResult(container_name);
+        // COMMENTS AND PSYCHO MOTOR REPORTS
+        getCommentsAndPsycho(container_name);
+      }
+
+      main_content = parent.body.innerHTML;
+      parent.body.innerHTML = "";
+      // parent.body.innerHTML = main_content.trim();
+    })
+    .catch((err) => console.log(err));
 }
 
-function getSessions() {
-  return 0;
+function getResult(value) {
+  // GET ACADEMIC PERFORMANCE
+  return fetch(ip + "/api/student/result", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      class_id: JSON.parse(localStorage["user_data"]).data.class.id,
+      session: value.split("_")[1],
+      term: value.split("_")[2],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      if (data.result.length > 0) {
+        data.result.forEach((result) => {
+          // ATTACH CLASS TO THAT RESULT TERM AND SESSION
+          document.getElementById(
+            "class_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = result.class.class_name;
+
+          // ATTACH NO OF STUDENT , GRADE POSITION AND PERCENTAGE
+          document.getElementById(
+            "no_student_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = data.no_student;
+
+          document.getElementById(
+            "grade_position_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = data.grade_position;
+
+          document.getElementById(
+            "percentage_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = data.percentage;
+
+          // SCORE TABLE
+          document.getElementById(
+            "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML += `
+            <tr>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                ${c}.
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                ${result.subject.subject_name}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.first_ca}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.second_ca}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.examination}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.total}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              
+              ${parseFloat(result.class_average).toFixed(0)}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.class_lowest}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.class_highest}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <b>${result.position}</b>
+              </td>
+              <td style="color: ${
+                result.grade == "F" ? "red" : "blue"
+              } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
+              ${result.grade}
+              </td>
+              <td style="color: ${
+                result.grade == "F" ? "red" : "blue"
+              } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.remark}
+              </td>
+            </tr>`;
+
+          c = c + 1;
+        });
+      } else {
+        // DELETE RESULT CONTAINER
+        console.log("DELETE THIS VALUE " + value);
+        document.getElementById(value).remove();
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
-// ID
+function getCommentsAndPsycho(value) {
+  // GET ACADEMIC PERFORMANCE
+  return fetch(ip + "/api/student/comments-psycho", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      session: value.split("_")[1],
+      term: value.split("_")[2],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      // POPULATE COMMENT
+      document.getElementById(
+        "teacher_comment_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = "<b><i>" + data.teacher_comment + "</b></i>";
+
+      // POPULATE RATINGS
+      document.getElementById(
+        "handwriting_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.handwriting;
+      document.getElementById(
+        "games_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.games;
+      document.getElementById(
+        "handing_tools_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.handling_tools;
+      document.getElementById(
+        "drawing_painting_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.drawing_painting;
+      document.getElementById(
+        "neatness_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.neatness;
+      document.getElementById(
+        "politeness_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.politeness;
+      document.getElementById(
+        "cooperation_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.cooperation;
+      document.getElementById(
+        "health_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.health;
+    })
+    .catch((err) => console.log(err));
+}
+
+// ATTENDANCE
+function getAttendanceSummary(value) {
+  // GET ACADEMIC PERFORMANCE
+  return fetch(ip + "/api/student/attendance-summary", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      session: value.split("_")[1],
+      term: value.split("_")[2],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById(
+        "opened_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.opened;
+      document.getElementById(
+        "present_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.present;
+    })
+    .catch((err) => console.log(err));
+}
+
+// ID CARD
 function getIDCard() {
+  // FILL CARD DETAILS
+  document.getElementById("full_name").innerHTML =
+    JSON.parse(localStorage["user_data"]).data.first_name +
+    " " +
+    JSON.parse(localStorage["user_data"]).data.last_name;
+
+  document.getElementById("id").innerHTML = JSON.parse(
+    localStorage["user_data"]
+  ).data.student_id;
+
+  document.getElementById("gender").innerHTML = JSON.parse(
+    localStorage["user_data"]
+  ).data.gender;
+
+  document.getElementById("school_address").innerHTML =
+    localStorage["SCHOOL_ADDRESS"];
+
+  //StudentATDCard~id~class_id~first_name
   var qrcode = new QRCode("IDQR", {
-    text: "2~12~LANRE",
+    text:
+      "StudentATDCard~" +
+      JSON.parse(localStorage["user_data"]).data.id +
+      "~" +
+      JSON.parse(localStorage["user_data"]).data.class.id +
+      "~" +
+      JSON.parse(localStorage["user_data"]).data.first_name,
     width: 128,
     height: 128,
     colorDark: "#000000",
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H,
   });
+}
+
+// FEE
+function getFee() {
+  fetch(ip + "/api/student/all-fee", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      localStorage.setItem("fee", JSON.stringify(data));
+      document.getElementById("due_balance").innerHTML =
+        "₦" + formatNumber(data.due_balance);
+    })
+    .catch((err) => console.log(err));
+}
+
+function loadFeeBreakdown() {
+  data = JSON.parse(localStorage["fee"]);
+
+  document.getElementById("expected_amount").innerHTML =
+    "₦" + formatNumber(data.expected_amount);
+  document.getElementById("total_paid").innerHTML =
+    "₦" + formatNumber(data.total_paid);
+  document.getElementById("due_balance").innerHTML =
+    "₦" + formatNumber(data.due_balance);
+
+  document.getElementById("amount").value = data.due_balance;
+
+  document.getElementById("fee_table").innerHTML = ``;
+  c = 1;
+  data.fee_breakdown.forEach((fee) => {
+    document.getElementById("fee_table").innerHTML += `
+    <tr>
+         <td>${c}.</td>
+         <td>${fee.description}</td>
+         <td>${fee.type}</td>
+         <td>${
+           fee.class == JSON.parse(localStorage["user_data"]).data.class.id
+             ? JSON.parse(localStorage["user_data"]).data.class.class_name
+             : fee.class
+         }</td>
+        <td>₦${formatNumber(fee.amount)}</td>
+    </tr>
+    `;
+
+    c = c + 1;
+  });
+}
+
+// PAYMENT HISTORY
+function getAllPaymentHistory() {
+  fetch(ip + "/api/student/payment-history", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("payment_history_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("payment_history_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td><b>${data[i].payment_type}</b></td>
+                    <td>${data[i].date}</td>
+                    <td>${data[i].session}</td>
+                    <td>${data[i].term}</td>
+                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // PRINT
@@ -1114,6 +1807,83 @@ function print1(section) {
   </html>`);
   a.print();
   a.document.close();
+}
+
+// COUNT ARRAY DISTINT VALUE
+function countDistinct(arr, n) {
+  let res = 1;
+
+  // Pick all elements one by one
+  for (let i = 1; i < n; i++) {
+    let j = 0;
+    for (j = 0; j < i; j++) if (arr[i] === arr[j]) break;
+
+    // If not printed earlier, then print it
+    if (i === j) res++;
+  }
+  return res;
+}
+
+function makePayment(amount) {
+  FlutterwaveCheckout({
+    public_key: "FLWPUBK_TEST-4a013176d7cab721b11eef9c4437fbba-X",
+    tx_ref: "T1",
+    amount: amount,
+    currency: "NGN",
+    country: "NG",
+    payment_options: " ",
+    // specified redirect URL
+    redirect_url: "#",
+    meta: {
+      consumer_id: 23,
+      consumer_mac: "92a3-912ba-1192a",
+    },
+    customer: {
+      email: "info@demo-school.com",
+      phone_number: "08102909304",
+      name: "Damilola Oyebanji",
+    },
+    callback: function (data) {
+      console.log(data);
+    },
+    onclose: function () {
+      // close modal
+    },
+    customizations: {
+      title: localStorage["SCHOOL_NAME"],
+      description:
+        "PAYMENT FOR " +
+        localStorage["current_session"] +
+        "-" +
+        localStorage["current_term"],
+      logo: domain + "/assets/img/sample_logo.png",
+    },
+  });
+}
+
+// GET SCHOOL DETAILS
+function getSchoolDetails() {
+  fetch(ip + "/api/general/school-details", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+    },
+  })
+    .then(function (res) {
+      return res.json();
+    })
+
+    .then((data) => {
+      console.log(data);
+      localStorage.setItem("SCHOOL_NAME", data[0].school_name);
+      localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
+      document.getElementById("school_name").innerHTML =
+        "Welcome , <br>" + localStorage["SCHOOL_NAME"];
+      document.getElementById("title").innerHTML +=
+        " | " + localStorage["SCHOOL_NAME"];
+    })
+    .catch((err) => console.log(err));
 }
 
 // TOAST

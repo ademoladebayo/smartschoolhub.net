@@ -22,4 +22,10 @@ class GeneralController extends Controller
     {
         return DB::table('school_details')->get();
     }
+
+    // ALL SESSION
+    function allSession()
+    {
+        return DB::table('session')->select('session')->get();
+    }
 }

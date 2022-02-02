@@ -7,7 +7,7 @@
 <head id="common-library">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>SSHUB | CSS Imode</title>
+    <title id="title"> SMARTSCHOOLHUB.NET</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
     <!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,600,700" rel="stylesheet"> -->
@@ -19,7 +19,7 @@
     <link href="assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
 </head>
 
-<body>
+<body onload="getSchoolDetails()">
     <div class="container-fluid">
         <div class="container">
             <div class="col-xl-10 col-lg-11 login-container">
@@ -31,23 +31,26 @@
                         <div class="login-box">
                             <div style="display: flex;
                             justify-content: center;" class="row">
+                                <h1><i style="color: #051f3e; display: flex;
+                                justify-content: center;" class="fas fa-graduation-cap fa-xs"></i></h1>
 
                                 <b>
-                                    <h1 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
-                                        <i style="color: #051f3e;" class="fas fa-graduation-cap fa-xs"></i> SSHUB
-                                    </h1>
+                                    <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                        <!-- <i style="color: #051f3e;" class="fas fa-graduation-cap fa-xs"></i> -->
+                                        SMARTSCHOOLHUB<small>.NET</small>
+                                    </h3>
                                 </b>
 
                             </div>
                             <br>
 
-                            <h3 style="color: #ff9d01;text-align: center;"><b>Welcome CSS Imode !</b></h3>
+                            <h3 style="color: #ff9d01;text-align: center;"><b id="school_name">Welcome !</b></h3>
                             <p style="color: #051f3e;text-align: center;"> <b>SignIn As ?</b></p><br>
 
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div  onclick=" window.location.href = 'student';" class="card">
+                                    <div onclick=" window.location.href = 'student';" class="card">
                                         <h2
                                             style="font-weight: bold; font-family: Rowdies; color:#051f3e; text-align: center;">
                                             <i class="fas fa-user-graduate"></i>
@@ -86,7 +89,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div onclick=" window.location.href = '#';" class="card">
+                                    <div onclick=" window.location.href = 'bursary';" class="card">
                                         <h2
                                             style="font-weight: bold; font-family: Rowdies; color:#051f3e; text-align: center;">
                                             <i class="fas fa-hand-holding-usd"></i>
@@ -104,8 +107,9 @@
                         </div>
                         <footer class="footer">
                             <div style="display: flex;
-                            justify-content: center;" class="copyright">© <a style="color: #051f3e;" href="#"><b>
-                                        Dextroux Technologies</b></a></div>
+                            justify-content: center; font-family: rowdies;" class="copyright"><a
+                                    style="color: #051f3e;" href="#"><b><small> © 2022
+                                            Dextroux Technologies</small></b></a></div>
                         </footer>
                     </div>
 
@@ -176,8 +180,29 @@
 </style>
 
 <script>
-    function signInAs() {
+    // DEVELOPMENT IP
+    // var ip = "http://127.0.0.1:8000";
+    var ip = "https://smartschoolhub.net/backend/imode";
+    function getSchoolDetails() {
+        fetch(ip + "/api/general/school-details", {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-type": "application/json",
+            },
+        })
+            .then(function (res) {
+                return res.json();
+            })
 
+            .then((data) => {
+                console.log(data);
+                localStorage.setItem('SCHOOL_NAME', data[0].school_name)
+                localStorage.setItem('SCHOOL_ADDRESS', data[0].school_address)
+                document.getElementById("school_name").innerHTML = "Welcome , <br>" + localStorage['SCHOOL_NAME'];
+                document.getElementById("title").innerHTML += " | " + localStorage['SCHOOL_NAME'];
+            })
+            .catch((err) => console.log(err));
     }
 </script>
 

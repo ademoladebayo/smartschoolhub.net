@@ -63,6 +63,12 @@ class TeacherController extends Controller
         return $TeacherService->deleteCBT($cbt_id);
     }
 
+    public function changeCBTStatus($cbt_id, $status)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->changeCBTStatus($cbt_id, $status);
+    }
+
     public function getCBTResult($cbt_id)
     {
         $TeacherService = new TeacherService();
@@ -90,6 +96,13 @@ class TeacherController extends Controller
         return $TeacherService->uploadResult($request);
     }
 
+    public function uploadCommentAndRating(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->uploadCommentAndRating($request);
+    }
+    
+
 
     // ATTENDANCE
     public function takeAttendance(Request $request)
@@ -110,5 +123,4 @@ class TeacherController extends Controller
         $TeacherService = new TeacherService();
         return $TeacherService->changePassword($request);
     }
-    
 }

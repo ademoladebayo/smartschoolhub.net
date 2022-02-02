@@ -87,6 +87,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/search-student/{search_data}', 'AdminController@searchStudent', function () {
     })->middleware(Cors::class);
 
+    //  STUDENT IMAGE
+    Route::post('admin/upload-student-image', 'AdminController@uploadStudentImage', function () {
+    })->middleware(Cors::class);
+
+    
+
 
     // ADMIN {TEACHER}
     Route::post('admin/create-teacher', 'AdminController@createTeacher', function () {
@@ -144,8 +150,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admin/get-teacher-attendance', 'AdminController@getTeacherAttendance', function () {
     })->middleware(Cors::class);
 
-     // ADMIN {DASHBOARD INFO}
-     Route::get('admin/dashboard-information', 'AdminController@getDashboardInfo', function () {
+    // ADMIN {DASHBOARD INFO}
+    Route::get('admin/dashboard-information', 'AdminController@getDashboardInfo', function () {
     })->middleware(Cors::class);
 
 
@@ -186,6 +192,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('teacher/delete-cbt/{cbt_id}', 'TeacherController@deleteCBT', function () {
     })->middleware(Cors::class);
 
+    Route::get('teacher/cbt-change-status/{cbt_id}/{status}', 'TeacherController@changeCBTStatus', function () {
+    })->middleware(Cors::class);
+
     Route::get('teacher/cbt-result/{cbt_id}', 'TeacherController@getCBTResult', function () {
     })->middleware(Cors::class);
 
@@ -198,6 +207,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('teacher/upload-result', 'TeacherController@uploadResult', function () {
     })->middleware(Cors::class);
+
+    Route::post('teacher/upload-comment-rating', 'TeacherController@uploadCommentAndRating', function () {
+    })->middleware(Cors::class);
+    
 
     // TEACHER {ATTENDANCE}
     Route::post('teacher/take-attendance', 'TeacherController@takeAttendance', function () {
@@ -231,18 +244,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('student/registered-subject', 'StudentController@getRegisteredSubject', function () {
     })->middleware(Cors::class);
 
+    //STUDENT {CBT}
     Route::get('student/taken-cbt/{cbt_id}/{student_id}', 'StudentController@checkIfStudenHasTakenCBT', function () {
     })->middleware(Cors::class);
 
     Route::post('student/submit-cbt', 'StudentController@submitCBT', function () {
     })->middleware(Cors::class);
 
+    // STUDENT {PAYMENT}
     Route::post('student/all-fee', 'StudentController@allFee', function () {
     })->middleware(Cors::class);
 
     Route::post('student/payment-history', 'StudentController@paymentHistory', function () {
     })->middleware(Cors::class);
 
+    // STUDENT {RESULT}
+    Route::post('student/result', 'StudentController@getResult', function () {
+    })->middleware(Cors::class);
+
+    Route::post('student/comments-psycho', 'StudentController@getCommentsAndPsycho', function () {
+    })->middleware(Cors::class);
+
+    // STUDENT {ATTENDANCE}
+    Route::post('student/attendance-summary', 'StudentController@attendanceSummary', function () {
+    })->middleware(Cors::class);
 });
 
 // =============================================================================
@@ -327,6 +352,11 @@ Route::get('general/school-details', 'GeneralController@getSchoolDetails', funct
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('general/current-session', 'GeneralController@getCurrentSession', function () {
+    })->middleware(Cors::class);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('general/all-session', 'GeneralController@allSession', function () {
     })->middleware(Cors::class);
 });
 // ===================================================================

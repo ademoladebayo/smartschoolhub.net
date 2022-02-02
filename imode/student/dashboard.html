@@ -34,7 +34,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); loadDashBoardInformation();">
+<body onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -142,6 +142,8 @@
                         </li>
                         <li style="font-weight: bold; font-family: Rowdies;">Dashboard</li>
                     </ul>
+                    <br>
+                    <h3 id="session_term" style="font-weight: bold;font-family: Rowdies">Loading ... </h3>
                 </div>
                 <div class="row">
                     <!-- STATISTIC -->
@@ -201,10 +203,17 @@
                                         <div class="col-6">
                                             <div class="item-content">
                                                 <div style="color: black; font-family: Rowdies;"
-                                                    class="item-title text-blue"><b>Due balance</b></div>
-                                                <a href="#" onclick="makePayment()" class="text-green"><b>Click to pay
+                                                    class="item-title text-blue"><b>Due Balance</b><br><span
+                                                        id="due_balance" style="font-style: bold; color: black;">Loading
+                                                        ...</span></div>
+
+                                                <a href="#"
+                                                    onclick="makePayment(JSON.parse(localStorage['fee']).due_balance)"
+                                                    class="text-green"><b>Click to pay
                                                         now</b></a><br>
-                                                <a href="#" onclick="" class="text-blue"><b>See breakdown</b></a>
+                                                <a href="#" onclick="reloadBreakdownFrame();" data-bs-toggle="modal"
+                                                    data-bs-target="#viewModal" class="text-blue"><b>See
+                                                        breakdown</b></a>
                                             </div>
                                         </div>
                                     </div>
@@ -338,6 +347,43 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="page-modal">
+                        <!-- CREATE MODAL -->
+                        <div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+
+                            <div class="modal-dialog modal-lg">
+
+                                <!--Content-->
+                                <div class="modal-content">
+                                    <div class="modal-header justify-content-center">
+                                        <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                            id="exampleModalLabel">DUE BALANCE BREAKDOWN</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+
+                                    <!--Body-->
+                                    <div class="modal-body mb-0 p-0">
+
+                                        <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                                            <iframe id="breakdown" class="embed-responsive-item"
+                                                src="./due-balance.html" allowfullscreen></iframe>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                                <!--/.Content-->
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
                 </div>
                 <footer class="footer-wrap-layout1">
                     <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
@@ -383,6 +429,7 @@
 
 
 </body>
+
 
 
 <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:04 GMT -->

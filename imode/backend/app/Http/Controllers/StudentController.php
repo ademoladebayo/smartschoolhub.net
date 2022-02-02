@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Model\StudentModel;
+use App\Model\PaymentHistoryModel;
+use App\Model\FeeModel;
 use App\Service\StudentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -43,5 +45,37 @@ class StudentController extends Controller
         $StudentService = new StudentService();
         return $StudentService->submitCBT($request);
     }
-    
+
+    // PAYMENT
+    public function allFee(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->allFee($request);
+    }
+
+    public function paymentHistory(Request $request)
+    {
+        return PaymentHistoryModel::where('student_id', $request->student_id)->orderBy('id', 'DESC')->get();
+    }
+
+    // RESULT
+    public function getResult(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getResult($request);
+    }
+
+    public function getCommentsAndPsycho(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getCommentsAndPsycho($request);
+    }
+
+
+    // ATTENDANCE
+    public function attendanceSummary(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->attendanceSummary($request);
+    }
 }

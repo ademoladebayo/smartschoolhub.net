@@ -40,7 +40,7 @@
 
 </head>
 
-<body onload="loadSideNav('idcard'); getIDCard()">
+<body onload="loadSideNav('idcard'); getIDCard(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -48,13 +48,13 @@
         <!-- Header Menu Area Start Here -->
         <div class="navbar navbar-expand-md header-menu-one bg-light">
             <div class="nav-bar-header-one">
-                <div class="header-logo">
-                    <a href="../index-2.html">
-                        <img src="../img/logo.png" alt="logo">
-                    </a>
-                </div>
+                <b style="margin-left: 5px; margin-top: 5px;" id="logo">
+                    <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                        <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                    </h1>
+                </b>
                 <div class="toggle-button sidebar-toggle">
-                    <button type="button" class="item-link">
+                    <button onclick="changeLogo()" type="button" class="item-link">
                         <span class="btn-icon-wrap">
                             <span></span>
                             <span></span>
@@ -87,25 +87,28 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="navbar-item dropdown header-admin">
-                        <a class="navbar-nav-link dropdown-toggle" href="../#" role="button" data-toggle="dropdown"
+                        <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">
                             <div class="admin-title">
-                                <h5 class="item-title">Stevne Zone</h5>
-                                <span>Admin</span>
+                                <h5 id="user_name" class="item-title"></h5>
+                                <span id="user_type">STUDENT</span>
                             </div>
-                            <div class="admin-img">
+                            <div id="user_img" class="admin-img">
                                 <img src="../img/figure/admin.jpg" alt="Admin">
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="item-header">
-                                <h6 class="item-title">Steven Zone</h6>
+                                <h6 id="user_name1" class="item-title"></h6>
                             </div>
                             <div class="item-content">
                                 <ul class="settings-list">
-                                    <li><a href="../#"><i class="flaticon-user"></i>My Profile</a></li>
-                                    <li><a href="../#"><i class="flaticon-gear-loading"></i>Account Settings</a></li>
-                                    <li><a href="../login.html"><i class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a href="dashboard.html?#my-profile"><i class="flaticon-user"></i>My Profile</a>
+                                    </li>
+                                    <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
+                                            Settings</a></li>
+                                    <li><a onclick="localStorage.removeItem('token')" href="index.html"><i
+                                                class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -120,12 +123,18 @@
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
             <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+
+
                 <div class="mobile-sidebar-header d-md-none">
                     <div class="header-logo">
-                        <a href="index.html"><img src="../img/logo1.png" alt="logo"></a>
+                        <a href="dashboard.html"><b id="logo">
+                                <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                                    <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                                </h1>
+                            </b></a>
                     </div>
                 </div>
-                <div id="side_nav" class="sidebar-menu-content">
+                <div id="side_nav" class="sidebar-menu-content ">
 
                 </div>
             </div>
@@ -149,21 +158,35 @@
 
 
                                     <h1
-                                        style="text-align: center; font-weight: bold; font-family: Rowdies; color:white !important;">
+                                        style="text-align: center; font-weight: bold; font-family: Rowdies; color:white !important; margin-bottom: 0%;">
                                         <i style="color: white !important;" class="fas fa-graduation-cap fa-xs"></i>
                                         SSHUB
+
                                     </h1>
+                                    <h5> <small
+                                            style="display: flex;
+                                        justify-content: center; color:white !important; margin-top: 0%; margin-bottom: 5px; font-family: rowdies;"><b>Attendance
+                                                Card</b></small></h5>
+
+
+
+
+
 
 
                                     <!-- <br> -->
-                                    <img style="border-color: #042954; border-style: solid;padding: 0%;"
+                                    <img style="border-color: #042954; border-style: solid;padding: 0%; margin-top: 5px;"
                                         src="../assets/img/sample_image.png" width="150px">
                                 </div>
                                 <div class="bottom">
-                                    <p style="margin-bottom: 1px; font-family: Rowdies; font-style: bold
-                                    ;color: black;">ADEMOLA ADEBAYO</p>
-                                    <p style="margin-bottom: 1px; color: black; ">2021-STD-001</p>
-                                    <p style="color: black; ">JSS2 </p>
+                                    <p id="full_name" style="margin-bottom: 1px; font-family: Rowdies; font-style: bold
+                                    ;color: black;">________________</p>
+                                    <p id="id" style="margin-bottom: 1px; color: black; ">________________</p>
+
+                                    <small>
+                                        <p id="gender" style="margin-bottom: 1px; color: black; font-size: 15px;">________________</p>
+                                    </small>
+
 
                                     <br>
                                     <p style="margin-bottom: 0; font-family: Rowdies
@@ -176,18 +199,19 @@
                             <h1 style="margin-bottom: 0; font-family: Rowdies
                             ;" class="Details">INFORMATION</h1>
                             <hr style="background-color: #ffa901 !important;">
-                            <h6 style="text-align: center;color: white !important;">SCAN HERE<br></h6>
-                            <div class="qrcode">
+                            <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+                            </h6>
+                            <div style="margin-top: 0%;" class="qrcode">
                                 <div style="display: flex; justify-content: center; text-align: center;" id="IDQR">
                                 </div>
                             </div>
                             <div class="details-info">
                                 <h6 style="text-align: center;color: white !important;">if found , please return to <br>
                                 </h6>
-                                <h6 style="text-align: center;color: white !important;">Community secondary school ,
-                                    Oke-ero,
-                                    Imode,
-                                    Kwara state.<br></h6>
+                                <h6 id="school_address"
+                                    style="text-align: center;color: white !important; margin-bottom: 10px;">
+                                    ________________<br></h6>
+
 
                             </div>
 

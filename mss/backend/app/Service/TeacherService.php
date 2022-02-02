@@ -227,6 +227,15 @@ class TeacherService
         return response()->json(['success' => true, 'message' => 'CBT was deleted successfully.']);
     }
 
+    public function changeCBTStatus($cbt_id, $status)
+    {
+
+        $cbt = CBTModel::find($cbt_id);
+        $cbt->cbt_status = $status;
+        $cbt->save();
+        return response()->json(['success' => true, 'message' => 'CBT was ' . $status . ' successfully.']);
+    }
+
     public function getCBTResult($cbt_id)
     {
         return CBTResultModel::where("cbt_id", $cbt_id)->with("student")->get();
@@ -293,6 +302,18 @@ class TeacherService
         $result->total =  $first_ca +  $second_ca +  $examination;
         $result->save();
         return response()->json(['success' => true, 'message' => 'Result updated']);
+    }
+
+
+    public function uploadCommentAndRating(Request $request)
+    {
+        if ($request->type == "COMMENT") {
+            StudentResultCommentModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->update(array('class_teacher_comment' => $request->value));
+            return response()->json(['success' => true, 'message' => 'Result updated']);
+        } else {
+            StudentResultRatingModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->update(array($request->rating_type => $request->value));
+            return response()->json(['success' => true, 'message' => 'Result updated']);
+        }
     }
 
     // ATTENDANCE

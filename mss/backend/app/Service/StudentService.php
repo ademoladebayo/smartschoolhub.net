@@ -7,12 +7,18 @@ use App\Model\CBTResultModel;
 use App\Model\ClassModel;
 use App\Model\FeeModel;
 use App\Model\PaymentHistoryModel;
+use App\Model\StudentAttendanceModel;
 use App\Model\StudentModel;
+use App\Model\StudentResultCommentModel;
+use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
 use App\Repository\StudentRepository;
 use App\Repository\SubjectRegistrationRepository;
+use App\Repository\GradeSettingsRepository;
+use App\Util\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class StudentService
 {
@@ -163,5 +169,100 @@ class StudentService
 
 
         return ['fee_breakdown' => $fees, 'expected_amount' => $expected_amount, 'total_paid' => $total_paid, 'due_balance' => ($expected_amount - $total_paid)];
+    }
+
+
+    // RESULT
+    public function getResult(Request $request)
+    {
+        // PERCENTAGE AND GRADE POSITION
+        $percentage = 0;
+        $score_accumulator = 0;
+        $no_subject = 0;
+        $grade_position = '';
+
+
+
+        $result =  SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class', 'subject')->get();
+        $no_student = DB::select('select count(distinct student_id) as no_student from subject_registration where class_id ="' . $request->class_id . '" and session ="' . $request->session . '" and term ="' . $request->term . '"')[0]->no_student;
+
+        // LOOP THROUGH RESULT AND ATTACH GRADE
+        foreach ($result as $data) {
+            // POSITION VARIABLE
+            $all_score = [];
+
+            // TAKE EACH TOTAL SCORE AND GET GRADE , REMARK , AVG , MIN ,MAX AND POSITION
+            $avg =  SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
+            $min =  SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
+            $max =  SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
+            $scores =  SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get();
+
+
+
+
+            // PUSH ALL SCORE TO ARRAY TO GET POSITION
+            foreach ($scores as $score) {
+                array_push($all_score, intval($score->total));
+            }
+
+            // SORT SCORE FROM H - L
+            rsort($all_score);
+
+            Log::alert($all_score);
+
+            $GradeSettingsRepository  = new GradeSettingsRepository();
+            $util = new Utils();
+
+            $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($data->total);
+            $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+            $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+            $data['class_average'] = $avg;
+            $data['class_lowest'] = $min;
+            $data['class_highest'] = $max;
+            $data['position'] =  $util->getPosition(array_search(intval($data->total), $all_score) + 1);
+
+
+            // GET SCORE TOTAL
+            $score_accumulator += intval($data->total);
+            $no_subject++;
+        }
+        $GradeSettingsRepository  = new GradeSettingsRepository();
+
+        $percentage = $no_subject != 0 ? $score_accumulator / $no_subject  : 0;
+
+        $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($percentage);
+        $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+
+
+        return response()->json(['result' => $result, 'percentage' => $percentage . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
+    }
+
+
+    public function getCommentsAndPsycho(Request $request)
+    {
+        $teacher_comment =  StudentResultCommentModel::select('class_teacher_comment')->where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->get();
+        $student_rating =  StudentResultRatingModel::where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->get();
+
+        $teacher_comment = count($teacher_comment) != 0 ? $teacher_comment[0]->class_teacher_comment : '';
+        $student_rating = count($student_rating) != 0 ? $student_rating[0] : '';
+
+        return response()->json(['teacher_comment' => $teacher_comment, 'student_rating' => $student_rating]);
+    }
+
+    // ATTENDANCE
+    public function attendanceSummary(Request $request)
+    {
+        $Days = [];
+        $DaysOpened = StudentAttendanceModel::select("date")->where("session", $request->session)->where("term", $request->term)->get();
+        $AttendanceSummary = StudentAttendanceModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->get();
+
+        foreach ($DaysOpened as $day) {
+            array_push($Days, $day->date);
+        }
+
+        $opened = count(array_unique($Days));
+        $present = count($AttendanceSummary);
+        $absent = intval($opened) - intval($present);
+        return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary]);
     }
 }

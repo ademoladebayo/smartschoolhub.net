@@ -55,6 +55,27 @@ class StudentController extends Controller
 
     public function paymentHistory(Request $request)
     {
-        return PaymentHistoryModel::where('student_id', $request->student_id)->orderBy('id','DESC')->get();
+        return PaymentHistoryModel::where('student_id', $request->student_id)->orderBy('id', 'DESC')->get();
+    }
+
+    // RESULT
+    public function getResult(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getResult($request);
+    }
+
+    public function getCommentsAndPsycho(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getCommentsAndPsycho($request);
+    }
+
+
+    // ATTENDANCE
+    public function attendanceSummary(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->attendanceSummary($request);
     }
 }

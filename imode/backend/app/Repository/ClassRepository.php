@@ -13,7 +13,7 @@ class ClassRepository
     {
         $AdminService = new AdminService();
         $ClassModel->save();
-        
+
         // UPDATE THE TEACHER ASSIGNED CLASS
         if ($ClassModel->class_teacher != "-") {
             $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->id);
@@ -27,6 +27,7 @@ class ClassRepository
 
         $ClassModel = ClassModel::find($request->class_id);
         $ClassModel->class_name =  $request->class_name;
+        $ClassModel->class_sector =  $request->class_sector;
         $ClassModel->class_teacher =  $request->class_teacher;
         // REMOVE CLASS FROM PREVIOUS TEACHER
         if ($request->class_teacher != "-") {

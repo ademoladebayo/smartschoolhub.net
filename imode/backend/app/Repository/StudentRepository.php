@@ -6,6 +6,7 @@ use App\Model\StudentModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class StudentRepository
 {
@@ -13,7 +14,8 @@ class StudentRepository
     public function createStudent(StudentModel $studentModel)
     {
         $studentModel->profile_status = 'ENABLED';
-        $studentModel->password = strtolower($studentModel->first_name . "." . $studentModel->last_name);
+        // hash::make(strtolower($studentModel->last_name));
+        $studentModel->password = strtolower($studentModel->last_name);
         $studentModel->save();
 
         // CREATE STUDENT ID
@@ -24,13 +26,15 @@ class StudentRepository
         } else {
             $studentModel->student_id = date("Y") . "-STD-" . $studentModel->id;
         }
+
+        $student_id =  $studentModel->student_id;
         $studentModel->save();
-        return response()->json(['success' => true, 'message' => 'Student was created successfully.']);
+        return response()->json(['success' => true, 'student_id' => $student_id, 'message' => 'Student was created successfully.']);
     }
     public function getAllStudent()
     {
         $StudentModel =  new StudentModel();
-        return  $StudentModel->with('class')->get();
+        return  $StudentModel->with('class')->orderBy('id', 'DESC')->get();
     }
     public function updateStudentClass($student_id, $class_id)
     {
@@ -60,7 +64,6 @@ class StudentRepository
         $studentModel->state =  $request->state;
         $studentModel->home_address =  $request->home_address;
         $studentModel->joining_date =  $request->joining_date;
-        $studentModel->joining_session =  $request->joining_session;
         $studentModel->class =  $request->student_class;
 
 
@@ -105,5 +108,10 @@ class StudentRepository
     public function getPassword($id)
     {
         return DB::select("select password from student where student_id ='" . $id . "'")[0]->password;
+    }
+
+    public function allStudentCount()
+    {
+        return DB::select('select count(id) as student_no from student')[0]->student_no;
     }
 }

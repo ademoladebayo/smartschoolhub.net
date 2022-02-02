@@ -26,13 +26,15 @@ class StudentRepository
         } else {
             $studentModel->student_id = date("Y") . "-STD-" . $studentModel->id;
         }
+
+        $student_id =  $studentModel->student_id;
         $studentModel->save();
-        return response()->json(['success' => true, 'message' => 'Student was created successfully.']);
+        return response()->json(['success' => true, 'student_id' => $student_id, 'message' => 'Student was created successfully.']);
     }
     public function getAllStudent()
     {
         $StudentModel =  new StudentModel();
-        return  $StudentModel->with('class')->get();
+        return  $StudentModel->with('class')->orderBy('id', 'DESC')->get();
     }
     public function updateStudentClass($student_id, $class_id)
     {

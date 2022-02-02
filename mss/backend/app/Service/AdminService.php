@@ -137,6 +137,22 @@ class AdminService
         return $StudentRepository->getAllStudent();
     }
 
+    // STUDENT IMAGE
+    public function uploadStudentImage(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            // GET FILENAME
+            $file_name = $_FILES['file']['name'];
+
+            $storage_path =  $request->file->storeAs('public/fileupload', $request->student_id . ".png");
+            $file_url = '/storage/fileupload/' . $request->student_id . ".png";
+
+            return response()->json(['success' => true, 'message' => 'file sent', 'url' => $file_url]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No File found.']);
+        }
+    }
+
     // TEACHER
     public function createTeacher(Request $request)
     {
