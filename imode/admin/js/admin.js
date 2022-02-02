@@ -1215,6 +1215,14 @@ function getAllStudentForTable() {
 }
 
 function viewStudent(json) {
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    json.student_id +
+    ".png";
+  document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
+
   document.getElementById("first_name").value = json.first_name;
   document.getElementById("middle_name").value = json.middle_name;
   document.getElementById("last_name").value = json.last_name;

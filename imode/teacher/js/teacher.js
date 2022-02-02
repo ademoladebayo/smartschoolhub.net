@@ -10,6 +10,7 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 var ip = "https://smartschoolhub.net/backend/imode";
 var domain = "https://imode.smartschoolhub.net";
 
+
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
