@@ -1817,7 +1817,10 @@ async function getIDCard() {
 
   // IMAGE URL
   url =
-    domain + "/backend/storage/app/public/fileupload/" + student_id + ".png";
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    JSON.parse(student_id).student_id +
+    ".png";
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
