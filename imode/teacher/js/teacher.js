@@ -10,7 +10,6 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 var ip = "https://smartschoolhub.net/backend/imode";
 var domain = "https://imode.smartschoolhub.net";
 
-
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
@@ -20,6 +19,8 @@ var question = [];
 var options = [];
 var questions_number = [];
 var answer = [];
+
+getSchoolDetails();
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
@@ -3146,6 +3147,10 @@ function uploadResult(id, result_type, score) {
 }
 
 // ATTENDANCE
+function getAttendanceDate() {
+  document.getElementById("date").innerHTML += Date("DD-MM-YYYY").toUpperCase();
+}
+
 function takeAttendance() {
   document.getElementById("date").innerHTML += Date("DD-MM-YYYY").toUpperCase();
   // document.getElementById("attendance_class").innerHTML += JSON.parse(
@@ -3168,10 +3173,10 @@ function takeAttendance() {
     });
 
   scanner.addListener("scan", function (qr_data) {
-    // document.getElementById("student_id").value = qr_data; //ATDCard~id~class_id~first_name
+    // document.getElementById("student_id").value = qr_data; //StudentATDCard~id~class_id~first_name
 
     // CHECK IF CARD IS VALID
-    if (qr_data.split("~")[0] != "ATDCard") {
+    if (qr_data.split("~")[0] != "StudentATDCard") {
       errorSound.play();
       setTimeout(function () {
         say("Invalid Card!");
@@ -3181,13 +3186,15 @@ function takeAttendance() {
     }
 
     if (
-      qr_data.split("~")[1] !=
+      qr_data.split("~")[2] !=
       JSON.parse(localStorage["user_data"]).data.assigned_class.id
     ) {
       errorSound.play();
       setTimeout(function () {
         say("Invalid Class!");
       }, 1000);
+
+      return 0;
     }
 
     // PASS ATTENDANCE DETAILS TO API
@@ -3289,6 +3296,54 @@ function getAttendance() {
         document.getElementById(
           "student_attendance"
         ).innerHTML = `NO ATTENDANCE`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function takeAttendanceByStudentID() {
+  if (document.getElementById("student_id").value == "") {
+    return alert("INPUT STUDENT ID");
+  }
+
+  // PASS ATTENDANCE DETAILS TO API
+  fetch(ip + "/api/teacher/take-attendance", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: document.getElementById("student_id").value,
+      class_id: "",
+      date: getDate().split("~")[1],
+      time: getDate().split("~")[0],
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/teacher/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      if (data.success) {
+        successSound.play();
+        setTimeout(function () {
+          say("Verified!");
+        }, 1000);
+        getAttendance();
+      } else {
+        errorSound.play();
+        setTimeout(function () {
+          say(data.message);
+        }, 1000);
+        getAttendance();
       }
     })
     .catch((err) => console.log(err));
@@ -3555,7 +3610,7 @@ function countDistinct(arr, n) {
 
 // GET SCHOOL DETAILS
 function getSchoolDetails() {
-  fetch(ip + "/api/general/school-details", {
+  return fetch(ip + "/api/general/school-details", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -3570,10 +3625,6 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
-      document.getElementById("school_name").innerHTML =
-        "Welcome , <br>" + localStorage["SCHOOL_NAME"];
-      document.getElementById("title").innerHTML +=
-        " | " + localStorage["SCHOOL_NAME"];
     })
     .catch((err) => console.log(err));
 }
@@ -3602,7 +3653,7 @@ function successtoast(message, time) {
 function warningtoast(message, time) {
   toastr.warning(message, "", {
     positionClass: "toast-top-center",
-    timeOut: 60 * 60,
+    timeOut: 10000,
     closeButton: true,
     debug: false,
     newestOnTop: true,

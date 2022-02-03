@@ -157,16 +157,25 @@
                                 <div class="top">
 
 
-                                    <h1
+                                    <!-- <h1
                                         style="text-align: center; font-weight: bold; font-family: Rowdies; color:white !important; margin-bottom: 0%;">
                                         <i style="color: white !important;" class="fas fa-graduation-cap fa-xs"></i>
                                         SSHUB
 
-                                    </h1>
-                                    <h5> <small
+                                    </h1> -->
+
+                                    <b>
+                                        <h6 id="school_name"
+                                            style="text-align: center; font-weight: bold; font-family: Rowdies; color:white !important; margin-bottom: 0%;">
+                                            ________________
+                                        </h6>
+                                    </b>
+
+
+                                    <!-- <h5> <small
                                             style="display: flex;
                                         justify-content: center; color:white !important; margin-top: 0%; margin-bottom: 5px; font-family: rowdies;"><b>Attendance
-                                                Card</b></small></h5>
+                                                Card</b></small></h5> -->
 
 
 
@@ -175,8 +184,15 @@
 
 
                                     <!-- <br> -->
-                                    <img style="border-color: #042954; border-style: solid;padding: 0%; margin-top: 5px;"
+                                    <!-- <img style="border-color: #042954; border-style: solid;padding: 0%; margin-top: 5px;"
+                                        src="../assets/img/sample_image.png" width="150px"> -->
+
+                                    <img id="student_image"
+                                        style="border-color: #042954; border-style: solid;padding: 0%; margin-top: 5px;"
                                         src="../assets/img/sample_image.png" width="150px">
+
+
+
                                 </div>
                                 <div class="bottom">
                                     <p id="full_name" style="margin-bottom: 1px; font-family: Rowdies; font-style: bold
@@ -184,7 +200,8 @@
                                     <p id="id" style="margin-bottom: 1px; color: black; ">________________</p>
 
                                     <small>
-                                        <p id="gender" style="margin-bottom: 1px; color: black; font-size: 15px;">________________</p>
+                                        <p id="gender" style="margin-bottom: 1px; color: black; font-size: 15px;">
+                                            ________________</p>
                                     </small>
 
 
@@ -199,18 +216,21 @@
                             <h1 style="margin-bottom: 0; font-family: Rowdies
                             ;" class="Details">INFORMATION</h1>
                             <hr style="background-color: #ffa901 !important;">
-                            <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
-                            </h6>
+                            <small>
+                                <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE FOR
+                                    ATTENDANCE<br>
+                                </h6>
+                            </small>
                             <div style="margin-top: 0%;" class="qrcode">
                                 <div style="display: flex; justify-content: center; text-align: center;" id="IDQR">
                                 </div>
                             </div>
                             <div class="details-info">
-                                <h6 style="text-align: center;color: white !important;">if found , please return to <br>
+                                <h6 style="text-align: center;color: white !important;">if found please return to
                                 </h6>
                                 <h6 id="school_address"
                                     style="text-align: center;color: white !important; margin-bottom: 10px;">
-                                    ________________<br></h6>
+                                    ________________</h6>
 
 
                             </div>

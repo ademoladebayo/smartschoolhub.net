@@ -6,7 +6,6 @@
 var ip = "https://smartschoolhub.net/backend/imode";
 var domain = "https://imode.smartschoolhub.net";
 
-
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
@@ -20,6 +19,8 @@ window.addEventListener("online", () =>
 window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
+
+getSchoolDetails();
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
@@ -467,7 +468,8 @@ function startCBT(cbt) {
     .catch((err) => console.log(err));
 }
 
-function getCBTdetails() {
+async function getCBTdetails() {
+  await getSchoolDetails();
   document.getElementById("session_term").innerHTML =
     JSON.parse(localStorage["cbt_detail"]).session +
     " Session | " +
@@ -1091,7 +1093,8 @@ function getRegisteredSubjectForTableCBT() {
 }
 
 // RESULT
-function getTranscript() {
+async function getTranscript() {
+  await getSchoolDetails();
   user_data = JSON.parse(localStorage["user_data"]);
   // POPULATE STUDENTS INFORMATION
   document.getElementById("full_name").innerHTML =
@@ -1583,7 +1586,64 @@ function getCommentsAndPsycho(value) {
 }
 
 // ATTENDANCE
-function getAttendanceSummary(value) {
+function getAttendanceSummary(value) {0
+  if ((value = "ATTENDANCE_HISTORY")) {
+    // GET ACADEMIC PERFORMANCE
+    return fetch(ip + "/api/student/attendance-summary", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        student_id: JSON.parse(localStorage["user_data"]).data.id,
+        session: localStorage["current_session"],
+        term: localStorage["current_term"],
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          window.parent.location.assign(domain + "/student/");
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        document.getElementById("opened").innerHTML +=
+          data.opened > 1 ? data.opened + " days" : data.opened + " day";
+        document.getElementById("present").innerHTML += data.present
+          ? data.present + " days"
+          : data.present + " day";
+        abesent = data.opened - data.present;
+        document.getElementById("absent").innerHTML +=
+          abesent > 1 ? abesent + " days" : abesent + " day";
+
+        document.getElementById("attendance_history").innerHTML = "";
+        c = 1;
+        if (data.attendance_summary.length > 0) {
+          data.attendance_summary.forEach((attendance) => {
+            document.getElementById("attendance_history").innerHTML += `
+            <tr>
+                <td>
+                  ${c}.</td>
+                <td>
+                    ${attendance.date}</td>
+                <td>
+                ${attendance.time}</td>
+
+            </tr>
+            `;
+            c = c + 1;
+          });
+        } else {
+          document.getElementById("attendance_history").innerHTML =
+            "NO ATTENDANCE FOUND.";
+        }
+      })
+      .catch((err) => console.log(err));
+  }
   // GET ACADEMIC PERFORMANCE
   return fetch(ip + "/api/student/attendance-summary", {
     method: "POST",
@@ -1618,7 +1678,21 @@ function getAttendanceSummary(value) {
 }
 
 // ID CARD
-function getIDCard() {
+async function getIDCard() {
+  await getSchoolDetails();
+  student_id = JSON.parse(localStorage["user_data"]).data.student_id;
+
+  // GET SCHOOL NAME
+  document.getElementById("school_name").innerHTML =
+    localStorage["SCHOOL_NAME"];
+
+  // IMAGE URL
+  url =
+    domain + "/backend/storage/app/public/fileupload/" + student_id + ".png";
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
+
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
     JSON.parse(localStorage["user_data"]).data.first_name +
@@ -1824,7 +1898,8 @@ function countDistinct(arr, n) {
   return res;
 }
 
-function makePayment(amount) {
+async function makePayment(amount) {
+  await getSchoolDetails();
   FlutterwaveCheckout({
     public_key: "FLWPUBK_TEST-4a013176d7cab721b11eef9c4437fbba-X",
     tx_ref: "T1",
@@ -1863,7 +1938,7 @@ function makePayment(amount) {
 
 // GET SCHOOL DETAILS
 function getSchoolDetails() {
-  fetch(ip + "/api/general/school-details", {
+  return fetch(ip + "/api/general/school-details", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -1878,10 +1953,6 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
-      document.getElementById("school_name").innerHTML =
-        "Welcome , <br>" + localStorage["SCHOOL_NAME"];
-      document.getElementById("title").innerHTML +=
-        " | " + localStorage["SCHOOL_NAME"];
     })
     .catch((err) => console.log(err));
 }
@@ -1910,7 +1981,7 @@ function successtoast(message, time) {
 function warningtoast(message, time) {
   toastr.warning(message, "", {
     positionClass: "toast-top-center",
-    timeOut: 60 * 60,
+    timeOut: 10000,
     closeButton: true,
     debug: false,
     newestOnTop: true,

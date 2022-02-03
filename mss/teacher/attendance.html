@@ -5,7 +5,7 @@
 <head id="header">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SSHUB | Mark Attendance</title>
+    <title>SSHUB | Student Attendance</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -55,7 +55,7 @@
 
 </head>
 
-<body onload="loadSideNav('attendance'); takeAttendance(); getAttendance(); loadDashBoardInformation()">
+<body onload="loadSideNav('attendance'); getAttendanceDate(); takeAttendance(); getAttendance(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -154,12 +154,13 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 id="date" style="font-weight: bold; font-family: Rowdies;">ATTENDANCE FOR </h3>
+                    <h3 id="" style="font-weight: bold; font-family: Rowdies;">ATTENDANCE SYSTEM FOR STUDENTS</h3>
+                    <h6 id="date" style="font-weight: bold; font-family: Rowdies;"></h6>
                     <ul>
                         <li>
                             <a style="font-weight: bold;font-family: Rowdies, serif;" href="dashboard.html">Home</a>
                         </li>
-                        <li style="font-weight: bold;font-family: Rowdies, serif;">Class Attendance</li>
+                        <li style="font-weight: bold;font-family: Rowdies, serif;">Student Attendance</li>
                     </ul>
                 </div>
 
@@ -169,30 +170,74 @@
                             <div style="float: right;" class="header-inline item-header">
                                 <div class="header-elements">
                                     <ul>
-                                        <!-- <li><a href="#"><i class="far fa-edit"></i></a></li> -->
+                                        <!-- <li><i class="far fa-edit"></i></a></li> -->
                                         <li><a onclick="print()" href="#"><i class="fas fa-print"></i></a></li>
-                                        <!-- <li><a href="#"><i class="fas fa-download"></i></a></li> -->
+                                        <!-- <li><i class="fas fa-download"></i></a></li> -->
                                     </ul>
                                 </div>
                             </div>
-                            <div class="heading-layout1">
+                            <div style="display: flex;
+                            justify-content: center;" class="heading-layout1">
                                 <div class="item-title">
                                     <h3 id="attendance_class" style="font-weight: bold;font-family: Rowdies, serif;">
-                                        TAKE ATTENDANCE FOR </h3> <a href="#">
+                                        SCAN STUDENT ID CARD HERE</h3>
 
 
                                 </div>
 
                             </div>
-                            <div class="row gutters-8 new-added-form">
+                            <div style="display: flex;
+                            justify-content: center;" class="row gutters-8 new-added-form">
 
-                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                <div class="col-4 form-group">
                                     <video id="preview" width="100%"></video>
                                 </div>
-                                <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input oninput="verifyID(this.value)" id="student_id" type="text"
-                                        placeholder="Student ID" class="form-control">
-                                </div> -->
+
+
+                            </div>
+                            <br>
+
+                            <div style="display: flex;
+                            justify-content: center;" class="heading-layout1">
+                                <div class="item-title">
+                                    <h3 id="attendance_class" style="font-weight: bold;font-family: Rowdies, serif;">
+                                        OR USE STUDENT ID</h3>
+
+
+                                </div>
+
+                            </div>
+
+
+                            <div style="display: flex;
+                            justify-content: center;" class="row gutters-8 new-added-form">
+
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input id="student_id" type="text" placeholder="2020-STD-000" class="form-control">
+                                </div>
+
+
+                                <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                    <button id="" onclick="takeAttendanceByStudentID()"
+                                        class="fw-btn-fill btn-gradient-yellow">PROCEED</button>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div style="display: flex;
+                            justify-content: center;" class="heading-layout1">
+                                <div class="item-title">
+                                    <h3 id="attendance_class" style="font-weight: bold;font-family: Rowdies, serif;">
+                                        GET ATTENDANCE LIST FOR A DATE</h3>
+
+
+                                </div>
+
+                            </div>
+
+                            <div style="display: flex;
+                            justify-content: center;" class="row gutters-8 new-added-form">
+
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
                                     <input autocomplete="off" id="attendance_date" type="text" placeholder="dd/mm/yyyy"
                                         value="" class="form-control air-datepicker" data-position='bottom right'>
@@ -204,9 +249,11 @@
                                         onclick="
                                     document.getElementById('student_attendance').innerHTML = 
                                     `<i style='color:black' class='fa fa-spinner fa-spin'></i>  Fetching Student Attendance For ${document.getElementById('attendance_date').value}  ...`; getAttendance()"
-                                        type="submit" class="fw-btn-fill btn-gradient-yellow">GET ATTENDANCE</button>
+                                        class="fw-btn-fill btn-gradient-yellow">GET ATTENDANCE</button>
                                 </div>
                             </div>
+
+
                             <div id="attendance_table" class="table-responsive">
 
                                 <table class="table display data-table text-nowrap">

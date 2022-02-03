@@ -1,14 +1,16 @@
 // DEVELOPMENT IP
-var ip = "http://127.0.0.1:8000";
-var domain = "http://localhost/smartschoolhub.net/mss";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-// var ip = "https://smartschoolhub.net/backend/mss";
-// var domain = "https://mss.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/mss";
+var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
+
+getSchoolDetails();
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
@@ -1129,7 +1131,7 @@ function getDashboardInfo() {
 
 // GET SCHOOL DETAILS
 function getSchoolDetails() {
-  fetch(ip + "/api/general/school-details", {
+  return fetch(ip + "/api/general/school-details", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -1144,10 +1146,6 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
-      document.getElementById("school_name").innerHTML =
-        "Welcome , <br>" + localStorage["SCHOOL_NAME"];
-      document.getElementById("title").innerHTML +=
-        " | " + localStorage["SCHOOL_NAME"];
     })
     .catch((err) => console.log(err));
 }
@@ -1176,7 +1174,7 @@ function successtoast(message, time) {
 function warningtoast(message, time) {
   toastr.warning(message, "", {
     positionClass: "toast-top-center",
-    timeOut: 60 * 60,
+    timeOut: 10000,
     closeButton: true,
     debug: false,
     newestOnTop: true,

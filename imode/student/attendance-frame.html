@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="">
 
-    <title> Courses </title>
+    <title> ATTENDANCE </title>
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="../css/all.min.css">
     <!-- Flaticon CSS -->
@@ -32,7 +32,7 @@
 
 </head>
 
-<body id="page-top" onload="getstudentAttendance(); getTermAndSession()">
+<body id="page-top" onload="getAttendanceSummary('ATTENDANCE_HISTORY'); getTermAndSession()">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -48,7 +48,7 @@
                     <div class="card-header py-3">
                         <h6 id="term_registration" class="m-0 font-weight-bold text-primary"> <b>SCHOOL ATTENDANCE</b>
                         </h6>
-                        <p id="present" class="m-0 font-weight-bold " style="color: blue;">School has opened for </p>
+                        <p id="opened" class="m-0 font-weight-bold " style="color: blue;">School has opened for </p>
                         <p id="present" class="m-0 font-weight-bold " style="color: green;">You have been present for
                         </p>
                         <p id="absent" class="m-0 font-weight-bold " style="color: red;">You have been absent for </p>
@@ -107,11 +107,11 @@
                                         <tr>
                                             <th>S/N</th>
                                             <th>Date</th>
-                                            <th>Attendance Status</th>
+                                            <th>Time</th>
 
                                         </tr>
                                     </thead>
-                                    <tbody id="subject_table">
+                                    <tbody id="attendance_history">
                                         <tr>
                                             <td>
                                                 1.</td>

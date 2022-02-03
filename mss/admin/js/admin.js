@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-var ip = "http://127.0.0.1:8000";
-var domain = "http://localhost/smartschoolhub.net/mss";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-// var ip = "https://smartschoolhub.net/backend/mss";
-// var domain = "https://mss.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/mss";
+var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -20,6 +20,8 @@ window.addEventListener("online", () =>
 window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
+getSchoolDetails();
+
 function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
@@ -1215,6 +1217,14 @@ function getAllStudentForTable() {
 }
 
 function viewStudent(json) {
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    json.student_id +
+    ".png";
+  document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
+
   document.getElementById("first_name").value = json.first_name;
   document.getElementById("middle_name").value = json.middle_name;
   document.getElementById("last_name").value = json.last_name;
@@ -1797,8 +1807,20 @@ function uploadImage(image, student_id) {
 }
 
 // STUDENT ID CARD
-function getIDCard() {
+async function getIDCard() {
+  await getSchoolDetails();
   student_id = localStorage["student_id_card"];
+
+  // GET SCHOOL NAME
+  document.getElementById("school_name").innerHTML =
+    localStorage["SCHOOL_NAME"];
+
+  // IMAGE URL
+  url =
+    domain + "/backend/storage/app/public/fileupload/" + student_id + ".png";
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
@@ -3531,7 +3553,7 @@ function say(text) {
 
 // GET SCHOOL DETAILS
 function getSchoolDetails() {
-  fetch(ip + "/api/general/school-details", {
+  return fetch(ip + "/api/general/school-details", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -3546,10 +3568,6 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
-      document.getElementById("school_name").innerHTML =
-        "Welcome , <br>" + localStorage["SCHOOL_NAME"];
-      document.getElementById("title").innerHTML +=
-        " | " + localStorage["SCHOOL_NAME"];
     })
     .catch((err) => console.log(err));
 }
@@ -3578,7 +3596,7 @@ function successtoast(message, time) {
 function warningtoast(message, time) {
   toastr.warning(message, "", {
     positionClass: "toast-top-center",
-    timeOut: 60 * 60,
+    timeOut: 10000,
     closeButton: true,
     debug: false,
     newestOnTop: true,
