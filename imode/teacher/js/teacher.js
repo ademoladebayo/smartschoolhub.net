@@ -1101,6 +1101,17 @@ function viewStudentResult(data) {
 // STUDENT RESULT
 function getTranscript() {
   user_data = JSON.parse(localStorage["student_result"]);
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    user_data.student_id +
+    ".png";
+  // "https://imode.smartschoolhub.net/backend/storage/app/public/fileupload/2022-STD-015.png"
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
+
   // POPULATE STUDENTS INFORMATION
   document.getElementById("full_name").innerHTML =
     "<b>" +
@@ -1392,7 +1403,7 @@ function getTranscript() {
 
   for (i = 0; i < result_containers.length; i++) {
     container_name = result_containers[i].attributes[0].nodeValue;
-    // ATTENDANCE
+    // ATTENDANCEk
     getAttendanceSummary(container_name);
     //ACADEMIC PERFORMANCE
     getResult(container_name);
@@ -3527,6 +3538,95 @@ function print1(section) {
   </html>`);
   a.print();
   a.document.close();
+}
+
+// CLASSES
+function getAllClassForDropDown() {
+  fetch(ip + "/api/admin/all-class", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        //  window.parent.location.assign(domain +"/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      for (i in data) {
+        document.getElementById(
+          "class"
+        ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// PROMOTE STUDENT
+function promoteStudent() {
+  class_id = document.getElementById("class").value;
+  class_name = document.getElementById("class");
+  index = document.getElementById("class").selectedIndex;
+
+  if (class_id == "") {
+    alert("Please select a class to promote student to !");
+  } else {
+    // CHECK IF SAME CLASS
+    if (
+      class_id == JSON.parse(localStorage["user_data"]).data.assigned_class.id
+    ) {
+      alert("Students are aleady in " + class_name[index].text);
+      return 0;
+    }
+
+    // CONFIRM PROMOTION
+    if (
+      confirm(
+        "You are about to promote all students in " +
+          JSON.parse(localStorage["user_data"]).data.assigned_class.class_name +
+          " to " +
+          class_name[index].text
+      )
+    ) {
+      // CALL API
+      warningtoast("Processing ... Please wait");
+      fetch(ip + "/api/teacher/promote-students", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+        body: JSON.stringify({
+          old_class: JSON.parse(localStorage["user_data"]).data.assigned_class
+            .id,
+          new_class: class_id,
+        }),
+      })
+        .then(function (res) {
+          console.log(res.status);
+          if (res.status == 401) {
+            window.parent.location.assign(domain + "/teacher/");
+          }
+          return res.json();
+        })
+
+        .then((data) => {
+          toastr.remove();
+          if (data.success) {
+            alert(data.message);
+            getAllStudentForTable();
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 }
 
 // DEBOUNCER

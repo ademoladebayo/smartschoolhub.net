@@ -1,10 +1,10 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/imode";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/imode";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/imode";
-var domain = "https://imode.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/imode";
+// var domain = "https://imode.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -1096,6 +1096,17 @@ function getRegisteredSubjectForTableCBT() {
 async function getTranscript() {
   await getSchoolDetails();
   user_data = JSON.parse(localStorage["user_data"]);
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    user_data.data.student_id; +
+    ".png";
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
+
   // POPULATE STUDENTS INFORMATION
   document.getElementById("full_name").innerHTML =
     "<b>" +
@@ -1586,8 +1597,8 @@ function getCommentsAndPsycho(value) {
 }
 
 // ATTENDANCE
-function getAttendanceSummary(value) {0
-  if ((value = "ATTENDANCE_HISTORY")) {
+function getAttendanceSummary(value) {
+  if (value == "ATTENDANCE_HISTORY") {
     // GET ACADEMIC PERFORMANCE
     return fetch(ip + "/api/student/attendance-summary", {
       method: "POST",

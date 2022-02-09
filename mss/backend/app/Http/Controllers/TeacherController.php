@@ -101,7 +101,7 @@ class TeacherController extends Controller
         $TeacherService = new TeacherService();
         return $TeacherService->uploadCommentAndRating($request);
     }
-    
+
 
 
     // ATTENDANCE
@@ -115,6 +115,13 @@ class TeacherController extends Controller
     {
         $StudentAttendanceRepository = new StudentAttendanceRepository();
         return $StudentAttendanceRepository->getAttendance($request);
+    }
+
+    // PROMOTE STUDENT
+    public function promoteStudents(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->promoteStudents($request);
     }
 
     // CHANGE PASSWORD

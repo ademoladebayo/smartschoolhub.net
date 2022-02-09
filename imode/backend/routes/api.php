@@ -91,7 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admin/upload-student-image', 'AdminController@uploadStudentImage', function () {
     })->middleware(Cors::class);
 
-    
+
 
 
     // ADMIN {TEACHER}
@@ -210,13 +210,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('teacher/upload-comment-rating', 'TeacherController@uploadCommentAndRating', function () {
     })->middleware(Cors::class);
-    
+
 
     // TEACHER {ATTENDANCE}
     Route::post('teacher/take-attendance', 'TeacherController@takeAttendance', function () {
     })->middleware(Cors::class);
 
     Route::post('teacher/get-attendance', 'TeacherController@getAttendance', function () {
+    })->middleware(Cors::class);
+
+    // TEACHER {PROMOTE STUDENT}
+    Route::post('teacher/promote-students', 'TeacherController@promoteStudents', function () {
     })->middleware(Cors::class);
 
     // TEACHER {CHANGE PASSWORD}

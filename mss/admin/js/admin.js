@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
-var domain = "https://mss.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/mss";
+// var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -156,7 +156,8 @@ function loadSideNav(page) {
         <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
         <span>Session Management</span></a>
     </li>
-    
+
+
     <li class="nav-item">
         <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
         <span>Grade Settings</span></a>
@@ -1031,7 +1032,9 @@ function getAllStudentForTable() {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+            <td>${
+              data[i].class == null ? `GRADUATED` : data[i].class.class_name
+            }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1076,7 +1079,9 @@ function getAllStudentForTable() {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1122,7 +1127,9 @@ function getAllStudentForTable() {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1167,7 +1174,9 @@ function getAllStudentForTable() {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1573,7 +1582,9 @@ function searchStudent(search_data) {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1618,7 +1629,9 @@ function searchStudent(search_data) {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1664,7 +1677,9 @@ function searchStudent(search_data) {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1709,7 +1724,9 @@ function searchStudent(search_data) {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
               /"/g,
@@ -1895,7 +1912,7 @@ function getAllClassForTable() {
               " " +
               data[i].class_teacher.last_name
             }</td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
               data[i].id
@@ -1925,7 +1942,7 @@ function getAllClassForTable() {
             <td>${data[i].class_name}</td>
             <td>${data[i].class_sector}</td>
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~~${data[i].class_sector}')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
@@ -1951,7 +1968,7 @@ function getAllClassForTable() {
               " " +
               data[i].class_teacher.last_name
             }</td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
               data[i].id
@@ -1981,7 +1998,7 @@ function getAllClassForTable() {
             <td>${data[i].class_name}</td>
             <td>${data[i].class_sector}</td>
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
                 <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~~${data[i].class_sector}')" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
@@ -2216,7 +2233,7 @@ function searchClass(class_name) {
                 " " +
                 data[i].class_teacher.last_name
               }</td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
               <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
                 data[i].id
@@ -2245,7 +2262,7 @@ function searchClass(class_name) {
               <td>${c}.</td>
               <td>${data[i].class_name}</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
               <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
@@ -2270,7 +2287,7 @@ function searchClass(class_name) {
                 " " +
                 data[i].class_teacher.last_name
               }</td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
               <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
                 data[i].id
@@ -2299,7 +2316,7 @@ function searchClass(class_name) {
               <td>${c}.</td>
               <td>${data[i].class_name}</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
                   <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
@@ -2397,7 +2414,9 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>${
               data[i].teacher.title +
               " " +
@@ -2405,7 +2424,7 @@ function getAllSubjectForTable() {
               " " +
               data[i].teacher.last_name
             }</td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
@@ -2435,13 +2454,21 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id}~${data[i].subject_name}~null~null~${data[i].class.class_name}~${data[i].class.id}')" class="btn btn-warning" data-bs-toggle="modal"
+            <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
+              data[i].class.id
+            }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
+                <a onclick="deleteClass(${
+                  data[i].id
+                })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -2455,7 +2482,9 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>${
               data[i].teacher.title +
               " " +
@@ -2463,7 +2492,7 @@ function getAllSubjectForTable() {
               " " +
               data[i].teacher.last_name
             }</td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
@@ -2491,13 +2520,23 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-            <td>${data[i].class.class_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-            <td>25</td>
+            <td>${data[i].student_no}</td>
             <td>
-                <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id}~${data[i].subject_name}~null~null~${data[i].class.class_name}~${data[i].class.id}')" class="btn btn-warning" data-bs-toggle="modal"
+                <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+                  data[i].id
+                }~${data[i].subject_name}~null~null~${
+              data[i].class.class_name
+            }~${
+              data[i].class.id
+            }')" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteSubject(${data[i].id})" class="btn btn-danger text-white"><i
+                <a onclick="deleteSubject(${
+                  data[i].id
+                })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -2656,7 +2695,9 @@ function searchSubject(subject_name) {
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-              <td>${data[i].class.class_name}</td>
+               <td>${
+                 data[i].class == null ? `GRADUATED` : data[i].class.class_name
+               }</td>
               <td>${
                 data[i].teacher.title +
                 " " +
@@ -2664,7 +2705,7 @@ function searchSubject(subject_name) {
                 " " +
                 data[i].teacher.last_name
               }</td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
               <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
                 data[i].id
@@ -2694,13 +2735,21 @@ function searchSubject(subject_name) {
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-              <td>${data[i].class.class_name}</td>
+               <td>${
+                 data[i].class == null ? `GRADUATED` : data[i].class.class_name
+               }</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
-              <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id}~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${data[i].class.id}')" class="btn btn-warning" data-bs-toggle="modal"
+              <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+                data[i].id
+              }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${
+                data[i].class.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
+                  <a onclick="deleteClass(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -2714,7 +2763,9 @@ function searchSubject(subject_name) {
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-              <td>${data[i].class.class_name}</td>
+               <td>${
+                 data[i].class == null ? `GRADUATED` : data[i].class.class_name
+               }</td>
               <td>${
                 data[i].teacher.title +
                 " " +
@@ -2722,7 +2773,7 @@ function searchSubject(subject_name) {
                 " " +
                 data[i].teacher.last_name
               }</td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
               <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
                 data[i].id
@@ -2750,13 +2801,21 @@ function searchSubject(subject_name) {
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-              <td>${data[i].class.class_name}</td>
+               <td>${
+                 data[i].class == null ? `GRADUATED` : data[i].class.class_name
+               }</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-              <td>25</td>
+              <td>${data[i].student_no}</td>
               <td>
-                  <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id}~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${data[i].class.id}')" class="btn btn-warning" data-bs-toggle="modal"
+                  <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+                    data[i].id
+                  }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${
+                data[i].class.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteSubject(${data[i].id})" class="btn btn-danger text-white"><i
+                  <a onclick="deleteSubject(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -3345,7 +3404,11 @@ function getAttendance() {
                       " " +
                       data[i].student.last_name
                     }</td>
-                    <td>${data[i].class.class_name}</td>
+                     <td>${
+                       data[i].class == null
+                         ? `GRADUATED`
+                         : data[i].class.class_name
+                     }</td>
                     <td>${data[i].student.gender}</td>
                     <td>${data[i].date}</td>
                     <td>${data[i].time}</td>

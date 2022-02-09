@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Model\SessionModel;
 use App\Model\SubjectModel;
+use App\Model\SubjectRegistrationModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,10 +17,27 @@ class SubjectRepository
         $SubjectModel->save();
         return response()->json(['success' => true, 'message' => 'Subject was created successfully.']);
     }
+
     public function getAllSubject()
     {
-        $SubjectModel =  new SubjectModel();
-        return  $SubjectModel->with('teacher', 'class')->get();
+        $Subjects =  SubjectModel::with('teacher', 'class')->get();
+
+        foreach ($Subjects as $subject) {
+            $student_no = $this->getNoSubjectRegistration($subject->id);
+            $subject['student_no'] = $student_no;
+        }
+        return  $Subjects;
+    }
+
+
+    public function getNoSubjectRegistration($subject_id)
+    {
+        $session_term = SessionModel::where("session_status", "CURRENT")->get();
+        if (count($session_term) == 0) {
+            return 0;
+        } else {
+            return  SubjectRegistrationModel::where('subject_id', $subject_id)->where('session', $session_term[0]->session)->where('term', $session_term[0]->term)->count();
+        }
     }
 
     public function editSubject(Request $request)

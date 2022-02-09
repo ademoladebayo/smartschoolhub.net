@@ -43,7 +43,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('my-student'); getAllStudentForTable(); loadDashBoardInformation()">
+<body onload="loadSideNav('my-student'); getAllClassForDropDown(); getAllStudentForTable(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -109,8 +109,7 @@
                                     <li><a href="my-profile.html"><i class="flaticon-user"></i>My Profile</a></li>
                                     <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
                                             Settings</a></li>
-                                    <li><a onclick="goTo('')" href="#"><i
-                                                class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -171,12 +170,35 @@
                                 </div>
 
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input oninput="searchStudentDebouncer(this.value)" type="text" placeholder="Search by Student ID or Name" class="form-control">
+                                    <input oninput="searchStudentDebouncer(this.value)" type="text"
+                                        placeholder="Search by Student ID or Name" class="form-control">
                                 </div>
 
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <select style="margin: 0%;" id="class" class="select2">
+                                        <option value="">SELECT PROMOTION CLASS</option>
+                                        <option value="GRADUATED">GRADUATED</option>
+
+                                    </select>
+                                </div>
+                                <br />
+
+                                <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                    <button style="height: 40px;" onclick="promoteStudent()" type="submit"
+                                        class="fw-btn-fill btn-gradient-yellow">PROMOTE</button>
+                                </div>
+                                <!-- 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
-                                </div>
+                                </div> -->
+                            </div>
+
+                            <div class="row gutters-8 ">
+                                <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <label style="color: black;">PROMOTE STUDENTS TO ?</label>
+                                </div> -->
+
+
                             </div>
                             <div class="table-responsive">
                                 <table class="table display data-table text-nowrap">
@@ -399,8 +421,8 @@
                                 <div class="modal-body mb-0 p-0">
 
                                     <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                        <iframe id="edit_frame" class="embed-responsive-item" src="./my-student/edit-student.html"
-                                            allowfullscreen></iframe>
+                                        <iframe id="edit_frame" class="embed-responsive-item"
+                                            src="./my-student/edit-student.html" allowfullscreen></iframe>
                                     </div>
 
                                 </div>

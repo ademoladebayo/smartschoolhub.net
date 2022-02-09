@@ -50,6 +50,10 @@ class AdminService
 
 
         if ($ClassModel->class_name != '') {
+            // REMOVE CLASS FROM PREVIOUS TEACHER
+            if ($request->class_teacher != "-") {
+                $this->removeClassFromTeacher($request->class_id);
+            }
             return  $ClassRepository->createClass($ClassModel);
         } else {
             return response()->json(['success' => false, 'message' => 'Please check that no field is left empty.']);

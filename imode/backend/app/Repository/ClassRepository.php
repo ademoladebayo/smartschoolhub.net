@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Model\ClassModel;
+use App\Model\StudentModel;
 use App\Service\AdminService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +17,7 @@ class ClassRepository
 
         // UPDATE THE TEACHER ASSIGNED CLASS
         if ($ClassModel->class_teacher != "-") {
+            $this->removeTeacherFromClass($ClassModel->class_teacher);
             $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->id);
         }
         return response()->json(['success' => true, 'message' => 'Class was created successfully.']);
@@ -32,20 +34,41 @@ class ClassRepository
         // REMOVE CLASS FROM PREVIOUS TEACHER
         if ($request->class_teacher != "-") {
             $AdminService->removeClassFromTeacher($request->class_id);
+            $this->removeTeacherFromClass($ClassModel->class_teacher);
         }
         $ClassModel->save();
         // UPDATE THE TEACHER ASSIGNED CLASS
         if ($request->class_teacher != "-") {
             $AdminService->updateTeacherClass($request->class_teacher, $request->class_id);
         }
-
-
         return response()->json(['success' => true, 'message' => 'Class updated successfully.']);
     }
+
+    public function removeTeacherFromClass($teacher_id)
+    {
+        $ClassModel =  ClassModel::where('class_teacher', $teacher_id)->first();
+        if ($ClassModel != "") {
+            log::debug($ClassModel);
+            $ClassModel->class_teacher = "-";
+            $ClassModel->save();
+        }
+    }
+
     public function getAllClass()
     {
-        $ClassModel =  new ClassModel();
-        return  $ClassModel->with('class_teacher')->get();
+        $classes = ClassModel::with('class_teacher')->get();
+        foreach ($classes as $class) {
+            $student_no =  $this->getNumberOfStudent($class->id);
+            $class['student_no'] = $student_no;
+        }
+
+        return $classes;
+    }
+
+
+    public function getNumberOfStudent($class_id)
+    {
+        return StudentModel::where('class', $class_id)->count();
     }
 
     public function deleteClass($class_id)
