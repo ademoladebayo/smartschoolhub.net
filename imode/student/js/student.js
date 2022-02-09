@@ -1,10 +1,10 @@
 // DEVELOPMENT IP
-var ip = "http://127.0.0.1:8000";
-var domain = "http://localhost/smartschoolhub.net/imode";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.net/imode";
 
 // LIVE IP
-// var ip = "https://smartschoolhub.net/backend/imode";
-// var domain = "https://imode.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/imode";
+var domain = "https://imode.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
