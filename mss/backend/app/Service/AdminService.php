@@ -142,18 +142,25 @@ class AdminService
     }
 
     // STUDENT IMAGE
-    public function uploadStudentImage(Request $request)
+    public function uploadImage(Request $request)
     {
         if ($request->hasFile('file')) {
-            // GET FILENAME
-            $file_name = $_FILES['file']['name'];
 
-            $storage_path =  $request->file->storeAs('public/fileupload', $request->student_id . ".png");
-            $file_url = '/storage/fileupload/' . $request->student_id . ".png";
+            if ($request->type == "STUDENT") {
+                // GET FILENAME
+                $file_name = $_FILES['file']['name'];
 
-            return response()->json(['success' => true, 'message' => 'file sent', 'url' => $file_url]);
+                $storage_path =  $request->file->storeAs('public/fileupload/student', $request->id . ".png");
+                return response()->json(['success' => true, 'message' => 'file uploaded', 'url' => $storage_path]);
+            } else {
+
+                // GET FILENAME
+                $file_name = $_FILES['file']['name'];
+                $storage_path =  $request->file->storeAs('public/fileupload/staff', $request->id . ".png");
+                return response()->json(['success' => true, 'message' => 'file uploaded', 'url' => $storage_path]);
+            }
         } else {
-            return response()->json(['success' => false, 'message' => 'No File found.']);
+            return response()->json(['success' => false, 'message' => 'File was not uploaded.']);
         }
     }
 
@@ -240,21 +247,110 @@ class AdminService
     {
         $TeacherAttendanceModel = new TeacherAttendanceModel();
 
-        // CHECK IF ALREADY TAKEN
-        $alreadytaken = DB::table('teacher_attendance')->where("teacher_id", $request->teacher_id)->where('date', $request->date)->exists();
+        //   USING STAFF NUMBER
+        if ($request->class_id == "") {
+            // CHECK IF STAFF ID EXIST
+            $teacher = TeacherModel::where("teacher_id", $request->staff_id)->get();
+            if (count($teacher) != 0) {
 
-        if ($alreadytaken) {
-            return response()->json(['success' => false, 'message' => 'Attendance has already been taken.']);
+                // CHECK IF ALREADY TAKEN 
+                $request->staff_id = $teacher[0]->id;
+                $alreadytaken =  $this->takenAttendance($request);
+
+
+                if ($alreadytaken) {
+                    // CHECK OUT STAFF
+                    if ($request->check_out) {
+                        $TeacherAttendanceModel = TeacherAttendanceModel::where('teacher_id', $teacher[0]->id)->where('date', $request->date)->get()[0];
+                        $TeacherAttendanceModel->time_out = $request->time;
+                        $TeacherAttendanceModel->save();
+                        return response()->json(['success' => true, 'message' => 'Check out was succesful.']);
+                    }
+                }
+
+
+                // GET CLASS
+                $TeacherAttendanceModel->teacher_id = $teacher[0]->id;
+                $TeacherAttendanceModel->date = $request->date;
+                $TeacherAttendanceModel->time_in = $request->time;
+                $TeacherAttendanceModel->session = $request->session;
+                $TeacherAttendanceModel->term = $request->term;
+                $TeacherAttendanceModel->save();
+                return response()->json(['success' => true, 'message' => 'Attendance was successful.']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Invalid Staff ID']);
+            }
         }
 
-        $TeacherAttendanceModel->teacher_id = $request->teacher_id;
+
+        //   USING CARD
+        // CHECK IF ALREADY TAKEN 
+        $alreadytaken =  $this->takenAttendance($request);
+
+        if ($alreadytaken) {
+            // CHECK OUT STAFF
+            if ($request->check_out) {
+                $TeacherAttendanceModel = TeacherAttendanceModel::where('teacher_id', $request->staff_id)->where('date', $request->date)->get()[0];
+                $TeacherAttendanceModel->time_out = $request->time;
+                $TeacherAttendanceModel->save();
+                return response()->json(['success' => true, 'message' => 'Check out was succesful.']);
+            }
+        }
+
+
+
+        $TeacherAttendanceModel->teacher_id = $request->staff_id;
         $TeacherAttendanceModel->date = $request->date;
-        $TeacherAttendanceModel->time = $request->time;
+        $TeacherAttendanceModel->time_in = $request->time;
         $TeacherAttendanceModel->session = $request->session;
         $TeacherAttendanceModel->term = $request->term;
         $TeacherAttendanceModel->save();
-        return response()->json(['success' => true, 'message' => 'Attendance was successfully.']);
+        return response()->json(['success' => true, 'message' => 'Attendance was successful.']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // $TeacherAttendanceModel = new TeacherAttendanceModel();
+
+        // // CHECK IF ALREADY TAKEN
+        // $alreadytaken = DB::table('teacher_attendance')->where("teacher_id", $request->teacher_id)->where('date', $request->date)->exists();
+
+        // if ($alreadytaken) {
+        //     return response()->json(['success' => false, 'message' => 'Attendance has already been taken.']);
+        // }
+
+        // $TeacherAttendanceModel->teacher_id = $request->teacher_id;
+        // $TeacherAttendanceModel->date = $request->date;
+        // $TeacherAttendanceModel->time = $request->time;
+        // $TeacherAttendanceModel->session = $request->session;
+        // $TeacherAttendanceModel->term = $request->term;
+        // $TeacherAttendanceModel->save();
+        // return response()->json(['success' => true, 'message' => 'Attendance was successfully.']);
     }
+
+    public function takenAttendance(Request $request)
+    {
+        // CHECK IF ALREADY TAKEN 
+        return DB::table('teacher_attendance')->where("teacher_id", $request->staff_id)->where('date', $request->date)->exists();
+    }
+
+
     public function getTeacherAttendance(Request $request)
     {
         $TeacherAttendanceModel =  new TeacherAttendanceModel();

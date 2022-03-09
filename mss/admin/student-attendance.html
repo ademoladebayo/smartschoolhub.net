@@ -52,10 +52,14 @@
 
     <script type="text/javascript" src="./js/instascan.min.js"></script>
 
+    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+
 
 </head>
 
-<body onload="loadSideNav('student-attendance'); getAttendanceDate(); takeAttendance(); getAttendance(); loadDashBoardInformation()">
+<body
+    onload="loadSideNav('student-attendance'); getAttendanceDate(); takeAttendance(); getAttendance(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -189,7 +193,7 @@
                             <div style="display: flex;
                             justify-content: center;" class="row gutters-8 new-added-form">
 
-                                <div class="col-4 form-group">
+                                <div class="col-12 form-group">
                                     <video id="preview" width="100%"></video>
                                 </div>
 
@@ -213,7 +217,8 @@
                             justify-content: center;" class="row gutters-8 new-added-form">
 
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input id="student_id" type="text" placeholder="2020-STD-000" class="form-control">
+                                    <input oninput="this.value = this.value.toUpperCase()" id="student_id" type="text"
+                                        placeholder="2020-STD-000" class="form-control">
                                 </div>
 
 
@@ -264,13 +269,15 @@
                                             <th>Class</th>
                                             <th>Gender</th>
                                             <th>Date</th>
-                                            <th>Time</th>
+                                            <th>Time IN</th>
+                                            <th>Time OUT</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody id="student_attendance">
                                         <tr>
                                             <td>1.</td>
+                                            <td>Loading ...</td>
                                             <td>Loading ...</td>
                                             <td>Loading ...</td>
                                             <td>Loading ...</td>
@@ -330,6 +337,11 @@
     <script src="../js/myscript.js"></script>
     <script src="./js/admin.js"></script>
     <script src="js/qrcode.min.js"></script>
+
+    <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+    <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
 
 
 </body>

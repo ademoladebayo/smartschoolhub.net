@@ -5,7 +5,7 @@
 <head id="header">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SSHUB | Teacher Attendance</title>
+    <title>SSHUB | Staff Attendance</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -52,10 +52,14 @@
 
     <script type="text/javascript" src="./js/instascan.min.js"></script>
 
+    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+
 
 </head>
 
-<body onload="loadSideNav('teacher-attendance'); takeTeacherAttendance(); getTeacherAttendance(); loadDashBoardInformation()">
+<body
+    onload="loadSideNav('teacher-attendance'); getAttendanceDate(); takeTeacherAttendance(); getTeacherAttendance(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -154,13 +158,13 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 id="" style="font-weight: bold; font-family: Rowdies;">ATTENDANCE SYSTEM FOR TEACHERS</h3>
+                    <h3 id="" style="font-weight: bold; font-family: Rowdies;">ATTENDANCE SYSTEM FOR STAFF</h3>
                     <h6 id="date" style="font-weight: bold; font-family: Rowdies;"></h6>
                     <ul>
                         <li>
                             <a style="font-weight: bold;font-family: Rowdies, serif;" href="dashboard.html">Home</a>
                         </li>
-                        <li style="font-weight: bold;font-family: Rowdies, serif;">Teacher Attendance</li>
+                        <li style="font-weight: bold;font-family: Rowdies, serif;">Staff Attendance</li>
                     </ul>
                 </div>
 
@@ -170,30 +174,75 @@
                             <div style="float: right;" class="header-inline item-header">
                                 <div class="header-elements">
                                     <ul>
-                                        <!-- <li><a href="#"><i class="far fa-edit"></i></a></li> -->
+                                        <!-- <li><i class="far fa-edit"></i></a></li> -->
                                         <li><a onclick="print()" href="#"><i class="fas fa-print"></i></a></li>
-                                        <!-- <li><a href="#"><i class="fas fa-download"></i></a></li> -->
+                                        <!-- <li><i class="fas fa-download"></i></a></li> -->
                                     </ul>
                                 </div>
                             </div>
-                            <div class="heading-layout1">
+                            <div style="display: flex;
+                            justify-content: center;" class="heading-layout1">
                                 <div class="item-title">
                                     <h3 id="attendance_class" style="font-weight: bold;font-family: Rowdies, serif;">
-                                        TAKE TEACHER ATTENDANCE</h3> <a href="#">
+                                        SCAN STAFF ID CARD HERE</h3>
 
 
                                 </div>
 
                             </div>
-                            <div class="row gutters-8 new-added-form">
+                            <div style="display: flex;
+                            justify-content: center;" class="row gutters-8 new-added-form">
 
-                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                <div class="col-12 form-group">
                                     <video id="preview" width="100%"></video>
                                 </div>
-                                <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input oninput="verifyID(this.value)" id="student_id" type="text"
-                                        placeholder="Teacher ID" class="form-control">
-                                </div> -->
+
+
+                            </div>
+                            <br>
+
+                            <div style="display: flex;
+                            justify-content: center;" class="heading-layout1">
+                                <div class="item-title">
+                                    <h3 id="attendance_class" style="font-weight: bold;font-family: Rowdies, serif;">
+                                        OR USE STAFF ID</h3>
+
+
+                                </div>
+
+                            </div>
+
+
+                            <div style="display: flex;
+                            justify-content: center;" class="row gutters-8 new-added-form">
+
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input oninput="this.value = this.value.toUpperCase()" id="staff_id" type="text"
+                                        placeholder="2020-STF-000" class="form-control">
+                                </div>
+
+
+                                <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                    <button id="" onclick="takeAttendanceByStaffID()"
+                                        class="fw-btn-fill btn-gradient-yellow">PROCEED</button>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div style="display: flex;
+                            justify-content: center;" class="heading-layout1">
+                                <div class="item-title">
+                                    <h3 id="attendance_class" style="font-weight: bold;font-family: Rowdies, serif;">
+                                        GET ATTENDANCE LIST FOR A DATE</h3>
+
+
+                                </div>
+
+                            </div>
+
+                            <div style="display: flex;
+                            justify-content: center;" class="row gutters-8 new-added-form">
+
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
                                     <input autocomplete="off" id="attendance_date" type="text" placeholder="dd/mm/yyyy"
                                         value="" class="form-control air-datepicker" data-position='bottom right'>
@@ -203,27 +252,31 @@
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <button id="get_attendance_btn"
                                         onclick="
-                                    document.getElementById('teacher_attendance').innerHTML = 
-                                    `<i style='color:black' class='fa fa-spinner fa-spin'></i>  Fetching Teacher Attendance For ${document.getElementById('attendance_date').value}  ...`; getTeacherAttendance()"
-                                        type="submit" class="fw-btn-fill btn-gradient-yellow">GET ATTENDANCE</button>
+                                    document.getElementById('student_attendance').innerHTML = 
+                                    `<i style='color:black' class='fa fa-spinner fa-spin'></i>  Fetching Student Attendance For ${document.getElementById('attendance_date').value}  ...`; getAttendance()"
+                                        class="fw-btn-fill btn-gradient-yellow">GET ATTENDANCE</button>
                                 </div>
                             </div>
+
+
                             <div id="attendance_table" class="table-responsive">
 
                                 <table class="table display data-table text-nowrap">
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Teacher Fullname</th>
+                                            <th>Staff Fullname</th>                                        
                                             <th>Gender</th>
                                             <th>Date</th>
-                                            <th>Time</th>
+                                            <th>Time IN</th>
+                                            <th>Time OUT</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody id="teacher_attendance">
                                         <tr>
                                             <td>1.</td>
+                                            <td>Loading ...</td>                                       
                                             <td>Loading ...</td>
                                             <td>Loading ...</td>
                                             <td>Loading ...</td>
@@ -282,6 +335,11 @@
     <script src="../js/myscript.js"></script>
     <script src="./js/admin.js"></script>
     <script src="js/qrcode.min.js"></script>
+
+    <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+    <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
 
 
 </body>

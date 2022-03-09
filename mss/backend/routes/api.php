@@ -88,7 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
     })->middleware(Cors::class);
 
     //  STUDENT IMAGE
-    Route::post('admin/upload-student-image', 'AdminController@uploadStudentImage', function () {
+    Route::post('admin/upload-image', 'AdminController@uploadImage', function () {
     })->middleware(Cors::class);
 
 

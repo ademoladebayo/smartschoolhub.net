@@ -124,10 +124,10 @@ class AdminController extends Controller
     }
 
     // STUDENT IMAGE
-    public function uploadStudentImage(Request $request)
+    public function uploadImage(Request $request)
     {
         $AdminService = new AdminService();
-        return $AdminService->uploadStudentImage($request);
+        return $AdminService->uploadImage($request);
     }
 
 

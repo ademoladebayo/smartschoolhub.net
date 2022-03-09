@@ -3174,7 +3174,12 @@ function takeAttendance() {
   Instascan.Camera.getCameras()
     .then(function (cameras) {
       if (cameras.length > 0) {
-        scanner.start(cameras[0]);
+        // CHECK IF BACK CAMERA IS AVAILABLE
+        if (cameras.length > 1) {
+          scanner.start(cameras[1]);
+        } else {
+          scanner.start(cameras[0]);
+        }
       } else {
         alert("No cameras found");
       }
@@ -3185,6 +3190,9 @@ function takeAttendance() {
 
   scanner.addListener("scan", function (qr_data) {
     // document.getElementById("student_id").value = qr_data; //StudentATDCard~id~class_id~first_name
+
+    // NOTIFIER WHEN CAN HAS BEEN SCANNED
+    alert("CARD SCANNED");
 
     // CHECK IF CARD IS VALID
     if (qr_data.split("~")[0] != "StudentATDCard") {

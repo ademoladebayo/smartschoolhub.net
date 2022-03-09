@@ -11,8 +11,8 @@ var ip = "https://smartschoolhub.net/backend/mss";
 var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
-// var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
-// var domain = "http://192.168.42.168/smartschoolhub.ng";
+// var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
+// var domain = "http://192.168.42.168/smartschoolhub.net";
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
@@ -138,7 +138,7 @@ function loadSideNav(page) {
 
     <li class="nav-item">
         <a  id="teachers" href="teachers.html" class="nav-link"> <i class="flaticon-multiple-users-silhouette"></i>
-        <span>Teacher Management</span></a>
+        <span>Staff Management</span></a>
     </li>
 
     
@@ -170,7 +170,7 @@ function loadSideNav(page) {
 
     <li class="nav-item">
         <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
-        <span>Teacher Attendance</span></a>
+        <span>Staff Attendance</span></a>
     </li>
 
 
@@ -515,6 +515,14 @@ function getAllTeacherForTable() {
 }
 
 function viewTeacher(json) {
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/staff/" +
+    json.teacher_id +
+    ".png";
+  document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
+
   document.getElementById("title").value = json.title;
   document.getElementById("first_name").value = json.first_name;
   document.getElementById("middle_name").value = json.middle_name;
@@ -536,6 +544,15 @@ function viewTeacher(json) {
 function getTeacherDetails() {
   json = JSON.parse(localStorage["editTeacher"]);
   console.log(json);
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/staff/" +
+    json.teacher_id +
+    ".png";
+  document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
+
   document.getElementById("title").innerHTML =
     `<option value="${json.title}">${json.title}</option>` +
     document.getElementById("title").innerHTML;
@@ -1229,7 +1246,7 @@ function viewStudent(json) {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" +
+    "/backend/storage/app/public/fileupload/student/" +
     json.student_id +
     ".png";
   document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
@@ -1254,6 +1271,14 @@ function viewStudent(json) {
 function getStudentDetails() {
   json = JSON.parse(localStorage["editStudent"]);
   console.log(json);
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/student/" +
+    json.student_id +
+    ".png";
+  document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
 
   document.getElementById("first_name").value = json.first_name;
   document.getElementById("middle_name").value = json.middle_name;
@@ -1782,11 +1807,13 @@ function uploadImage(image, student_id) {
   const formData = new FormData();
 
   formData.append("file", image);
-  formData.append("student_id", student_id);
+  formData.append("id", student_id);
+  formData.append("type", "STUDENT");
+
   // Select your input type file and store it in a variable
 
   // This will upload the file after having read it
-  return fetch(ip + "/api/admin/upload-student-image", {
+  return fetch(ip + "/api/admin/upload-image", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -1821,6 +1848,64 @@ function uploadImage(image, student_id) {
   // // Add a listener on your input
   // // It will be triggered when a file will be selected
   // input.addEventListener("change", onSelectFile, false);
+}
+
+// DUAL TYPE UPLOAD
+function uploadImage(type) {
+  // CHECK IMAGE
+  const input = document.getElementById("imageUpload");
+  console.log(input.files);
+  image = input.files;
+
+  if (image.length < 1) {
+    return alert("Please select image !");
+  }
+
+  warningtoast("Uploading ... Please wait");
+  const formData = new FormData();
+
+  var id = "";
+
+  if (type == "STUDENT") {
+    id = JSON.parse(localStorage["editStudent"]).student_id;
+  } else {
+    id = JSON.parse(localStorage["editTeacher"]).teacher_id;
+  }
+
+  formData.append("file", image[0]);
+  formData.append("id", id);
+  formData.append("type", type);
+
+  // This will upload the file after having read it
+  return fetch(ip + "/api/admin/upload-image", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: formData,
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        toastr.remove();
+        successtoast("<b>" + data.message + "</b>");
+        setTimeout(function () {
+          window.parent.location.reload();
+        }, 1000);
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // STUDENT ID CARD
@@ -3235,7 +3320,7 @@ function deleteGrade(id) {
     .catch((err) => console.log(err));
 }
 
-// ATTENDANCE
+// ATTENDANCE STUDENT
 function getAttendanceDate() {
   document.getElementById("date").innerHTML += Date("DD-MM-YYYY").toUpperCase();
 }
@@ -3245,13 +3330,20 @@ function takeAttendance() {
   //   localStorage["user_data"]
   // ).data.assigned_class.class_name;
 
+  var check_out = false;
+
   let scanner = new Instascan.Scanner({
     video: document.getElementById("preview"),
   });
   Instascan.Camera.getCameras()
     .then(function (cameras) {
       if (cameras.length > 0) {
-        scanner.start(cameras[0]);
+        // CHECK IF BACK CAMERA IS AVAILABLE
+        if (cameras.length > 1) {
+          scanner.start(cameras[1]);
+        } else {
+          scanner.start(cameras[0]);
+        }
       } else {
         alert("No cameras found");
       }
@@ -3261,8 +3353,11 @@ function takeAttendance() {
     });
 
   scanner.addListener("scan", function (qr_data) {
-    // say("Card scanned , Please wait ...");
     // document.getElementById("student_id").value = qr_data; //StudentATDCard~id~class_id~first_name
+
+    // NOTIFIER WHEN CARD HAS BEEN SCANNED
+    say("Card Scanned , Click OK.");
+    alert("CARD SCANNED 👍. CLICK OK AND WAIT FOR A RESPONSE.");
 
     // CHECK IF CARD IS VALID
     if (qr_data.split("~")[0] != "StudentATDCard") {
@@ -3272,6 +3367,27 @@ function takeAttendance() {
       }, 1000);
 
       return 0;
+    }
+
+    // CHECK IF STUDENT IS ON ATTENDANCE LIST
+    takenAttendance = isStudentIDInAttendanceList(qr_data.split("~")[1], "");
+    console.log(takenAttendance);
+
+    if (takenAttendance) {
+      // CHECK IF STUDENT ALREADY CHECKED OUT
+      checkedOut = hasStudentCheckedOut(qr_data.split("~")[1], "");
+      if (checkedOut) {
+        errorSound.play();
+        alert("This student has been checked out.");
+        return 0;
+      }
+
+      if (window.parent.confirm("You are about to CHECK OUT this student !")) {
+        // PROCEED TO CHECK OUT STUDENT
+        check_out = true;
+      } else {
+        return 0;
+      }
     }
 
     // PASS ATTENDANCE DETAILS TO API
@@ -3287,6 +3403,7 @@ function takeAttendance() {
         class_id: qr_data.split("~")[2],
         date: getDate().split("~")[1],
         time: getDate().split("~")[0],
+        check_out: check_out,
         session: localStorage["current_session"],
         term: localStorage["current_term"],
       }),
@@ -3303,7 +3420,7 @@ function takeAttendance() {
         if (data.success) {
           successSound.play();
           setTimeout(function () {
-            say("Verified!");
+            say(data.message);
           }, 1000);
           getAttendance();
         } else {
@@ -3319,9 +3436,34 @@ function takeAttendance() {
 }
 
 function takeAttendanceByStudentID() {
-  if (document.getElementById("student_id").value == "") {
+  var check_out = false;
+  var student_id = document.getElementById("student_id").value;
+  if (student_id == "") {
     return alert("INPUT STUDENT ID");
   }
+
+  // CHECK IF STUDENT IS ON ATTENDANCE LIST
+  takenAttendance = isStudentIDInAttendanceList(student_id, "STUDENT_NUMBER");
+  console.log(takenAttendance);
+
+  if (takenAttendance) {
+    // CHECK IF STUDENT ALREADY CHECKED OUT
+    checkedOut = hasStudentCheckedOut(student_id, "STUDENT_NUMBER");
+    if (checkedOut) {
+      errorSound.play();
+      alert("This student has been checked out.");
+      return 0;
+    }
+
+    if (window.parent.confirm("You are about to CHECK OUT this student !")) {
+      // PROCEED TO CHECK OUT STUDENT
+      check_out = true;
+    } else {
+      return 0;
+    }
+  }
+
+  warningtoast("Taking Attendance Please wait ...");
 
   // PASS ATTENDANCE DETAILS TO API
   fetch(ip + "/api/teacher/take-attendance", {
@@ -3336,6 +3478,7 @@ function takeAttendanceByStudentID() {
       class_id: "",
       date: getDate().split("~")[1],
       time: getDate().split("~")[0],
+      check_out: check_out,
       session: localStorage["current_session"],
       term: localStorage["current_term"],
     }),
@@ -3349,10 +3492,11 @@ function takeAttendanceByStudentID() {
     })
 
     .then((data) => {
+      toastr.remove();
       if (data.success) {
         successSound.play();
         setTimeout(function () {
-          say("Verified!");
+          say(data.message);
         }, 1000);
         getAttendance();
       } else {
@@ -3364,6 +3508,61 @@ function takeAttendanceByStudentID() {
       }
     })
     .catch((err) => console.log(err));
+}
+
+function isStudentIDInAttendanceList(student_id, check_type) {
+  attendance_list = JSON.parse(localStorage["attendanceListStudent"]);
+  response = false;
+
+  if (check_type == "STUDENT_NUMBER") {
+    attendance_list.forEach((attendance) => {
+      takenAttendance =
+        attendance.student.student_id.toString().trim() ===
+        student_id.toString().trim();
+      if (takenAttendance) {
+        response = true;
+      }
+    });
+  } else {
+    attendance_list.forEach((attendance) => {
+      takenAttendance =
+        attendance.student_id.toString().trim() ===
+        student_id.toString().trim();
+      if (takenAttendance) {
+        response = true;
+      }
+    });
+  }
+
+  return response;
+}
+
+function hasStudentCheckedOut(student_id, check_type) {
+  attendance_list = JSON.parse(localStorage["attendanceListStudent"]);
+  response = false;
+
+  if (check_type == "STUDENT_NUMBER") {
+    attendance_list.forEach((attendance) => {
+      if (
+        attendance.student.student_id.toString().trim() ===
+        student_id.toString().trim()
+      ) {
+        // CHECK IF TIME-OUT IS (-)
+        attendance.time_out == "-" ? (response = false) : (response = true);
+      }
+    });
+  } else {
+    attendance_list.forEach((attendance) => {
+      if (
+        attendance.student_id.toString().trim() === student_id.toString().trim()
+      ) {
+        // CHECK IF TIME-OUT IS (-)
+        attendance.time_out == "-" ? (response = false) : (response = true);
+      }
+    });
+  }
+
+  return response;
 }
 
 function getAttendance() {
@@ -3391,6 +3590,9 @@ function getAttendance() {
     })
 
     .then((data) => {
+      // SAVE IN THE LOCAL STORAGE FOR A LATER CHECK
+      localStorage.setItem("attendanceListStudent", JSON.stringify(data));
+
       c = 1;
       document.getElementById("student_attendance").innerHTML = ``;
       if (data.length != 0) {
@@ -3411,7 +3613,8 @@ function getAttendance() {
                      }</td>
                     <td>${data[i].student.gender}</td>
                     <td>${data[i].date}</td>
-                    <td>${data[i].time}</td>
+                    <td>${data[i].time_in}</td>
+                    <td>${data[i].time_out}</td>
                     <td><span class="badge bg-success"><b>PRESENT</b></span></td>
                     
                   
@@ -3429,11 +3632,9 @@ function getAttendance() {
     .catch((err) => console.log(err));
 }
 
+// TEACHER ATTENDANCE
 function takeTeacherAttendance() {
-  document.getElementById("date").innerHTML += Date("DD-MM-YYYY").toUpperCase();
-  // document.getElementById("attendance_class").innerHTML += JSON.parse(
-  //   localStorage["user_data"]
-  // ).data.assigned_class.class_name;
+  var check_out = false;
 
   let scanner = new Instascan.Scanner({
     video: document.getElementById("preview"),
@@ -3441,7 +3642,12 @@ function takeTeacherAttendance() {
   Instascan.Camera.getCameras()
     .then(function (cameras) {
       if (cameras.length > 0) {
-        scanner.start(cameras[0]);
+        // CHECK IF BACK CAMERA IS AVAILABLE
+        if (cameras.length > 1) {
+          scanner.start(cameras[1]);
+        } else {
+          scanner.start(cameras[0]);
+        }
       } else {
         alert("No cameras found");
       }
@@ -3451,7 +3657,11 @@ function takeTeacherAttendance() {
     });
 
   scanner.addListener("scan", function (qr_data) {
-    // document.getElementById("student_id").value = qr_data; //TeacherATDCard~id~first_name
+    // document.getElementById("student_id").value = qr_data; //TeacherATDCard~id~class_id~first_name
+
+    // NOTIFIER WHEN CARD HAS BEEN SCANNED
+    say("Card Scanned , Click OK.");
+    alert("CARD SCANNED 👍. CLICK OK AND WAIT FOR A RESPONSE.");
 
     // CHECK IF CARD IS VALID
     if (qr_data.split("~")[0] != "TeacherATDCard") {
@@ -3463,6 +3673,27 @@ function takeTeacherAttendance() {
       return 0;
     }
 
+    // CHECK IF STAFF IS ON ATTENDANCE LIST
+    takenAttendance = isStaffIDInAttendanceList(qr_data.split("~")[1], "");
+    console.log(takenAttendance);
+
+    if (takenAttendance) {
+      // CHECK IF STAFF ALREADY CHECKED OUT
+      checkedOut = hasStaffCheckedOut(qr_data.split("~")[1], "");
+      if (checkedOut) {
+        errorSound.play();
+        alert("This staff has been checked out.");
+        return 0;
+      }
+
+      if (window.parent.confirm("You are about to CHECK OUT this staff !")) {
+        // PROCEED TO CHECK OUT STAFF
+        check_out = true;
+      } else {
+        return 0;
+      }
+    }
+
     // PASS ATTENDANCE DETAILS TO API
     fetch(ip + "/api/admin/take-teacher-attendance", {
       method: "POST",
@@ -3472,9 +3703,11 @@ function takeTeacherAttendance() {
         Authorization: "Bearer " + localStorage["token"],
       },
       body: JSON.stringify({
-        teacher_id: qr_data.split("~")[1],
+        staff_id: qr_data.split("~")[1],
+        class_id: "00",
         date: getDate().split("~")[1],
         time: getDate().split("~")[0],
+        check_out: check_out,
         session: localStorage["current_session"],
         term: localStorage["current_term"],
       }),
@@ -3491,19 +3724,148 @@ function takeTeacherAttendance() {
         if (data.success) {
           successSound.play();
           setTimeout(function () {
-            say("Verified!");
+            say(data.message);
           }, 1000);
           getTeacherAttendance();
         } else {
           errorSound.play();
           setTimeout(function () {
-            say("Attendance as already been taken!");
+            say(data.message);
           }, 1000);
           getTeacherAttendance();
         }
       })
       .catch((err) => console.log(err));
   });
+}
+
+function takeAttendanceByStaffID() {
+  var check_out = false;
+  var staff_id = document.getElementById("staff_id").value;
+  if (staff_id == "") {
+    return alert("INPUT STAFF ID");
+  }
+
+  // CHECK IF STAFF IS ON ATTENDANCE LIST
+  takenAttendance = isStaffIDInAttendanceList(staff_id, "STAFF_NUMBER");
+  console.log(takenAttendance);
+
+  if (takenAttendance) {
+    // CHECK IF Staff ALREADY CHECKED OUT
+    checkedOut = hasStaffCheckedOut(staff_id, "STAFF_NUMBER");
+    if (checkedOut) {
+      errorSound.play();
+      alert("This staff has been checked out.");
+      return 0;
+    }
+
+    if (window.parent.confirm("You are about to CHECK OUT this staff !")) {
+      // PROCEED TO CHECK OUT STAFF
+      check_out = true;
+    } else {
+      return 0;
+    }
+  }
+
+  warningtoast("Taking Attendance Please wait ...");
+
+  // PASS ATTENDANCE DETAILS TO API
+  fetch(ip + "/api/admin/take-teacher-attendance", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      staff_id: document.getElementById("staff_id").value,
+      class_id: "",
+      date: getDate().split("~")[1],
+      time: getDate().split("~")[0],
+      check_out: check_out,
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successSound.play();
+        setTimeout(function () {
+          say(data.message);
+        }, 1000);
+        getTeacherAttendance();
+      } else {
+        errorSound.play();
+        setTimeout(function () {
+          say(data.message);
+        }, 1000);
+        getTeacherAttendance();
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function isStaffIDInAttendanceList(staff_id, check_type) {
+  attendance_list = JSON.parse(localStorage["attendanceListStaff"]);
+  response = false;
+
+  if (check_type == "STAFF_NUMBER") {
+    attendance_list.forEach((attendance) => {
+      takenAttendance =
+        attendance.teacher.teacher_id.toString().trim() ===
+        staff_id.toString().trim();
+      if (takenAttendance) {
+        response = true;
+      }
+    });
+  } else {
+    attendance_list.forEach((attendance) => {
+      takenAttendance =
+        attendance.teacher_id.toString().trim() === staff_id.toString().trim();
+      if (takenAttendance) {
+        response = true;
+      }
+    });
+  }
+
+  return response;
+}
+
+function hasStaffCheckedOut(staff_id, check_type) {
+  attendance_list = JSON.parse(localStorage["attendanceListStaff"]);
+  response = false;
+
+  if (check_type == "STAFF_NUMBER") {
+    attendance_list.forEach((attendance) => {
+      if (
+        attendance.teacher.teacher_id.toString().trim() ===
+        staff_id.toString().trim()
+      ) {
+        // CHECK IF TIME-OUT IS (-)
+        attendance.time_out == "-" ? (response = false) : (response = true);
+      }
+    });
+  } else {
+    attendance_list.forEach((attendance) => {
+      if (
+        attendance.teacher_id.toString().trim() === staff_id.toString().trim()
+      ) {
+        // CHECK IF TIME-OUT IS (-)
+        attendance.time_out == "-" ? (response = false) : (response = true);
+      }
+    });
+  }
+
+  return response;
 }
 
 function getTeacherAttendance() {
@@ -3531,6 +3893,9 @@ function getTeacherAttendance() {
     })
 
     .then((data) => {
+      // SAVE IN THE LOCAL STORAGE FOR A LATER CHECK
+      localStorage.setItem("attendanceListStaff", JSON.stringify(data));
+
       c = 1;
       document.getElementById("teacher_attendance").innerHTML = ``;
       if (data.length != 0) {
@@ -3546,7 +3911,8 @@ function getTeacherAttendance() {
                     }</td>
                     <td>${data[i].teacher.gender}</td>
                     <td>${data[i].date}</td>
-                    <td>${data[i].time}</td>
+                    <td>${data[i].time_in}</td>
+                    <td>${data[i].time_out}</td>
                     <td><span class="badge bg-success"><b>PRESENT</b></span></td>
                     
                   

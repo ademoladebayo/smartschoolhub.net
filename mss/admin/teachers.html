@@ -5,7 +5,7 @@
 <head id="common-library">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SSHUB | Teacher</title>
+    <title>SSHUB | Staff</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="../css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Flaticon CSS -->
     <link rel="stylesheet" href="../fonts/flaticon.css">
     <!-- Full Calender CSS -->
@@ -143,12 +144,12 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Rowdies;">TEACHER MANAGEMENT</h3>
+                    <h3 style="font-weight: bold; font-family: Rowdies;">STAFF MANAGEMENT</h3>
                     <ul>
                         <li>
                             <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
                         </li>
-                        <li style="font-weight: bold; font-family: Rowdies;">Teachers</li>
+                        <li style="font-weight: bold; font-family: Rowdies;">Staff</li>
                     </ul>
                 </div>
 
@@ -157,7 +158,7 @@
                         <div class="card-body">
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h3 style="font-weight: bold; font-family: Rowdies;">ALL TEACHER</h3>
+                                    <h3 style="font-weight: bold; font-family: Rowdies;">ALL STAFF</h3>
                                 </div>
 
                             </div>
@@ -167,7 +168,7 @@
                                     <button type="button" style="box-shadow: 10px;" class="btn-lg btn-primary"
                                         data-bs-toggle="modal" data-bs-target="#modalYT"><i class="fas fa-plus"></i>
                                         <b>Add
-                                            Teacher</b></button>
+                                            Staff</b></button>
                                 </div>
 
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
@@ -184,8 +185,8 @@
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
-                                            <th>Teacher ID</th>
-                                            <th>Teacher Fullname</th>
+                                            <th>Staff ID</th>
+                                            <th>Staff Fullname</th>
                                             <th>Gender</th>
                                             <th>Profile Status</th>
                                             <th>Actions</th>
@@ -233,7 +234,7 @@
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
                                     <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
-                                        id="exampleModalLabel">CREATE NEW TEACHER</h5>
+                                        id="exampleModalLabel">CREATE NEW STAFF</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -262,7 +263,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
-                                        id="exampleModalLabel">Teacher Information</h5>
+                                        id="exampleModalLabel">STAFF INFORMATION</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -278,6 +279,26 @@
 
                                                     </div>
                                                     <form class="new-added-form">
+
+                                                        <div class="col-12 form-group">
+                                                            <div class="container">
+                                                                <!-- <h1><b>STUDENT IMAGE</b>
+                                                                </h1> -->
+                                                                <div class="avatar-upload">
+                                                                    <!-- <div class="avatar-edit">
+                                                                        <input type='file' id="imageUpload"
+                                                                            accept=".png, .jpg, .jpeg" />
+                                                                        <label for="imageUpload"></label>
+                                                                    </div> -->
+                                                                    <div class="avatar-preview">
+                                                                        <div id="imagePreview"
+                                                                            style="background-image: url(../assets/img/sample_image.png);  height: 100%;">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
                                                         <div class="row">
                                                             <div class="col-xl-3 col-lg-6 col-12 form-group">
                                                                 <label>Title</label>
@@ -464,6 +485,98 @@
     <script>
 
     </script>
+
+    <style>
+        body {
+            background: whitesmoke;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            /* font-size: 20px; */
+            text-align: center;
+            /* margin: 20px 0 20px; */
+        }
+
+        h1 small {
+            display: block;
+            font-size: 15px;
+            padding-top: 8px;
+            color: gray;
+        }
+
+        .avatar-upload {
+            position: relative;
+            max-width: 205px;
+            margin: 50px auto;
+        }
+
+        .avatar-upload .avatar-edit {
+            position: absolute;
+            right: 12px;
+            z-index: 1;
+            top: 10px;
+        }
+
+        .avatar-upload .avatar-edit input {
+            display: none;
+        }
+
+        .avatar-upload .avatar-edit input+label {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 0;
+            border-radius: 100%;
+            background: #ffffff;
+            border: 1px solid transparent;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            font-weight: normal;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .avatar-upload .avatar-edit input+label:hover {
+            background: #f1f1f1;
+            border-color: #d6d6d6;
+        }
+
+        .avatar-upload .avatar-edit input+label:after {
+            content: "\f040";
+            font-family: "FontAwesome";
+            color: #757575;
+            position: absolute;
+            top: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            margin: auto;
+        }
+
+        .avatar-upload .avatar-preview {
+            width: 192px;
+            height: 192px;
+            position: relative;
+            border-radius: 100%;
+            border: 6px solid #f8f8f8;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-upload .avatar-preview>div {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
 
 </body>
 
