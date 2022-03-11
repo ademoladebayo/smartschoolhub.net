@@ -27,12 +27,23 @@
 .top {
   height: 30%;
   width: 100%;
-  background-color: #ffa901 !important;
+  background-color: rgb(116, 150, 187) !important;
   position: relative;
   z-index: 5;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
+
+/* .top {
+  height: 30%;
+  width: 100%;
+  background-color: #ffa901 !important;
+  position: relative;
+  z-index: 5;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+} */
+
 
 .bottom {
   height: 70%;

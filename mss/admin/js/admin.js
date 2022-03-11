@@ -376,6 +376,13 @@ function getAllTeacherForTable() {
               data[i].id
             })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
+
+            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
             
             <a onclick="deleteTeacher(${
               data[i].id
@@ -415,6 +422,13 @@ function getAllTeacherForTable() {
             <a onclick="updateTeacherProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+
+            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a>
             
             <a onclick="deleteTeacher(${
               data[i].id
@@ -458,6 +472,13 @@ function getAllTeacherForTable() {
             })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
             
+            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a>    
+            
             <a onclick="deleteTeacher(${
               data[i].id
             })" class="btn btn-danger text-white"><i
@@ -496,6 +517,13 @@ function getAllTeacherForTable() {
             <a onclick="updateTeacherProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+
+            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a>
             
             <a onclick="deleteTeacher(${
               data[i].id
@@ -835,11 +863,7 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title +
-                " " +
-                data[i].first_name +
-                " " +
-                data[i].last_name
+                data[i].title + " " + data[i].first_name + " " + data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
@@ -863,6 +887,13 @@ function searchTeacher(search_data) {
                 data[i].id
               })" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
+  
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+                /"/g,
+                "'"
+              )})" class="btn btn-secondary text-white"><i
+                          class="fas fa-id-card"></i>
+                      ID Card</a> 
               
               <a onclick="deleteTeacher(${
                 data[i].id
@@ -879,11 +910,7 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title +
-                " " +
-                data[i].first_name +
-                " " +
-                data[i].last_name
+                data[i].title + " " + data[i].first_name + " " + data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
@@ -906,6 +933,13 @@ function searchTeacher(search_data) {
               <a onclick="updateTeacherProfileStatus(${
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+  
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+                /"/g,
+                "'"
+              )})" class="btn btn-secondary text-white"><i
+                          class="fas fa-id-card"></i>
+                      ID Card</a>
               
               <a onclick="deleteTeacher(${
                 data[i].id
@@ -924,11 +958,7 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title +
-                " " +
-                data[i].first_name +
-                " " +
-                data[i].last_name
+                data[i].title + " " + data[i].first_name + " " + data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
@@ -953,6 +983,13 @@ function searchTeacher(search_data) {
               })" href="#" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
               
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+                /"/g,
+                "'"
+              )})" class="btn btn-secondary text-white"><i
+                          class="fas fa-id-card"></i>
+                      ID Card</a>    
+              
               <a onclick="deleteTeacher(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
@@ -968,11 +1005,7 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title +
-                " " +
-                data[i].first_name +
-                " " +
-                data[i].last_name
+                data[i].title + " " + data[i].first_name + " " + data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
@@ -995,6 +1028,13 @@ function searchTeacher(search_data) {
               <a onclick="updateTeacherProfileStatus(${
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+  
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+                /"/g,
+                "'"
+              )})" class="btn btn-secondary text-white"><i
+                          class="fas fa-id-card"></i>
+                      ID Card</a>
               
               <a onclick="deleteTeacher(${
                 data[i].id
@@ -1006,7 +1046,7 @@ function searchTeacher(search_data) {
           <tr>`;
             }
           }
-
+  
           c = c + 1;
         }
       } else {
@@ -1803,6 +1843,11 @@ function viewStudentIDCard(data) {
   window.parent.location.assign(domain + "/admin/student-id-card.html");
 }
 
+function viewStaffIDCard(data) {
+  localStorage.setItem("staff_id_card", JSON.stringify(data));
+  window.parent.location.assign(domain + "/admin/staff-id-card.html");
+}
+
 function uploadImage(image, student_id) {
   const formData = new FormData();
 
@@ -1909,7 +1954,7 @@ function uploadImage(type) {
 }
 
 // STUDENT ID CARD
-async function getIDCard() {
+async function getStudentIDCard() {
   await getSchoolDetails();
   student_id = localStorage["student_id_card"];
 
@@ -1920,7 +1965,7 @@ async function getIDCard() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" +
+    "/backend/storage/app/public/fileupload/student/" +
     JSON.parse(student_id).student_id +
     ".png";
 
@@ -1947,6 +1992,51 @@ async function getIDCard() {
       JSON.parse(student_id).class.id +
       "~" +
       JSON.parse(student_id).first_name,
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+}
+
+// STAFF ID CARD
+async function getStaffIDCard() {
+  await getSchoolDetails();
+  staff_id = localStorage["staff_id_card"];
+
+  // GET SCHOOL NAME
+  document.getElementById("school_name").innerHTML =
+    localStorage["SCHOOL_NAME"];
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/staff/" +
+    JSON.parse(staff_id).teacher_id +
+    ".png";
+
+  // staff_IMAGE
+  document.getElementById("staff_image").src = url;
+
+  // FILL CARD DETAILS
+  document.getElementById("full_name").innerHTML =
+    JSON.parse(staff_id).first_name + " " + JSON.parse(staff_id).last_name;
+
+  document.getElementById("id").innerHTML = JSON.parse(staff_id).teacher_id;
+
+  document.getElementById("gender").innerHTML = JSON.parse(staff_id).gender;
+
+  document.getElementById("school_address").innerHTML =
+    localStorage["SCHOOL_ADDRESS"];
+
+  //TeacherATDCard~id~first_name
+  var qrcode = new QRCode("IDQR", {
+    text:
+      "TeacherATDCard~" +
+      JSON.parse(staff_id).id +
+      "~" +
+      JSON.parse(staff_id).first_name,
     width: 128,
     height: 128,
     colorDark: "#000000",
