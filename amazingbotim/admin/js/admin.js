@@ -11,8 +11,8 @@ var ip = "https://smartschoolhub.net/backend/amazingbotim";
 var domain = "https://amazingbotim.smartschoolhub.net";
 
 // REMOTE ACCESS
-var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
-var domain = "http://192.168.42.168/smartschoolhub.net";
+// var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
+// var domain = "http://192.168.42.168/smartschoolhub.net";
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
