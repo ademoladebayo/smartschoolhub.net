@@ -62,9 +62,17 @@ function signIn() {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
-          setTimeout(function () {
-            window.location.href = "dashboard.html";
-          }, 1000);
+          username = JSON.parse(localStorage["user_data"]).data.username;
+
+          if (username.includes("SECURITY")) {
+            setTimeout(function () {
+              window.location.href = "student-attendance.html";
+            }, 1000);
+          } else {
+            setTimeout(function () {
+              window.location.href = "dashboard.html";
+            }, 1000);
+          }
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -125,7 +133,47 @@ function getCurrentSession() {
 }
 
 function loadSideNav(page) {
-  document.getElementById("side_nav").innerHTML = `
+  username = JSON.parse(localStorage["user_data"]).data.username;
+
+  if (username.includes("SECURITY")) {
+    document.getElementById("side_nav").innerHTML = `
+    <ul class="nav nav-sidebar-menu sidebar-toggle-view">
+  
+    <li class="nav-item">
+        <a  id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <span>Student Attendance</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <span>Staff Attendance</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a href="../index.html" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+                Out</span></a>
+    </li>
+
+    
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <!-- <li class="nav-item">
+        <a href="" class="nav-link"><i class=""></i><span></span></a>
+    </li>
+    <li class="nav-item">
+        <a href="" class="nav-link"><i class=""></i><span></span></a>
+    </li> -->
+
+
+</ul>
+    
+    
+    
+    `;
+  } else {
+    document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
         <a id="dashboard" href="dashboard.html" class="nav-link"><i
@@ -235,6 +283,7 @@ function loadSideNav(page) {
     
     
     `;
+  }
 
   document.getElementById(page).className += " menu-active";
 }
@@ -765,6 +814,9 @@ function updateTeacher() {
 }
 
 function updateTeacherProfileStatus(id) {
+  if (!confirm("You are about to change this Staff's profile status?")) {
+    return 0;
+  }
   // PUSH TO API
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/update-teacher-profilestatus/" + id, {
@@ -798,6 +850,10 @@ function updateTeacherProfileStatus(id) {
 }
 
 function deleteTeacher(id) {
+  if (!confirm("You are about to delete this Staff ?")) {
+    return 0;
+  }
+
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-teacher/" + id, {
     method: "GET",
@@ -863,7 +919,11 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title + " " + data[i].first_name + " " + data[i].last_name
+                data[i].title +
+                " " +
+                data[i].first_name +
+                " " +
+                data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
@@ -910,7 +970,11 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title + " " + data[i].first_name + " " + data[i].last_name
+                data[i].title +
+                " " +
+                data[i].first_name +
+                " " +
+                data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
@@ -958,7 +1022,11 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title + " " + data[i].first_name + " " + data[i].last_name
+                data[i].title +
+                " " +
+                data[i].first_name +
+                " " +
+                data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
@@ -1005,7 +1073,11 @@ function searchTeacher(search_data) {
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
               <td>${
-                data[i].title + " " + data[i].first_name + " " + data[i].last_name
+                data[i].title +
+                " " +
+                data[i].first_name +
+                " " +
+                data[i].last_name
               }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
@@ -1046,7 +1118,7 @@ function searchTeacher(search_data) {
           <tr>`;
             }
           }
-  
+
           c = c + 1;
         }
       } else {
@@ -1548,6 +1620,9 @@ function updateStudent() {
 }
 
 function updateStudentProfileStatus(id) {
+  if (!confirm("You are about to change this Student's profile status?")) {
+    return 0;
+  }
   // PUSH TO API
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/update-student-profilestatus/" + id, {
@@ -1581,6 +1656,9 @@ function updateStudentProfileStatus(id) {
 }
 
 function deleteStudent(id) {
+  if (!confirm("You are about to delete this Student ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-student/" + id, {
     method: "GET",
