@@ -11,6 +11,7 @@ var domain = "https://amazingbotim.smartschoolhub.net";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
 
 getSchoolDetails();
+getCurrentSession();
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `

@@ -20,7 +20,10 @@ window.addEventListener("online", () =>
 window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
+
 getSchoolDetails();
+getCurrentSession();
+
 
 function changeLogo() {
   document.getElementById("logo").innerHTML =

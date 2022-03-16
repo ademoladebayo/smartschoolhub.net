@@ -21,6 +21,7 @@ var questions_number = [];
 var answer = [];
 
 getSchoolDetails();
+getCurrentSession();
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")

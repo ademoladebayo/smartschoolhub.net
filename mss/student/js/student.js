@@ -21,6 +21,7 @@ window.addEventListener("offline", () =>
 );
 
 getSchoolDetails();
+getCurrentSession();
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
@@ -1101,8 +1102,8 @@ async function getTranscript() {
   url =
     domain +
     "/backend/storage/app/public/fileupload/" +
-    user_data.data.student_id; +
-    ".png";
+    user_data.data.student_id;
+  +".png";
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;

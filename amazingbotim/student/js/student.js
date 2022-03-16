@@ -21,6 +21,7 @@ window.addEventListener("offline", () =>
 );
 
 getSchoolDetails();
+getCurrentSession();
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
