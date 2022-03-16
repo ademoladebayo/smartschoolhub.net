@@ -116,13 +116,12 @@ function getCurrentSession() {
 
     .then((data) => {
       if (data.success) {
+        localStorage.setItem("current_session", data["session"].session);
+        localStorage.setItem("current_term", data["session"].term);
         document.getElementById(
           "session_term"
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >${data["session"].session} - ${data["session"].term}</span></div>`;
-
-        localStorage.setItem("current_session", data["session"].session);
-        localStorage.setItem("current_term", data["session"].term);
       } else {
         document.getElementById(
           "session_term"
