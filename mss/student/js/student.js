@@ -1103,8 +1103,8 @@ async function getTranscript() {
   url =
     domain +
     "/backend/storage/app/public/fileupload/student/" +
-    user_data.data.student_id;
-  +".png";
+    user_data.data.student_id +
+    ".png";
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
