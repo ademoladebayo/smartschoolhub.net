@@ -1102,7 +1102,7 @@ async function getTranscript() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" +
+    "/backend/storage/app/public/fileupload/student/" +
     user_data.data.student_id;
   +".png";
 
