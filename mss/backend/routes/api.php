@@ -354,10 +354,9 @@ Route::get('general/school-details', 'GeneralController@getSchoolDetails', funct
 })->middleware(Cors::class);
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('general/current-session', 'GeneralController@getCurrentSession', function () {
-    })->middleware(Cors::class);
-});
+Route::get('general/current-session', 'GeneralController@getCurrentSession', function () {
+})->middleware(Cors::class);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('general/all-session', 'GeneralController@allSession', function () {
