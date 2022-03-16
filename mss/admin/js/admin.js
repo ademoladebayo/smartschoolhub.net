@@ -2653,7 +2653,6 @@ function getAllSubjectForTable() {
       }
       return res.json();
     })
-
     .then((data) => {
       console.log("DEBUG =>   RESULT: " + data);
       document.getElementById("subject_table").innerHTML = ``;

@@ -248,6 +248,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('student/registered-subject', 'StudentController@getRegisteredSubject', function () {
     })->middleware(Cors::class);
 
+    Route::post('student/registered-subject-id', 'StudentController@getRegisteredSubjectID', function () {
+    })->middleware(Cors::class);
+
     //STUDENT {CBT}
     Route::get('student/taken-cbt/{cbt_id}/{student_id}', 'StudentController@checkIfStudenHasTakenCBT', function () {
     })->middleware(Cors::class);

@@ -104,6 +104,15 @@ class StudentService
         // return SubjectRegistrationModel::where('student_id', $request->student_id)->with('subject',)->where('class_id', $request->class)->Where('subject_type', 'COMPULSORY')->Where('session', $request->session)->Where('term', $request->term)->get();
     }
 
+    public function getRegisteredSubjectID(Request $request)
+    {
+        $previous_registration_id = [];
+        foreach (SubjectRegistrationModel::select("subject_id")->where('student_id', $request->student_id)->where('class_id', $request->class)->Where('session', $request->session)->Where('term', $request->term)->get() as $data) {
+            array_push($previous_registration_id, $data->subject_id);
+        }
+        return  $previous_registration_id;
+    }
+
 
 
     public function getDashBoardInformation($student)

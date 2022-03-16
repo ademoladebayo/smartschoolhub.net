@@ -32,6 +32,12 @@ class StudentController extends Controller
         return $StudentService->getRegisteredSubject($request);
     }
 
+    public function getRegisteredSubjectID(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getRegisteredSubjectID($request);
+    }
+
     // CBT
 
     public function checkIfStudenHasTakenCBT($cbt_id, $student_id)

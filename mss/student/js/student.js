@@ -707,7 +707,7 @@ function submitCBT(timeup) {
 //   SUBJECT
 function getPreviousSubjectRegistration() {
   registered_subject = [];
-  fetch(ip + "/api/teacher/registered-subject", {
+  fetch(ip + "/api/student/registered-subject-id", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -715,7 +715,7 @@ function getPreviousSubjectRegistration() {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      both_elective_and_compulsory: true,
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
       class: JSON.parse(localStorage["user_data"]).data.class.id,
       session: localStorage["current_session"],
       term: localStorage["current_term"],
@@ -736,7 +736,7 @@ function getPreviousSubjectRegistration() {
 
       document.getElementById("number_registered").innerHTML =
         document.getElementById("number_registered").innerHTML +
-        countDistinct(registered_subject, registered_subject.length);
+        registered_subject.length;
     })
     .catch((err) => console.log(err));
 
@@ -773,6 +773,8 @@ function getAllSubjectForTable() {
 
     .then((data) => {
       document.getElementById("subject_table").innerHTML = ``;
+
+      // FIRST POPULATE COMPULSORY AND ELECTIVE REGISTERED FOR THE STUDENT
       for (i in data) {
         if (data[i].subject_type == "COMPULSORY") {
           document.getElementById("subject_table").innerHTML += `
