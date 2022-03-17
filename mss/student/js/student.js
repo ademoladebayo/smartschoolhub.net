@@ -1644,7 +1644,9 @@ function getAttendanceSummary(value) {
                 <td>
                     ${attendance.date}</td>
                 <td>
-                ${attendance.time}</td>
+                ${attendance.time_in}</td>
+                <td>
+                ${attendance.time_out}</td>
 
             </tr>
             `;
@@ -1701,7 +1703,7 @@ async function getIDCard() {
 
   // IMAGE URL
   url =
-    domain + "/backend/storage/app/public/fileupload/" + student_id + ".png";
+    domain + "/backend/storage/app/public/fileupload/student/" + student_id + ".png";
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;

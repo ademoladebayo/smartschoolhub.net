@@ -263,7 +263,7 @@ class StudentService
     {
         $Days = [];
         $DaysOpened = StudentAttendanceModel::select("date")->where("session", $request->session)->where("term", $request->term)->get();
-        $AttendanceSummary = StudentAttendanceModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->get();
+        $AttendanceSummary = StudentAttendanceModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->orderBy('id', 'DESC')->get();
 
         foreach ($DaysOpened as $day) {
             array_push($Days, $day->date);
