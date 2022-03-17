@@ -197,6 +197,18 @@ function formatNumber(number) {
 }
 
 function loadDashBoardInformation() {
+  student_id = JSON.parse(localStorage["user_data"]).data.student_id;
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/student/" +
+    student_id +
+    ".png";
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
+
   document.getElementById("user_name").innerHTML = `<b>${
     JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
@@ -1703,7 +1715,10 @@ async function getIDCard() {
 
   // IMAGE URL
   url =
-    domain + "/backend/storage/app/public/fileupload/student/" + student_id + ".png";
+    domain +
+    "/backend/storage/app/public/fileupload/student/" +
+    student_id +
+    ".png";
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
