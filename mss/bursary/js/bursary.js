@@ -965,6 +965,7 @@ function getAllPaymentHistory() {
                     }</td>
                     <td>${data[i].class.class_name}</td>
                     <td><b>${data[i].payment_type}</b></td>
+                    <td><b>${data[i].payment_description}</b></td>
                     <td>${data[i].date}</td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     
@@ -1151,8 +1152,8 @@ function getDashboardInfo() {
         parseInt(data.total_manual_payment)
       );
 
-      document.getElementById("total_expense").innerHTML = parseInt(
-        data.total_expense
+      document.getElementById("total_expense").innerHTML = formatNumber(
+        parseInt(data.total_expense)
       );
     })
     .catch((err) => console.log(err));
