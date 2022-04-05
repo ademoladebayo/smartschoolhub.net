@@ -820,11 +820,8 @@ function editManualPaymentDetails() {
       localStorage["editManualPayment"].split("~")[6]
     }</option>` + document.getElementById("payment_type").innerHTML;
 
-  document.getElementById("payment_description").innerHTML =
-    `
-  <option value="${localStorage["editManualPayment"].split("~")[7]}">${
-      localStorage["editManualPayment"].split("~")[7]
-    }</option>` + document.getElementById("payment_description").innerHTML;
+  document.getElementById("payment_description").value =
+    localStorage["editManualPayment"].split("~")[7];
 
   document.getElementById("amount").value =
     localStorage["editManualPayment"].split("~")[8];
