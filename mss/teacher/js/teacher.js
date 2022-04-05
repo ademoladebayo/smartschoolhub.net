@@ -1108,7 +1108,7 @@ function getTranscript() {
     "/backend/storage/app/public/fileupload/student/" +
     user_data.student_id +
     ".png";
-  // "https://imode.smartschoolhub.net/backend/storage/app/public/fileupload/2022-STD-015.png"
+
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
 

@@ -340,6 +340,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('bursary/search-payment-history', 'BursaryController@searchPayment', function () {
     })->middleware(Cors::class);
+
+     // ADMIN {DASHBOARD INFO}
+     Route::post('bursary/dashboard-information', 'BursaryController@getDashboardInfo', function () {
+    })->middleware(Cors::class);
 });
 
 // =============================================================================

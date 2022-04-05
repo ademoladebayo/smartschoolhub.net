@@ -8,6 +8,8 @@ use App\Model\FeeModel;
 use App\Model\ExpenseModel;
 use App\Model\PaymentHistoryModel;
 use App\Repository\BursaryRepository;
+use App\Repository\StudentRepository;
+use App\Repository\TeacherRepository;
 use Illuminate\Support\Facades\Log;
 
 class BursaryService
@@ -28,6 +30,36 @@ class BursaryService
                 return  response(['success' => false, 'message' => "Invalid Password"]);
             }
         }
+    }
+
+
+    // GET DASHBOARD DETAILS
+    public function getDashboardInfo(Request $request)
+    {
+        $StudentRepository = new StudentRepository();
+        $TeacherRepository = new TeacherRepository();
+
+        $total_manual_payment = 0;
+        $total_bank = 0;
+        $total_cash = 0;
+        $total_expense = 0;
+
+        $payment_history = PaymentHistoryModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
+        $expenses = ExpenseModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
+
+
+
+        // GET TOTAL MANUAL PAYMENT
+        foreach ($payment_history as $payment) {
+            $total_manual_payment = $total_manual_payment + intval($payment->amount);
+        }
+
+        // GET TOTAL EXPENSES
+        foreach ($expenses as $expense) {
+            $total_expense = $total_expense + intval($expense->amount);
+        }
+
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'total_manual_payment' => $total_manual_payment, 'total_bank' => $total_bank, 'total_cash' => $total_cash, 'total_expense' =>  $total_expense]);
     }
 
     // FEE MANAGEMENT
@@ -103,6 +135,7 @@ class BursaryService
         $PaymentHistoryModel->class_id = $request->student_class;
         $PaymentHistoryModel->date = $request->date;
         $PaymentHistoryModel->payment_type = $request->payment_type;
+        $PaymentHistoryModel->payment_description = $request->payment_description;
         $PaymentHistoryModel->amount = $request->amount;
 
         $PaymentHistoryModel->session = $request->session;
@@ -118,6 +151,7 @@ class BursaryService
         $PaymentHistoryModel->class_id = $request->student_class;
         $PaymentHistoryModel->date = $request->date;
         $PaymentHistoryModel->payment_type = $request->payment_type;
+        $PaymentHistoryModel->payment_description = $request->payment_description;
         $PaymentHistoryModel->amount = $request->amount;
         $PaymentHistoryModel->save();
         return response(['success' => true, 'message' => "Manual Payment was updated successfully."]);

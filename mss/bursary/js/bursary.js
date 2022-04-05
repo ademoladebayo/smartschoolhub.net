@@ -673,13 +673,17 @@ function createManualPayment() {
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
   var payment_type = document.getElementById("payment_type").value;
+  var payment_description = document.getElementById(
+    "payment_description"
+  ).value;
 
   if (
     student_class != "" &&
     amount != "" &&
     date != "" &&
     student != "" &&
-    payment_type
+    payment_type != "" &&
+    payment_description != ""
   ) {
     // PUSH TO API
     warningtoast("<b>Processing ... Please wait</b>");
@@ -696,6 +700,7 @@ function createManualPayment() {
         date: date,
         student: student,
         payment_type: payment_type,
+        payment_description: payment_description,
         session: localStorage["current_session"],
         term: localStorage["current_term"],
       }),
@@ -762,6 +767,7 @@ function getAllManualPayment() {
                 <td>${data[i].class.class_name}</td>
                 <td>${data[i].date}</td>
                 <td><b>${data[i].payment_type}</b></td>
+                <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
                     <a onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
@@ -770,7 +776,7 @@ function getAllManualPayment() {
             data[i].student.first_name + " " + data[i].student.last_name
           }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${
             data[i].payment_type
-          }~${
+          }~${data[i].payment_description}~${
             data[i].amount
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
@@ -790,8 +796,8 @@ function getAllManualPayment() {
 }
 
 function editManualPaymentDetails() {
-  // 1~8~CHRISTINA ABEGUNDE~2~SS2~03/01/2022~BANK~25000
-  //   0  1          2        3  4        5      6     7
+  // 1~8~CHRISTINA ABEGUNDE~2~SS2~03/01/2022~BANK~Payment description~25000
+  //   0  1          2        3  4        5      6     7                 8
 
   document.getElementById("class").innerHTML =
     `
@@ -814,8 +820,14 @@ function editManualPaymentDetails() {
       localStorage["editManualPayment"].split("~")[6]
     }</option>` + document.getElementById("payment_type").innerHTML;
 
+  document.getElementById("payment_description").innerHTML =
+    `
+  <option value="${localStorage["editManualPayment"].split("~")[7]}">${
+      localStorage["editManualPayment"].split("~")[7]
+    }</option>` + document.getElementById("payment_description").innerHTML;
+
   document.getElementById("amount").value =
-    localStorage["editManualPayment"].split("~")[7];
+    localStorage["editManualPayment"].split("~")[8];
 }
 
 function updateManualPayment() {
@@ -824,13 +836,17 @@ function updateManualPayment() {
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
   var payment_type = document.getElementById("payment_type").value;
+  var payment_description = document.getElementById(
+    "payment_description"
+  ).value;
 
   if (
     student_class != "" &&
     amount != "" &&
     date != "" &&
     student != "" &&
-    payment_type
+    payment_type != "" &&
+    payment_description != ""
   ) {
     // PUSH TO API
     warningtoast("<b>Processing ... Please wait</b>");
@@ -848,6 +864,7 @@ function updateManualPayment() {
         date: date,
         student: student,
         payment_type: payment_type,
+        payment_description: payment_description,
         session: localStorage["current_session"],
         term: localStorage["current_term"],
       }),
@@ -1106,13 +1123,17 @@ function debounce(func, timeout = 2000) {
 }
 
 function getDashboardInfo() {
-  fetch(ip + "/api/admin/dashboard-information", {
-    method: "GET",
+  fetch(ip + "/api/bursary/dashboard-information", {
+    method: "POST",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
   })
     .then(function (res) {
       console.log(res.status);
@@ -1125,6 +1146,14 @@ function getDashboardInfo() {
     .then((data) => {
       document.getElementById("student_no").innerHTML = `<span class="counter"
       data-num="${data.student_no}">${data.student_no}</span>`;
+
+      document.getElementById("total_manual_payment").innerHTML = formatNumber(
+        parseInt(data.total_manual_payment)
+      );
+
+      document.getElementById("total_expense").innerHTML = parseInt(
+        data.total_expense
+      );
     })
     .catch((err) => console.log(err));
 }

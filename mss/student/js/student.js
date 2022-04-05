@@ -1854,6 +1854,7 @@ function getAllPaymentHistory() {
             
                     <td>${c}.</td>
                     <td><b>${data[i].payment_type}</b></td>
+                    <td><b>${data[i].payment_description}</b></td>
                     <td>${data[i].date}</td>
                     <td>${data[i].session}</td>
                     <td>${data[i].term}</td>

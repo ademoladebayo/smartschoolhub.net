@@ -98,4 +98,10 @@ class BursaryController extends Controller
     {
         return  PaymentHistoryModel::where('date', 'like', '%' . $request->search_data . '%')->orWhere('payment_type', 'like', '%' . $request->search_data . '%')->orWhere('amount', 'like', '%' . $request->search_data . '%')->where('session', $request->session)->where('term', $request->term)->with('class', 'student')->orderBy('id', 'DESC')->get();
     }
+
+    public function getDashboardInfo(Request $request)
+    {
+        $BursaryService = new BursaryService();
+        return $BursaryService->getDashboardInfo($request);
+    }
 }
