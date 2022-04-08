@@ -175,6 +175,7 @@ class BursaryService
 
         //LOOP THROUGH ALL STUDENT 
         $all_student = StudentModel::select("id", "class")->get();
+        $c = 0;
         foreach ($all_student as $student) {
 
             $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
@@ -194,10 +195,12 @@ class BursaryService
                     $debitorModel->student_id = $student->id;
                     $debitorModel->amount = $balance;
                     $debitorModel->last_checked = $request->session . " " . $request->term . "_" . date("l jS \of F Y h:i:s A");
+                    $debitorModel->save();
                 }
             }
+            $c = $c + 1;
         }
-        return response(['success' => true, 'message' => "Sync was successful."]);
+        return response(['success' => true, 'message' => "{" . $c . "} Sync was successful."]);
     }
 
 

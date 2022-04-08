@@ -1059,11 +1059,11 @@ function getAllDebitor() {
     })
 
     .then((data) => {
-      document.getElementById("last_checked").innerHTML +=
-        data[0].last_checked;
       c = 1;
       document.getElementById("debitors_table").innerHTML = ``;
       if (data.length > 0) {
+        document.getElementById("last_checked").innerHTML +=
+          data[0].last_checked;
         for (i in data) {
           document.getElementById("debitors_table").innerHTML += `
                     <tr class='${c % 2 == 0 ? "even" : "odd"}'>
