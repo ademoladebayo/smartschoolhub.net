@@ -158,9 +158,9 @@ class StudentService
     {
         $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
         $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
-        $fees =  FeeModel::where('class', $class)->orWhere('class', $class_sector)->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
+        $fees =  FeeModel::where('class', $class)->where("type", "COMPULSORY")->orWhere('class', $class_sector)->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
 
-        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->get();
+        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $request->student_id)->where("fee_type","COMPULSORY")->where('session', $request->session)->where('term', $request->term)->get();
 
 
         // GET EXPECTED TOTAL

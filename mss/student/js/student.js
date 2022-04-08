@@ -206,9 +206,6 @@ function loadDashBoardInformation() {
     student_id +
     ".png";
 
-  // STUDENT_IMAGE
-  document.getElementById("student_image").src = url;
-
   document.getElementById("user_name").innerHTML = `<b>${
     JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
@@ -219,6 +216,9 @@ function loadDashBoardInformation() {
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
   }</b>`;
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
 }
 
 function getProfileData() {

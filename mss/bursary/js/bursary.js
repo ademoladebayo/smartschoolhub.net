@@ -1026,6 +1026,84 @@ function searchPayment(search_data) {
     .catch((err) => console.log(err));
 }
 
+// DEBITORS
+function getAllDebitor() {
+  fetch(ip + "/api/bursary/all-debitor", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("debitors_table").innerHTML +=
+        data[0].last_checked;
+      c = 1;
+      document.getElementById("debitors_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("debitors_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td>${data[i].student.student_id}</td>
+                    <td>${
+                      data[i].student.first_name +
+                      " " +
+                      data[i].student.last_name
+                    }</td>                 
+                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function syncLatestDebitor() {
+  fetch(ip + "/api/bursary/sync-lastest-debitor", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      if (data.success) {
+        successtoast(data.message);
+        getAllDebitor();
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
 // SEARCH DEBOUCER
 const searchPaymentDebouncer = debounce((search_data) =>
   searchPayment(search_data)

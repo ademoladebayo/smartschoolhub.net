@@ -341,8 +341,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('bursary/search-payment-history', 'BursaryController@searchPayment', function () {
     })->middleware(Cors::class);
 
-     // ADMIN {DASHBOARD INFO}
-     Route::post('bursary/dashboard-information', 'BursaryController@getDashboardInfo', function () {
+    // BURSARY {DEBITORS MANAGEMENT}
+    Route::post('bursary/sync-lastest-debitor', 'BursaryController@syncLastestDebitor', function () {
+    })->middleware(Cors::class);
+
+    Route::get('bursary/all-debitor', 'BursaryController@allDebitor', function () {
+    })->middleware(Cors::class);
+
+    // BURSARY {DASHBOARD INFO}
+    Route::post('bursary/dashboard-information', 'BursaryController@getDashboardInfo', function () {
     })->middleware(Cors::class);
 });
 

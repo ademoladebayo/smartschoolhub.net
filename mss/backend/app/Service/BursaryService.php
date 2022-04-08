@@ -4,9 +4,12 @@ namespace App\Service;
 
 use Illuminate\Http\Request;
 use App\Model\BursaryModel;
+use App\Model\ClassModel;
+use App\Model\DebitorModel;
 use App\Model\FeeModel;
 use App\Model\ExpenseModel;
 use App\Model\PaymentHistoryModel;
+use App\Model\StudentModel;
 use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
@@ -161,5 +164,59 @@ class BursaryService
     {
         PaymentHistoryModel::destroy($id);
         return response(['success' => true, 'message' => "Manual Payment was deleted successfully."]);
+    }
+
+    // DEBITOR MANAGEMENT  
+    public function syncLastestDebitor(Request $request)
+    {
+
+        //LOOP THROUGH ALL STUDENT 
+        $all_student = StudentModel::select("id", "class")->get();
+        foreach ($all_student as $student) {
+
+            $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
+            $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
+            $balance = $total_payable - $total_paid;
+
+            if ($balance > 0) {
+                // ADD STUDENT TO DEBITOR TABLE
+                // IF STUDENT ALREADY EXISTING ON DEBITORS LIST UPDATE AMOUNT ELSE RUN NEW INSERT
+                if (DebitorModel::where("student_id", $student->id)->exist()) {
+                    $debitorModel = DebitorModel::where("student_id", $student->id)->get()[0];
+                    $debitorModel->amount = intval($debitorModel->amount) + intval($balance);
+                    $debitorModel->last_checked = $request->session . " " . $request->term . "_" . date("l jS \of F Y h:i:s A");
+                    $debitorModel->save();
+                } else {
+                    $debitorModel = new DebitorModel();
+                    $debitorModel->student_id = $student->id;
+                    $debitorModel->amount = $balance;
+                    $debitorModel->last_checked = $request->session . " " . $request->term . "_" . date("l jS \of F Y h:i:s A");
+                }
+            }
+        }
+        return response(['success' => true, 'message' => "Sync was successful."]);
+    }
+
+
+    public function getPayableForClass(String $class_id, String $session, String  $term)
+    {
+        $class_sector = ClassModel::select('class_sector')->where('id', $class_id)->get()[0]->class_sector;
+        $fees =  FeeModel::where('class', $class_id)->where("type", "COMPULSORY")->orWhere('class', $class_sector)->orWhere('class', 'ALL STUDENT')->where('session', $session)->where('term', $term)->get();
+        $expected_amount = 0;
+        foreach ($fees as $fee) {
+            $expected_amount = $expected_amount + intval($fee->amount);
+        }
+        return $expected_amount;
+    }
+
+
+    public function getTotalPaid(String $student_id, String $session, String  $term)
+    {
+        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $student_id)->where("fee_type", "COMPULSORY")->where('session', $session)->where('term', $term)->get();
+        $total_paid = 0;
+        foreach ($payment_history as $payment) {
+            $total_paid = $total_paid + intval($payment->amount);
+        }
+        return $total_paid;
     }
 }
