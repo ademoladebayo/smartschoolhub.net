@@ -184,8 +184,8 @@ class BursaryService
             if ($balance > 0) {
                 // ADD STUDENT TO DEBITOR TABLE
                 // IF STUDENT ALREADY EXISTING ON DEBITORS LIST UPDATE AMOUNT ELSE RUN NEW INSERT
-                if (DB::table('debitors')->where("student_id", $student->id)->get()->exist()) {
-                    $debitorModel = DebitorModel::where("student_id", $student->id)->get()[0];
+                $debitorModel = DebitorModel::where("student_id", $student->id)->get()->first();
+                if ($debitorModel != null) {
                     $debitorModel->amount = intval($debitorModel->amount) + intval($balance);
                     $debitorModel->last_checked = $request->session . " " . $request->term . "_" . date("l jS \of F Y h:i:s A");
                     $debitorModel->save();

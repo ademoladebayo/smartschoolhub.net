@@ -831,7 +831,7 @@ function editManualPaymentDetails() {
   document.getElementById("amount").value =
     localStorage["editManualPayment"].split("~")[8];
 
-  document.getElementById("payment_type").innerHTML =
+  document.getElementById("fee_type").innerHTML =
     `
   <option value="${localStorage["editManualPayment"].split("~")[9]}">${
       localStorage["editManualPayment"].split("~")[9]
