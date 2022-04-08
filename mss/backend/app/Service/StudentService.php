@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
 use App\Model\ClassModel;
+use App\Model\DebitorModel;
 use App\Model\FeeModel;
 use App\Model\PaymentHistoryModel;
 use App\Model\StudentAttendanceModel;
@@ -160,8 +161,10 @@ class StudentService
         $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
         $fees =  FeeModel::where('class', $class)->where("type", "COMPULSORY")->orWhere('class', $class_sector)->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
 
-        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $request->student_id)->where("fee_type","COMPULSORY")->where('session', $request->session)->where('term', $request->term)->get();
+        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $request->student_id)->where("fee_type", "COMPULSORY")->where('session', $request->session)->where('term', $request->term)->get();
 
+        $arrears = DebitorModel::select('amount', 'last_checked')->where('student_id', $request->student_id)->get()->first();
+        $total_arrears =  $arrears == null ? 0 :  intval($arrears->amount);
 
         // GET EXPECTED TOTAL
         $expected_amount = 0;
@@ -175,9 +178,18 @@ class StudentService
             $total_paid = $total_paid + intval($payment->amount);
         }
 
+        $check_session_term = $request->session . " " . $request->term;
+        $last_checked_session_term = explode("_", $arrears->last_checked)[0];
+
+        // 
+        if ($check_session_term == $last_checked_session_term) {
+            $total_due_balance = $total_arrears - ($expected_amount - $total_paid);
+        } else {
+            $total_due_balance = $total_arrears + ($expected_amount - $total_paid);
+        }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_amount, 'total_paid' => $total_paid, 'due_balance' => ($expected_amount - $total_paid)];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_amount, 'total_paid' => $total_paid, 'due_balance' => ($expected_amount - $total_paid), 'arrears' => $total_arrears, 'total_due_balance' => $total_due_balance];
     }
 
 

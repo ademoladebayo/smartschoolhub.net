@@ -1798,6 +1798,12 @@ function loadFeeBreakdown() {
   document.getElementById("due_balance").innerHTML =
     "₦" + formatNumber(data.due_balance);
 
+  document.getElementById("arrears").innerHTML =
+    "₦" + formatNumber(data.arrears);
+
+  document.getElementById("total_due_balance").innerHTML =
+    "₦" + formatNumber(data.total_due_balance);
+
   document.getElementById("amount").value = data.due_balance;
 
   document.getElementById("fee_table").innerHTML = ``;
@@ -1855,6 +1861,7 @@ function getAllPaymentHistory() {
                     <td>${c}.</td>
                     <td><b>${data[i].payment_type}</b></td>
                     <td><b>${data[i].payment_description}</b></td>
+                    <td><b>${data[i].fee_type}</b></td>
                     <td>${data[i].date}</td>
                     <td>${data[i].session}</td>
                     <td>${data[i].term}</td>
