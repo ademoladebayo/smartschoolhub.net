@@ -13,6 +13,7 @@ use App\Model\StudentModel;
 use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class BursaryService
@@ -138,6 +139,7 @@ class BursaryService
         $PaymentHistoryModel->class_id = $request->student_class;
         $PaymentHistoryModel->date = $request->date;
         $PaymentHistoryModel->payment_type = $request->payment_type;
+        $PaymentHistoryModel->fee_type = $request->fee_type;
         $PaymentHistoryModel->payment_description = $request->payment_description;
         $PaymentHistoryModel->amount = $request->amount;
 
@@ -154,6 +156,7 @@ class BursaryService
         $PaymentHistoryModel->class_id = $request->student_class;
         $PaymentHistoryModel->date = $request->date;
         $PaymentHistoryModel->payment_type = $request->payment_type;
+        $PaymentHistoryModel->fee_type = $request->fee_type;
         $PaymentHistoryModel->payment_description = $request->payment_description;
         $PaymentHistoryModel->amount = $request->amount;
         $PaymentHistoryModel->save();
@@ -181,7 +184,7 @@ class BursaryService
             if ($balance > 0) {
                 // ADD STUDENT TO DEBITOR TABLE
                 // IF STUDENT ALREADY EXISTING ON DEBITORS LIST UPDATE AMOUNT ELSE RUN NEW INSERT
-                if (DebitorModel::where("student_id", $student->id)->exist()) {
+                if (DB::table('debitors')->where("student_id", $student->id)->exist()) {
                     $debitorModel = DebitorModel::where("student_id", $student->id)->get()[0];
                     $debitorModel->amount = intval($debitorModel->amount) + intval($balance);
                     $debitorModel->last_checked = $request->session . " " . $request->term . "_" . date("l jS \of F Y h:i:s A");

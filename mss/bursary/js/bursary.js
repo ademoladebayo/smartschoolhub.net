@@ -673,6 +673,8 @@ function createManualPayment() {
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
   var payment_type = document.getElementById("payment_type").value;
+  var fee_type = document.getElementById("fee_type").value;
+
   var payment_description = document.getElementById(
     "payment_description"
   ).value;
@@ -683,6 +685,7 @@ function createManualPayment() {
     date != "" &&
     student != "" &&
     payment_type != "" &&
+    fee_type != "" &&
     payment_description != ""
   ) {
     // PUSH TO API
@@ -700,6 +703,7 @@ function createManualPayment() {
         date: date,
         student: student,
         payment_type: payment_type,
+        fee_type: fee_type,
         payment_description: payment_description,
         session: localStorage["current_session"],
         term: localStorage["current_term"],
@@ -767,6 +771,7 @@ function getAllManualPayment() {
                 <td>${data[i].class.class_name}</td>
                 <td>${data[i].date}</td>
                 <td><b>${data[i].payment_type}</b></td>
+                <td><b>${data[i].fee_type}</b></td>
                 <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
@@ -776,8 +781,8 @@ function getAllManualPayment() {
             data[i].student.first_name + " " + data[i].student.last_name
           }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${
             data[i].payment_type
-          }~${data[i].payment_description}~${
-            data[i].amount
+          }~${data[i].payment_description}~${data[i].amount}~${
+            data[i].fee_type
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                     <a onclick="deleteManualPayment(${
@@ -825,6 +830,12 @@ function editManualPaymentDetails() {
 
   document.getElementById("amount").value =
     localStorage["editManualPayment"].split("~")[8];
+
+  document.getElementById("payment_type").innerHTML =
+    `
+  <option value="${localStorage["editManualPayment"].split("~")[9]}">${
+      localStorage["editManualPayment"].split("~")[6]
+    }</option>` + document.getElementById("fee_type").innerHTML;
 }
 
 function updateManualPayment() {
@@ -833,6 +844,7 @@ function updateManualPayment() {
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
   var payment_type = document.getElementById("payment_type").value;
+  var fee_type = document.getElementById("fee_type").value;
   var payment_description = document.getElementById(
     "payment_description"
   ).value;
@@ -843,6 +855,7 @@ function updateManualPayment() {
     date != "" &&
     student != "" &&
     payment_type != "" &&
+    fee_type != "" &&
     payment_description != ""
   ) {
     // PUSH TO API
@@ -861,6 +874,7 @@ function updateManualPayment() {
         date: date,
         student: student,
         payment_type: payment_type,
+        fee_type: fee_type,
         payment_description: payment_description,
         session: localStorage["current_session"],
         term: localStorage["current_term"],
@@ -1067,6 +1081,10 @@ function getAllDebitor() {
                     `;
           c = c + 1;
         }
+      } else {
+        document.getElementById(
+          "debitors_table"
+        ).innerHTML = `NO DEBITOR FOUND`;
       }
     })
     .catch((err) => console.log(err));
