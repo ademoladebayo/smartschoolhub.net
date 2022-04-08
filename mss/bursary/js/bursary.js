@@ -834,7 +834,7 @@ function editManualPaymentDetails() {
   document.getElementById("payment_type").innerHTML =
     `
   <option value="${localStorage["editManualPayment"].split("~")[9]}">${
-      localStorage["editManualPayment"].split("~")[6]
+      localStorage["editManualPayment"].split("~")[9]
     }</option>` + document.getElementById("fee_type").innerHTML;
 }
 
@@ -1059,7 +1059,7 @@ function getAllDebitor() {
     })
 
     .then((data) => {
-      document.getElementById("debitors_table").innerHTML +=
+      document.getElementById("last_checked").innerHTML +=
         data[0].last_checked;
       c = 1;
       document.getElementById("debitors_table").innerHTML = ``;
