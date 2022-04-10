@@ -264,7 +264,9 @@ class BursaryService
             $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
             $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
             $arrears = DebitorModel::select("amount")->where("student_id", $student->id)->get();
-            if ($arrears != null) {
+            Log::alert("ARREARS : ".$arrears);
+           
+            if (count($arrears) > 0) {
                 $arrears = $arrears[0]->amount;
             }
 
