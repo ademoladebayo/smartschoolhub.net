@@ -1043,12 +1043,16 @@ function searchPayment(search_data) {
 // DEBITORS
 function getAllDebitor() {
   fetch(ip + "/api/bursary/all-debitor", {
-    method: "GET",
+    method: "POST",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
   })
     .then(function (res) {
       console.log(res.status);
@@ -1074,8 +1078,12 @@ function getAllDebitor() {
                       data[i].student.first_name +
                       " " +
                       data[i].student.last_name
-                    }</td>                 
-                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    }</td>  
+                    <td>${formatNumber(parseInt(data[i].expected_fee))}</td>
+                    <td>${formatNumber(parseInt(data[i].total_paid))}</td>
+                    <td>${formatNumber(parseInt(data[i].balance))}</td>
+                    <td>${formatNumber(parseInt(data[i].arrears))}</td>
+                    <td>${formatNumber(parseInt(data[i].total_balance))}</td>
                     
                    </tr>
                     `;

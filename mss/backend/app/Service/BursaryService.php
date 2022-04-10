@@ -9,6 +9,7 @@ use App\Model\DebitorModel;
 use App\Model\FeeModel;
 use App\Model\ExpenseModel;
 use App\Model\PaymentHistoryModel;
+use App\Model\OptionalFeeRequestModel;
 use App\Model\StudentModel;
 use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
@@ -216,13 +217,67 @@ class BursaryService
     }
 
 
+    public function getOptionalFeeRequest(String $student_id, String $session, String  $term)
+    {
+        $optional_fee = 0;
+        $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
+
+
+        if ($OptionalFeeRequest == null) {
+            return $optional_fee;
+        } else {
+            foreach ($OptionalFeeRequest as $optionalfee) {
+                // USE COORESPONDING FEE_ID TO GET THE ACTUAL AMOUNT IN FEE TABLE
+                $request_amount = FeeModel::select("amount")->where("id", $optionalfee->fee_id)->get()[0]->amount;
+                $optional_fee += $request_amount;
+            }
+        }
+        return $optional_fee;
+    }
+
+
     public function getTotalPaid(String $student_id, String $session, String  $term)
     {
-        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $student_id)->where("fee_type", "COMPULSORY")->where('session', $session)->where('term', $term)->get();
+        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
         $total_paid = 0;
         foreach ($payment_history as $payment) {
             $total_paid = $total_paid + intval($payment->amount);
         }
         return $total_paid;
+    }
+
+    // DEBITORS LIST
+    public function allDebitor(Request $request)
+    {
+        $expected_fee = 0;
+        $optional_fee = 0;
+        $total_paid = 0;
+        $arrears = 0;
+        $total_balance = 0;
+
+        //LOOP THROUGH ALL STUDENT 
+        $all_student = StudentModel::select("id", "class")->get();
+        $c = 0;
+        foreach ($all_student as $student) {
+            // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+            $expected_fee = $this->getPayableForClass($student->class, $request->session, $request->term);
+            $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
+            $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
+            $arrears = DebitorModel::select("amount")->where("student_id", $student->id)->get()[0]->amount;
+
+
+
+
+            $student["expected_fee"] = $expected_fee + $optional_fee;
+            $student["total_paid"] = $total_paid;
+            $student["balance"] = $expected_fee - $total_paid;
+            $student["arrears"] = $arrears;
+            $student["total_balance"] = $arrears + $student["balance"];
+
+            $c = $c + 1;
+        }
+
+
+        return $all_student;
     }
 }

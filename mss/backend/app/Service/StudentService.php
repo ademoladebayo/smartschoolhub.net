@@ -32,7 +32,14 @@ class StudentService
             return  response(['success' => false, 'message' => "Invalid Student!"]);
         } else {
 
+
+
             if ($StudentRepository->getPassword($request->id) == $request->password) {
+                // Check if account is disabled
+                if ($student->profile_status == "DISABLED") {
+                    return  response(['success' => false, 'message' => "😔Your account has been disabled, contact the school admin."]);
+                }
+
                 $token = $student->createToken('token')->plainTextToken;
                 return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, ' . $student->first_name, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student)]);
             } else {

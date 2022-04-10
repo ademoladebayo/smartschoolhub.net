@@ -108,11 +108,13 @@ class BursaryController extends Controller
         return $BursaryService->syncLastestDebitor($request);
     }
 
-    public function allDebitor()
+    public function allDebitor(Request $request)
     {
-        return DebitorModel::with("student")->get();
+        $BursaryService = new BursaryService();
+        return $BursaryService->allDebitor($request);
     }
 
+    
     public function getDashboardInfo(Request $request)
     {
         $BursaryService = new BursaryService();

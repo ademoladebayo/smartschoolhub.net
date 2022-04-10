@@ -37,6 +37,12 @@ class TeacherService
         } else {
 
             if (Hash::check($request->password, $TeacherRepository->getPassword($request->id))) {
+                
+                // Check if account is disabled
+                if ($teacher->profile_status == "DISABLED") {
+                    return  response(['success' => false, 'message' => "😔Your account has been disabled, contact the school admin."]);
+                }
+
                 $token = $teacher->createToken('token')->plainTextToken;
                 // $cookie = cookie('jwt', $token, 1);
                 $cookie = Cookie::make('jwt', $token, 1);
