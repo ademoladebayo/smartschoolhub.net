@@ -1073,12 +1073,9 @@ function getAllDebitor() {
                     <tr class='${c % 2 == 0 ? "even" : "odd"}'>
             
                     <td>${c}.</td>
-                    <td>${data[i].student.student_id}</td>
-                    <td>${
-                      data[i].student.first_name +
-                      " " +
-                      data[i].student.last_name
-                    }</td>  
+                    <td>${data[i].student_id}</td>
+                    <td>${data[i].first_name + " " + data[i].last_name}</td>  
+                    <td>${data[i].class.class_name}</td>
                     <td>${formatNumber(parseInt(data[i].expected_fee))}</td>
                     <td>${formatNumber(parseInt(data[i].total_paid))}</td>
                     <td>${formatNumber(parseInt(data[i].balance))}</td>
@@ -1099,35 +1096,41 @@ function getAllDebitor() {
 }
 
 function syncLatestDebitor() {
-  fetch(ip + "/api/bursary/sync-lastest-debitor", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-    body: JSON.stringify({
-      session: localStorage["current_session"],
-      term: localStorage["current_term"],
-    }),
-  })
-    .then(function (res) {
-      console.log(res.status);
-      if (res.status == 401) {
-        window.location.href = "index.html";
-      }
-      return res.json();
+  if (
+    confirm(
+      "You should only do this at the end of every term to keep track of student arrears for the term ..... Do you want to proceed ?"
+    )
+  ) {
+    fetch(ip + "/api/bursary/sync-lastest-debitor", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        session: localStorage["current_session"],
+        term: localStorage["current_term"],
+      }),
     })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          window.location.href = "index.html";
+        }
+        return res.json();
+      })
 
-    .then((data) => {
-      if (data.success) {
-        successtoast(data.message);
-        getAllDebitor();
-      } else {
-        errortoast(data.message);
-      }
-    })
-    .catch((err) => console.log(err));
+      .then((data) => {
+        if (data.success) {
+          successtoast(data.message);
+          getAllDebitor();
+        } else {
+          errortoast(data.message);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 }
 
 // SEARCH DEBOUCER

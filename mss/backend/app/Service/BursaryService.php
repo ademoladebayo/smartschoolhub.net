@@ -256,7 +256,7 @@ class BursaryService
         $total_balance = 0;
 
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class")->get();
+        $all_student = StudentModel::select("id", "class", "firstname", "lastname", "student_id")->with("class")->get();
         $c = 0;
         foreach ($all_student as $student) {
             // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
