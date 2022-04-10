@@ -345,7 +345,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('bursary/sync-lastest-debitor', 'BursaryController@syncLastestDebitor', function () {
     })->middleware(Cors::class);
 
-    Route::get('bursary/all-debitor', 'BursaryController@allDebitor', function () {
+    Route::post('bursary/all-debitor', 'BursaryController@allDebitor', function () {
     })->middleware(Cors::class);
 
     // BURSARY {DASHBOARD INFO}
