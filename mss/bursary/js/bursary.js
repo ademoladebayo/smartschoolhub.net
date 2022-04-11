@@ -1069,7 +1069,7 @@ function getAllDebitor() {
         document.getElementById("last_checked").innerHTML +=
           typeof data[0].last_checked == "undefined"
             ? " FOR ARREARS HAS NOT BEEN SYNCED"
-            : data[0].last_checked;
+            : "LAST UPDATED AT " + data[0].last_checked;
 
         for (i in data) {
           document.getElementById("debitors_table").innerHTML += `

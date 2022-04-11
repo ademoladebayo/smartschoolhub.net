@@ -208,7 +208,7 @@ class BursaryService
     public function getPayableForClass(String $class_id, String $session, String  $term)
     {
         $class_sector = ClassModel::select('class_sector')->where('id', $class_id)->get()[0]->class_sector;
-        $fees =  FeeModel::where('class', $class_id)->where("type", "COMPULSORY")->orWhere('class', $class_sector)->orWhere('class', 'ALL STUDENT')->where('session', $session)->where('term', $term)->get();
+        $fees =  FeeModel::where('class', $class_id)->where("type", "COMPULSORY")->Where('class', $class_sector)->Where('class', 'ALL STUDENT')->where('session', $session)->where('term', $term)->get();
         $expected_amount = 0;
         foreach ($fees as $fee) {
             $expected_amount = $expected_amount + intval($fee->amount);
