@@ -263,11 +263,12 @@ class BursaryService
             $expected_fee = $this->getPayableForClass($student->class, $request->session, $request->term);
             $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
             $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
-            $arrears = DebitorModel::select("amount")->where("student_id", $student->id)->get();
+            $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
             Log::alert("ARREARS : " . $arrears);
 
             if (count($arrears) > 0) {
                 $arrears = $arrears[0]->amount;
+                $student["last_checked"] = $arrears[0]->last_checked;
             } else {
                 $arrears = 0;
             }

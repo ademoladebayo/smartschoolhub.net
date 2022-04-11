@@ -1067,7 +1067,10 @@ function getAllDebitor() {
       document.getElementById("debitors_table").innerHTML = ``;
       if (data.length > 0) {
         document.getElementById("last_checked").innerHTML +=
-          data[0].last_checked;
+          typeof data[0].last_checked == "undefined"
+            ? " FOR ARREARS HAS NOT BEEN SYNCED"
+            : data[0].last_checked;
+
         for (i in data) {
           document.getElementById("debitors_table").innerHTML += `
                     <tr class='${c % 2 == 0 ? "even" : "odd"}'>
@@ -1101,6 +1104,9 @@ function syncLatestDebitor() {
       "You should only do this at the end of every term to keep track of student arrears for the term ..... Do you want to proceed ?"
     )
   ) {
+    document.getElementById(
+      "debitors_table"
+    ).innerHTML = `<i style='color:black' class='fa fa-spinner fa-spin'></i>  Fetching latest debitor ...`;
     fetch(ip + "/api/bursary/sync-lastest-debitor", {
       method: "POST",
       headers: {
