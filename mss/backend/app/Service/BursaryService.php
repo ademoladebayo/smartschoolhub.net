@@ -267,8 +267,9 @@ class BursaryService
             Log::alert("ARREARS : " . $arrears);
 
             if (count($arrears) > 0) {
-                $arrears = $arrears[0]->amount;
                 $student["last_checked"] = $arrears[0]->last_checked;
+                $arrears = $arrears[0]->amount;
+               
             } else {
                 $arrears = 0;
             }
