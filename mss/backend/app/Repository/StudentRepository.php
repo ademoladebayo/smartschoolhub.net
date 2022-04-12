@@ -92,7 +92,7 @@ class StudentRepository
     public function updateStudentProfileStatus($id)
     {
         $StudentModel =  StudentModel::find($id);
-        $StudentModel->profile_status =  $StudentModel->profile_status == 'ENABLED' ? 'DISABLE' : 'ENABLED';
+        $StudentModel->profile_status =  $StudentModel->profile_status == 'ENABLED' ? 'DISABLED' : 'ENABLED';
         $StudentModel->save();
         return response()->json(['success' => true, 'message' => 'Profile updated successfully.']);
     }

@@ -32,8 +32,6 @@ class StudentService
             return  response(['success' => false, 'message' => "Invalid Student!"]);
         } else {
 
-
-
             if ($StudentRepository->getPassword($request->id) == $request->password) {
                 // Check if account is disabled
                 if ($student->profile_status == "DISABLED") {
@@ -164,41 +162,36 @@ class StudentService
     // FEE AND PAYMENT
     function allFee(Request $request)
     {
+        $bursaryService = new BursaryService();
         $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
         $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
-        $fees =  FeeModel::where('class', $class)->where("type", "COMPULSORY")->orWhere('class', $class_sector)->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
+        $fees =  FeeModel::orWhere('class', $class)->where('session', $request->session)->where('term', $request->term)
+            ->orWhere('class', $class_sector)->where('session', $request->session)->where('term', $request->term)
+            ->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
 
-        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $request->student_id)->where("fee_type", "COMPULSORY")->where('session', $request->session)->where('term', $request->term)->get();
-
-        $arrears = DebitorModel::select('amount', 'last_checked')->where('student_id', $request->student_id)->get()->first();
-        $total_arrears =  $arrears == null ? 0 :  intval($arrears->amount);
-
-        // GET EXPECTED TOTAL
-        $expected_amount = 0;
-        foreach ($fees as $fee) {
-            $expected_amount = $expected_amount + intval($fee->amount);
-        }
-
-        // GET TOTAL PAID
+        $expected_fee = 0;
+        $optional_fee = 0;
         $total_paid = 0;
-        foreach ($payment_history as $payment) {
-            $total_paid = $total_paid + intval($payment->amount);
-        }
+        $arrears = 0;
 
-        $check_session_term = $request->session . " " . $request->term;
-        $last_checked_session_term = explode("_", $arrears->last_checked)[0];
 
-        // 
-        if ($check_session_term == $last_checked_session_term) {
-            $total_due_balance = $total_arrears - ($expected_amount - $total_paid);
+        // SO GET STUDENT'S, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+        $expected_fee = $bursaryService->getPayableForClass($class, $request->session, $request->term);
+        $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
+        $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
+        $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $request->student_id)->get();
+        Log::alert("ARREARS : " . $arrears);
+
+        if (count($arrears) > 0) {
+            $student["last_checked"] = $arrears[0]->last_checked;
+            $arrears = $arrears[0]->amount;
         } else {
-            $total_due_balance = $total_arrears + ($expected_amount - $total_paid);
+            $arrears = 0;
         }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_amount, 'total_paid' => $total_paid, 'due_balance' => ($expected_amount - $total_paid), 'arrears' => $total_arrears, 'total_due_balance' => $total_due_balance];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'optional_fee' => $optional_fee, 'due_balance' => ($expected_fee - $total_paid), 'arrears' => $arrears, 'total_due_balance' => $arrears + ($expected_fee - $total_paid)];
     }
-
 
     // RESULT
     public function getResult(Request $request)
