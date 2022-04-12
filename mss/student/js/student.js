@@ -1811,6 +1811,13 @@ function loadFeeBreakdown() {
   data.fee_breakdown.forEach((fee) => {
     document.getElementById("fee_table").innerHTML += `
     <tr>
+         <td>${
+           fee.type == "COMPULSORY"
+             ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+         value="${fee.id}" checked  onclick="this.checked = !this.checked">`
+             : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+             value="${fee.id}" checked ">`
+         }.</td>
          <td>${c}.</td>
          <td>${fee.description}</td>
          <td>${fee.type}</td>
@@ -1874,6 +1881,72 @@ function getAllPaymentHistory() {
       }
     })
     .catch((err) => console.log(err));
+}
+
+// GENERATE PAYMENT
+function generatePayment() {
+  var optional_fee_id = [];
+
+  var fee_optional = document.getElementsByName("fee_optional");
+  for (var i = 0; i < fee_optional.length; i++) {
+    if (fee_optional[i].checked == true) {
+      optional_fee_id.push(fee_optional[i].value);
+    }
+  }
+  console.log(optional_fee_id);
+
+  if (optional_fee_id.length < 1) {
+    alert("No optional fee was selected !");
+    return 0;
+  }
+
+  if (
+    confirm(
+      "Kindly confirm you would like to add the selected optional fees for " +
+        localStorage["current_session"] +
+        " " +
+        localStorage["current_term"]
+    )
+  ) {
+    document.getElementById("add_optional_fee").innerHTML = `<i
+      class="fa fa-spinner fa-spin"></i> Processing ...`;
+
+    // PUSH TO API
+    fetch(ip + "/api/student/add-optional-fee", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        student_id: JSON.parse(localStorage["user_data"]).data.id,
+        optional_fee_id: optional_fee_id,
+        class: JSON.parse(localStorage["user_data"]).data.class.id,
+        session: localStorage["current_session"],
+        term: localStorage["current_term"],
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          window.location.href = "index.html";
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        if (data.success) {
+          alert("" + data.message + "");
+          setTimeout(function () {
+            window.parent.location.reload();
+          }, 1000);
+        } else {
+          alert("" + data.message + "");
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 }
 
 // PRINT

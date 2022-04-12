@@ -165,7 +165,7 @@ class StudentService
         $bursaryService = new BursaryService();
         $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
         $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
-        $fees =  FeeModel::orWhere('class', $class)->where('session', $request->session)->where('term', $request->term)
+        $fees =  FeeModel::where('class', $class)->where('session', $request->session)->where('term', $request->term)
             ->orWhere('class', $class_sector)->where('session', $request->session)->where('term', $request->term)
             ->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
 
