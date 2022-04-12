@@ -1811,13 +1811,13 @@ function loadFeeBreakdown() {
   data.fee_breakdown.forEach((fee) => {
     document.getElementById("fee_table").innerHTML += `
     <tr>
-         <td>${
+         ${
            fee.type == "COMPULSORY"
              ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
          value="${fee.id}" checked  onclick="this.checked = !this.checked">`
              : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
-             value="${fee.id}" checked ">`
-         }.</td>
+             value="${fee.id}"">`
+         }
          <td>${c}.</td>
          <td>${fee.description}</td>
          <td>${fee.type}</td>
