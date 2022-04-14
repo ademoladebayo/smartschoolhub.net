@@ -1783,7 +1783,7 @@ function getFee() {
     .then((data) => {
       localStorage.setItem("fee", JSON.stringify(data));
       document.getElementById("due_balance").innerHTML =
-        "₦" + formatNumber(data.due_balance);
+        "₦" + formatNumber(data.total_due_balance);
     })
     .catch((err) => console.log(err));
 }
@@ -1807,7 +1807,7 @@ function loadFeeBreakdown() {
   document.getElementById("total_due_balance").innerHTML =
     "₦" + formatNumber(data.total_due_balance);
 
-  document.getElementById("amount").value = data.due_balance;
+  // document.getElementById("amount").value = data.due_balance;
 
   document.getElementById("fee_table").innerHTML = ``;
   c = 1;
