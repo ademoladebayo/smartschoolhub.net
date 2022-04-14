@@ -296,7 +296,7 @@ class BursaryService
 
             $student["expected_fee"] = $expected_fee + $optional_fee;
             $student["total_paid"] = $total_paid;
-            $student["balance"] = $expected_fee - $total_paid;
+            $student["balance"] = ($expected_fee + $optional_fee) - $total_paid;
             $student["arrears"] = $arrears;
             $student["total_balance"] = intval($arrears) + intval($student["balance"]);
 

@@ -193,7 +193,7 @@ class StudentService
         }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee - $total_paid), 'arrears' => $arrears, 'total_due_balance' => $arrears + ($expected_fee - $total_paid)];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
     }
 
 

@@ -1821,7 +1821,7 @@ function loadFeeBreakdown() {
              : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
              value="${fee.id}"  ${
                  optional_fee.includes(fee.id.toString())
-                   ? `checked  onclick="this.checked = !this.checked"`
+                   ? `checked`
                    : ``
                }>`
          }
@@ -1916,7 +1916,7 @@ function generatePayment() {
   }
 
   document.getElementById("add_optional_fee").innerHTML = `<i
-      class="fa fa-spinner fa-spin"></i> Processing ...`;
+      class="fa fa-spinner fa-spin"></i> Generating Please wait ...`;
 
   // PUSH TO API
   fetch(ip + "/api/student/add-optional-fee", {
