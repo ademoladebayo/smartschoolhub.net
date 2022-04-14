@@ -265,6 +265,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('student/payment-history', 'StudentController@paymentHistory', function () {
     })->middleware(Cors::class);
 
+    Route::post('student/add-optional-fee', 'StudentController@addOptionalFee', function () {
+    })->middleware(Cors::class);
+
     // STUDENT {RESULT}
     Route::post('student/result', 'StudentController@getResult', function () {
     })->middleware(Cors::class);

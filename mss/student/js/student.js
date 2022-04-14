@@ -1791,6 +1791,9 @@ function getFee() {
 function loadFeeBreakdown() {
   data = JSON.parse(localStorage["fee"]);
 
+  optional_fee = [];
+  optional_fee = data.optional_fee_id;
+
   document.getElementById("expected_amount").innerHTML =
     "₦" + formatNumber(data.expected_amount);
   document.getElementById("total_paid").innerHTML =
@@ -1816,7 +1819,11 @@ function loadFeeBreakdown() {
              ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
          value="${fee.id}" checked  onclick="this.checked = !this.checked">`
              : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
-             value="${fee.id}"">`
+             value="${fee.id}"  ${
+                 optional_fee.includes(fee.id.toString())
+                   ? `checked  onclick="this.checked = !this.checked"`
+                   : ``
+               }>`
          }
          <td>${c}.</td>
          <td>${fee.description}</td>
@@ -1895,59 +1902,57 @@ function generatePayment() {
   }
   console.log(optional_fee_id);
 
-  if (optional_fee_id.length < 1) {
-    alert("No optional fee was selected !");
-    return 0;
+  if (optional_fee_id.length > 0) {
+    if (
+      !confirm(
+        "Kindly confirm you would like to add the selected optional fee for " +
+          localStorage["current_session"] +
+          " " +
+          localStorage["current_term"]
+      )
+    ) {
+      return 0;
+    }
   }
 
-  if (
-    confirm(
-      "Kindly confirm you would like to add the selected optional fees for " +
-        localStorage["current_session"] +
-        " " +
-        localStorage["current_term"]
-    )
-  ) {
-    document.getElementById("add_optional_fee").innerHTML = `<i
+  document.getElementById("add_optional_fee").innerHTML = `<i
       class="fa fa-spinner fa-spin"></i> Processing ...`;
 
-    // PUSH TO API
-    fetch(ip + "/api/student/add-optional-fee", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: "Bearer " + localStorage["token"],
-      },
-      body: JSON.stringify({
-        student_id: JSON.parse(localStorage["user_data"]).data.id,
-        optional_fee_id: optional_fee_id,
-        class: JSON.parse(localStorage["user_data"]).data.class.id,
-        session: localStorage["current_session"],
-        term: localStorage["current_term"],
-      }),
+  // PUSH TO API
+  fetch(ip + "/api/student/add-optional-fee", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      optional_fee_id: optional_fee_id,
+      class: JSON.parse(localStorage["user_data"]).data.class.id,
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
     })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          window.location.href = "index.html";
-        }
-        return res.json();
-      })
 
-      .then((data) => {
-        if (data.success) {
-          alert("" + data.message + "");
-          setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
-        } else {
-          alert("" + data.message + "");
-        }
-      })
-      .catch((err) => console.log(err));
-  }
+    .then((data) => {
+      if (data.success) {
+        getFee();
+
+        // LOAD PAYMENT SLIP PAGE
+      }
+    })
+    .catch((err) => console.log(err));
 }
+
+function getPaymentSlip() {}
 
 // PRINT
 function print() {

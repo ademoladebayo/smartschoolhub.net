@@ -13,6 +13,7 @@ use App\Model\StudentModel;
 use App\Model\StudentResultCommentModel;
 use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
+use App\Model\OptionalFeeRequestModel;
 use App\Repository\StudentRepository;
 use App\Repository\SubjectRegistrationRepository;
 use App\Repository\GradeSettingsRepository;
@@ -179,6 +180,8 @@ class StudentService
         $expected_fee = $bursaryService->getPayableForClass($class, $request->session, $request->term);
         $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
         $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
+        $optional_fee_id =  $bursaryService->getOptionalFeeId($request->student_id, $request->session, $request->term);
+
         $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $request->student_id)->get();
         Log::alert("ARREARS : " . $arrears);
 
@@ -190,8 +193,28 @@ class StudentService
         }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'optional_fee' => $optional_fee, 'due_balance' => ($expected_fee - $total_paid), 'arrears' => $arrears, 'total_due_balance' => $arrears + ($expected_fee - $total_paid)];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee - $total_paid), 'arrears' => $arrears, 'total_due_balance' => $arrears + ($expected_fee - $total_paid)];
     }
+
+
+    public function addOptionalFee(Request $request)
+    {
+
+        // FIRST DELETE PREVIOUS OPTIONAL FEE REQUEST FOR THAT TERM
+        OptionalFeeRequestModel::where('student_id', $request->student_id)->where('session', $request->session)->Where('term', $request->term)->delete();
+
+        // PERSIST THE NEW REQUEST
+        foreach ($request->optional_fee_id as $fee_id) {
+            $OptionalFeeRequestModel = new OptionalFeeRequestModel();
+            $OptionalFeeRequestModel->student_id = $request->student_id;
+            $OptionalFeeRequestModel->fee_id = $fee_id;
+            $OptionalFeeRequestModel->session = $request->session;
+            $OptionalFeeRequestModel->term = $request->term;
+            $OptionalFeeRequestModel->save();
+        }
+        return ['success' => true];
+    }
+
 
     // RESULT
     public function getResult(Request $request)

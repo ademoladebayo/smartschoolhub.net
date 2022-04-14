@@ -14,7 +14,9 @@
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="../css/all.min.css">
     <!-- Flaticon CSS -->
+    -
     <link rel="stylesheet" href="../fonts/flaticon.css">
+
 
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"> -->
@@ -103,7 +105,13 @@
 
                             </tbody>
                         </table>
-                        <label for="">How much do you want to pay ?</label>
+
+                        <button id="add_optional_fee" onclick="generatePayment()" type="button"
+                            class="btn btn-primary btn-block">
+                            <i class="fas fa-sync-alt"></i> GENERATE PAYMENT SLIP
+                        </button>
+                        <br>
+                        <!-- <label for="">How much do you want to pay ?</label>
                         <input id="amount" placeholder="ENTER AMOUNT HERE 10,000" type="number" value=""
                             style="float: right; border-color: blue; width: 330px; margin-bottom: 20px;">
 
@@ -111,7 +119,7 @@
                             onclick="$('#viewModal').modal('hide'); makePayment(document.getElementById('amount').value)"
                             type="button" class="btn btn-primary btn-block">
                             <i class="flaticon-money"></i> Pay Now
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </div>

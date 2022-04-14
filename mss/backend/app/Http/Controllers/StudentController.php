@@ -64,6 +64,13 @@ class StudentController extends Controller
         return PaymentHistoryModel::where('student_id', $request->student_id)->orderBy('id', 'DESC')->get();
     }
 
+    public function addOptionalFee(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->addOptionalFee($request);
+    }
+
+
     // RESULT
     public function getResult(Request $request)
     {

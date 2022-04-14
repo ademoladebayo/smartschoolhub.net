@@ -238,6 +238,22 @@ class BursaryService
     }
 
 
+    public function getOptionalFeeId(String $student_id, String $session, String  $term)
+    {
+        $optional_fee = [];
+        $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
+
+
+        if ($OptionalFeeRequest == null) {
+            return $optional_fee;
+        } else {
+            foreach ($OptionalFeeRequest as $optionalfee) {
+                array_push($optional_fee, $optionalfee->fee_id);
+            }
+        }
+        return $optional_fee;
+    }
+
     public function getTotalPaid(String $student_id, String $session, String  $term)
     {
         $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
