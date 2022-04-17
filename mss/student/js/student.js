@@ -1889,7 +1889,7 @@ function getAllPaymentHistory() {
 }
 
 // GENERATE PAYMENT
- async function generatePayment() {
+  function generatePayment() {
   var optional_fee_id = [];
 
   var fee_optional = document.getElementsByName("fee_optional");
@@ -1942,7 +1942,7 @@ function getAllPaymentHistory() {
 
     .then((data) => {
       if (data.success) {
-       await getFee();
+        getFee();
         loadFeeBreakdown();
         // LOAD PAYMENT SLIP PAGE
         window.parent.location.assign(domain + "/student/payment-slip.html");
@@ -1951,7 +1951,8 @@ function getAllPaymentHistory() {
     .catch((err) => console.log(err));
 }
 
-function getPaymentSlip(loadPage) {
+async function getPaymentSlip(loadPage) {
+  await getFee();
   if (loadPage) {
     window.parent.location.assign(domain + "/student/payment-slip.html");
   } else {
