@@ -2016,8 +2016,13 @@ function getPaymentSlip(loadPage) {
       "₦" + formatNumber(data.total_due_balance);
 
     document.getElementById("payment_slip_table").innerHTML = ``;
+
     c = 1;
     data.fee_breakdown.forEach((fee) => {
+      if (!optional_fee.includes(fee.id.toString())) {
+        return 0;
+      }
+
       document.getElementById("payment_slip_table").innerHTML += `
     <tr>
          ${
