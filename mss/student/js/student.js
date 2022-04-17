@@ -2019,8 +2019,8 @@ function getPaymentSlip(loadPage) {
 
     c = 1;
     data.fee_breakdown.forEach((fee) => {
-      if (fee.type == "OPTIONAL" && optional_fee.includes(fee.id.toString())) {
-        return 0;
+      if (fee.type == "OPTIONAL" && !optional_fee.includes(fee.id.toString())) {
+        return;
       }
 
       document.getElementById("payment_slip_table").innerHTML += `
