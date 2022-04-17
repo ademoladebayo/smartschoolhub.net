@@ -1759,7 +1759,7 @@ async function getIDCard() {
 
 // FEE
 function getFee() {
-  fetch(ip + "/api/student/all-fee", {
+  return fetch(ip + "/api/student/all-fee", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -1889,7 +1889,7 @@ function getAllPaymentHistory() {
 }
 
 // GENERATE PAYMENT
-function generatePayment() {
+ async function generatePayment() {
   var optional_fee_id = [];
 
   var fee_optional = document.getElementsByName("fee_optional");
@@ -1942,7 +1942,7 @@ function generatePayment() {
 
     .then((data) => {
       if (data.success) {
-        getFee();
+       await getFee();
         loadFeeBreakdown();
         // LOAD PAYMENT SLIP PAGE
         window.parent.location.assign(domain + "/student/payment-slip.html");
