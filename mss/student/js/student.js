@@ -2019,23 +2019,14 @@ function getPaymentSlip(loadPage) {
 
     c = 1;
     data.fee_breakdown.forEach((fee) => {
-      if (!optional_fee.includes(fee.id.toString())) {
+      if (fee.type == "OPTIONAL" && optional_fee.includes(fee.id.toString())) {
         return 0;
       }
 
       document.getElementById("payment_slip_table").innerHTML += `
     <tr>
-         ${
-           fee.type == "COMPULSORY"
-             ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
-         value="${fee.id}" checked  onclick="this.checked = !this.checked">`
-             : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
-             value="${fee.id}"  ${
-                 optional_fee.includes(fee.id.toString())
-                   ? `checked onclick="this.checked = !this.checked"`
-                   : ``
-               }>`
-         }
+        <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+        value="${fee.id}" checked  onclick="this.checked = !this.checked">
          <td>${c}.</td>
          <td>${fee.description}</td>
          <td>${fee.type}</td>
