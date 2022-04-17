@@ -192,8 +192,9 @@ class StudentService
             $arrears = 0;
         }
 
+        $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
     }
 
 
@@ -257,13 +258,21 @@ class StudentService
             $GradeSettingsRepository  = new GradeSettingsRepository();
             $util = new Utils();
 
-            $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($data->total);
-            $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
-            $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+
+            if ($data->total > 0) {
+                $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($data->total);
+                $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+                $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+                $data['position'] =  $util->getPosition(array_search(intval($data->total), $all_score) + 1);
+            } else {
+                $data['grade'] = '--';
+                $data['remark'] = '--';
+                $data['position'] =  '--';
+            }
+
             $data['class_average'] = $avg;
             $data['class_lowest'] = $min;
             $data['class_highest'] = $max;
-            $data['position'] =  $util->getPosition(array_search(intval($data->total), $all_score) + 1);
 
 
             // GET SCORE TOTAL
@@ -278,7 +287,7 @@ class StudentService
         $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
 
 
-        return response()->json(['result' => $result, 'percentage' => $percentage . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
+        return response()->json(['result' => $result, 'percentage' => number_format($percentage, 2)  . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
     }
 
 

@@ -1953,7 +1953,7 @@ function generatePayment() {
 
 function getPaymentSlip(loadPage) {
   if (loadPage) {
-    window.location.assign(domain + "/student/payment-slip.html");
+    window.parent.location.assign(domain + "/student/payment-slip.html");
   } else {
     data = JSON.parse(localStorage["fee"]);
 
@@ -2005,7 +2005,8 @@ function getPaymentSlip(loadPage) {
       "₦" + formatNumber(data.expected_amount);
     document.getElementById("total_paid").innerHTML =
       "₦" + formatNumber(data.total_paid);
-    document.getElementById("due_balance").innerHTML =
+    document.getElementById("percentage_paid").innerHTML = data.percentage_paid;
+    document.getElementById("balance").innerHTML =
       "₦" + formatNumber(data.due_balance);
 
     document.getElementById("arrears").innerHTML =
