@@ -1820,9 +1820,7 @@ function loadFeeBreakdown() {
          value="${fee.id}" checked  onclick="this.checked = !this.checked">`
              : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
              value="${fee.id}"  ${
-                 optional_fee.includes(fee.id.toString())
-                   ? `checked`
-                   : ``
+                 optional_fee.includes(fee.id.toString()) ? `checked` : ``
                }>`
          }
          <td>${c}.</td>
@@ -1916,7 +1914,7 @@ function generatePayment() {
   }
 
   document.getElementById("add_optional_fee").innerHTML = `<i
-      class="fa fa-spinner fa-spin"></i> Generating Please wait ...`;
+      class="fa fa-spinner fa-spin"></i> Processing Please wait ...`;
 
   // PUSH TO API
   fetch(ip + "/api/student/add-optional-fee", {
@@ -1945,14 +1943,123 @@ function generatePayment() {
     .then((data) => {
       if (data.success) {
         getFee();
-
+        loadFeeBreakdown();
         // LOAD PAYMENT SLIP PAGE
+        window.parent.location.assign(domain + "/student/payment-slip.html");
       }
     })
     .catch((err) => console.log(err));
 }
 
-function getPaymentSlip() {}
+function getPaymentSlip(loadPage) {
+  if (loadPage) {
+    window.location.assign(domain + "/student/payment-slip.html");
+  } else {
+    data = JSON.parse(localStorage["fee"]);
+
+    optional_fee = [];
+    optional_fee = data.optional_fee_id;
+
+    // SLIP HEADER
+    user_data = JSON.parse(localStorage["user_data"]);
+
+    // IMAGE URL
+    url =
+      domain +
+      "/backend/storage/app/public/fileupload/student/" +
+      user_data.data.student_id +
+      ".png";
+
+    // STUDENT_IMAGE
+    document.getElementById("student_image").src = url;
+
+    // POPULATE STUDENTS INFORMATION
+    document.getElementById("full_name").innerHTML =
+      "<b>" +
+      user_data.data.last_name +
+      "</b>" +
+      " " +
+      user_data.data.first_name +
+      " " +
+      user_data.data.middle_name;
+
+    document.getElementById("student_id").innerHTML = user_data.data.student_id;
+    document.getElementById("class_sector").innerHTML =
+      user_data.data.class.class_sector;
+    document.getElementById("school_details").innerHTML =
+      localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+
+    document.getElementById("student_class").innerHTML =
+      user_data.data.class.class_name;
+
+    document.getElementById("session").innerHTML =
+      localStorage["current_session"];
+
+    document.getElementById("term").innerHTML = localStorage["current_term"];
+
+    document.getElementById("date_generated").innerHTML =
+      getDate().split("~")[1];
+
+    // SLIP FOOTER
+    document.getElementById("total_expected").innerHTML =
+      "₦" + formatNumber(data.expected_amount);
+    document.getElementById("total_paid").innerHTML =
+      "₦" + formatNumber(data.total_paid);
+    document.getElementById("due_balance").innerHTML =
+      "₦" + formatNumber(data.due_balance);
+
+    document.getElementById("arrears").innerHTML =
+      "₦" + formatNumber(data.arrears);
+
+    document.getElementById("total_due_balance").innerHTML =
+      "₦" + formatNumber(data.total_due_balance);
+
+    document.getElementById("payment_slip_table").innerHTML = ``;
+    c = 1;
+    data.fee_breakdown.forEach((fee) => {
+      document.getElementById("payment_slip_table").innerHTML += `
+    <tr>
+         ${
+           fee.type == "COMPULSORY"
+             ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+         value="${fee.id}" checked  onclick="this.checked = !this.checked">`
+             : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+             value="${fee.id}"  ${
+                 optional_fee.includes(fee.id.toString())
+                   ? `checked onclick="this.checked = !this.checked"`
+                   : ``
+               }>`
+         }
+         <td>${c}.</td>
+         <td>${fee.description}</td>
+         <td>${fee.type}</td>
+         <td>${
+           fee.class == JSON.parse(localStorage["user_data"]).data.class.id
+             ? JSON.parse(localStorage["user_data"]).data.class.class_name
+             : fee.class
+         }</td>
+        <td>₦${formatNumber(fee.amount)}</td>
+    </tr>
+    `;
+
+      c = c + 1;
+    });
+  }
+}
+
+function download() {
+  const payment_slip = this.document.getElementById("payment-slip");
+  console.log(payment_slip);
+  console.log(window);
+  var opt = {
+    // margin: 1,
+    // filename: "myfile.pdf",
+    // image: { type: "jpeg", quality: 0.98 },
+    // html2canvas: { scale: 2 },
+    // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+  html2pdf().from(payment_slip).set(opt).save();
+}
 
 // PRINT
 function print() {
