@@ -81,7 +81,10 @@ class BursaryController extends Controller
 
     public function allManualPayment(Request $request)
     {
-        return PaymentHistoryModel::where('session', $request->session)->where('term', $request->term)->where('payment_type', 'CASH')->orwhere('payment_type', 'BANK')->with('class', 'student')->orderBy('id', 'DESC')->get();
+        // return PaymentHistoryModel::where('session', $request->session)->where('term', $request->term)->where('payment_type', 'CASH')->orwhere('payment_type', 'BANK')->with('class', 'student')->orderBy('id', 'DESC')->get();
+        return PaymentHistoryModel::orWhere('payment_type', 'CASH')->where('session', $request->session)->where('term', $request->term)
+            ->orwhere('payment_type', 'BANK')->where('session', $request->session)->where('term', $request->term)
+            ->with('class', 'student')->orderBy('id', 'DESC')->get();
     }
     public function deleteManualPayment($id)
     {
@@ -114,7 +117,7 @@ class BursaryController extends Controller
         return $BursaryService->allDebitor($request);
     }
 
-    
+
     public function getDashboardInfo(Request $request)
     {
         $BursaryService = new BursaryService();

@@ -688,47 +688,58 @@ function createManualPayment() {
     fee_type != "" &&
     payment_description != ""
   ) {
-    // PUSH TO API
-    warningtoast("<b>Processing ... Please wait</b>");
-    fetch(ip + "/api/bursary/create-manual-payment", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: "Bearer " + localStorage["token"],
-      },
-      body: JSON.stringify({
-        student_class: student_class,
-        amount: amount,
-        date: date,
-        student: student,
-        payment_type: payment_type,
-        fee_type: fee_type,
-        payment_description: payment_description,
-        session: localStorage["current_session"],
-        term: localStorage["current_term"],
-      }),
-    })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          window.location.href = "index.html";
-        }
-        return res.json();
+    if (
+      confirm(
+        "Please confirm that you are about to record a payment of ₦" +
+          formatNumber(amount) +
+          " for " +
+          document.getElementById("student").innerHTML +
+          " in " +
+          document.getElementById("class").innerHTML
+      )
+    ) {
+      // PUSH TO API
+      warningtoast("<b>Processing ... Please wait</b>");
+      fetch(ip + "/api/bursary/create-manual-payment", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+        body: JSON.stringify({
+          student_class: student_class,
+          amount: amount,
+          date: date,
+          student: student,
+          payment_type: payment_type,
+          fee_type: fee_type,
+          payment_description: payment_description,
+          session: localStorage["current_session"],
+          term: localStorage["current_term"],
+        }),
       })
+        .then(function (res) {
+          console.log(res.status);
+          if (res.status == 401) {
+            window.location.href = "index.html";
+          }
+          return res.json();
+        })
 
-      .then((data) => {
-        toastr.remove();
-        if (data.success) {
-          successtoast("<b>" + data.message + "</b>");
-          setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
-        } else {
-          errortoast("<b>" + data.message + "</b>");
-        }
-      })
-      .catch((err) => console.log(err));
+        .then((data) => {
+          toastr.remove();
+          if (data.success) {
+            successtoast("<b>" + data.message + "</b>");
+            setTimeout(function () {
+              window.parent.location.reload();
+            }, 1000);
+          } else {
+            errortoast("<b>" + data.message + "</b>");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   } else {
     warningtoast("<b>Please check that compulsory field is not empty.</b>");
   }

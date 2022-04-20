@@ -135,18 +135,76 @@ class BursaryService
     // MANUAL PAYMENT MANAGEMENT
     public function createManualPayment(Request $request)
     {
-        $PaymentHistoryModel = new PaymentHistoryModel();
-        $PaymentHistoryModel->student_id = $request->student;
-        $PaymentHistoryModel->class_id = $request->student_class;
-        $PaymentHistoryModel->date = $request->date;
-        $PaymentHistoryModel->payment_type = $request->payment_type;
-        $PaymentHistoryModel->fee_type = $request->fee_type;
-        $PaymentHistoryModel->payment_description = $request->payment_description;
-        $PaymentHistoryModel->amount = $request->amount;
+        //   BEFORE PERSISTING, REDUCE PAYMENT FROM ARREARS IF THERE IS ANY.
+        // GET STUDENT ARREARS
+        $arrears = DebitorModel::select("amount")->where("student_id", $request->student)->get();
 
-        $PaymentHistoryModel->session = $request->session;
-        $PaymentHistoryModel->term = $request->term;
-        $PaymentHistoryModel->save();
+        if (count($arrears) > 0) {
+            $arrears = $arrears[0]->amount;
+        } else {
+            $arrears = 0;
+        }
+
+        if ($arrears > 0) {
+            // STUDENT HAS AN ARREARS, REMOVE ARREARS FROM PAYING AMOUNT
+            $balance_after_removing_arrears = intval($request->amount) - $arrears;
+
+            if ($balance_after_removing_arrears > 0) {
+                // MEANS ARREARS HAS BEEN CLEARED, UPDATE STUDENT ARREARS TO NGN 0.0
+                DB::table('debitors')
+                    ->where('student_id', $request->student)
+                    ->update(['amount' => 0]);
+
+                //USE balance_after_removing_arrears TO PAY FOR TERM PART PAYMENT
+                $PaymentHistoryModel = new PaymentHistoryModel();
+                $PaymentHistoryModel->student_id = $request->student;
+                $PaymentHistoryModel->class_id = $request->student_class;
+                $PaymentHistoryModel->date = $request->date;
+                $PaymentHistoryModel->payment_type = $request->payment_type;
+                $PaymentHistoryModel->fee_type = $request->fee_type;
+                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") BUT (₦" . number_format($arrears) . "), WAS USED TO SETTLE THE ARREARS AND THE REMAINING (₦" . number_format($balance_after_removing_arrears) . " WAS PAID FOR THIS TERM";
+                $PaymentHistoryModel->amount = $balance_after_removing_arrears;
+
+                $PaymentHistoryModel->session = $request->session;
+                $PaymentHistoryModel->term = $request->term;
+                $PaymentHistoryModel->save();
+            } else {
+                // STUDENT STILL OWES balance_after_removing_arrears , UPDATE STUDENT ARREARS AS AREARS + balance_after_removing_arrear
+                DB::table('debitors')
+                    ->where('student_id', $request->student)
+                    ->update(['amount' => $arrears + $balance_after_removing_arrears]);
+
+                $PaymentHistoryModel = new PaymentHistoryModel();
+                $PaymentHistoryModel->student_id = $request->student;
+                $PaymentHistoryModel->class_id = $request->student_class;
+                $PaymentHistoryModel->date = $request->date;
+                $PaymentHistoryModel->payment_type = $request->payment_type;
+                $PaymentHistoryModel->fee_type = "COMPULSORY";
+                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") AND IT WAS USED TO SETTLE PART OF THE ARREARS OF (₦" . number_format($arrears) . "), YOU STILL HAVE AN ARREARS OF (₦" . number_format($arrears + $balance_after_removing_arrears);
+                $PaymentHistoryModel->amount = 0;
+
+                $PaymentHistoryModel->session = $request->session;
+                $PaymentHistoryModel->term = $request->term;
+                $PaymentHistoryModel->save();
+            }
+        } else {
+            // STUDENT DOES NOT HAVE ANY ARREARS
+            $PaymentHistoryModel = new PaymentHistoryModel();
+            $PaymentHistoryModel->student_id = $request->student;
+            $PaymentHistoryModel->class_id = $request->student_class;
+            $PaymentHistoryModel->date = $request->date;
+            $PaymentHistoryModel->payment_type = $request->payment_type;
+            $PaymentHistoryModel->fee_type = $request->fee_type;
+            $PaymentHistoryModel->payment_description = $request->payment_description;
+            $PaymentHistoryModel->amount = $request->amount;
+
+            $PaymentHistoryModel->session = $request->session;
+            $PaymentHistoryModel->term = $request->term;
+            $PaymentHistoryModel->save();
+        }
+
+
+
         return response(['success' => true, 'message' => "Manual Payment was created successfully."]);
     }
 
