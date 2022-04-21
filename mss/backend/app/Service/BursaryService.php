@@ -162,7 +162,7 @@ class BursaryService
                 $PaymentHistoryModel->date = $request->date;
                 $PaymentHistoryModel->payment_type = $request->payment_type;
                 $PaymentHistoryModel->fee_type = $request->fee_type;
-                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") BUT (₦" . number_format($arrears) . "), WAS USED TO SETTLE THE ARREARS AND THE REMAINING (₦" . number_format($balance_after_removing_arrears) . " WAS PAID FOR THIS TERM";
+                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") BUT (₦" . number_format($arrears) . "), WAS USED TO SETTLE THE ARREARS AND THE REMAINING (₦" . number_format($balance_after_removing_arrears) . ") WAS PAID FOR THIS TERM.";
                 $PaymentHistoryModel->amount = $balance_after_removing_arrears;
 
                 $PaymentHistoryModel->session = $request->session;
@@ -172,7 +172,7 @@ class BursaryService
                 // STUDENT STILL OWES balance_after_removing_arrears , UPDATE STUDENT ARREARS AS AREARS + balance_after_removing_arrear
                 DB::table('debitors')
                     ->where('student_id', $request->student)
-                    ->update(['amount' => $arrears + $balance_after_removing_arrears]);
+                    ->update(['amount' => abs($balance_after_removing_arrears)]);
 
                 $PaymentHistoryModel = new PaymentHistoryModel();
                 $PaymentHistoryModel->student_id = $request->student;
@@ -180,7 +180,7 @@ class BursaryService
                 $PaymentHistoryModel->date = $request->date;
                 $PaymentHistoryModel->payment_type = $request->payment_type;
                 $PaymentHistoryModel->fee_type = "COMPULSORY";
-                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") AND IT WAS USED TO SETTLE PART OF THE ARREARS OF (₦" . number_format($arrears) . "), YOU STILL HAVE AN ARREARS OF (₦" . number_format($arrears + $balance_after_removing_arrears);
+                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") AND IT WAS USED TO SETTLE PART OF THE ARREARS OF (₦" . number_format($arrears) . "), YOU STILL HAVE AN ARREARS OF (₦" . number_format($arrears + $balance_after_removing_arrears).").";
                 $PaymentHistoryModel->amount = 0;
 
                 $PaymentHistoryModel->session = $request->session;
