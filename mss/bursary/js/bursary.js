@@ -688,7 +688,7 @@ function createManualPayment() {
     fee_type != "" &&
     payment_description != ""
   ) {
-    querySelector1 = 'option[value="' + student_class + '"]';
+    querySelector1 = 'option[value="' + student + '"]';
     querySelector2 = 'option[value="' + student_class + '"]';
     confirmation_message = "";
 
