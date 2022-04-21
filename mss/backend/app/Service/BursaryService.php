@@ -180,7 +180,7 @@ class BursaryService
                 $PaymentHistoryModel->date = $request->date;
                 $PaymentHistoryModel->payment_type = $request->payment_type;
                 $PaymentHistoryModel->fee_type = "COMPULSORY";
-                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") AND IT WAS USED TO SETTLE PART OF THE ARREARS OF (₦" . number_format($arrears) . "), YOU STILL HAVE AN ARREARS OF (₦" . number_format($arrears + $balance_after_removing_arrears).").";
+                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") AND IT WAS USED TO SETTLE PART OF THE ARREARS OF (₦" . number_format($arrears) . "), YOU STILL HAVE AN ARREARS OF (₦" . number_format(abs($balance_after_removing_arrears)).").";
                 $PaymentHistoryModel->amount = 0;
 
                 $PaymentHistoryModel->session = $request->session;
