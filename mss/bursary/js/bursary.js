@@ -688,16 +688,28 @@ function createManualPayment() {
     fee_type != "" &&
     payment_description != ""
   ) {
-    if (
-      confirm(
+    querySelector1 = 'option[value="' + student_class + '"]';
+    querySelector2 = 'option[value="' + student_class + '"]';
+    confirmation_message = "";
+
+    if (student == student_class) {
+      confirmation_message =
         "Please confirm that you are about to record a payment of ₦" +
-          formatNumber(amount) +
-          " for " +
-          document.getElementById("student").innerHTML +
-          " in " +
-          document.getElementById("class").innerHTML
-      )
-    ) {
+        formatNumber(parseInt(amount)) +
+        " for " +
+        document.querySelectorAll(querySelector1)[1].innerHTML +
+        " in " +
+        document.querySelectorAll(querySelector2)[0].innerHTML;
+    } else {
+      confirmation_message =
+        "Please confirm that you are about to record a payment of ₦" +
+        formatNumber(parseInt(amount)) +
+        " for " +
+        document.querySelectorAll(querySelector1)[0].innerHTML +
+        " in " +
+        document.querySelectorAll(querySelector2)[0].innerHTML;
+    }
+    if (confirm(confirmation_message)) {
       // PUSH TO API
       warningtoast("<b>Processing ... Please wait</b>");
       fetch(ip + "/api/bursary/create-manual-payment", {
