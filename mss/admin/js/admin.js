@@ -4207,12 +4207,12 @@ function getControl() {
       document.getElementById("check_debitor_percentage").value =
         data.check_debitors.split("-")[0];
 
-      data.max_resumption.split("-")[1] == "YES"
+      data.max_resumption_time.split("-")[1] == "YES"
         ? (document.getElementById("max_resumption").checked = true)
         : "";
 
       document.getElementById("resumption_time").value =
-        data.check_debitors.split("-")[0];
+        data.max_resumption_time.split("-")[0];
     })
     .catch((err) => console.log(err));
 }
