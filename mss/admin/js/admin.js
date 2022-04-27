@@ -4166,9 +4166,7 @@ function saveControl() {
       toastr.remove();
       if (data.success) {
         successtoast("<b>" + data.message + "</b>");
-        setTimeout(function () {
-          window.parent.location.reload();
-        }, 1000);
+        getControl();
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
@@ -4207,31 +4205,27 @@ function getControl() {
         : "";
 
       document.getElementById("check_debitor_percentage").value =
-        data.check_debitor.split("-")[0];
+        data.check_debitors.split("-")[0];
 
-
-        data.max_resumption.split("-")[1] == "YES"
+      data.max_resumption.split("-")[1] == "YES"
         ? (document.getElementById("max_resumption").checked = true)
         : "";
 
       document.getElementById("resumption_time").value =
-        data.check_debitor.split("-")[0];
-
+        data.check_debitors.split("-")[0];
     })
     .catch((err) => console.log(err));
 }
 
 // LESSON PLAN
-function editLessonPlan(){
+function editLessonPlan() {
   document.getElementById("save_lesson_bt").hidden = false;
 
   lesson_content = document.getElementsByName("lesson_plan_content");
-  
-  lesson_content.forEach(element => {
+
+  lesson_content.forEach((element) => {
     element.disabled = false;
   });
-
-  
 }
 
 // GET TODAY'S DATE
