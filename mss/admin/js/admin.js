@@ -4202,7 +4202,7 @@ function getControl() {
         ? (document.getElementById("register_subject").checked = true)
         : "";
 
-      data.check_debitor.split("-")[1] == "YES"
+      data.check_debitors.split("-")[1] == "YES"
         ? (document.getElementById("check_debitor").checked = true)
         : "";
 

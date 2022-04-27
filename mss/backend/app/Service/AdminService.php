@@ -364,7 +364,7 @@ class AdminService
         $ControlPanelModel =  ControlPanelModel::find(1);
         $ControlPanelModel->access_result = $request->access_result;
         $ControlPanelModel->register_subject = $request->register_subject;
-        $ControlPanelModel->check_debitor = $request->check_debitor;
+        $ControlPanelModel->check_debitorss = $request->check_debitorss;
         $ControlPanelModel->max_resumption = $request->max_resumption;
         $ControlPanelModel->save();
 
@@ -407,10 +407,10 @@ class AdminService
     {
         $response = "";
         $ControlPanelModel =  ControlPanelModel::find(1);
-        if (explode("-",$ControlPanelModel->check_debitor)[1] == "YES") {
-            $response =  true."-".explode("-",$ControlPanelModel->check_debitor)[0];
+        if (explode("-",$ControlPanelModel->check_debitors)[1] == "YES") {
+            $response =  true."-".explode("-",$ControlPanelModel->check_debitors)[0];
         } else {
-            $response =  false."-".explode("-",$ControlPanelModel->check_debitor)[0];
+            $response =  false."-".explode("-",$ControlPanelModel->check_debitors)[0];
         }
         return $response;
         
