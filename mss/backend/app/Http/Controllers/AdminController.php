@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\AdminModel;
+use App\Model\ControlPanelModel;
 use App\Repository\ClassRepository;
 use App\Service\AdminService;
 use App\Repository\SubjectRepository;
@@ -237,6 +238,20 @@ class AdminController extends Controller
         $AdminService = new AdminService();
         return $AdminService->getTeacherAttendance($request);
     }
+
+    // CONTROL PANEL
+    public function saveControl(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->saveControl($request);
+    }
+
+
+    public function getControl()
+    {
+     return ControlPanelModel::select("*")->get();
+    }
+
 
     public function getDashboardInfo()
     {

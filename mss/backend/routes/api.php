@@ -154,6 +154,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/dashboard-information', 'AdminController@getDashboardInfo', function () {
     })->middleware(Cors::class);
 
+    // ADMIN {CONTROL PANEL}
+    Route::post('admin/control-panel', 'AdminController@saveControl', function () {
+    })->middleware(Cors::class);
+
+    // ADMIN {DASHBOARD INFO}
+    Route::get('admin/control-panel', 'AdminController@getControl', function () {
+    })->middleware(Cors::class);
+
 
     // =============================================================================
     //               END OF ADMIN ROUTE

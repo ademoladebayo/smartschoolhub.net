@@ -180,7 +180,7 @@ class BursaryService
                 $PaymentHistoryModel->date = $request->date;
                 $PaymentHistoryModel->payment_type = $request->payment_type;
                 $PaymentHistoryModel->fee_type = "COMPULSORY";
-                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") AND IT WAS USED TO SETTLE PART OF THE ARREARS OF (₦" . number_format($arrears) . "), YOU STILL HAVE AN ARREARS OF (₦" . number_format(abs($balance_after_removing_arrears)).").";
+                $PaymentHistoryModel->payment_description = "PAID (₦" . number_format($request->amount) . ") AND IT WAS USED TO SETTLE PART OF THE ARREARS OF (₦" . number_format($arrears) . "), YOU STILL HAVE AN ARREARS OF (₦" . number_format(abs($balance_after_removing_arrears)) . ").";
                 $PaymentHistoryModel->amount = 0;
 
                 $PaymentHistoryModel->session = $request->session;
@@ -363,5 +363,24 @@ class BursaryService
 
 
         return $all_student;
+    }
+
+    function getStudentPercentagePaid(Request $request)
+    {
+        $bursaryService = new BursaryService();
+        $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
+     
+        $expected_fee = 0;
+        $optional_fee = 0;
+        $total_paid = 0;
+
+        // SO GET STUDENT'S, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+        $expected_fee = $bursaryService->getPayableForClass($class, $request->session, $request->term);
+        $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
+        $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
+
+
+        $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
+        return $percentage_paid;
     }
 }

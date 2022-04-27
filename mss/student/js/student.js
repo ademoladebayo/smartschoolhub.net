@@ -1472,6 +1472,11 @@ function getResult(value) {
     })
 
     .then((data) => {
+      if (!data.success) {
+        document.getElementById(value).innerHTML = data.message;
+        return 0;
+      }
+
       c = 1;
       if (data.result.length > 0) {
         data.result.forEach((result) => {
@@ -1889,7 +1894,7 @@ function getAllPaymentHistory() {
 }
 
 // GENERATE PAYMENT
-  function generatePayment() {
+function generatePayment() {
   var optional_fee_id = [];
 
   var fee_optional = document.getElementsByName("fee_optional");

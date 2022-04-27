@@ -3456,19 +3456,19 @@ function getDate() {
 }
 
 // PRINT
-function print() {
-  var divContents = document.getElementById("attendance_table").innerHTML;
-  var header = document.getElementById("header").innerHTML;
-  console.log(divContents);
-  var a = window.open("", "", "height=500, width=500");
-  a.document.write("<html>");
-  a.document.write(header);
-  a.document.write("<body > <h1>Div contents are <br>");
-  a.document.write(divContents);
-  a.document.write("</body></html>");
-  a.document.close();
-  a.print();
-}
+// function print() {
+//   var divContents = document.getElementById("attendance_table").innerHTML;
+//   var header = document.getElementById("header").innerHTML;
+//   console.log(divContents);
+//   var a = window.open("", "", "height=500, width=500");
+//   a.document.write("<html>");
+//   a.document.write(header);
+//   a.document.write("<body style="font-family: Poppins; font-weight: bold;"  > <h1>Div contents are <br>");
+//   a.document.write(divContents);
+//   a.document.write("</body></html>");
+//   a.document.close();
+//   a.print();
+// }
 
 // ID
 function getIDCard() {
@@ -3714,6 +3714,18 @@ function countDistinct(arr, n) {
     if (i === j) res++;
   }
   return res;
+}
+
+function editLessonPlan(){
+  document.getElementById("save_lesson_bt").hidden = false;
+
+  lesson_content = document.getElementsByName("lesson_plan_content");
+  
+  lesson_content.forEach(element => {
+    element.disabled = false;
+  });
+
+  
 }
 
 // GET SCHOOL DETAILS

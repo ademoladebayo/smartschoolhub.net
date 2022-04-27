@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Model\AdminModel;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
 use App\Model\ClassModel;
@@ -17,6 +18,7 @@ use App\Model\OptionalFeeRequestModel;
 use App\Repository\StudentRepository;
 use App\Repository\SubjectRegistrationRepository;
 use App\Repository\GradeSettingsRepository;
+use App\Repository\SessionRepository;
 use App\Util\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -50,6 +52,11 @@ class StudentService
     // SUBJECT
     public function registerSubject(Request $request)
     {
+        // CHECK CONTROL BEFORE REGISTERING SUBJECTS
+        $AdminService = new AdminService();
+        if (!$AdminService->isSubjectRegistrationOpened()) {
+            return  response(['success' => false, 'message' => "Subject Registration Closed !"]);
+        }
 
         // GET PREVIOUS REGISTRATION FOR STUDENT
         $previous_registration_id = [];
@@ -220,6 +227,21 @@ class StudentService
     // RESULT
     public function getResult(Request $request)
     {
+        // CHECK CONTROL BEFORE FETCHING RESULT
+        $SessionRepository = new SessionRepository();
+        $response = $SessionRepository->getCurrentSession();
+        if ($response->success == true) {
+            if ($request->session == $response->session->session && $request->term == $response->session->term) {
+                // CHECK CONTROL BEFORE FETCHING RESULT
+                $AdminService = new AdminService();
+                if (!$AdminService->isResultAccessOpened()) {
+                    return  response(['success' => false, 'message' => "RESULT FOR " . $request->session . " " . $request->term . " IS COMING SOON ..."]);
+                }
+            }
+        }
+
+
+
         // PERCENTAGE AND GRADE POSITION
         $percentage = 0;
         $score_accumulator = 0;
@@ -287,7 +309,7 @@ class StudentService
         $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
 
 
-        return response()->json(['result' => $result, 'percentage' => number_format($percentage, 2)  . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
+        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'result' => $result, 'percentage' => number_format($percentage, 2)  . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
     }
 
 

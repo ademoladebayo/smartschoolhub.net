@@ -6,6 +6,7 @@ use App\Model\ClassModel;
 use App\Model\SubjectModel;
 use App\Model\StudentModel;
 use App\Model\AdminModel;
+use App\Model\ControlPanelModel;
 use App\Model\TeacherModel;
 use App\Model\TeacherAttendanceModel;
 use App\Repository\ClassRepository;
@@ -356,6 +357,65 @@ class AdminService
         $TeacherAttendanceModel =  new TeacherAttendanceModel();
         return  $TeacherAttendanceModel->with('teacher')->where('date', $request->date)->get();
     }
+
+    // CONTROL PANEL
+    public function saveControl(Request $request)
+    {
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel->access_result = $request->access_result;
+        $ControlPanelModel->register_subject = $request->register_subject;
+        $ControlPanelModel->check_debitor = $request->check_debitor;
+        $ControlPanelModel->max_resumption = $request->max_resumption;
+        $ControlPanelModel->save();
+
+        return response()->json(['success' => true, 'message' => "Control Saved."]);
+    }
+
+    public function isSubjectRegistrationOpened()
+    {
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if ($ControlPanelModel->register_subject == "YES") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isResultAccessOpened()
+    {
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if ($ControlPanelModel->access_result == "YES") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isResumptionTimeCheckOpened()
+    {
+        $response = "";
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if (explode("-",$ControlPanelModel->max_resumption)[1] == "YES") {
+            $response =  true."-".explode("-",$ControlPanelModel->max_resumption)[0];
+        } else {
+            $response =  false."-".explode("-",$ControlPanelModel->max_resumption)[0];
+        }
+        return $response;
+    }
+
+    public function isCheckDebitorsOpened()
+    {
+        $response = "";
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if (explode("-",$ControlPanelModel->check_debitor)[1] == "YES") {
+            $response =  true."-".explode("-",$ControlPanelModel->check_debitor)[0];
+        } else {
+            $response =  false."-".explode("-",$ControlPanelModel->check_debitor)[0];
+        }
+        return $response;
+        
+    }
+
 
     public function getDashboardInfo()
     {

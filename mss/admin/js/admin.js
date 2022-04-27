@@ -222,6 +222,10 @@ function loadSideNav(page) {
         <span>Staff Attendance</span></a>
     </li>
 
+    <li class="nav-item">
+        <a  id="control-panel" href="control-panel.html" class="nav-link"> <i class="flaticon-settings-work-tool"></i></i>
+        <span>Control Panel</span></a>
+    </li>
 
     <li class="nav-item">
         <a  id="inventory" href="#?inventory.html" class="nav-link"><i class="fas fa-box-open"></i><span>Inventory <sup><small>Coming Soon ...</small></sup></span></a>
@@ -4123,6 +4127,111 @@ function getDashboardInfo() {
       data-num="${data.teacher_no}">${data.teacher_no}</span>`;
     })
     .catch((err) => console.log(err));
+}
+
+// CONTROL PANEL
+function saveControl() {
+  warningtoast("Saving please wait ...");
+  fetch(ip + "/api/admin/control-panel", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      access_result: document.getElementById("access_result").checked
+        ? "YES"
+        : "NO",
+      register_subject: document.getElementById("register_subject").checked
+        ? "YES"
+        : "NO",
+      check_debitor: document.getElementById("check_debitor").checked
+        ? document.getElementById("check_debitor_percentage").value + "-YES"
+        : document.getElementById("check_debitor_percentage").value + "-NO",
+      max_resumption: document.getElementById("max_resumption").checked
+        ? document.getElementById("resumption_time").value + "-YES"
+        : document.getElementById("resumption_time").value + "-NO",
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast("<b>" + data.message + "</b>");
+        setTimeout(function () {
+          window.parent.location.reload();
+        }, 1000);
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getControl() {
+  fetch(ip + "/api/admin/control-panel", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      data.access_result == "YES"
+        ? (document.getElementById("access_result").checked = true)
+        : "";
+
+      data.register_subject == "YES"
+        ? (document.getElementById("register_subject").checked = true)
+        : "";
+
+      data.check_debitor.split("-")[1] == "YES"
+        ? (document.getElementById("check_debitor").checked = true)
+        : "";
+
+      document.getElementById("check_debitor_percentage").value =
+        data.check_debitor.split("-")[0];
+
+
+        data.max_resumption.split("-")[1] == "YES"
+        ? (document.getElementById("max_resumption").checked = true)
+        : "";
+
+      document.getElementById("resumption_time").value =
+        data.check_debitor.split("-")[0];
+
+    })
+    .catch((err) => console.log(err));
+}
+
+// LESSON PLAN
+function editLessonPlan(){
+  document.getElementById("save_lesson_bt").hidden = false;
+
+  lesson_content = document.getElementsByName("lesson_plan_content");
+  
+  lesson_content.forEach(element => {
+    element.disabled = false;
+  });
+
+  
 }
 
 // GET TODAY'S DATE
