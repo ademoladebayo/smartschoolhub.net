@@ -249,7 +249,7 @@ class AdminController extends Controller
 
     public function getControl()
     {
-     return ControlPanelModel::select("*")->get();
+     return ControlPanelModel::select("*")->get()[0];
     }
 
 
