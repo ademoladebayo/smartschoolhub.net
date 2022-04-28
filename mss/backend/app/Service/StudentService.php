@@ -235,7 +235,7 @@ class StudentService
         $SessionRepository = new SessionRepository();
         $response = json_decode($SessionRepository->getCurrentSession(), true);
 
-        if ($session == $response->session->session && $term == $response->session->term) {
+        if ($session == $request->session && $term == $request->term) {
             // CHECK CONTROL BEFORE FETCHING RESULT
             $AdminService = new AdminService();
             if (!$AdminService->isResultAccessOpened()) {
