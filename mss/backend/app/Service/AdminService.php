@@ -395,7 +395,7 @@ class AdminService
     {
         $response = "";
         $ControlPanelModel =  ControlPanelModel::find(1);
-        if (explode("-",$ControlPanelModel->max_resumption)[1] == "YES") {
+        if (explode("-",$ControlPanelModel->max_resumption_time)[1] == "YES") {
             $response =  true."-".explode("-",$ControlPanelModel->max_resumption)[0];
         } else {
             $response =  false."-".explode("-",$ControlPanelModel->max_resumption)[0];
