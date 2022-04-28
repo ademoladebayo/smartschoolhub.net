@@ -229,7 +229,7 @@ class StudentService
     {
         // CHECK CONTROL BEFORE FETCHING RESULT
         $SessionRepository = new SessionRepository();
-        $response = Json_decode($SessionRepository->getCurrentSession());
+        $response = json_decode($SessionRepository->getCurrentSession(),true);
         if ($response->success == true) {
             if ($request->session == $response->session->session && $request->term == $response->session->term) {
                 // CHECK CONTROL BEFORE FETCHING RESULT
