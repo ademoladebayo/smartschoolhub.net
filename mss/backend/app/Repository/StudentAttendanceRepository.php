@@ -87,7 +87,7 @@ class StudentAttendanceRepository
             $paid_percentage = intval($BursaryService->getStudentPercentagePaid($request));
             $control_percentage = intval(explode("-", $AdminService->isCheckDebitorsOpened())[1]);
             if ($paid_percentage < $control_percentage) {
-                return response(['success' => false, 'message' => "Access denied ! you have not paid up to " . $control_percentage . " percent."]);
+                return response(['success' => false, 'message' => "Access denied ! you have only paid " . $paid_percentage . " out of " . $control_percentage . " percent required."]);
             }
         }
 

@@ -945,6 +945,9 @@ function registerSubject() {
             }, 1000);
           } else {
             alert("" + data.message + "");
+            setTimeout(function () {
+              window.parent.location.reload();
+            }, 1000);
           }
         })
         .catch((err) => console.log(err));
