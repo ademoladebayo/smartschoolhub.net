@@ -1473,7 +1473,11 @@ function getResult(value) {
 
     .then((data) => {
       if (!data.success) {
-        document.getElementById(value).innerHTML = data.message;
+        document.getElementById(value).innerHTML = `
+        <hr style="color: black; border: 1px solid black">
+        <h3 style="text-align: center;">${data.message}</h3>
+        <hr style="color: black; border: 1px solid black">
+        `;
         return 0;
       }
 
