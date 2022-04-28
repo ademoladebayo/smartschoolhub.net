@@ -4146,7 +4146,7 @@ function saveControl() {
       register_subject: document.getElementById("register_subject").checked
         ? "YES"
         : "NO",
-      check_debitor: document.getElementById("check_debitor").checked
+      check_debitors: document.getElementById("check_debitor").checked
         ? document.getElementById("check_debitor_percentage").value + "-YES"
         : document.getElementById("check_debitor_percentage").value + "-NO",
       max_resumption: document.getElementById("max_resumption").checked

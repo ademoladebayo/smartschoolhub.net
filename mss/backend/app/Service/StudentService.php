@@ -15,6 +15,7 @@ use App\Model\StudentResultCommentModel;
 use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
 use App\Model\OptionalFeeRequestModel;
+use App\Model\SessionModel;
 use App\Repository\StudentRepository;
 use App\Repository\SubjectRegistrationRepository;
 use App\Repository\GradeSettingsRepository;
@@ -227,18 +228,21 @@ class StudentService
     // RESULT
     public function getResult(Request $request)
     {
+        // GET CURRENT SESSION AND TERM
+        $session =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
+        $term =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
         // CHECK CONTROL BEFORE FETCHING RESULT
         $SessionRepository = new SessionRepository();
-        $response = json_decode($SessionRepository->getCurrentSession(),true);
-        if ($response->success == true) {
-            if ($request->session == $response->session->session && $request->term == $response->session->term) {
-                // CHECK CONTROL BEFORE FETCHING RESULT
-                $AdminService = new AdminService();
-                if (!$AdminService->isResultAccessOpened()) {
-                    return  response(['success' => false, 'message' => "RESULT FOR " . $request->session . " " . $request->term . " IS COMING SOON ..."]);
-                }
+        $response = json_decode($SessionRepository->getCurrentSession(), true);
+
+        if ($session == $response->session->session && $term == $response->session->term) {
+            // CHECK CONTROL BEFORE FETCHING RESULT
+            $AdminService = new AdminService();
+            if (!$AdminService->isResultAccessOpened()) {
+                return  response(['success' => false, 'message' => "RESULT FOR " . $request->session . " " . $request->term . " IS COMING SOON ..."]);
             }
         }
+
 
 
 

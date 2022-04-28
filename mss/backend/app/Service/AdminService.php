@@ -365,7 +365,7 @@ class AdminService
         $ControlPanelModel->access_result = $request->access_result;
         $ControlPanelModel->register_subject = $request->register_subject;
         $ControlPanelModel->check_debitors = $request->check_debitors;
-        $ControlPanelModel->max_resumption = $request->max_resumption;
+        $ControlPanelModel->max_resumption_time = $request->max_resumption;
         $ControlPanelModel->save();
 
         return response()->json(['success' => true, 'message' => "Control Saved."]);
