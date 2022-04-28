@@ -4212,7 +4212,7 @@ function getControl() {
         : "";
 
       document.getElementById("resumption_time").value =
-        data.max_resumption_time.split("-")[0];
+        data.check_debitors.split("-")[0];
     })
     .catch((err) => console.log(err));
 }
