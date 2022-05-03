@@ -32,7 +32,7 @@
 
 </head>
 
-<body id="page-top" onload="getRegisteredSubjectForTable(); getTermAndSession()">
+<body id="page-top" onload="getAssignedSubjectForLearningHub(); getTermAndSession()">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -50,7 +50,7 @@
                             MATERIALS</h6>
                         <p id="info" class="m-0 font-weight-bold " style="color: green;">Materials includes LIVE CLASS,
                             NOTES ,
-                            SLIDES , VIDEOS AND AUDIO FOR </p>
+                            SLIDES , VIDEOS AND AUDIO </p>
                         <div class="row mt-2">
                             <div class="col-auto">
                                 <a href="#" class="btn btn-light btn-circle btn-sm" style="cursor: default;">
@@ -106,8 +106,7 @@
                                         <tr>
                                             <th>S/N</th>
                                             <th>Subject Name</th>
-                                            <th>Subject Type</th>
-                                            <th>Teacher</th>
+                                            <th>Subject Class</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -115,8 +114,6 @@
                                         <tr>
                                             <td>
                                                 1.</td>
-                                            <td> <label class="form-check-label" for="c4977"> Loading ...</label>
-                                            </td>
                                             <td>
                                                 Loading ...</td>
                                             <td>
@@ -129,12 +126,12 @@
                                                     Materials
                                                 </button>
                                                 <button type="button" class="btn btn-primary btn-block  btn-sm"
-                                                    onclick="goTo('lesson-plan.html')" disabled>
+                                                    onclick="goTo('lesson-plan.html')" disable>
 
                                                     Lesson Plan
                                                 </button>
                                             </td>
-                                           
+
 
                                         </tr>
 
@@ -166,15 +163,14 @@
                 <div class="modal-dialog modal-xl modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">LEARNING HUB FOR ICT</h5>
-                            <button style="border-style: none; background-color: white;" type="button" class="btn-close"
-                                data-bs-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i></button>
+                            <h5 class="modal-title" id="staticBackdropLabel">LEARNING HUB FOR ENGLISH</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <!-- <h6 class="m-0 font-weight-bold text-primary"> ACC 418 (3)</h6> -->
-                                    <span> ICT </span>
+                                    <h6 class="m-0 font-weight-bold text-primary"> ACC 418 (3)</h6>
+                                    <span> Advanced Financial Accounting 1 </span>
                                 </div>
                                 <div class="card-body">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -251,6 +247,22 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td><small>Accounting treatment of pension
+                                                                            fund</small></td>
+                                                                    <td><small>Thursday 25-Feb-2021 11:00am</small>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="recordings2.php?id=1406"
+                                                                            target="_blank"
+                                                                            class="btn btn-sm btn-primary btn-block"><i
+                                                                                class="fas fa-video"></i> Start
+                                                                            Live</a>
+
+
+                                                                    </td>
+                                                                </tr>
                                                                 <tr>
                                                                     <td colspan="4">
                                                                         <center>No scheduled class yet.</center>
@@ -356,16 +368,24 @@
                                         </div>
                                         <div class="tab-pane fade" id="notes-content" role="tabpanel"
                                             aria-labelledby="pills-notes-tab">
+                                            <div class="card shadow mb-1">
+                                                <a onclick="" href="#" class="btn btn-primary"><i
+                                                        class="far fa-sticky-note"></i> Upload New Note</a>
+                                            </div>
+                                            <br />
+
+
 
                                             <div class="card shadow mb-3">
                                                 <div class="card-header">
                                                     <small class="m-0 text-primary">2021-01-28 11:45:06</small><br>
-                                                    <span class="m-0 text-primary">INTRODUCTION TO OUTPUT DEVICE</span>
+                                                    <span class="m-0 text-primary">Accounting for Insurance
+                                                        Claim</span>
                                                 </div>
                                                 <div class="card-body text-dark bg-light">
                                                     <div class="p-2"
                                                         style="overflow: auto; height: 65vh; border:1px solid black"
-                                                        onmouseover="takeattendance(3114, 1)">
+                                                        onmouseover="takeattendance(3114, 1)" contenteditable="true">
                                                         <p>On 30th September 2008, the premises of Longman biscuits
                                                             Ltd, was
                                                             severely damaged by fire and the company’s business
@@ -1248,33 +1268,46 @@
                                         </div>
                                         <div class="tab-pane fade" id="slides-content" role="tabpanel"
                                             aria-labelledby="pills-slides-tab">
+                                            <div class="card shadow mb-1">
+                                                <a onclick="" href="#" class="btn btn-primary"><i
+                                                        class="fab fa-slideshare"></i> Upload New Slide</a>
+                                            </div>
+                                            <br />
+
 
                                             <div class="card shadow mb-3">
                                                 <div class="card-header">
                                                     <small class="m-0 text-primary">2021-01-19 10:48:39</small>
-                                                    <a href="#https://bowenstaff.bowen.edu.ng//lectureslides/1611049719.docx"
-                                                        target="_blank"
-                                                        class="btn btn-primary btn-circle btn-sm float-right">
-                                                        <i class="fas fa-file-download"></i>
+                                                    <a href="url" target="_blank"
+                                                        class="btn  btn-circle btn-sm float-right">
+                                                        <i style="color:green;" class="fas fa-file-download"></i>
+                                                    </a>
+
+                                                    <a href="url" target="_blank"
+                                                        class="btn  btn-circle btn-sm float-right">
+                                                        <i style="color:red;" class="fas fa-trash-alt"></i></i>
                                                     </a>
                                                     <br>
-                                                    <span class="m-0 text-primary">HARDWARE AND SOFTWARE</span>
+                                                    <span class="m-0 text-primary">Investment and Unit Trust
+                                                        Account</span>
                                                 </div>
                                                 <div class="card-body">
-                                                    <object
-                                                        data="#https://bowenstaff.bowen.edu.ng//lectureslides/1611049719.docx"
-                                                        type="application/pdf" class="img-fluid"
+                                                    <object data="url" type="application/pdf" class="img-fluid"
                                                         style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey"
                                                         onmouseover="takeattendance(3683, 2)">
-                                                        <embed
-                                                            src="#https://bowenstaff.bowen.edu.ng//lectureslides/1611049719.docx"
-                                                            type="application/pdf" class="img-fluid">
+                                                        <embed src="url" type="application/pdf" class="img-fluid">
                                                     </object>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="audios-content" role="tabpanel"
                                             aria-labelledby="pills-audios-tab">
+
+                                            <div class="card shadow mb-1">
+                                                <a onclick="" href="#" class="btn btn-primary"><i
+                                                        class="fas fa-microphone-alt"></i> Upload New Audio</a>
+                                            </div>
+                                            <br />
                                             <div class="card shadow mb-1">
                                                 <div class="card-body">No Audio Here</div>
                                             </div>
@@ -1282,11 +1315,21 @@
                                         <div class="tab-pane fade" id="videos-content" role="tabpanel"
                                             aria-labelledby="pills-videos-tab">
                                             <div class="card shadow mb-1">
+                                                <a onclick="" href="#" class="btn btn-primary"><i
+                                                        class="fas fa-video"></i></i> Upload New Vidoe</a>
+                                            </div>
+                                            <br />
+                                            <div class="card shadow mb-1">
                                                 <div class="card-body">No Video Here</div>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="assignments-content" role="tabpanel"
                                             aria-labelledby="pills-assignments-tab">
+                                            <div class="card shadow mb-1">
+                                                <a onclick="" href="#" class="btn btn-primary"><i
+                                                        class="far fa-clipboard"></i> Upload New Assignment</a>
+                                            </div>
+                                            <br />
                                             <div class="card shadow mb-1">
                                                 <div class="card-body">No Assignment Here</div>
                                             </div>
@@ -1336,7 +1379,7 @@
         crossorigin="anonymous"></script>
 
 
-    <script src="./js/student.js"></script>
+    <script src="./js/teacher.js"></script>
     <script src="../assets/js/lib/toastr/toastr.min.js"></script>
     <script src="../assets/js/lib/toastr/toastr.init.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>

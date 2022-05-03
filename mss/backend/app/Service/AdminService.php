@@ -7,6 +7,7 @@ use App\Model\SubjectModel;
 use App\Model\StudentModel;
 use App\Model\AdminModel;
 use App\Model\ControlPanelModel;
+use App\Model\LessonPlanModel;
 use App\Model\TeacherModel;
 use App\Model\TeacherAttendanceModel;
 use App\Repository\ClassRepository;
@@ -395,10 +396,10 @@ class AdminService
     {
         $response = "";
         $ControlPanelModel =  ControlPanelModel::find(1);
-        if (explode("-",$ControlPanelModel->max_resumption_time)[1] == "YES") {
-            $response =  true."-".explode("-",$ControlPanelModel->max_resumption)[0];
+        if (explode("-", $ControlPanelModel->max_resumption_time)[1] == "YES") {
+            $response =  true . "-" . explode("-", $ControlPanelModel->max_resumption)[0];
         } else {
-            $response =  false."-".explode("-",$ControlPanelModel->max_resumption)[0];
+            $response =  false . "-" . explode("-", $ControlPanelModel->max_resumption)[0];
         }
         return $response;
     }
@@ -407,13 +408,12 @@ class AdminService
     {
         $response = "";
         $ControlPanelModel =  ControlPanelModel::find(1);
-        if (explode("-",$ControlPanelModel->check_debitors)[1] == "YES") {
-            $response =  true."-".explode("-",$ControlPanelModel->check_debitors)[0];
+        if (explode("-", $ControlPanelModel->check_debitors)[1] == "YES") {
+            $response =  true . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
         } else {
-            $response =  false."-".explode("-",$ControlPanelModel->check_debitors)[0];
+            $response =  false . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
         }
         return $response;
-        
     }
 
 
@@ -423,5 +423,40 @@ class AdminService
         $TeacherRepository = new TeacherRepository();
 
         return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount()]);
+    }
+
+    public function lessonNote()
+    {
+        $term = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
+        $week = ['WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7', 'WEEK 8', 'WEEK 9', 'WEEK 10', 'WEEK 11', 'WEEK 12', 'WEEK 13'];
+
+
+        $subjects = SubjectModel::get();
+        $c = 0;
+        foreach ($subjects as $subject) {
+            for ($i = 0; $i < count($term); $i++) {
+                for ($j = 0; $j < count($week); $j++) {
+                    $LessonPlanModel = new  LessonPlanModel();
+                    $LessonPlanModel->subject_id = $subject->id;
+                    $LessonPlanModel->term = $term[$i];
+                    $LessonPlanModel->week = $week[$j];
+                    $LessonPlanModel->instructional_material = "instructional_material for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->previous_knowledge = "previous_knowledge for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->previous_lesson = "previous_lesson for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->behavioural_objective = "behavioural_objective for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->content = "content for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->presentation = "presentation for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->evaluation = "evaluation for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->conclusion = "conclusion for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->assignment = "assignment for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->save();
+                }
+            }
+            $c = $c + 1;
+        }
+
+
+
+        return "Lesson Note Created for ". $c ." subjects.";
     }
 }

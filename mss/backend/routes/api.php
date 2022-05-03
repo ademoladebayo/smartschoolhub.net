@@ -34,6 +34,8 @@ Route::post('admin/signin', 'AdminController@signIn', function () {
 Route::get('test/all-class', 'AdminController@getAllClass', function () {
 })->middleware(Cors::class);
 
+Route::post('admin/create-lesson-note', 'AdminController@lessonNote', function () {
+})->middleware(Cors::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     // ADMIN {CLASS}
@@ -231,9 +233,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('teacher/promote-students', 'TeacherController@promoteStudents', function () {
     })->middleware(Cors::class);
 
-    // TEACHER {CHANGE PASSWORD}
-    Route::post('teacher/change-password', 'TeacherController@changePassword', function () {
+    // TEACHER {LESSON PLAN}
+    Route::post('teacher/save-lesson-plan', 'TeacherController@saveLessonPlan', function () {
     })->middleware(Cors::class);
+
+    Route::post('teacher/lesson-plan', 'TeacherController@lessonPlan', function () {
+    })->middleware(Cors::class);
+
+
 });
 
 // =============================================================================

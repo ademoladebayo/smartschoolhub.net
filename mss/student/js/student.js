@@ -1,6 +1,6 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
 var ip = "https://smartschoolhub.net/backend/mss";
@@ -995,9 +995,11 @@ function getRegisteredSubjectForTable() {
                   <td>${data[i].teacher}</td>
                   <td>
                     <button type="button" class="btn btn-primary btn-block"
-                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
                         Materials
+                    </button>
+                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="LocalStorage.setItem("LESSON-PLAN",${data[i].subject_id}-${data[i].subject_name});goTo('lesson-plan.html')">
+                      Lesson Plan
                     </button>
                  </td>
                   
@@ -1015,9 +1017,11 @@ function getRegisteredSubjectForTable() {
                   <td>${data[i].teacher}</td>
                   <td>
                     <button type="button" class="btn btn-primary btn-block"
-                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
                         Materials
+                    </button>
+                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="LocalStorage.setItem("LESSON-PLAN",${data[i].subject_id}-${data[i].subject_name}-${data[i].class.class_name});goTo('lesson-plan.html')">
+                      Lesson Plan
                     </button>
                  </td>
                   
@@ -1712,6 +1716,55 @@ function getAttendanceSummary(value) {
       document.getElementById(
         "present_" + value.split("_")[1] + "_" + value.split("_")[2]
       ).innerHTML = data.present;
+    })
+    .catch((err) => console.log(err));
+}
+
+// LESSON PLAN
+function getLessonPlan(week) {
+  if (week == "") {
+    week = document.getElementById(week).value;
+  }
+
+  fetch(ip + "/api/teacher/lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: localStorage["LESSON-PLAN"].split("-")[0],
+      week: week,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("week1").innerHTML =
+        ` <option value="${data.week}">${data.week}</option>` +
+        document.getElementById("week1").innerHTML;
+
+      document.getElementById("instructional_material").value =
+        data.instructional_material;
+      document.getElementById("previous_knowledge").value =
+        data.previous_knowledge;
+      document.getElementById("previous_lesson").value = data.previous_lesson;
+      document.getElementById("behavioural_objective").value =
+        data.behavioural_objective;
+      document.getElementById("content").value = data.content;
+      document.getElementById("presentation").value = data.presentation;
+      document.getElementById("evaluation").value = data.evaluation;
+      document.getElementById("conclusion").value = data.conclusion;
+      document.getElementById("assignment").value = data.assignment;
+      document.getElementById("lesson_id").value = data.id;
     })
     .catch((err) => console.log(err));
 }

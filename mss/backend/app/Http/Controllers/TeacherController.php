@@ -130,4 +130,17 @@ class TeacherController extends Controller
         $TeacherService = new TeacherService();
         return $TeacherService->changePassword($request);
     }
+
+    // LESSON PLAN
+    public function lessonNote(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->lessonNote($request);
+    }
+
+    public function saveLessonNote(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->saveLessonNote($request);
+    }
 }

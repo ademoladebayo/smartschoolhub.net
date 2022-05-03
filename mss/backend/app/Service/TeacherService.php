@@ -12,6 +12,7 @@ use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
 use App\Model\SubjectModel;
 use App\Model\TeacherModel;
+use App\Model\LessonPlanModel;
 use App\Repository\GradeSettingsRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SubjectRepository;
@@ -37,7 +38,7 @@ class TeacherService
         } else {
 
             if (Hash::check($request->password, $TeacherRepository->getPassword($request->id))) {
-                
+
                 // Check if account is disabled
                 if ($teacher->profile_status == "DISABLED") {
                     return  response(['success' => false, 'message' => "😔Your account has been disabled, contact the school admin."]);
@@ -348,5 +349,28 @@ class TeacherService
             $TeacherRepository->updatePassword($request->teacher_id, Hash::make($request->new_password));
             return response()->json(['success' => true, 'message' => 'Password has been changed successfully.']);
         }
+    }
+
+    // LESSON NOTE
+    public function lessonNote(Request $request)
+    {
+        return LessonPlanModel::where('subject_id',$request->subject_id)->where('term',$request->term)->where('week',$request->week)->get()[0];
+    }
+
+    public function saveLessonNote(Request $request)
+    {
+        $LessonPlanModel = LessonPlanModel::find($request->id);
+        $LessonPlanModel->week = $request->week;
+        $LessonPlanModel->instructional_material = $request->instructional_material;
+        $LessonPlanModel->previous_knowledge =$request->previous_knowledge;
+        $LessonPlanModel->previous_lesson = $request->previous_lesson;
+        $LessonPlanModel->behavioural_objective = $request->behavioural_objective;
+        $LessonPlanModel->content = $request->content;
+        $LessonPlanModel->presentation = $request->presentation;
+        $LessonPlanModel->evaluation = $request->evaluation;
+        $LessonPlanModel->conclusion = $request->conclusion;
+        $LessonPlanModel->assignment = $request->assignment;
+        $LessonPlanModel->save();
+        return response()->json(['success' => true, 'message' => 'Lesson plan has been saved.']);
     }
 }

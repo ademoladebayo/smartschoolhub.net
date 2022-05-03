@@ -36,7 +36,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body  onload="loadSideNav('learning-hub'); getLessonPlan(); loadDashBoardInformation()">
+<body  onload="loadSideNav('learning-hub'); getLessonPlan('WEEK 1'); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -87,7 +87,7 @@
                             aria-expanded="false">
                             <div class="admin-title">
                                 <h5 id="user_name" class="item-title"></h5>
-                                <span id="user_type">TEACHER</span>
+                                <span id="user_type">STUDENT</span>
                             </div>
                             <div id="user_img" class="admin-img">
                                 <img src="../img/figure/admin.jpg" alt="Admin">
@@ -156,10 +156,9 @@
 
                                     </div> -->
                                 </div>
-                                <form class="mg-b-20">
                                     <div class="row gutters-8">
                                         <div class="col-lg-5 col-12 form-group">
-                                            <select id="week_search" class="select2">
+                                            <select id="week" class="select2">
                                                 <option value="">Please Select Week *</option>
                                                 <option value="WEEK 1">WEEK 1</option>
                                                 <option value="WEEK 2">WEEK 2</option>
@@ -177,11 +176,10 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-2 col-12 form-group">
-                                            <button type="submit" class="fw-btn-fill btn-gradient-yellow">Get
+                                            <button onclick="getLessonPlan('')" class="fw-btn-fill btn-gradient-yellow">Get
                                                 Plan</button>
                                         </div>
                                     </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -193,10 +191,10 @@
                             <div class="card-body">
                                 <div class="heading-layout1">
                                     <div class="">
-                                        <h3 id="lesson_plan_for" style="font-weight: bold; font-family: Rowdies; text-align: center;">
+                                        <h3 style="font-weight: bold; font-family: Rowdies; text-align: center;">
                                             LESSON PLAN FOR </h3>
                                     </div>
-                                    <div class="dropdown">
+                                    <!-- <div class="dropdown">
                                         <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                                             aria-expanded="false">...</a>
 
@@ -206,7 +204,7 @@
                                                     class="fas fa-cogs text-dark-pastel-green"></i>Edit Plan</a>
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <form class="new-added-form">
@@ -215,7 +213,7 @@
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">LESSON
                                                 WEEK</h5>
-                                            <select disabled id="week" class="select2" name="lesson_plan_content">
+                                            <select disabled id="week1" class="select2" name="lesson_plan_content">
                                                 <option value="WEEK 1">WEEK 1</option>
                                                 <option value="WEEK 2">WEEK 2</option>
                                                 <option value="WEEK 3">WEEK 3</option>
@@ -313,17 +311,17 @@
                                         
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
 
-                                            <input id="id" type="text" placeholder="" class="form-control" hidden>
+                                            <input id="lesson_id" type="text" placeholder="" class="form-control" hidden>
                                         </div>
 
                                         <div class="col-12 form-group mg-t-8">
-                                            <button id="save_lesson_bt" hidden onclick="saveLessonPlan()"
+                                            <button id="save_lesson_bt" hidden type="submit"
                                                 class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
                                             <!-- <button type="reset"
                                                 class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button> -->
                                         </div>
                                     </div>
-                                
+                                </form>
 
 
 
@@ -371,9 +369,9 @@
     <script src="../js/Chart.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
-    <script src="./js/teacher.js"></script>
+    <script src="./js/student.js"></script>
     <script src="../common-library.js"></script>
-    <script src="./js/teacher.js"></script>
+    <script src="./js/student.js"></script>
     <script src="../js/iframeSizer.min.js"></script>
     <script src="../js/frame_script.js"></script>
     <script src="../assets/js/lib/toastr/toastr.min.js"></script>

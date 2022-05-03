@@ -3368,6 +3368,160 @@ function takeAttendanceByStudentID() {
     .catch((err) => console.log(err));
 }
 
+// LESSON PLAN
+function getLessonPlan(week) {
+  if (week == "") {
+    week = document.getElementById(week).value;
+  }
+
+  fetch(ip + "/api/teacher/lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: localStorage["LESSON-PLAN"].split("-")[0],
+      week: week,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("lesson_plan_for").innerHTML +=
+        localStorage["LESSON-PLAN"].split("-")[1] +
+        " " +
+        localStorage["LESSON-PLAN"].split("-")[2];
+
+      document.getElementById("week1").innerHTML =
+        ` <option value="${data.week}">${data.week}</option>` +
+        document.getElementById("week1").innerHTML;
+
+      document.getElementById("instructional_material").value =
+        data.instructional_material;
+      document.getElementById("previous_knowledge").value =
+        data.previous_knowledge;
+      document.getElementById("previous_lesson").value = data.previous_lesson;
+      document.getElementById("behavioural_objective").value =
+        data.behavioural_objective;
+      document.getElementById("content").value = data.content;
+      document.getElementById("presentation").value = data.presentation;
+      document.getElementById("evaluation").value = data.evaluation;
+      document.getElementById("conclusion").value = data.conclusion;
+      document.getElementById("assignment").value = data.assignment;
+      document.getElementById("lesson_id").value = data.id;
+    })
+    .catch((err) => console.log(err));
+}
+
+function getAssignedSubjectForLearningHub() {
+  var c = 1;
+  // GET ASSIGNED SUBJECT
+  fetch(ip + "/api/teacher/assigned-subject", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      teacher_id: JSON.parse(localStorage["user_data"]).data.id,
+      //   session: localStorage["current_session"],
+      //   term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        // window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("subject_table").innerHTML = ``;
+      for (i in data) {
+        document.getElementById("subject_table").innerHTML += `
+                  <tr>
+          
+                        <td>${c}.</td>
+                        <td> <small>${data[i].subject_name}</td>
+                        <td>${data[i].class.class_name}</td>
+                        <td>
+                          <button type="button" class="btn btn-primary btn-block"
+                              data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
+                              Materials
+                          </button>
+                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="LocalStorage.setItem("LESSON-PLAN",${data[i].subject_id}-${data[i].subject_name}-${data[i].class.class_name});goTo('lesson-plan.html')">
+                            Lesson Plan
+                          </button>
+                         </td>
+                        
+                     
+                        
+              
+                    <tr>`;
+
+        c = c + 1;
+      }
+      document.getElementById("assigned_registered").innerHTML =
+        document.getElementById("assigned_registered").innerHTML + (c - 1);
+    })
+    .catch((err) => console.log(err));
+}
+
+function saveLessonPlan() {
+  fetch(ip + "/api/teacher/save-lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      week: document.getElementById("week1").value,
+      instructional_material: document.getElementById("instructional_material")
+        .value,
+      previous_knowledge: document.getElementById("previous_knowledge").value,
+      previous_lesson: document.getElementById("previous_lesson").value,
+      behavioural_objective: document.getElementById("behavioural_objective")
+        .value,
+      content: document.getElementById("content").value,
+      presentation: document.getElementById("presentation").value,
+      evaluation: document.getElementById("evaluation").value,
+      conclusion: document.getElementById("conclusion").value,
+      assignment: document.getElementById("assignment").value,
+      id: document.getElementById("lesson_id").value,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      if (data.success) {
+        successtoast(data.message);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
 // CHANGE PASSWORD
 function changePassword() {
   var current_password = document
@@ -3716,16 +3870,14 @@ function countDistinct(arr, n) {
   return res;
 }
 
-function editLessonPlan(){
+function editLessonPlan() {
   document.getElementById("save_lesson_bt").hidden = false;
 
   lesson_content = document.getElementsByName("lesson_plan_content");
-  
-  lesson_content.forEach(element => {
+
+  lesson_content.forEach((element) => {
     element.disabled = false;
   });
-
-  
 }
 
 // GET SCHOOL DETAILS
