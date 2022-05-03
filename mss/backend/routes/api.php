@@ -34,7 +34,7 @@ Route::post('admin/signin', 'AdminController@signIn', function () {
 Route::get('test/all-class', 'AdminController@getAllClass', function () {
 })->middleware(Cors::class);
 
-Route::post('admin/create-lesson-note', 'AdminController@lessonNote', function () {
+Route::get('admin/create-lesson-note', 'AdminController@lessonNote', function () {
 })->middleware(Cors::class);
 
 Route::middleware('auth:sanctum')->group(function () {

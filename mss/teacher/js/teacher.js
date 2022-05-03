@@ -179,8 +179,8 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a data-bs-placement="top" data-bs-toggle="tooltip" title="Coming Soon ..."  id="learning-hub" href="#" class="nav-link"><i
-                class="flaticon-open-book"></i><span>Learning Hub <sup><small>Coming Soon ...</small></sup></span></a>
+        <a data-bs-placement="top" data-bs-toggle="tooltip" title="Coming Soon ..."  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+                class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
 
     
@@ -3462,7 +3462,7 @@ function getAssignedSubjectForLearningHub() {
                               data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
                               Materials
                           </button>
-                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="LocalStorage.setItem("LESSON-PLAN",${data[i].subject_id}-${data[i].subject_name}-${data[i].class.class_name});goTo('lesson-plan.html')">
+                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="LocalStorage.setItem("LESSON-PLAN",${data[i].id}-${data[i].subject_name}-${data[i].class.class_name});goTo('lesson-plan.html')">
                             Lesson Plan
                           </button>
                          </td>
