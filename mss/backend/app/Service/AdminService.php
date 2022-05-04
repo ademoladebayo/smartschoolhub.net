@@ -425,7 +425,7 @@ class AdminService
         return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount()]);
     }
 
-    public function lessonNote()
+    public function lessonPlan()
     {
         $term = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
         $week = ['WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7', 'WEEK 8', 'WEEK 9', 'WEEK 10', 'WEEK 11', 'WEEK 12', 'WEEK 13'];

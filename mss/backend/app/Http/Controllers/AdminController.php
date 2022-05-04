@@ -259,9 +259,9 @@ class AdminController extends Controller
         return $AdminService->getDashboardInfo();
     }
 
-    public function lessonNote()
+    public function lessonPlan()
     {
         $AdminService = new AdminService();
-        return $AdminService->lessonNote();
+        return $AdminService->lessonPlan();
     }
 }

@@ -132,15 +132,15 @@ class TeacherController extends Controller
     }
 
     // LESSON PLAN
-    public function lessonNote(Request $request)
+    public function lessonPlan(Request $request)
     {
         $TeacherService = new TeacherService();
-        return $TeacherService->lessonNote($request);
+        return $TeacherService->lessonPlan($request);
     }
 
-    public function saveLessonNote(Request $request)
+    public function savelessonPlan(Request $request)
     {
         $TeacherService = new TeacherService();
-        return $TeacherService->saveLessonNote($request);
+        return $TeacherService->savelessonPlan($request);
     }
 }

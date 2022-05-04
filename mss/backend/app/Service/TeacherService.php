@@ -352,12 +352,12 @@ class TeacherService
     }
 
     // LESSON NOTE
-    public function lessonNote(Request $request)
+    public function lessonPlan(Request $request)
     {
         return LessonPlanModel::where('subject_id',$request->subject_id)->where('term',$request->term)->where('week',$request->week)->get()[0];
     }
 
-    public function saveLessonNote(Request $request)
+    public function savelessonPlan(Request $request)
     {
         $LessonPlanModel = LessonPlanModel::find($request->id);
         $LessonPlanModel->week = $request->week;
