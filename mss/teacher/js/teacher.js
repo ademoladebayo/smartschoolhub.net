@@ -3371,7 +3371,7 @@ function takeAttendanceByStudentID() {
 // LESSON PLAN
 function getLessonPlan(week) {
   if (week == "") {
-    week = document.getElementById(week).value;
+    week = document.getElementById("week").value;
   }
 
   fetch(ip + "/api/teacher/lesson-plan", {
