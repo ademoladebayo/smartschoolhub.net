@@ -3462,7 +3462,7 @@ function getAssignedSubjectForLearningHub() {
                               data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
                               Materials
                           </button>
-                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="localStorage.setItem('LESSON-PLAN',${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}); goTo('lesson-plan.html')">
+                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}')">
                             Lesson Plan
                           </button>
                          </td>
@@ -3520,6 +3520,11 @@ function saveLessonPlan() {
       }
     })
     .catch((err) => console.log(err));
+}
+
+function loadLessonPage(value) {
+  localStorage.setItem("LESSON-PLAN", value);
+  goTo("lesson-plan.html");
 }
 
 // CHANGE PASSWORD
