@@ -3462,7 +3462,7 @@ function getAssignedSubjectForLearningHub() {
                               data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
                               Materials
                           </button>
-                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="localStorage.setItem('LESSON-PLAN',${data[i].id}-${data[i].subject_name}-${data[i].class.class_name});goTo('lesson-plan.html')">
+                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="localStorage.setItem('LESSON-PLAN',${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}); goTo('lesson-plan.html')">
                             Lesson Plan
                           </button>
                          </td>
