@@ -3481,6 +3481,7 @@ function getAssignedSubjectForLearningHub() {
 }
 
 function saveLessonPlan() {
+  warningtoast("Processing ... please wait")
   fetch(ip + "/api/teacher/save-lesson-plan", {
     method: "POST",
     headers: {
@@ -3513,6 +3514,7 @@ function saveLessonPlan() {
     })
 
     .then((data) => {
+      toastr.remove();
       if (data.success) {
         successtoast(data.message);
       } else {
