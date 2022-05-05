@@ -3396,8 +3396,8 @@ function getLessonPlan(week) {
     })
 
     .then((data) => {
-      document.getElementById("lesson_plan_for").innerHTML +=
-        localStorage["LESSON-PLAN"].split("-")[1] +
+      document.getElementById("lesson_plan_for").innerHTML = "LESSON PLAN FOR ";
+      localStorage["LESSON-PLAN"].split("-")[1] +
         " " +
         localStorage["LESSON-PLAN"].split("-")[2];
 
@@ -3481,7 +3481,7 @@ function getAssignedSubjectForLearningHub() {
 }
 
 function saveLessonPlan() {
-  warningtoast("Processing ... please wait")
+  warningtoast("Processing ... please wait");
   fetch(ip + "/api/teacher/save-lesson-plan", {
     method: "POST",
     headers: {

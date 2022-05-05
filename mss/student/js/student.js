@@ -1113,10 +1113,7 @@ function getRegisteredSubjectForTableCBT() {
     .catch((err) => console.log(err));
 }
 
-function loadLessonPage(value) {
-  localStorage.setItem("LESSON-PLAN", value);
-  goTo("lesson-plan.html");
-}
+
 
 // RESULT
 async function getTranscript() {
@@ -1728,7 +1725,7 @@ function getAttendanceSummary(value) {
 // LESSON PLAN
 function getLessonPlan(week) {
   if (week == "") {
-    week = document.getElementById(week).value;
+    week = document.getElementById("week").value;
   }
 
   fetch(ip + "/api/teacher/lesson-plan", {
@@ -1753,6 +1750,11 @@ function getLessonPlan(week) {
     })
 
     .then((data) => {
+      document.getElementById("lesson_plan_for").innerHTML = "LESSON PLAN FOR ";
+      localStorage["LESSON-PLAN"].split("-")[1] +
+        " " +
+        localStorage["LESSON-PLAN"].split("-")[2];
+
       document.getElementById("week1").innerHTML =
         ` <option value="${data.week}">${data.week}</option>` +
         document.getElementById("week1").innerHTML;
@@ -1772,6 +1774,11 @@ function getLessonPlan(week) {
       document.getElementById("lesson_id").value = data.id;
     })
     .catch((err) => console.log(err));
+}
+
+function loadLessonPage(value) {
+  localStorage.setItem("LESSON-PLAN", value);
+  goTo("lesson-plan.html");
 }
 
 // ID CARD

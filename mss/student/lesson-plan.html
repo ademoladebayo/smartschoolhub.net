@@ -36,7 +36,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body  onload="loadSideNav('learning-hub'); getLessonPlan('WEEK 1'); loadDashBoardInformation()">
+<body onload="loadSideNav('learning-hub'); getLessonPlan('WEEK 1'); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -116,7 +116,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -156,30 +157,30 @@
 
                                     </div> -->
                                 </div>
-                                    <div class="row gutters-8">
-                                        <div class="col-lg-5 col-12 form-group">
-                                            <select id="week" class="select2">
-                                                <option value="">Please Select Week *</option>
-                                                <option value="WEEK 1">WEEK 1</option>
-                                                <option value="WEEK 2">WEEK 2</option>
-                                                <option value="WEEK 3">WEEK 3</option>
-                                                <option value="WEEK 4">WEEK 4</option>
-                                                <option value="WEEK 5">WEEK 5</option>
-                                                <option value="WEEK 6">WEEK 6</option>
-                                                <option value="WEEK 7">WEEK 7</option>
-                                                <option value="WEEK 8">WEEK 8</option>
-                                                <option value="WEEK 9">WEEK 9</option>
-                                                <option value="WEEK 10">WEEK 10</option>
-                                                <option value="WEEK 11">WEEK 11</option>
-                                                <option value="WEEK 12">WEEK 12</option>
-                                                <option value="WEEK 13">WEEK 13</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-2 col-12 form-group">
-                                            <button onclick="getLessonPlan('')" class="fw-btn-fill btn-gradient-yellow">Get
-                                                Plan</button>
-                                        </div>
+                                <div class="row gutters-8">
+                                    <div class="col-lg-5 col-12 form-group">
+                                        <select id="week" class="select2">
+                                            <option value="">Please Select Week *</option>
+                                            <option value="WEEK 1">WEEK 1</option>
+                                            <option value="WEEK 2">WEEK 2</option>
+                                            <option value="WEEK 3">WEEK 3</option>
+                                            <option value="WEEK 4">WEEK 4</option>
+                                            <option value="WEEK 5">WEEK 5</option>
+                                            <option value="WEEK 6">WEEK 6</option>
+                                            <option value="WEEK 7">WEEK 7</option>
+                                            <option value="WEEK 8">WEEK 8</option>
+                                            <option value="WEEK 9">WEEK 9</option>
+                                            <option value="WEEK 10">WEEK 10</option>
+                                            <option value="WEEK 11">WEEK 11</option>
+                                            <option value="WEEK 12">WEEK 12</option>
+                                            <option value="WEEK 13">WEEK 13</option>
+                                        </select>
                                     </div>
+                                    <div class="col-lg-2 col-12 form-group">
+                                        <button onclick="getLessonPlan('')" class="fw-btn-fill btn-gradient-yellow">Get
+                                            Plan</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -191,8 +192,9 @@
                             <div class="card-body">
                                 <div class="heading-layout1">
                                     <div class="">
-                                        <h3 style="font-weight: bold; font-family: Rowdies; text-align: center;">
-                                            LESSON PLAN FOR </h3>
+                                        <h3 id="lesson_plan_for"
+                                            style="font-weight: bold; font-family: Rowdies; text-align: center;">
+                                            _____ </h3>
                                     </div>
                                     <!-- <div class="dropdown">
                                         <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -209,7 +211,7 @@
 
                                 <form class="new-added-form">
                                     <div class="row">
-                                       
+
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">LESSON
                                                 WEEK</h5>
@@ -229,18 +231,17 @@
                                                 <option value="WEEK 13">WEEK 13</option>
                                             </select>
                                         </div>
-                                        <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                        <!-- <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">DURATION
                                             </h5>
                                             <input id="duration" name="lesson_plan_content" type="text" placeholder=""
                                                 class="form-control" disabled>
-                                        </div>
+                                        </div> -->
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">
                                                 INSTRUCTIONAL
                                                 MATERIALS</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()"
-                                                id="instructional_material" class="textarea form-control"
+                                            <textarea id="instructional_material" class="textarea form-control"
                                                 name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
 
                                         </div>
@@ -248,16 +249,14 @@
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">PREVIOUS
                                                 KNOWLEDGE</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()"
-                                                id="previous_knowledge" class="textarea form-control"
+                                            <textarea id="previous_knowledge" class="textarea form-control"
                                                 name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
                                         </div>
 
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">PREVIOUS
                                                 LESSON</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()"
-                                                id="previous_lesson" class="textarea form-control"
+                                            <textarea id="previous_lesson" class="textarea form-control"
                                                 name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
 
                                         </div>
@@ -266,52 +265,47 @@
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">
                                                 BEHAVIOURAL
                                                 OBJECTIVES</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()"
-                                                id="behavioural_objective" class="textarea form-control"
+                                            <textarea id="behavioural_objective" class="textarea form-control"
                                                 name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
                                         </div>
 
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">CONTENT
                                             </h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()" id="content"
-                                                class="textarea form-control" name="lesson_plan_content" cols="100"
-                                                rows="50" disabled></textarea>
+                                            <textarea id="content" class="textarea form-control"
+                                                name="lesson_plan_content" cols="100" rows="50" disabled></textarea>
                                         </div>
 
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">
                                                 PRESENTATION</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()" id="presentation"
-                                                class="textarea form-control" name="lesson_plan_content" cols="50"
-                                                rows="12" disabled></textarea>
+                                            <textarea id="presentation" class="textarea form-control"
+                                                name="lesson_plan_content" cols="50" rows="12" disabled></textarea>
                                         </div>
 
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">
                                                 EVALUATION</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()" id="evaluation"
-                                                class="textarea form-control" name="lesson_plan_content" cols="30"
-                                                rows="10" disabled></textarea>
+                                            <textarea id="evaluation" class="textarea form-control"
+                                                name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
                                         </div>
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">
                                                 CONCLUSION</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()" id="conclusion"
-                                                class="textarea form-control" name="lesson_plan_content" cols="30"
-                                                rows="10" disabled></textarea>
+                                            <textarea id="conclusion" class="textarea form-control"
+                                                name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
                                         </div>
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                             <h5 style="font-family: Poppins; color: black; font-weight: bold;">
                                                 ASSIGNMENT</h5>
-                                            <textarea oninput="this.value = this.value.toUpperCase()" id="assignment"
-                                                class="textarea form-control" name="lesson_plan_content" cols="30"
-                                                rows="10" disabled></textarea>
+                                            <textarea id="assignment" class="textarea form-control"
+                                                name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
                                         </div>
-                                        
+
                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
 
-                                            <input id="lesson_id" type="text" placeholder="" class="form-control" hidden>
+                                            <input id="lesson_id" type="text" placeholder="" class="form-control"
+                                                hidden>
                                         </div>
 
                                         <div class="col-12 form-group mg-t-8">
