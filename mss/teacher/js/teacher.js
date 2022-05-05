@@ -3396,8 +3396,9 @@ function getLessonPlan(week) {
     })
 
     .then((data) => {
-      document.getElementById("lesson_plan_for").innerHTML = "LESSON PLAN FOR ";
-      localStorage["LESSON-PLAN"].split("-")[1] +
+      document.getElementById("lesson_plan_for").innerHTML =
+        "LESSON PLAN FOR " +
+        localStorage["LESSON-PLAN"].split("-")[1] +
         " " +
         localStorage["LESSON-PLAN"].split("-")[2];
 
