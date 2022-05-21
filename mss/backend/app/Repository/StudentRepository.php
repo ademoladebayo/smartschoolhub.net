@@ -112,6 +112,6 @@ class StudentRepository
 
     public function allStudentCount()
     {
-        return DB::select('select count(id) as student_no from student where profile_status = ENABLED')[0]->student_no;
+        return DB::select('select count(id) as student_no from student where profile_status = "ENABLED"')[0]->student_no;
     }
 }

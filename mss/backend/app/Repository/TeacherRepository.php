@@ -106,6 +106,6 @@ class TeacherRepository
 
     public function allTeacherCount()
     {
-        return DB::select('select count(id) as teacher_no from teacher profile_status = ENABLED')[0]->teacher_no;
+        return DB::select('select count(id) as teacher_no from teacher profile_status = "ENABLED"')[0]->teacher_no;
     }
 }
