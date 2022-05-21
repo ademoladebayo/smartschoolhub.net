@@ -48,10 +48,22 @@ class BursaryService
         $total_bank = 0;
         $total_cash = 0;
         $total_expense = 0;
+        $total_arrears = 0;
 
         $payment_history = PaymentHistoryModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
         $expenses = ExpenseModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
+        $descriptions =  PaymentHistoryModel::select('description')->where('session', $request->session)->where('term', $request->term)->get();
 
+
+        foreach ($descriptions as $description) {
+            if (strpos($description, "WAS USED TO SETTLE THE ARREARS") !== false) {
+                // FULL SETTLEMENT
+                $total_arrears = $total_arrears + str_replace(str_split('₦,()'), '', explode("WAS", explode("BUT", $description)[1])[0]);
+            } elseif (strpos($description, "WAS USED TO SETTLE PART OF THE ARREARS") !== false) {
+                // PART SETTLEMENT
+                $total_arrears = $total_arrears + str_replace(str_split('₦,()'), '', explode("PAID", explode("AND", $description)[0])[1]);
+            }
+        } 
 
 
         // GET TOTAL MANUAL PAYMENT
@@ -64,7 +76,7 @@ class BursaryService
             $total_expense = $total_expense + intval($expense->amount);
         }
 
-        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'total_manual_payment' => $total_manual_payment, 'total_bank' => $total_bank, 'total_cash' => $total_cash, 'total_expense' =>  $total_expense]);
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'total_manual_payment' => $total_manual_payment, 'total_arrears' => $total_arrears, 'total_bank' => $total_bank, 'total_cash' => $total_cash, 'total_expense' =>  $total_expense]);
     }
 
     // FEE MANAGEMENT

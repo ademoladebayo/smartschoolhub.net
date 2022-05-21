@@ -235,15 +235,15 @@ class StudentService
         $SessionRepository = new SessionRepository();
         $response = json_decode($SessionRepository->getCurrentSession(), true);
 
-        if ($session == $request->session && $term == $request->term) {
-            // CHECK CONTROL BEFORE FETCHING RESULT
-            $AdminService = new AdminService();
-            if (!$AdminService->isResultAccessOpened()) {
-                return  response(['success' => false, 'message' => "RESULT FOR " . $request->session . " " . $request->term . " IS COMING SOON ..."]);
+        if ($request->user_type == "STUDENT") {
+            if ($session == $request->session && $term == $request->term) {
+                // CHECK CONTROL BEFORE FETCHING RESULT
+                $AdminService = new AdminService();
+                if (!$AdminService->isResultAccessOpened()) {
+                    return  response(['success' => false, 'message' => "RESULT FOR " . $request->session . " " . $request->term . " IS COMING SOON ..."]);
+                }
             }
         }
-
-
 
 
         // PERCENTAGE AND GRADE POSITION

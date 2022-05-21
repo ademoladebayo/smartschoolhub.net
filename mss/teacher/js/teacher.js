@@ -1422,6 +1422,7 @@ function getResult(value) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
+      user_type: "TEACHER",
       student_id: JSON.parse(localStorage["student_result"]).id,
       class_id: JSON.parse(localStorage["student_result"]).class.id,
       session: value.split("_")[1],

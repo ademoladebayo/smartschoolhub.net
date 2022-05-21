@@ -1285,6 +1285,10 @@ function getDashboardInfo() {
         parseInt(data.total_manual_payment)
       );
 
+      document.getElementById("total_arrears").innerHTML = formatNumber(
+        parseInt(data.total_arrears)
+      );
+
       document.getElementById("total_expense").innerHTML = formatNumber(
         parseInt(data.total_expense)
       );
