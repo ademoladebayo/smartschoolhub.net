@@ -58,10 +58,10 @@ class BursaryService
         foreach ($descriptions as $description) {
             if (strpos($description, "WAS USED TO SETTLE THE ARREARS") !== false) {
                 // FULL SETTLEMENT
-                $total_arrears = $total_arrears + str_replace(str_split('₦,()'), '', explode("WAS", explode("BUT", $description)[1])[0]);
+                $total_arrears = $total_arrears + intval(str_replace(str_split('₦,()'), '', explode("WAS", explode("BUT", $description)[1])[0]));
             } elseif (strpos($description, "WAS USED TO SETTLE PART OF THE ARREARS") !== false) {
                 // PART SETTLEMENT
-                $total_arrears = $total_arrears + str_replace(str_split('₦,()'), '', explode("PAID", explode("AND", $description)[0])[1]);
+                $total_arrears = $total_arrears + intval(str_replace(str_split('₦,()'), '', explode("PAID", explode("AND", $description)[0])[1]));
             }
         } 
 
