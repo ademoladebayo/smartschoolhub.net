@@ -52,7 +52,7 @@ class BursaryService
 
         $payment_history = PaymentHistoryModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
         $expenses = ExpenseModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
-        $descriptions =  PaymentHistoryModel::select('description')->where('session', $request->session)->where('term', $request->term)->get();
+        $descriptions =  PaymentHistoryModel::select('payment_description')->where('session', $request->session)->where('term', $request->term)->get();
 
 
         foreach ($descriptions as $description) {
