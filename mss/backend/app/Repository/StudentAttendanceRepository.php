@@ -39,6 +39,30 @@ class StudentAttendanceRepository
                 }
 
 
+                // CHECK CONTROL BEFORE TAKING ATTENDANCE (TIME AND % PAID CHECK)
+                $AdminService = new AdminService();
+                $BursaryService = new BursaryService();
+
+                if (explode("-", $AdminService->isResumptionTimeCheckOpened())[0]) {
+                    //  CHECK CLOCK IN TIME AGAINST THE ONE IN THE CONTROL
+                    $time = intval(explode(":", $request->time)[0]);
+                    $control_time = intval(explode("-", $AdminService->isResumptionTimeCheckOpened())[1]);
+                    if ($time > $control_time) {
+                        return response(['success' => false, 'message' => "It is past resumption time, you are late !"]);
+                    }
+                }
+
+
+                if (explode("-", $AdminService->isCheckDebitorsOpened())[0]) {
+                    //  CHECK CLOCK IN TIME AGAINST THE ONE IN THE CONTROL
+                    $paid_percentage = intval($BursaryService->getStudentPercentagePaid($request));
+                    $control_percentage = intval(explode("-", $AdminService->isCheckDebitorsOpened())[1]);
+                    if ($paid_percentage < $control_percentage) {
+                        return response(['success' => false, 'message' => "Access denied ! you have only paid " . $paid_percentage . " out of " . $control_percentage . " percent required."]);
+                    }
+                }
+
+
                 // GET CLASS
                 $StudentAttendanceModel->student_id = $student[0]->id;
                 $StudentAttendanceModel->class_id = $student[0]->class;
