@@ -47,6 +47,7 @@ class StudentAttendanceRepository
                     //  CHECK CLOCK IN TIME AGAINST THE ONE IN THE CONTROL
                     $time = intval(explode(":", $request->time)[0]);
                     $control_time = intval(explode("-", $AdminService->isResumptionTimeCheckOpened())[1]);
+                    Log::alert("TIME IN : " . $time ." CONTROL TIME : ". $control_time);
                     if ($time > $control_time) {
                         return response(['success' => false, 'message' => "It is past resumption time, you are late !"]);
                     }
