@@ -172,7 +172,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/inventory', 'AdminController@getInventory', function () {
     })->middleware(Cors::class);
 
-    Route::put('admin/inventory', 'AdminController@updateInventory', function () {
+    Route::put('admin/inventory', 'AdminController@editInventory', function () {
     })->middleware(Cors::class);
 
     Route::delete('admin/inventory', 'AdminController@deleteInventory', function () {

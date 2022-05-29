@@ -4337,7 +4337,7 @@ function getInventory() {
       
             <a id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
           data.id
-        })" href="#" class="btn btn-primary hidden">
+        })" href="#" class="btn btn-primary" hidden>
                   Save Update
             </a>
             <a id="editButton${data.id}" onclick="allowEdit(${
