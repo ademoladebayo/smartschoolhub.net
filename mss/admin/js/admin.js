@@ -228,7 +228,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a  id="inventory" href="inventory.html" class="nav-link"><i class="fas fa-box-open"></i></a>
+        <a  id="inventory" href="inventory.html" class="nav-link"><i class="fas fa-box-open"></i><span>Inventory</span></a>
     </li>
 
 
