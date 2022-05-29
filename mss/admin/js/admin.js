@@ -4383,21 +4383,22 @@ function allowEdit(id, action) {
     document.getElementById("updateButton" + id).hidden = true;
     document.getElementById("deleteButton" + id).hidden = true;
   } else {
-    document.getElementById("item" + id).setAttribute("contenteditable", false);
-    document
-      .getElementById("description" + id)
-      .setAttribute("contenteditable", false);
-    document
-      .getElementById("quantity" + id)
-      .setAttribute("contenteditable", false);
+    getInventory();
+    // document.getElementById("item" + id).setAttribute("contenteditable", false);
+    // document
+    //   .getElementById("description" + id)
+    //   .setAttribute("contenteditable", false);
+    // document
+    //   .getElementById("quantity" + id)
+    //   .setAttribute("contenteditable", false);
 
-    // DISABLE
-    document.getElementById("saveUpdateButton" + id).hidden = true;
-    document.getElementById("discardButton" + id).hidden = true;
+    // // DISABLE
+    // document.getElementById("saveUpdateButton" + id).hidden = true;
+    // document.getElementById("discardButton" + id).hidden = true;
 
-    // ENABLE
-    document.getElementById("updateButton" + id).hidden = false;
-    document.getElementById("deleteButton" + id).hidden = false;
+    // // ENABLE
+    // document.getElementById("updateButton" + id).hidden = false;
+    // document.getElementById("deleteButton" + id).hidden = false;
   }
 }
 
@@ -4458,7 +4459,7 @@ function deleteInventoryItem(id) {
     })
 
     .then((data) => {
-      alert(data.message);
+      successtoast(data.message);
       getInventory();
     })
     .catch((err) => console.log(err));

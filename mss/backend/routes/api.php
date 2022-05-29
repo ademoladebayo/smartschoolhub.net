@@ -175,7 +175,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('admin/inventory', 'AdminController@editInventory', function () {
     })->middleware(Cors::class);
 
-    Route::delete('admin/inventory', 'AdminController@deleteInventory', function () {
+    Route::delete('admin/inventory/{id}', 'AdminController@deleteInventory', function () {
     })->middleware(Cors::class);
 
 
