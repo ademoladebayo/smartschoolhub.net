@@ -166,7 +166,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // ADMIN {INVENTORY SYSTEM}
-    Route::post('admin/inventory', 'AdminController@saveInventory', function () {
+    Route::post('admin/inventory', 'AdminController@createInventory', function () {
     })->middleware(Cors::class);
 
     Route::get('admin/inventory', 'AdminController@getInventory', function () {
@@ -409,4 +409,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 // ===================================================================
 // END OF GENERAL ROUTE
-// ===================================================================
+// ==============================================================

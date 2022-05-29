@@ -4257,9 +4257,9 @@ function createInventoryItem() {
 }
 
 function saveInventoryItem() {
-  var item = document.getElementById("item").value;
-  var description = document.getElementById("description").value;
-  var quantity = document.getElementById("quantity").value;
+  var item = document.getElementById("item").innerHTML;
+  var description = document.getElementById("description").innerHTML;
+  var quantity = document.getElementById("quantity").innerHTML;
 
   if (description != "" && item != "" && quantity != "") {
     // PUSH TO API
