@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
-var domain = "https://mss.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/mss";
+// var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -228,7 +228,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a  id="inventory" href="#?inventory.html" class="nav-link"><i class="fas fa-box-open"></i><span>Inventory <sup><small>Coming Soon ...</small></sup></span></a>
+        <a  id="inventory" href="inventory.html" class="nav-link"><i class="fas fa-box-open"></i></a>
     </li>
 
 
@@ -4125,6 +4125,8 @@ function getDashboardInfo() {
 
       document.getElementById("teacher_no").innerHTML = `<span class="counter"
       data-num="${data.teacher_no}">${data.teacher_no}</span>`;
+
+      document.getElementById("no_inventory_item").innerHTML = data.inventory;
     })
     .catch((err) => console.log(err));
 }
@@ -4226,6 +4228,240 @@ function editLessonPlan() {
   lesson_content.forEach((element) => {
     element.disabled = false;
   });
+}
+
+// INVENTORY
+function createInventoryItem() {
+  document.getElementById("inventory_table").innerHTML =
+    `<tr id="new_item_roll">
+
+  <td><span class="badge bg-success"><b>NEW</b></span></td>
+  <td id="item" contenteditable="true"> ITEM NAME </td>
+  <td id="description" contenteditable="true"> ITEM DESCRIPTION </td>
+  <td id="quantity" contenteditable="true"> ITEM QUANTITY </td>
+  <td id="">${getDate().split("~")[1]}</td>
+  <td id="">${getDate().split("~")[1]}</td>
+  <td>
+
+
+      <a onclick="saveInventoryItem()" href="#" class="btn btn-primary">
+            Save
+      </a>
+      <a onclick="document.getElementById('new_item_roll').remove()" href="#" class="btn btn-danger">
+            Cancel
+      </a>
+
+  </td>
+</tr>` + document.getElementById("inventory_table").innerHTML;
+}
+
+function saveInventoryItem() {
+  var item = document.getElementById("item").value;
+  var description = document.getElementById("description").value;
+  var quantity = document.getElementById("quantity").value;
+
+  if (description != "" && item != "" && quantity != "") {
+    // PUSH TO API
+    warningtoast("<b>Processing ... Please wait</b>");
+    fetch(ip + "/api/admin/inventory", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        item: item,
+        description: description,
+        quantity: quantity,
+        date_created: getDate().split("~")[1],
+        last_modified: getDate().split("~")[1],
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          window.location.href = "index.html";
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>" + data.message + "</b>");
+          setTimeout(function () {
+            getInventory();
+          }, 1000);
+        } else {
+          errortoast("<b>" + data.message + "</b>");
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that compulsory field is not empty.</b>");
+  }
+}
+
+function getInventory() {
+  fetch(ip + "/api/admin/inventory", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 0;
+      document.getElementById("inventory_table").innerHTML = ``;
+      data.forEach((data) => {
+        document.getElementById("inventory_table").innerHTML += `
+        <tr id="${data.id}">
+
+        <td>${c}.</td>
+        <td id="item${data.id}">${data.item}</td>
+        <td id="description${data.id}">${data.description}</td>
+        <td id="quantity${data.id}">${data.description}</td>
+        <td id="date_created${data.id}">${data.date_created}</td>
+        <td id="last_modified${data.id}">${data.last_modified}</td>
+        <td>
+      
+            <a id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
+          data.id
+        })" href="#" class="btn btn-primary disabled">
+                  Save Update
+            </a>
+            <a id="editButton${data.id}" onclick="allowEdit(${
+          (data.id, true)
+        })" href="#" class="btn btn-warning">
+                  Edit
+            </a>
+            <a id="deleteButton${data.id}" onclick="deleteInventoryItem(${
+          data.id
+        })" href="#" class="btn btn-danger">
+                  Delete
+            </a>
+
+            <a id="discardButton${data.id}"onclick="allowEdit(${
+          (data.id, false)
+        })" href="#" class="btn btn-danger" disabled>
+                  Discard Change
+            </a>
+      
+        </td>
+      </tr>`;
+        c += 1;
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
+function allowEdit(id, action) {
+  if (action) {
+    document.getElementById("item" + id).setAttribute("contenteditable", true);
+    document
+      .getElementById("description" + id)
+      .setAttribute("contenteditable", true);
+    document
+      .getElementById("quantity" + id)
+      .setAttribute("contenteditable", true);
+
+    // ENABLE
+    document.getElementById("saveUpdateButton" + id).disabled = false;
+    document.getElementById("discardButton" + id).disabled = false;
+
+    // DISABLE
+    document.getElementById("updateButton" + id).disabled = true;
+    document.getElementById("deleteButton" + id).disabled = true;
+  } else {
+    document.getElementById("item" + id).setAttribute("contenteditable", false);
+    document
+      .getElementById("description" + id)
+      .setAttribute("contenteditable", false);
+    document
+      .getElementById("quantity" + id)
+      .setAttribute("contenteditable", false);
+
+    // DISABLE
+    document.getElementById("saveUpdateButton" + id).disabled = true;
+    document.getElementById("discardButton" + id).disabled = true;
+
+    // ENABLE
+    document.getElementById("updateButton" + id).disabled = false;
+    document.getElementById("deleteButton" + id).disabled = false;
+  }
+}
+
+function updateInventoryItem(id) {
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/inventory", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      item: document.getElementById("item" + id).innerHTML,
+      description: document.getElementById("description" + id).innerHTML,
+      quantity: document.getElementById("quantity" + id).innerHTML,
+      last_modified: getDate().split("~")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast("<b>" + data.message + "</b>");
+        setTimeout(function () {
+          getInventory();
+        }, 1000);
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function deleteInventoryItem(id) {
+  fetch(ip + "/api/admin/inventory/" + id, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      alert(data.message);
+      getInventory();
+    })
+    .catch((err) => console.log(err));
 }
 
 // GET TODAY'S DATE

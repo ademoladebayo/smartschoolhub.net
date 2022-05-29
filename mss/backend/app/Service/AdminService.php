@@ -7,6 +7,7 @@ use App\Model\SubjectModel;
 use App\Model\StudentModel;
 use App\Model\AdminModel;
 use App\Model\ControlPanelModel;
+use App\Model\InventoryModel;
 use App\Model\LessonPlanModel;
 use App\Model\TeacherModel;
 use App\Model\TeacherAttendanceModel;
@@ -422,7 +423,7 @@ class AdminService
         $StudentRepository = new StudentRepository();
         $TeacherRepository = new TeacherRepository();
 
-        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount()]);
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount() , 'inventory'=> InventoryModel::get()->count()]);
     }
 
     public function lessonPlan()
@@ -486,5 +487,36 @@ class AdminService
             }
         
 
+    }
+
+    // INVENTORY
+    public function createInventory(Request $request)
+    {
+        $InventoryModel = new InventoryModel();
+        $InventoryModel->item = $request->item;
+        $InventoryModel->description = $request->description;
+        $InventoryModel->quantity = $request->quantity;
+        $InventoryModel->date_created = $request->date_created;
+        $InventoryModel->last_modified = $request->last_modified;
+        $InventoryModel->save();
+        return response()->json(['success' => true, 'message' => 'Item was created successfully.']);
+    }
+
+    public function editInventory(Request $request)
+    {
+        $InventoryModel = InventoryModel::find($request->id);
+        $InventoryModel->item = $request->item;
+        $InventoryModel->description = $request->description;
+        $InventoryModel->quantity = $request->quantity;
+        $InventoryModel->last_modified = $request->last_modified;
+        $InventoryModel->save();
+        return response()->json(['success' => true, 'message' => 'Item was updated successfully.']);
+    }
+
+    public function deleteInventory($id)
+    {
+        InventoryModel::find($id)->delete();
+        return response()->json(['success' => true, 'message' => 'Item was deleted successfully.']);
+   
     }
 }

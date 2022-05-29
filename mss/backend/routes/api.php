@@ -165,6 +165,20 @@ Route::middleware('auth:sanctum')->group(function () {
     })->middleware(Cors::class);
 
 
+    // ADMIN {INVENTORY SYSTEM}
+    Route::post('admin/inventory', 'AdminController@saveInventory', function () {
+    })->middleware(Cors::class);
+
+    Route::get('admin/inventory', 'AdminController@getInventory', function () {
+    })->middleware(Cors::class);
+
+    Route::put('admin/inventory', 'AdminController@updateInventory', function () {
+    })->middleware(Cors::class);
+
+    Route::delete('admin/inventory', 'AdminController@deleteInventory', function () {
+    })->middleware(Cors::class);
+
+
     // =============================================================================
     //               END OF ADMIN ROUTE
     // =============================================================================
@@ -239,7 +253,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('teacher/lesson-plan', 'TeacherController@lessonPlan', function () {
     })->middleware(Cors::class);
-
 
 });
 
