@@ -4322,28 +4322,27 @@ function getInventory() {
     })
 
     .then((data) => {
-      c = 0;
+      c = 1;
       document.getElementById("inventory_table").innerHTML = ``;
       data.forEach((data) => {
         document.getElementById("inventory_table").innerHTML += `
-        <tr id="${data.id}">
-
+        <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}id="${data.id}">
         <td>${c}.</td>
         <td id="item${data.id}">${data.item}</td>
         <td id="description${data.id}">${data.description}</td>
-        <td id="quantity${data.id}">${data.description}</td>
+        <td id="quantity${data.id}">${data.quantity}</td>
         <td id="date_created${data.id}">${data.date_created}</td>
         <td id="last_modified${data.id}">${data.last_modified}</td>
         <td>
       
             <a id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
           data.id
-        })" href="#" class="btn btn-primary disabled">
+        })" href="#" class="btn btn-primary hidden">
                   Save Update
             </a>
             <a id="editButton${data.id}" onclick="allowEdit(${
-          (data.id, true)
-        })" href="#" class="btn btn-warning">
+          data.id
+        },true)" href="#" class="btn btn-warning">
                   Edit
             </a>
             <a id="deleteButton${data.id}" onclick="deleteInventoryItem(${
@@ -4353,8 +4352,8 @@ function getInventory() {
             </a>
 
             <a id="discardButton${data.id}"onclick="allowEdit(${
-          (data.id, false)
-        })" href="#" class="btn btn-danger" disabled>
+          data.id
+        },false)" href="#" class="btn btn-danger" hidden>
                   Discard Change
             </a>
       
@@ -4377,12 +4376,12 @@ function allowEdit(id, action) {
       .setAttribute("contenteditable", true);
 
     // ENABLE
-    document.getElementById("saveUpdateButton" + id).disabled = false;
-    document.getElementById("discardButton" + id).disabled = false;
+    document.getElementById("saveUpdateButton" + id).hidden = false;
+    document.getElementById("discardButton" + id).hidden = false;
 
     // DISABLE
-    document.getElementById("updateButton" + id).disabled = true;
-    document.getElementById("deleteButton" + id).disabled = true;
+    document.getElementById("updateButton" + id).hidden = true;
+    document.getElementById("deleteButton" + id).hidden = true;
   } else {
     document.getElementById("item" + id).setAttribute("contenteditable", false);
     document
@@ -4393,12 +4392,12 @@ function allowEdit(id, action) {
       .setAttribute("contenteditable", false);
 
     // DISABLE
-    document.getElementById("saveUpdateButton" + id).disabled = true;
-    document.getElementById("discardButton" + id).disabled = true;
+    document.getElementById("saveUpdateButton" + id).hidden = true;
+    document.getElementById("discardButton" + id).hidden = true;
 
     // ENABLE
-    document.getElementById("updateButton" + id).disabled = false;
-    document.getElementById("deleteButton" + id).disabled = false;
+    document.getElementById("updateButton" + id).hidden = false;
+    document.getElementById("deleteButton" + id).hidden = false;
   }
 }
 
