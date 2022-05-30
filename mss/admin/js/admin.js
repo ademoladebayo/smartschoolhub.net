@@ -229,7 +229,7 @@ function loadSideNav(page) {
 
     <li class="nav-item">
         <a  id="inventory" href="inventory.html" class="nav-link"><i class="fas fa-box-open"></i>
-        <span>Inventory</span></a>
+        <span>Inventory<sup><small><span class="badge bg-success"><b>NEW</b></span></small></sup></span></a>
     </li>
 
 
@@ -4324,43 +4324,48 @@ function getInventory() {
     .then((data) => {
       c = 1;
       document.getElementById("inventory_table").innerHTML = ``;
-      data.forEach((data) => {
-        document.getElementById("inventory_table").innerHTML += `
-        <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}id="${data.id}">
-        <td>${c}.</td>
-        <td id="item${data.id}">${data.item}</td>
-        <td id="description${data.id}">${data.description}</td>
-        <td id="quantity${data.id}">${data.quantity}</td>
-        <td id="date_created${data.id}">${data.date_created}</td>
-        <td id="last_modified${data.id}">${data.last_modified}</td>
-        <td>
-      
-            <a id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
-          data.id
-        })" href="#" class="btn btn-primary" hidden>
-                  Save Update
-            </a>
-            <a id="editButton${data.id}" onclick="allowEdit(${
-          data.id
-        },true)" href="#" class="btn btn-warning">
-                  Edit
-            </a>
-            <a id="deleteButton${data.id}" onclick="deleteInventoryItem(${
-          data.id
-        })" href="#" class="btn btn-danger">
-                  Delete
-            </a>
-
-            <a id="discardButton${data.id}"onclick="allowEdit(${
-          data.id
-        },false)" href="#" class="btn btn-danger" hidden>
-                  Discard Change
-            </a>
-      
-        </td>
-      </tr>`;
-        c += 1;
-      });
+      if(data.length > 0){
+        data.forEach((data) => {
+          document.getElementById("inventory_table").innerHTML += `
+          <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}id="${data.id}">
+          <td>${c}.</td>
+          <td id="item${data.id}">${data.item}</td>
+          <td id="description${data.id}">${data.description}</td>
+          <td id="quantity${data.id}">${data.quantity}</td>
+          <td id="date_created${data.id}">${data.date_created}</td>
+          <td id="last_modified${data.id}">${data.last_modified}</td>
+          <td>
+        
+              <a id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
+            data.id
+          })" href="#" class="btn btn-primary" hidden>
+                    Save Update
+              </a>
+              <a id="editButton${data.id}" onclick="allowEdit(${
+            data.id
+          },true)" href="#" class="btn btn-warning">
+                    Edit
+              </a>
+              <a id="deleteButton${data.id}" onclick="deleteInventoryItem(${
+            data.id
+          })" href="#" class="btn btn-danger">
+                    Delete
+              </a>
+  
+              <a id="discardButton${data.id}"onclick="allowEdit(${
+            data.id
+          },false)" href="#" class="btn btn-danger" hidden>
+                    Discard Change
+              </a>
+        
+          </td>
+        </tr>`;
+          c += 1;
+        });
+      }else{
+        document.getElementById("inventory_table").innerHTML = `NO ITEM IN THE INVENTORY`;
+      }
+     
     })
     .catch((err) => console.log(err));
 }
