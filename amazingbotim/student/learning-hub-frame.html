@@ -108,7 +108,7 @@
                                             <th>Subject Name</th>
                                             <th>Subject Type</th>
                                             <th>Teacher</th>
-                                            <th>Materials</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody id="subject_table">
@@ -123,12 +123,18 @@
                                                 Loading ...</td>
 
                                             <td>
-                                                <button type="button" class="btn btn-primary btn-block"
-                                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                <button type="button" class="btn btn-primary btn-block  btn-sm"
+                                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
 
                                                     Materials
                                                 </button>
+                                                <button type="button" class="btn btn-primary btn-block  btn-sm"
+                                                    onclick="goTo('lesson-plan.html')" disabled>
+
+                                                    Lesson Plan
+                                                </button>
                                             </td>
+                                           
 
                                         </tr>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\FeeModel;
 use App\Model\ExpenseModel;
+use App\Model\DebitorModel;
 use App\Model\PaymentHistoryModel;
 use Illuminate\Http\Request;
 use App\Service\BursaryService;
@@ -80,7 +81,10 @@ class BursaryController extends Controller
 
     public function allManualPayment(Request $request)
     {
-        return PaymentHistoryModel::where('session', $request->session)->where('term', $request->term)->where('payment_type', 'CASH')->orwhere('payment_type', 'BANK')->with('class', 'student')->orderBy('id', 'DESC')->get();
+        // return PaymentHistoryModel::where('session', $request->session)->where('term', $request->term)->where('payment_type', 'CASH')->orwhere('payment_type', 'BANK')->with('class', 'student')->orderBy('id', 'DESC')->get();
+        return PaymentHistoryModel::orWhere('payment_type', 'CASH')->where('session', $request->session)->where('term', $request->term)
+            ->orwhere('payment_type', 'BANK')->where('session', $request->session)->where('term', $request->term)
+            ->with('class', 'student')->orderBy('id', 'DESC')->get();
     }
     public function deleteManualPayment($id)
     {
@@ -97,5 +101,26 @@ class BursaryController extends Controller
     public function searchPayment(Request $request)
     {
         return  PaymentHistoryModel::where('date', 'like', '%' . $request->search_data . '%')->orWhere('payment_type', 'like', '%' . $request->search_data . '%')->orWhere('amount', 'like', '%' . $request->search_data . '%')->where('session', $request->session)->where('term', $request->term)->with('class', 'student')->orderBy('id', 'DESC')->get();
+    }
+
+
+    // DEBITOR MANAGEMENT  
+    public function syncLastestDebitor(Request $request)
+    {
+        $BursaryService = new BursaryService();
+        return $BursaryService->syncLastestDebitor($request);
+    }
+
+    public function allDebitor(Request $request)
+    {
+        $BursaryService = new BursaryService();
+        return $BursaryService->allDebitor($request);
+    }
+
+
+    public function getDashboardInfo(Request $request)
+    {
+        $BursaryService = new BursaryService();
+        return $BursaryService->getDashboardInfo($request);
     }
 }

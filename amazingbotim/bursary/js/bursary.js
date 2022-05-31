@@ -198,7 +198,7 @@ function getCurrentSession() {
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >Session not set !</span></div>`;
 
-        alert("Admin has not set session.");
+        alert(data.message);
       }
     })
     .catch((err) => console.log(err));
@@ -673,53 +673,85 @@ function createManualPayment() {
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
   var payment_type = document.getElementById("payment_type").value;
+  var fee_type = document.getElementById("fee_type").value;
+
+  var payment_description = document.getElementById(
+    "payment_description"
+  ).value;
 
   if (
     student_class != "" &&
     amount != "" &&
     date != "" &&
     student != "" &&
-    payment_type
+    payment_type != "" &&
+    fee_type != "" &&
+    payment_description != ""
   ) {
-    // PUSH TO API
-    warningtoast("<b>Processing ... Please wait</b>");
-    fetch(ip + "/api/bursary/create-manual-payment", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: "Bearer " + localStorage["token"],
-      },
-      body: JSON.stringify({
-        student_class: student_class,
-        amount: amount,
-        date: date,
-        student: student,
-        payment_type: payment_type,
-        session: localStorage["current_session"],
-        term: localStorage["current_term"],
-      }),
-    })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          window.location.href = "index.html";
-        }
-        return res.json();
-      })
+    querySelector1 = 'option[value="' + student + '"]';
+    querySelector2 = 'option[value="' + student_class + '"]';
+    confirmation_message = "";
 
-      .then((data) => {
-        toastr.remove();
-        if (data.success) {
-          successtoast("<b>" + data.message + "</b>");
-          setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
-        } else {
-          errortoast("<b>" + data.message + "</b>");
-        }
+    if (student == student_class) {
+      confirmation_message =
+        "Please confirm that you are about to record a payment of ₦" +
+        formatNumber(parseInt(amount)) +
+        " for " +
+        document.querySelectorAll(querySelector1)[1].innerHTML +
+        " in " +
+        document.querySelectorAll(querySelector2)[0].innerHTML;
+    } else {
+      confirmation_message =
+        "Please confirm that you are about to record a payment of ₦" +
+        formatNumber(parseInt(amount)) +
+        " for " +
+        document.querySelectorAll(querySelector1)[0].innerHTML +
+        " in " +
+        document.querySelectorAll(querySelector2)[0].innerHTML;
+    }
+    if (confirm(confirmation_message)) {
+      // PUSH TO API
+      warningtoast("<b>Processing ... Please wait</b>");
+      fetch(ip + "/api/bursary/create-manual-payment", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+        body: JSON.stringify({
+          student_class: student_class,
+          amount: amount,
+          date: date,
+          student: student,
+          payment_type: payment_type,
+          fee_type: fee_type,
+          payment_description: payment_description,
+          session: localStorage["current_session"],
+          term: localStorage["current_term"],
+        }),
       })
-      .catch((err) => console.log(err));
+        .then(function (res) {
+          console.log(res.status);
+          if (res.status == 401) {
+            window.location.href = "index.html";
+          }
+          return res.json();
+        })
+
+        .then((data) => {
+          toastr.remove();
+          if (data.success) {
+            successtoast("<b>" + data.message + "</b>");
+            setTimeout(function () {
+              window.parent.location.reload();
+            }, 1000);
+          } else {
+            errortoast("<b>" + data.message + "</b>");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   } else {
     warningtoast("<b>Please check that compulsory field is not empty.</b>");
   }
@@ -762,6 +794,8 @@ function getAllManualPayment() {
                 <td>${data[i].class.class_name}</td>
                 <td>${data[i].date}</td>
                 <td><b>${data[i].payment_type}</b></td>
+                <td><b>${data[i].fee_type}</b></td>
+                <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
                     <a onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
@@ -770,8 +804,8 @@ function getAllManualPayment() {
             data[i].student.first_name + " " + data[i].student.last_name
           }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${
             data[i].payment_type
-          }~${
-            data[i].amount
+          }~${data[i].payment_description}~${data[i].amount}~${
+            data[i].fee_type
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                     <a onclick="deleteManualPayment(${
@@ -790,8 +824,8 @@ function getAllManualPayment() {
 }
 
 function editManualPaymentDetails() {
-  // 1~8~CHRISTINA ABEGUNDE~2~SS2~03/01/2022~BANK~25000
-  //   0  1          2        3  4        5      6     7
+  // 1~8~CHRISTINA ABEGUNDE~2~SS2~03/01/2022~BANK~Payment description~25000
+  //   0  1          2        3  4        5      6     7                 8
 
   document.getElementById("class").innerHTML =
     `
@@ -814,8 +848,17 @@ function editManualPaymentDetails() {
       localStorage["editManualPayment"].split("~")[6]
     }</option>` + document.getElementById("payment_type").innerHTML;
 
-  document.getElementById("amount").value =
+  document.getElementById("payment_description").value =
     localStorage["editManualPayment"].split("~")[7];
+
+  document.getElementById("amount").value =
+    localStorage["editManualPayment"].split("~")[8];
+
+  document.getElementById("fee_type").innerHTML =
+    `
+  <option value="${localStorage["editManualPayment"].split("~")[9]}">${
+      localStorage["editManualPayment"].split("~")[9]
+    }</option>` + document.getElementById("fee_type").innerHTML;
 }
 
 function updateManualPayment() {
@@ -824,13 +867,19 @@ function updateManualPayment() {
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
   var payment_type = document.getElementById("payment_type").value;
+  var fee_type = document.getElementById("fee_type").value;
+  var payment_description = document.getElementById(
+    "payment_description"
+  ).value;
 
   if (
     student_class != "" &&
     amount != "" &&
     date != "" &&
     student != "" &&
-    payment_type
+    payment_type != "" &&
+    fee_type != "" &&
+    payment_description != ""
   ) {
     // PUSH TO API
     warningtoast("<b>Processing ... Please wait</b>");
@@ -848,6 +897,8 @@ function updateManualPayment() {
         date: date,
         student: student,
         payment_type: payment_type,
+        fee_type: fee_type,
+        payment_description: payment_description,
         session: localStorage["current_session"],
         term: localStorage["current_term"],
       }),
@@ -948,6 +999,7 @@ function getAllPaymentHistory() {
                     }</td>
                     <td>${data[i].class.class_name}</td>
                     <td><b>${data[i].payment_type}</b></td>
+                    <td><b>${data[i].payment_description}</b></td>
                     <td>${data[i].date}</td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     
@@ -1009,6 +1061,105 @@ function searchPayment(search_data) {
       }
     })
     .catch((err) => console.log(err));
+}
+
+// DEBITORS
+function getAllDebitor() {
+  fetch(ip + "/api/bursary/all-debitor", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("debitors_table").innerHTML = ``;
+      if (data.length > 0) {
+        document.getElementById("last_checked").innerHTML +=
+          typeof data[0].last_checked == "undefined"
+            ? " FOR ARREARS HAS NOT BEEN SYNCED"
+            : " WAS LAST UPDATED AT " + data[0].last_checked;
+
+        for (i in data) {
+          document.getElementById("debitors_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td>${data[i].student_id}</td>
+                    <td>${data[i].first_name + " " + data[i].last_name}</td>  
+                    <td>${data[i].class.class_name}</td>
+                    <td>${formatNumber(parseInt(data[i].expected_fee))}</td>
+                    <td>${formatNumber(parseInt(data[i].total_paid))}</td>
+                    <td>${formatNumber(parseInt(data[i].balance))}</td>
+                    <td>${formatNumber(parseInt(data[i].arrears))}</td>
+                    <td>${formatNumber(parseInt(data[i].total_balance))}</td>
+                    
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      } else {
+        document.getElementById(
+          "debitors_table"
+        ).innerHTML = `NO DEBITOR FOUND`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function syncLatestDebitor() {
+  if (
+    confirm(
+      "You should only do this at the end of every term to keep track of student arrears for the term ..... Do you want to proceed ?"
+    )
+  ) {
+    document.getElementById(
+      "debitors_table"
+    ).innerHTML = `<i style='color:black' class='fa fa-spinner fa-spin'></i>  Fetching latest debitor ...`;
+    fetch(ip + "/api/bursary/sync-lastest-debitor", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        session: localStorage["current_session"],
+        term: localStorage["current_term"],
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          window.location.href = "index.html";
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        if (data.success) {
+          successtoast(data.message);
+          getAllDebitor();
+        } else {
+          errortoast(data.message);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 }
 
 // SEARCH DEBOUCER
@@ -1106,13 +1257,17 @@ function debounce(func, timeout = 2000) {
 }
 
 function getDashboardInfo() {
-  fetch(ip + "/api/admin/dashboard-information", {
-    method: "GET",
+  fetch(ip + "/api/bursary/dashboard-information", {
+    method: "POST",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
   })
     .then(function (res) {
       console.log(res.status);
@@ -1125,6 +1280,18 @@ function getDashboardInfo() {
     .then((data) => {
       document.getElementById("student_no").innerHTML = `<span class="counter"
       data-num="${data.student_no}">${data.student_no}</span>`;
+
+      document.getElementById("total_manual_payment").innerHTML = formatNumber(
+        parseInt(data.total_manual_payment)
+      );
+
+      document.getElementById("total_arrears").innerHTML = formatNumber(
+        parseInt(data.total_arrears)
+      );
+
+      document.getElementById("total_expense").innerHTML = formatNumber(
+        parseInt(data.total_expense)
+      );
     })
     .catch((err) => console.log(err));
 }

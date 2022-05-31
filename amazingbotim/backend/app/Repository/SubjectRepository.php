@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Model\SessionModel;
 use App\Model\SubjectModel;
 use App\Model\SubjectRegistrationModel;
+use App\Service\AdminService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,9 @@ class SubjectRepository
     public function createSubject(SubjectModel $SubjectModel)
     {
         $SubjectModel->save();
+        $AdminService = new AdminService();
+        //CREATE LESSON PLAN
+        $AdminService->createlessonPlan($SubjectModel->id);
         return response()->json(['success' => true, 'message' => 'Subject was created successfully.']);
     }
 

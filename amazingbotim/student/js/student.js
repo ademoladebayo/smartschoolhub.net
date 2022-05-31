@@ -1,6 +1,6 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/amazingbotim";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
 var ip = "https://smartschoolhub.net/backend/amazingbotim";
@@ -154,7 +154,7 @@ function getCurrentSession() {
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >Session not set !</span></div>`;
 
-        alert("Admin has not set session.");
+        alert(data.message);
       }
     })
     .catch((err) => console.log(err));
@@ -197,6 +197,15 @@ function formatNumber(number) {
 }
 
 function loadDashBoardInformation() {
+  student_id = JSON.parse(localStorage["user_data"]).data.student_id;
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/student/" +
+    student_id +
+    ".png";
+
   document.getElementById("user_name").innerHTML = `<b>${
     JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
@@ -207,6 +216,9 @@ function loadDashBoardInformation() {
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
   }</b>`;
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
 }
 
 function getProfileData() {
@@ -707,7 +719,7 @@ function submitCBT(timeup) {
 //   SUBJECT
 function getPreviousSubjectRegistration() {
   registered_subject = [];
-  fetch(ip + "/api/teacher/registered-subject", {
+  fetch(ip + "/api/student/registered-subject-id", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -715,7 +727,7 @@ function getPreviousSubjectRegistration() {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      both_elective_and_compulsory: true,
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
       class: JSON.parse(localStorage["user_data"]).data.class.id,
       session: localStorage["current_session"],
       term: localStorage["current_term"],
@@ -736,7 +748,7 @@ function getPreviousSubjectRegistration() {
 
       document.getElementById("number_registered").innerHTML =
         document.getElementById("number_registered").innerHTML +
-        countDistinct(registered_subject, registered_subject.length);
+        registered_subject.length;
     })
     .catch((err) => console.log(err));
 
@@ -773,6 +785,8 @@ function getAllSubjectForTable() {
 
     .then((data) => {
       document.getElementById("subject_table").innerHTML = ``;
+
+      // FIRST POPULATE COMPULSORY AND ELECTIVE REGISTERED FOR THE STUDENT
       for (i in data) {
         if (data[i].subject_type == "COMPULSORY") {
           document.getElementById("subject_table").innerHTML += `
@@ -931,6 +945,9 @@ function registerSubject() {
             }, 1000);
           } else {
             alert("" + data.message + "");
+            setTimeout(function () {
+              window.parent.location.reload();
+            }, 1000);
           }
         })
         .catch((err) => console.log(err));
@@ -978,9 +995,11 @@ function getRegisteredSubjectForTable() {
                   <td>${data[i].teacher}</td>
                   <td>
                     <button type="button" class="btn btn-primary btn-block"
-                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
                         Materials
+                    </button>
+                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}')">
+                      Lesson Plan
                     </button>
                  </td>
                   
@@ -998,9 +1017,11 @@ function getRegisteredSubjectForTable() {
                   <td>${data[i].teacher}</td>
                   <td>
                     <button type="button" class="btn btn-primary btn-block"
-                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
                         Materials
+                    </button>
+                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}')">
+                      Lesson Plan
                     </button>
                  </td>
                   
@@ -1100,8 +1121,8 @@ async function getTranscript() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" +
-    user_data.data.student_id; +
+    "/backend/storage/app/public/fileupload/student/" +
+    user_data.data.student_id +
     ".png";
 
   // STUDENT_IMAGE
@@ -1443,6 +1464,7 @@ function getResult(value) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
+      user_type:"STUDENT",
       student_id: JSON.parse(localStorage["user_data"]).data.id,
       class_id: JSON.parse(localStorage["user_data"]).data.class.id,
       session: value.split("_")[1],
@@ -1458,6 +1480,15 @@ function getResult(value) {
     })
 
     .then((data) => {
+      if (!data.success) {
+        document.getElementById(value).innerHTML = `
+        <hr style="color: black; border: 1px solid black">
+        <h3 style="text-align: center;">${data.message}</h3>
+        <hr style="color: black; border: 1px solid black">
+        `;
+        return 0;
+      }
+
       c = 1;
       if (data.result.length > 0) {
         data.result.forEach((result) => {
@@ -1642,7 +1673,9 @@ function getAttendanceSummary(value) {
                 <td>
                     ${attendance.date}</td>
                 <td>
-                ${attendance.time}</td>
+                ${attendance.time_in}</td>
+                <td>
+                ${attendance.time_out}</td>
 
             </tr>
             `;
@@ -1688,6 +1721,66 @@ function getAttendanceSummary(value) {
     .catch((err) => console.log(err));
 }
 
+// LESSON PLAN
+function getLessonPlan(week) {
+  if (week == "") {
+    week = document.getElementById("week").value;
+  }
+
+  fetch(ip + "/api/teacher/lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: localStorage["LESSON-PLAN"].split("-")[0],
+      week: week,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("lesson_plan_for").innerHTML =
+        "LESSON PLAN FOR " +
+        localStorage["LESSON-PLAN"].split("-")[1] +
+        " " +
+        localStorage["LESSON-PLAN"].split("-")[2];
+
+      document.getElementById("week1").innerHTML =
+        ` <option value="${data.week}">${data.week}</option>` +
+        document.getElementById("week1").innerHTML;
+
+      document.getElementById("instructional_material").value =
+        data.instructional_material;
+      document.getElementById("previous_knowledge").value =
+        data.previous_knowledge;
+      document.getElementById("previous_lesson").value = data.previous_lesson;
+      document.getElementById("behavioural_objective").value =
+        data.behavioural_objective;
+      document.getElementById("content").value = data.content;
+      document.getElementById("presentation").value = data.presentation;
+      document.getElementById("evaluation").value = data.evaluation;
+      document.getElementById("conclusion").value = data.conclusion;
+      document.getElementById("assignment").value = data.assignment;
+      document.getElementById("lesson_id").value = data.id;
+    })
+    .catch((err) => console.log(err));
+}
+
+function loadLessonPage(value) {
+  localStorage.setItem("LESSON-PLAN", value);
+  goTo("lesson-plan.html");
+}
+
 // ID CARD
 async function getIDCard() {
   await getSchoolDetails();
@@ -1699,7 +1792,10 @@ async function getIDCard() {
 
   // IMAGE URL
   url =
-    domain + "/backend/storage/app/public/fileupload/" + student_id + ".png";
+    domain +
+    "/backend/storage/app/public/fileupload/student/" +
+    student_id +
+    ".png";
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
@@ -1740,7 +1836,7 @@ async function getIDCard() {
 
 // FEE
 function getFee() {
-  fetch(ip + "/api/student/all-fee", {
+  return fetch(ip + "/api/student/all-fee", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -1764,13 +1860,16 @@ function getFee() {
     .then((data) => {
       localStorage.setItem("fee", JSON.stringify(data));
       document.getElementById("due_balance").innerHTML =
-        "₦" + formatNumber(data.due_balance);
+        "₦" + formatNumber(data.total_due_balance);
     })
     .catch((err) => console.log(err));
 }
 
 function loadFeeBreakdown() {
   data = JSON.parse(localStorage["fee"]);
+
+  optional_fee = [];
+  optional_fee = data.optional_fee_id;
 
   document.getElementById("expected_amount").innerHTML =
     "₦" + formatNumber(data.expected_amount);
@@ -1779,13 +1878,28 @@ function loadFeeBreakdown() {
   document.getElementById("due_balance").innerHTML =
     "₦" + formatNumber(data.due_balance);
 
-  document.getElementById("amount").value = data.due_balance;
+  document.getElementById("arrears").innerHTML =
+    "₦" + formatNumber(data.arrears);
+
+  document.getElementById("total_due_balance").innerHTML =
+    "₦" + formatNumber(data.total_due_balance);
+
+  // document.getElementById("amount").value = data.due_balance;
 
   document.getElementById("fee_table").innerHTML = ``;
   c = 1;
   data.fee_breakdown.forEach((fee) => {
     document.getElementById("fee_table").innerHTML += `
     <tr>
+         ${
+           fee.type == "COMPULSORY"
+             ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+         value="${fee.id}" checked  onclick="this.checked = !this.checked">`
+             : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+             value="${fee.id}"  ${
+                 optional_fee.includes(fee.id.toString()) ? `checked` : ``
+               }>`
+         }
          <td>${c}.</td>
          <td>${fee.description}</td>
          <td>${fee.type}</td>
@@ -1835,6 +1949,8 @@ function getAllPaymentHistory() {
             
                     <td>${c}.</td>
                     <td><b>${data[i].payment_type}</b></td>
+                    <td><b>${data[i].payment_description}</b></td>
+                    <td><b>${data[i].fee_type}</b></td>
                     <td>${data[i].date}</td>
                     <td>${data[i].session}</td>
                     <td>${data[i].term}</td>
@@ -1847,6 +1963,177 @@ function getAllPaymentHistory() {
       }
     })
     .catch((err) => console.log(err));
+}
+
+// GENERATE PAYMENT
+function generatePayment() {
+  var optional_fee_id = [];
+
+  var fee_optional = document.getElementsByName("fee_optional");
+  for (var i = 0; i < fee_optional.length; i++) {
+    if (fee_optional[i].checked == true) {
+      optional_fee_id.push(fee_optional[i].value);
+    }
+  }
+  console.log(optional_fee_id);
+
+  if (optional_fee_id.length > 0) {
+    if (
+      !confirm(
+        "Kindly confirm you would like to add the selected optional fee for " +
+          localStorage["current_session"] +
+          " " +
+          localStorage["current_term"]
+      )
+    ) {
+      return 0;
+    }
+  }
+
+  document.getElementById("add_optional_fee").innerHTML = `<i
+      class="fa fa-spinner fa-spin"></i> Processing Please wait ...`;
+
+  // PUSH TO API
+  fetch(ip + "/api/student/add-optional-fee", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      optional_fee_id: optional_fee_id,
+      class: JSON.parse(localStorage["user_data"]).data.class.id,
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      if (data.success) {
+        getFee();
+        loadFeeBreakdown();
+        // LOAD PAYMENT SLIP PAGE
+        window.parent.location.assign(domain + "/student/payment-slip.html");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+async function getPaymentSlip(loadPage) {
+  await getFee();
+  if (loadPage) {
+    window.parent.location.assign(domain + "/student/payment-slip.html");
+  } else {
+    data = JSON.parse(localStorage["fee"]);
+
+    optional_fee = [];
+    optional_fee = data.optional_fee_id;
+
+    // SLIP HEADER
+    user_data = JSON.parse(localStorage["user_data"]);
+
+    // IMAGE URL
+    url =
+      domain +
+      "/backend/storage/app/public/fileupload/student/" +
+      user_data.data.student_id +
+      ".png";
+
+    // STUDENT_IMAGE
+    document.getElementById("student_image").src = url;
+
+    // POPULATE STUDENTS INFORMATION
+    document.getElementById("full_name").innerHTML =
+      "<b>" +
+      user_data.data.last_name +
+      "</b>" +
+      " " +
+      user_data.data.first_name +
+      " " +
+      user_data.data.middle_name;
+
+    document.getElementById("student_id").innerHTML = user_data.data.student_id;
+    document.getElementById("class_sector").innerHTML =
+      user_data.data.class.class_sector;
+    document.getElementById("school_details").innerHTML =
+      localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+
+    document.getElementById("student_class").innerHTML =
+      user_data.data.class.class_name;
+
+    document.getElementById("session").innerHTML =
+      localStorage["current_session"];
+
+    document.getElementById("term").innerHTML = localStorage["current_term"];
+
+    document.getElementById("date_generated").innerHTML =
+      getDate().split("~")[1];
+
+    // SLIP FOOTER
+    document.getElementById("total_expected").innerHTML =
+      "₦" + formatNumber(data.expected_amount);
+    document.getElementById("total_paid").innerHTML =
+      "₦" + formatNumber(data.total_paid);
+    document.getElementById("percentage_paid").innerHTML = data.percentage_paid;
+    document.getElementById("balance").innerHTML =
+      "₦" + formatNumber(data.due_balance);
+
+    document.getElementById("arrears").innerHTML =
+      "₦" + formatNumber(data.arrears);
+
+    document.getElementById("total_due_balance").innerHTML =
+      "₦" + formatNumber(data.total_due_balance);
+
+    document.getElementById("payment_slip_table").innerHTML = ``;
+
+    c = 1;
+    data.fee_breakdown.forEach((fee) => {
+      if (fee.type == "OPTIONAL" && !optional_fee.includes(fee.id.toString())) {
+        return;
+      }
+
+      document.getElementById("payment_slip_table").innerHTML += `
+    <tr>
+        <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+        value="${fee.id}" checked  onclick="this.checked = !this.checked">
+         <td>${c}.</td>
+         <td>${fee.description}</td>
+         <td>${fee.type}</td>
+         <td>${
+           fee.class == JSON.parse(localStorage["user_data"]).data.class.id
+             ? JSON.parse(localStorage["user_data"]).data.class.class_name
+             : fee.class
+         }</td>
+        <td>₦${formatNumber(fee.amount)}</td>
+    </tr>
+    `;
+
+      c = c + 1;
+    });
+  }
+}
+
+function download() {
+  const payment_slip = this.document.getElementById("payment-slip");
+  console.log(payment_slip);
+  console.log(window);
+  var opt = {
+    // margin: 1,
+    // filename: "myfile.pdf",
+    // image: { type: "jpeg", quality: 0.98 },
+    // html2canvas: { scale: 2 },
+    // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+  html2pdf().from(payment_slip).set(opt).save();
 }
 
 // PRINT
@@ -1966,6 +2253,18 @@ function getSchoolDetails() {
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
     })
     .catch((err) => console.log(err));
+}
+
+// GET TODAY'S DATE
+function getDate() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, "0");
+  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  var yyyy = today.getFullYear();
+  time = today.getHours() + ":" + today.getMinutes();
+  date = dd + "/" + mm + "/" + yyyy;
+
+  return time + "~" + date;
 }
 
 // TOAST

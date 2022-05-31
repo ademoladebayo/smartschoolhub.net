@@ -6,6 +6,9 @@ use App\Model\ClassModel;
 use App\Model\SubjectModel;
 use App\Model\StudentModel;
 use App\Model\AdminModel;
+use App\Model\ControlPanelModel;
+use App\Model\InventoryModel;
+use App\Model\LessonPlanModel;
 use App\Model\TeacherModel;
 use App\Model\TeacherAttendanceModel;
 use App\Repository\ClassRepository;
@@ -357,11 +360,163 @@ class AdminService
         return  $TeacherAttendanceModel->with('teacher')->where('date', $request->date)->get();
     }
 
+    // CONTROL PANEL
+    public function saveControl(Request $request)
+    {
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel->access_result = $request->access_result;
+        $ControlPanelModel->register_subject = $request->register_subject;
+        $ControlPanelModel->check_debitors = $request->check_debitors;
+        $ControlPanelModel->max_resumption_time = $request->max_resumption;
+        $ControlPanelModel->save();
+
+        return response()->json(['success' => true, 'message' => "Control Saved."]);
+    }
+
+    public function isSubjectRegistrationOpened()
+    {
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if ($ControlPanelModel->register_subject == "YES") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isResultAccessOpened()
+    {
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if ($ControlPanelModel->access_result == "YES") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isResumptionTimeCheckOpened()
+    {
+        $response = "";
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if (explode("-", $ControlPanelModel->max_resumption_time)[1] == "YES") {
+            $response =  true . "-" . explode("-", $ControlPanelModel->max_resumption_time)[0];
+        } else {
+            $response =  false . "-" . explode("-", $ControlPanelModel->max_resumption_time)[0];
+        }
+        return $response;
+    }
+
+    public function isCheckDebitorsOpened()
+    {
+        $response = "";
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        if (explode("-", $ControlPanelModel->check_debitors)[1] == "YES") {
+            $response =  true . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
+        } else {
+            $response =  false . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
+        }
+        return $response;
+    }
+
+
     public function getDashboardInfo()
     {
         $StudentRepository = new StudentRepository();
         $TeacherRepository = new TeacherRepository();
 
-        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount()]);
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount() , 'inventory'=> InventoryModel::get()->count()]);
+    }
+
+    public function lessonPlan()
+    {
+        $term = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
+        $week = ['WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7', 'WEEK 8', 'WEEK 9', 'WEEK 10', 'WEEK 11', 'WEEK 12', 'WEEK 13'];
+
+
+        $subjects = SubjectModel::get();
+        $c = 0;
+        foreach ($subjects as $subject) {
+            for ($i = 0; $i < count($term); $i++) {
+                for ($j = 0; $j < count($week); $j++) {
+                    $LessonPlanModel = new  LessonPlanModel();
+                    $LessonPlanModel->subject_id = $subject->id;
+                    $LessonPlanModel->term = $term[$i];
+                    $LessonPlanModel->week = $week[$j];
+                    $LessonPlanModel->instructional_material = "instructional_material for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->previous_knowledge = "previous_knowledge for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->previous_lesson = "previous_lesson for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->behavioural_objective = "behavioural_objective for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->content = "content for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->presentation = "presentation for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->evaluation = "evaluation for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->conclusion = "conclusion for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->assignment = "assignment for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->save();
+                }
+            }
+            $c = $c + 1;
+        }
+
+
+
+        return "Lesson Note Created for ". $c ." subjects.";
+    }
+
+    public function createlessonPlan($subject_id)
+    {
+        $term = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
+        $week = ['WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7', 'WEEK 8', 'WEEK 9', 'WEEK 10', 'WEEK 11', 'WEEK 12', 'WEEK 13'];
+
+        
+            for ($i = 0; $i < count($term); $i++) {
+                for ($j = 0; $j < count($week); $j++) {
+                    $LessonPlanModel = new  LessonPlanModel();
+                    $LessonPlanModel->subject_id = $subject_id;
+                    $LessonPlanModel->term = $term[$i];
+                    $LessonPlanModel->week = $week[$j];
+                    $LessonPlanModel->instructional_material = "instructional_material for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->previous_knowledge = "previous_knowledge for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->previous_lesson = "previous_lesson for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->behavioural_objective = "behavioural_objective for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->content = "content for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->presentation = "presentation for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->evaluation = "evaluation for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->conclusion = "conclusion for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->assignment = "assignment for " . $week[$j] . " " . $term[$i];
+                    $LessonPlanModel->save();
+                }
+            }
+        
+
+    }
+
+    // INVENTORY
+    public function createInventory(Request $request)
+    {
+        $InventoryModel = new InventoryModel();
+        $InventoryModel->item = $request->item;
+        $InventoryModel->description = $request->description;
+        $InventoryModel->quantity = $request->quantity;
+        $InventoryModel->date_created = $request->date_created;
+        $InventoryModel->last_modified = $request->last_modified;
+        $InventoryModel->save();
+        return response()->json(['success' => true, 'message' => 'Item was created successfully.']);
+    }
+
+    public function editInventory(Request $request)
+    {
+        $InventoryModel = InventoryModel::find($request->id);
+        $InventoryModel->item = $request->item;
+        $InventoryModel->description = $request->description;
+        $InventoryModel->quantity = $request->quantity;
+        $InventoryModel->last_modified = $request->last_modified;
+        $InventoryModel->save();
+        return response()->json(['success' => true, 'message' => 'Item was updated successfully.']);
+    }
+
+    public function deleteInventory($id)
+    {
+        InventoryModel::find($id)->delete();
+        return response()->json(['success' => true, 'message' => 'Item was deleted successfully.']);
+   
     }
 }

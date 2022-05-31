@@ -116,7 +116,7 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -159,7 +159,8 @@
                                     <div class="item-content">
                                         <div style="font-family: Rowdies; color: black;" class="item-title">Students
                                         </div>
-                                        <div id="student_no" style="font-family: Rowdies; color: black;"><span class="counter" data-num="0">0</span>
+                                        <div id="student_no" style="font-family: Rowdies; color: black;"><span
+                                                class="counter" data-num="0">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -178,7 +179,8 @@
                                     <div class="item-content">
                                         <div style="font-family: Rowdies; color: black;" class="item-title">Online
                                             Payment</div>
-                                        <div id="online_payment" style="font-family: Rowdies; color: black;"><span class="counter" data-num="0">0</span>
+                                        <div id="online_payment" style="font-family: Rowdies; color: black;"><span
+                                                class="counter" data-num="0">0</span>
                                         </div>
                                     </div>
                                 </div>
@@ -197,7 +199,9 @@
                                     <div class="item-content">
                                         <div style="font-family: Rowdies; color: black;" class="item-title">Manual
                                             Payment</div>
-                                        <div id="manual_payment" style="font-family: Rowdies; color: black;"><span class="counter" data-num="0">0</span>
+                                        <div id="manual_payment" style="font-family: Rowdies; color: black;">
+                                            <span>₦</span><span id="total_manual_payment">0</span>
+                                            <small>Arrears : ₦</small><small id="total_arrears">0</small>
                                         </div>
                                     </div>
                                 </div>
@@ -214,9 +218,11 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="item-content">
-                                        <div style="font-family: Rowdies; color: black;" class="item-title">Expense</div>
-                                        <div id="expense" style="font-family: Rowdies; color: black;"><span>₦</span><span class="counter"
-                                                data-num="0">0</span></div>
+                                        <div style="font-family: Rowdies; color: black;" class="item-title">Expense
+                                        </div>
+                                        <div id="expense" style="font-family: Rowdies; color: black;">
+                                            <span>₦</span><span id="total_expense">0</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -478,7 +484,7 @@
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
     <script src="../js/myscript.js"></script>
-    <script src="./js/bursary.js"></script>
+    <script src="./js/bursary.js?v=1"></script>
     <script src="../common-library.js"></script>
 
 

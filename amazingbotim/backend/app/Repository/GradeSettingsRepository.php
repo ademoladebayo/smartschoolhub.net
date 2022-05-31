@@ -37,6 +37,7 @@ class GradeSettingsRepository
     {
         GradeSettingsModel::find($grade_id)->delete();
         return response()->json(['success' => true, 'message' => 'Grade was deleted successfully.']);
+   
     }
 
     public function getGradeAndRemark($score)

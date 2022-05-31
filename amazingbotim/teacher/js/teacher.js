@@ -78,7 +78,7 @@ function getCurrentSession() {
         ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >Session not set !</span></div>`;
 
-        alert("Admin has not set session.");
+        alert(data.message);
       }
     })
     .catch((err) => console.log(err));
@@ -179,8 +179,8 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a data-bs-placement="top" data-bs-toggle="tooltip" title="Coming Soon ..."  id="learning-hub" href="#" class="nav-link"><i
-                class="flaticon-open-book"></i><span>Learning Hub <sup><small>Coming Soon ...</small></sup></span></a>
+        <a data-bs-placement="top" data-bs-toggle="tooltip" title="Coming Soon ..."  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+                class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
 
     
@@ -1108,7 +1108,7 @@ function getTranscript() {
     "/backend/storage/app/public/fileupload/student/" +
     user_data.student_id +
     ".png";
-  // "https://imode.smartschoolhub.net/backend/storage/app/public/fileupload/2022-STD-015.png"
+
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
 
@@ -1422,6 +1422,7 @@ function getResult(value) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
+      user_type: "TEACHER",
       student_id: JSON.parse(localStorage["student_result"]).id,
       class_id: JSON.parse(localStorage["student_result"]).class.id,
       session: value.split("_")[1],
@@ -3368,6 +3369,168 @@ function takeAttendanceByStudentID() {
     .catch((err) => console.log(err));
 }
 
+// LESSON PLAN
+function getLessonPlan(week) {
+  if (week == "") {
+    week = document.getElementById("week").value;
+  }
+
+  fetch(ip + "/api/teacher/lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: localStorage["LESSON-PLAN"].split("-")[0],
+      week: week,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("lesson_plan_for").innerHTML =
+        "LESSON PLAN FOR " +
+        localStorage["LESSON-PLAN"].split("-")[1] +
+        " " +
+        localStorage["LESSON-PLAN"].split("-")[2];
+
+      document.getElementById("week1").innerHTML =
+        ` <option value="${data.week}">${data.week}</option>` +
+        document.getElementById("week1").innerHTML;
+
+      document.getElementById("instructional_material").value =
+        data.instructional_material;
+      document.getElementById("previous_knowledge").value =
+        data.previous_knowledge;
+      document.getElementById("previous_lesson").value = data.previous_lesson;
+      document.getElementById("behavioural_objective").value =
+        data.behavioural_objective;
+      document.getElementById("content").value = data.content;
+      document.getElementById("presentation").value = data.presentation;
+      document.getElementById("evaluation").value = data.evaluation;
+      document.getElementById("conclusion").value = data.conclusion;
+      document.getElementById("assignment").value = data.assignment;
+      document.getElementById("lesson_id").value = data.id;
+    })
+    .catch((err) => console.log(err));
+}
+
+function getAssignedSubjectForLearningHub() {
+  var c = 1;
+  // GET ASSIGNED SUBJECT
+  fetch(ip + "/api/teacher/assigned-subject", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      teacher_id: JSON.parse(localStorage["user_data"]).data.id,
+      //   session: localStorage["current_session"],
+      //   term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        // window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("subject_table").innerHTML = ``;
+      for (i in data) {
+        document.getElementById("subject_table").innerHTML += `
+                  <tr>
+          
+                        <td>${c}.</td>
+                        <td> <small>${data[i].subject_name}</td>
+                        <td>${data[i].class.class_name}</td>
+                        <td>
+                          <button type="button" class="btn btn-primary btn-block"
+                              data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
+                              Materials
+                          </button>
+                          <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}')">
+                            Lesson Plan
+                          </button>
+                         </td>
+                        
+                     
+                        
+              
+                    <tr>`;
+
+        c = c + 1;
+      }
+      document.getElementById("assigned_registered").innerHTML =
+        document.getElementById("assigned_registered").innerHTML + (c - 1);
+    })
+    .catch((err) => console.log(err));
+}
+
+function saveLessonPlan() {
+  warningtoast("Processing ... please wait");
+  fetch(ip + "/api/teacher/save-lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      week: document.getElementById("week1").value,
+      instructional_material: document.getElementById("instructional_material")
+        .value,
+      previous_knowledge: document.getElementById("previous_knowledge").value,
+      previous_lesson: document.getElementById("previous_lesson").value,
+      behavioural_objective: document.getElementById("behavioural_objective")
+        .value,
+      content: document.getElementById("content").value,
+      presentation: document.getElementById("presentation").value,
+      evaluation: document.getElementById("evaluation").value,
+      conclusion: document.getElementById("conclusion").value,
+      assignment: document.getElementById("assignment").value,
+      id: document.getElementById("lesson_id").value,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function loadLessonPage(value) {
+  localStorage.setItem("LESSON-PLAN", value);
+  goTo("lesson-plan.html");
+}
+
 // CHANGE PASSWORD
 function changePassword() {
   var current_password = document
@@ -3456,19 +3619,19 @@ function getDate() {
 }
 
 // PRINT
-function print() {
-  var divContents = document.getElementById("attendance_table").innerHTML;
-  var header = document.getElementById("header").innerHTML;
-  console.log(divContents);
-  var a = window.open("", "", "height=500, width=500");
-  a.document.write("<html>");
-  a.document.write(header);
-  a.document.write("<body > <h1>Div contents are <br>");
-  a.document.write(divContents);
-  a.document.write("</body></html>");
-  a.document.close();
-  a.print();
-}
+// function print() {
+//   var divContents = document.getElementById("attendance_table").innerHTML;
+//   var header = document.getElementById("header").innerHTML;
+//   console.log(divContents);
+//   var a = window.open("", "", "height=500, width=500");
+//   a.document.write("<html>");
+//   a.document.write(header);
+//   a.document.write("<body style="font-family: Poppins; font-weight: bold;"  > <h1>Div contents are <br>");
+//   a.document.write(divContents);
+//   a.document.write("</body></html>");
+//   a.document.close();
+//   a.print();
+// }
 
 // ID
 function getIDCard() {
@@ -3714,6 +3877,16 @@ function countDistinct(arr, n) {
     if (i === j) res++;
   }
   return res;
+}
+
+function editLessonPlan() {
+  document.getElementById("save_lesson_bt").hidden = false;
+
+  lesson_content = document.getElementsByName("lesson_plan_content");
+
+  lesson_content.forEach((element) => {
+    element.disabled = false;
+  });
 }
 
 // GET SCHOOL DETAILS

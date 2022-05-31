@@ -23,7 +23,7 @@
     <script type="text/javascript" src="./js/instascan.min.js"></script>
 </head>
 
-<body style="background: #ffffff;" onload="getTranscript()">
+<body   style="background: #ffffff;" onload="getTranscript()">
 
 
     <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
@@ -66,13 +66,15 @@
 
                     <div class="w-100" style="margin-bottom: 0px;"></div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" style="display: flex;
+                    justify-content: center;">
                         <div id="verificationQR" style="margin-left: 50px;margin-top: 30px;">
 
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" style="display: flex;
+                    justify-content: center;">
                         <div style="margin-top: 30px;">
                             <p id="full_name" style="font-size: 14px;">_____________________________</p>
                             <p id="student_id" style="font-size: 14px;font-family: Quicksand, sans-serif;">
@@ -85,8 +87,8 @@
                         </div>
                     </div>
                     <div class="col-md-4"><br>
-                        <img style="margin-bottom: 15px; margin-left: 80px;" id="student_image" src="../assets/img/sample_image.png"
-                            width="110px">
+                        <img style="margin-bottom: 15px; margin-left: 80px;" id="student_image"
+                            src="../assets/img/sample_image.png" width="110px">
                     </div>
                 </div>
             </div>

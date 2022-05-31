@@ -10,7 +10,7 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 var ip = "https://smartschoolhub.net/backend/amazingbotim";
 var domain = "https://amazingbotim.smartschoolhub.net";
 
-// REMOTE ACCESS
+// // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.net";
 
@@ -23,7 +23,6 @@ window.addEventListener("offline", () =>
 
 getSchoolDetails();
 getCurrentSession();
-
 
 function changeLogo() {
   document.getElementById("logo").innerHTML =
@@ -223,9 +222,14 @@ function loadSideNav(page) {
         <span>Staff Attendance</span></a>
     </li>
 
+    <li class="nav-item">
+        <a  id="control-panel" href="control-panel.html" class="nav-link"> <i class="flaticon-settings-work-tool"></i></i>
+        <span>Control Panel</span></a>
+    </li>
 
     <li class="nav-item">
-        <a  id="inventory" href="#?inventory.html" class="nav-link"><i class="fas fa-box-open"></i><span>Inventory <sup><small>Coming Soon ...</small></sup></span></a>
+        <a  id="inventory" href="inventory.html" class="nav-link"><i class="fas fa-box-open"></i>
+        <span>Inventory <small><sup><span style="color:white" class="badge bg-success"><b>NEW</b></span></sup></small></span></a>
     </li>
 
 
@@ -2654,7 +2658,6 @@ function getAllSubjectForTable() {
       }
       return res.json();
     })
-
     .then((data) => {
       console.log("DEBUG =>   RESULT: " + data);
       document.getElementById("subject_table").innerHTML = ``;
@@ -4123,6 +4126,346 @@ function getDashboardInfo() {
 
       document.getElementById("teacher_no").innerHTML = `<span class="counter"
       data-num="${data.teacher_no}">${data.teacher_no}</span>`;
+
+      document.getElementById("no_inventory_item").innerHTML = data.inventory;
+    })
+    .catch((err) => console.log(err));
+}
+
+// CONTROL PANEL
+function saveControl() {
+  warningtoast("Saving please wait ...");
+  fetch(ip + "/api/admin/control-panel", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      access_result: document.getElementById("access_result").checked
+        ? "YES"
+        : "NO",
+      register_subject: document.getElementById("register_subject").checked
+        ? "YES"
+        : "NO",
+      check_debitors: document.getElementById("check_debitor").checked
+        ? document.getElementById("check_debitor_percentage").value + "-YES"
+        : document.getElementById("check_debitor_percentage").value + "-NO",
+      max_resumption: document.getElementById("max_resumption").checked
+        ? document.getElementById("resumption_time").value + "-YES"
+        : document.getElementById("resumption_time").value + "-NO",
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast("<b>" + data.message + "</b>");
+        getControl();
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getControl() {
+  fetch(ip + "/api/admin/control-panel", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      data.access_result == "YES"
+        ? (document.getElementById("access_result").checked = true)
+        : "";
+
+      data.register_subject == "YES"
+        ? (document.getElementById("register_subject").checked = true)
+        : "";
+
+      data.check_debitors.split("-")[1] == "YES"
+        ? (document.getElementById("check_debitor").checked = true)
+        : "";
+
+      document.getElementById("check_debitor_percentage").value =
+        data.check_debitors.split("-")[0];
+
+      data.max_resumption_time.split("-")[1] == "YES"
+        ? (document.getElementById("max_resumption").checked = true)
+        : "";
+
+      document.getElementById("resumption_time").value =
+        data.max_resumption_time.split("-")[0];
+    })
+    .catch((err) => console.log(err));
+}
+
+// LESSON PLAN
+function editLessonPlan() {
+  document.getElementById("save_lesson_bt").hidden = false;
+
+  lesson_content = document.getElementsByName("lesson_plan_content");
+
+  lesson_content.forEach((element) => {
+    element.disabled = false;
+  });
+}
+
+// INVENTORY
+function createInventoryItem() {
+  document.getElementById("inventory_table").innerHTML =
+    `<tr id="new_item_roll">
+
+  <td><span class="badge bg-success"><b>NEW</b></span></td>
+  <td id="item" contenteditable="true"> ITEM NAME </td>
+  <td id="description" contenteditable="true"> ITEM DESCRIPTION </td>
+  <td id="quantity" contenteditable="true"> ITEM QUANTITY </td>
+  <td id="">${getDate().split("~")[1]}</td>
+  <td id="">${getDate().split("~")[1]}</td>
+  <td>
+
+
+      <a onclick="saveInventoryItem()" href="#" class="btn btn-primary">
+            Save
+      </a>
+      <a onclick="document.getElementById('new_item_roll').remove()" href="#" class="btn btn-danger">
+            Cancel
+      </a>
+
+  </td>
+</tr>` + document.getElementById("inventory_table").innerHTML;
+}
+
+function saveInventoryItem() {
+  var item = document.getElementById("item").innerHTML;
+  var description = document.getElementById("description").innerHTML;
+  var quantity = document.getElementById("quantity").innerHTML;
+
+  if (description != "" && item != "" && quantity != "") {
+    // PUSH TO API
+    warningtoast("<b>Processing ... Please wait</b>");
+    fetch(ip + "/api/admin/inventory", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        item: item,
+        description: description,
+        quantity: quantity,
+        date_created: getDate().split("~")[1],
+        last_modified: getDate().split("~")[1],
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          window.location.href = "index.html";
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>" + data.message + "</b>");
+          setTimeout(function () {
+            getInventory();
+          }, 1000);
+        } else {
+          errortoast("<b>" + data.message + "</b>");
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that compulsory field is not empty.</b>");
+  }
+}
+
+function getInventory() {
+  fetch(ip + "/api/admin/inventory", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("inventory_table").innerHTML = ``;
+      if(data.length > 0){
+        data.forEach((data) => {
+          document.getElementById("inventory_table").innerHTML += `
+          <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}id="${data.id}">
+          <td>${c}.</td>
+          <td id="item${data.id}">${data.item}</td>
+          <td id="description${data.id}">${data.description}</td>
+          <td id="quantity${data.id}">${data.quantity}</td>
+          <td id="date_created${data.id}">${data.date_created}</td>
+          <td id="last_modified${data.id}">${data.last_modified}</td>
+          <td>
+        
+              <a id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
+            data.id
+          })" href="#" class="btn btn-primary" hidden>
+                    Save Update
+              </a>
+              <a id="editButton${data.id}" onclick="allowEdit(${
+            data.id
+          },true)" href="#" class="btn btn-warning">
+                    Edit
+              </a>
+              <a id="deleteButton${data.id}" onclick="deleteInventoryItem(${
+            data.id
+          })" href="#" class="btn btn-danger">
+                    Delete
+              </a>
+  
+              <a id="discardButton${data.id}"onclick="allowEdit(${
+            data.id
+          },false)" href="#" class="btn btn-danger" hidden>
+                    Discard Change
+              </a>
+        
+          </td>
+        </tr>`;
+          c += 1;
+        });
+      }else{
+        document.getElementById("inventory_table").innerHTML = `NO ITEM IN THE INVENTORY`;
+      }
+     
+    })
+    .catch((err) => console.log(err));
+}
+
+function allowEdit(id, action) {
+  if (action) {
+    document.getElementById("item" + id).setAttribute("contenteditable", true);
+    document
+      .getElementById("description" + id)
+      .setAttribute("contenteditable", true);
+    document
+      .getElementById("quantity" + id)
+      .setAttribute("contenteditable", true);
+
+    // ENABLE
+    document.getElementById("saveUpdateButton" + id).hidden = false;
+    document.getElementById("discardButton" + id).hidden = false;
+
+    // DISABLE
+    document.getElementById("updateButton" + id).hidden = true;
+    document.getElementById("deleteButton" + id).hidden = true;
+  } else {
+    getInventory();
+    // document.getElementById("item" + id).setAttribute("contenteditable", false);
+    // document
+    //   .getElementById("description" + id)
+    //   .setAttribute("contenteditable", false);
+    // document
+    //   .getElementById("quantity" + id)
+    //   .setAttribute("contenteditable", false);
+
+    // // DISABLE
+    // document.getElementById("saveUpdateButton" + id).hidden = true;
+    // document.getElementById("discardButton" + id).hidden = true;
+
+    // // ENABLE
+    // document.getElementById("updateButton" + id).hidden = false;
+    // document.getElementById("deleteButton" + id).hidden = false;
+  }
+}
+
+function updateInventoryItem(id) {
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/inventory", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      item: document.getElementById("item" + id).innerHTML,
+      description: document.getElementById("description" + id).innerHTML,
+      quantity: document.getElementById("quantity" + id).innerHTML,
+      last_modified: getDate().split("~")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast("<b>" + data.message + "</b>");
+        setTimeout(function () {
+          getInventory();
+        }, 1000);
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function deleteInventoryItem(id) {
+  fetch(ip + "/api/admin/inventory/" + id, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      successtoast(data.message);
+      getInventory();
     })
     .catch((err) => console.log(err));
 }

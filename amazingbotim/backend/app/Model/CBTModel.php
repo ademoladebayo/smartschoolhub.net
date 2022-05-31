@@ -19,4 +19,6 @@ class CBTModel extends Model
     {
         return $this->hasOne(ClassModel::class, 'id', 'class_id');
     }
+
+    // protected $hidden = ['cbt_answer'];
 }

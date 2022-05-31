@@ -36,7 +36,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="getAllClassForDropDown(); editManualPaymentDetails()">
+<body   onload="getAllClassForDropDown(); editManualPaymentDetails()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -72,7 +72,8 @@
 
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                                         <label>Which Student Made Payment ? *</label>
-                                        <select style="font-style: bold; font-size: 15px; color: black;" id="student" class="select">
+                                        <select style="font-style: bold; font-size: 15px; color: black;" id="student"
+                                            class="select">
                                             <option value="">Loading ...</option>
                                         </select>
 
@@ -100,6 +101,19 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                        <label>Fee Type *</label>
+                                        <select id="fee_type" class="select2">
+                                            <option value="COMPULSORY">COMPULSORY</option>
+                                            <option value="OPTIONAL">OPTIONAL</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                        <label>Payment Description *</label>
+                                        <input oninput="this.value = this.value.toUpperCase()" id="payment_description"
+                                            type="text" placeholder="" class="form-control">
+                                    </div>
                                     <div class="col-12 form-group mg-t-8">
                                         <button onclick="updateManualPayment()"
                                             class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
@@ -139,7 +153,7 @@
     <script src="../assets/js/lib/toastr/toastr.init.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
-    <script src="./js/bursary.js"></script>
+    <script src="./js/bursary.js?v=1"></script>
 </body>
 
 <style>

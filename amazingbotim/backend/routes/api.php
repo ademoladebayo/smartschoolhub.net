@@ -34,6 +34,8 @@ Route::post('admin/signin', 'AdminController@signIn', function () {
 Route::get('test/all-class', 'AdminController@getAllClass', function () {
 })->middleware(Cors::class);
 
+Route::get('admin/create-lesson-note', 'AdminController@lessonPlan', function () {
+})->middleware(Cors::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     // ADMIN {CLASS}
@@ -154,6 +156,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/dashboard-information', 'AdminController@getDashboardInfo', function () {
     })->middleware(Cors::class);
 
+    // ADMIN {CONTROL PANEL}
+    Route::post('admin/control-panel', 'AdminController@saveControl', function () {
+    })->middleware(Cors::class);
+
+    // ADMIN {DASHBOARD INFO}
+    Route::get('admin/control-panel', 'AdminController@getControl', function () {
+    })->middleware(Cors::class);
+
+
+    // ADMIN {INVENTORY SYSTEM}
+    Route::post('admin/inventory', 'AdminController@createInventory', function () {
+    })->middleware(Cors::class);
+
+    Route::get('admin/inventory', 'AdminController@getInventory', function () {
+    })->middleware(Cors::class);
+
+    Route::put('admin/inventory', 'AdminController@editInventory', function () {
+    })->middleware(Cors::class);
+
+    Route::delete('admin/inventory/{id}', 'AdminController@deleteInventory', function () {
+    })->middleware(Cors::class);
+
 
     // =============================================================================
     //               END OF ADMIN ROUTE
@@ -223,9 +247,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('teacher/promote-students', 'TeacherController@promoteStudents', function () {
     })->middleware(Cors::class);
 
-    // TEACHER {CHANGE PASSWORD}
-    Route::post('teacher/change-password', 'TeacherController@changePassword', function () {
+    // TEACHER {LESSON PLAN}
+    Route::post('teacher/save-lesson-plan', 'TeacherController@saveLessonPlan', function () {
     })->middleware(Cors::class);
+
+    Route::post('teacher/lesson-plan', 'TeacherController@lessonPlan', function () {
+    })->middleware(Cors::class);
+
 });
 
 // =============================================================================
@@ -248,6 +276,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('student/registered-subject', 'StudentController@getRegisteredSubject', function () {
     })->middleware(Cors::class);
 
+    Route::post('student/registered-subject-id', 'StudentController@getRegisteredSubjectID', function () {
+    })->middleware(Cors::class);
+
     //STUDENT {CBT}
     Route::get('student/taken-cbt/{cbt_id}/{student_id}', 'StudentController@checkIfStudenHasTakenCBT', function () {
     })->middleware(Cors::class);
@@ -260,6 +291,9 @@ Route::middleware('auth:sanctum')->group(function () {
     })->middleware(Cors::class);
 
     Route::post('student/payment-history', 'StudentController@paymentHistory', function () {
+    })->middleware(Cors::class);
+
+    Route::post('student/add-optional-fee', 'StudentController@addOptionalFee', function () {
     })->middleware(Cors::class);
 
     // STUDENT {RESULT}
@@ -337,6 +371,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('bursary/search-payment-history', 'BursaryController@searchPayment', function () {
     })->middleware(Cors::class);
+
+    // BURSARY {DEBITORS MANAGEMENT}
+    Route::post('bursary/sync-lastest-debitor', 'BursaryController@syncLastestDebitor', function () {
+    })->middleware(Cors::class);
+
+    Route::post('bursary/all-debitor', 'BursaryController@allDebitor', function () {
+    })->middleware(Cors::class);
+
+    // BURSARY {DASHBOARD INFO}
+    Route::post('bursary/dashboard-information', 'BursaryController@getDashboardInfo', function () {
+    })->middleware(Cors::class);
 });
 
 // =============================================================================
@@ -352,6 +397,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('general/school-details', 'GeneralController@getSchoolDetails', function () {
 })->middleware(Cors::class);
+
 
 Route::get('general/current-session', 'GeneralController@getCurrentSession', function () {
 })->middleware(Cors::class);

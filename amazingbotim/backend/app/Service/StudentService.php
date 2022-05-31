@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Model\AdminModel;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
 use App\Model\ClassModel;
+use App\Model\DebitorModel;
 use App\Model\FeeModel;
 use App\Model\PaymentHistoryModel;
 use App\Model\StudentAttendanceModel;
@@ -12,9 +14,12 @@ use App\Model\StudentModel;
 use App\Model\StudentResultCommentModel;
 use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
+use App\Model\OptionalFeeRequestModel;
+use App\Model\SessionModel;
 use App\Repository\StudentRepository;
 use App\Repository\SubjectRegistrationRepository;
 use App\Repository\GradeSettingsRepository;
+use App\Repository\SessionRepository;
 use App\Util\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +37,11 @@ class StudentService
         } else {
 
             if ($StudentRepository->getPassword($request->id) == $request->password) {
+                // Check if account is disabled
+                if ($student->profile_status == "DISABLED") {
+                    return  response(['success' => false, 'message' => "😔Your account has been disabled, contact the school admin."]);
+                }
+
                 $token = $student->createToken('token')->plainTextToken;
                 return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, ' . $student->first_name, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student)]);
             } else {
@@ -43,6 +53,11 @@ class StudentService
     // SUBJECT
     public function registerSubject(Request $request)
     {
+        // CHECK CONTROL BEFORE REGISTERING SUBJECTS
+        $AdminService = new AdminService();
+        if (!$AdminService->isSubjectRegistrationOpened()) {
+            return  response(['success' => false, 'message' => "Subject Registration Closed !"]);
+        }
 
         // GET PREVIOUS REGISTRATION FOR STUDENT
         $previous_registration_id = [];
@@ -104,6 +119,15 @@ class StudentService
         // return SubjectRegistrationModel::where('student_id', $request->student_id)->with('subject',)->where('class_id', $request->class)->Where('subject_type', 'COMPULSORY')->Where('session', $request->session)->Where('term', $request->term)->get();
     }
 
+    public function getRegisteredSubjectID(Request $request)
+    {
+        $previous_registration_id = [];
+        foreach (SubjectRegistrationModel::select("subject_id")->where('student_id', $request->student_id)->where('class_id', $request->class)->Where('session', $request->session)->Where('term', $request->term)->get() as $data) {
+            array_push($previous_registration_id, $data->subject_id);
+        }
+        return  $previous_registration_id;
+    }
+
 
 
     public function getDashBoardInformation($student)
@@ -147,34 +171,81 @@ class StudentService
     // FEE AND PAYMENT
     function allFee(Request $request)
     {
+        $bursaryService = new BursaryService();
         $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
         $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
-        $fees =  FeeModel::where('class', $class)->orWhere('class', $class_sector)->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
+        $fees =  FeeModel::where('class', $class)->where('session', $request->session)->where('term', $request->term)
+            ->orWhere('class', $class_sector)->where('session', $request->session)->where('term', $request->term)
+            ->orWhere('class', 'ALL STUDENT')->where('session', $request->session)->where('term', $request->term)->get();
 
-        $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->get();
-
-
-        // GET EXPECTED TOTAL
-        $expected_amount = 0;
-        foreach ($fees as $fee) {
-            $expected_amount = $expected_amount + intval($fee->amount);
-        }
-
-        // GET TOTAL PAID
+        $expected_fee = 0;
+        $optional_fee = 0;
         $total_paid = 0;
-        foreach ($payment_history as $payment) {
-            $total_paid = $total_paid + intval($payment->amount);
+        $arrears = 0;
+
+
+        // SO GET STUDENT'S, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+        $expected_fee = $bursaryService->getPayableForClass($class, $request->session, $request->term);
+        $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
+        $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
+        $optional_fee_id =  $bursaryService->getOptionalFeeId($request->student_id, $request->session, $request->term);
+
+        $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $request->student_id)->get();
+        Log::alert("ARREARS : " . $arrears);
+
+        if (count($arrears) > 0) {
+            $student["last_checked"] = $arrears[0]->last_checked;
+            $arrears = $arrears[0]->amount;
+        } else {
+            $arrears = 0;
         }
 
+        $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
+
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
+    }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_amount, 'total_paid' => $total_paid, 'due_balance' => ($expected_amount - $total_paid)];
+    public function addOptionalFee(Request $request)
+    {
+
+        // FIRST DELETE PREVIOUS OPTIONAL FEE REQUEST FOR THAT TERM
+        OptionalFeeRequestModel::where('student_id', $request->student_id)->where('session', $request->session)->Where('term', $request->term)->delete();
+
+        // PERSIST THE NEW REQUEST
+        foreach ($request->optional_fee_id as $fee_id) {
+            $OptionalFeeRequestModel = new OptionalFeeRequestModel();
+            $OptionalFeeRequestModel->student_id = $request->student_id;
+            $OptionalFeeRequestModel->fee_id = $fee_id;
+            $OptionalFeeRequestModel->session = $request->session;
+            $OptionalFeeRequestModel->term = $request->term;
+            $OptionalFeeRequestModel->save();
+        }
+        return ['success' => true];
     }
 
 
     // RESULT
     public function getResult(Request $request)
     {
+        // GET CURRENT SESSION AND TERM
+        $session =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
+        $term =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
+        // CHECK CONTROL BEFORE FETCHING RESULT
+        $SessionRepository = new SessionRepository();
+        $response = json_decode($SessionRepository->getCurrentSession(), true);
+
+        if ($request->user_type == "STUDENT") {
+            if ($session == $request->session && $term == $request->term) {
+                // CHECK CONTROL BEFORE FETCHING RESULT
+                $AdminService = new AdminService();
+                if (!$AdminService->isResultAccessOpened()) {
+                    return  response(['success' => false, 'message' => "RESULT FOR " . $request->session . " " . $request->term . " IS COMING SOON ..."]);
+                }
+            }
+        }
+
+
         // PERCENTAGE AND GRADE POSITION
         $percentage = 0;
         $score_accumulator = 0;
@@ -213,13 +284,21 @@ class StudentService
             $GradeSettingsRepository  = new GradeSettingsRepository();
             $util = new Utils();
 
-            $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($data->total);
-            $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
-            $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+
+            if ($data->total > 0) {
+                $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($data->total);
+                $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+                $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+                $data['position'] =  $util->getPosition(array_search(intval($data->total), $all_score) + 1);
+            } else {
+                $data['grade'] = '--';
+                $data['remark'] = '--';
+                $data['position'] =  '--';
+            }
+
             $data['class_average'] = $avg;
             $data['class_lowest'] = $min;
             $data['class_highest'] = $max;
-            $data['position'] =  $util->getPosition(array_search(intval($data->total), $all_score) + 1);
 
 
             // GET SCORE TOTAL
@@ -234,7 +313,7 @@ class StudentService
         $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
 
 
-        return response()->json(['result' => $result, 'percentage' => $percentage . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
+        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'result' => $result, 'percentage' => number_format($percentage, 2)  . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
     }
 
 
@@ -254,7 +333,7 @@ class StudentService
     {
         $Days = [];
         $DaysOpened = StudentAttendanceModel::select("date")->where("session", $request->session)->where("term", $request->term)->get();
-        $AttendanceSummary = StudentAttendanceModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->get();
+        $AttendanceSummary = StudentAttendanceModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->orderBy('id', 'DESC')->get();
 
         foreach ($DaysOpened as $day) {
             array_push($Days, $day->date);

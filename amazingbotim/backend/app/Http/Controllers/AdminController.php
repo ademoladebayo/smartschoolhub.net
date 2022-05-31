@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\AdminModel;
+use App\Model\ControlPanelModel;
 use App\Repository\ClassRepository;
 use App\Service\AdminService;
 use App\Repository\SubjectRepository;
@@ -11,6 +12,7 @@ use App\Repository\StudentRepository;
 use App\Repository\GradeSettingsRepository;
 use App\Model\SessionModel;
 use App\Model\GradeSettingsModel;
+use App\Model\InventoryModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
@@ -187,7 +189,7 @@ class AdminController extends Controller
         return $SessionModel->get();
     }
 
-    // GRADE SETTINGS
+    //eInventory SETTINGS
     public function createGrade(Request $request)
     {
         $AdminService = new AdminService();
@@ -238,9 +240,54 @@ class AdminController extends Controller
         return $AdminService->getTeacherAttendance($request);
     }
 
+    // CONTROL PANEL
+    public function saveControl(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->saveControl($request);
+    }
+
+
+    public function getControl()
+    {
+     return ControlPanelModel::select("*")->get()[0];
+    }
+
+
     public function getDashboardInfo()
     {
         $AdminService = new AdminService();
         return $AdminService->getDashboardInfo();
     }
+
+    public function lessonPlan()
+    {
+        $AdminService = new AdminService();
+        return $AdminService->lessonPlan();
+    }
+
+    // INVENTORY
+    public function createInventory(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->createInventory($request);
+    }
+
+    public function editInventory(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->editInventory($request);
+    }
+
+    public function getInventory()
+    {
+       return InventoryModel::orderBy('id','DESC')->get();
+    }
+
+    public function deleteInventory($id)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->deleteInventory($id);
+    }
+
 }

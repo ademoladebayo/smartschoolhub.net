@@ -92,7 +92,7 @@ class StudentRepository
     public function updateStudentProfileStatus($id)
     {
         $StudentModel =  StudentModel::find($id);
-        $StudentModel->profile_status =  $StudentModel->profile_status == 'ENABLED' ? 'DISABLE' : 'ENABLED';
+        $StudentModel->profile_status =  $StudentModel->profile_status == 'ENABLED' ? 'DISABLED' : 'ENABLED';
         $StudentModel->save();
         return response()->json(['success' => true, 'message' => 'Profile updated successfully.']);
     }
@@ -112,6 +112,6 @@ class StudentRepository
 
     public function allStudentCount()
     {
-        return DB::select('select count(id) as student_no from student')[0]->student_no;
+        return DB::select('select count(id) as student_no from student where profile_status = "ENABLED"')[0]->student_no;
     }
 }
