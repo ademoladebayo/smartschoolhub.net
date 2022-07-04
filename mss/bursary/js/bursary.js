@@ -1203,15 +1203,19 @@ function getPortalSubscription() {
                     }"><b>${data[i].status}</b></span></td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     <td>   
-                     
-                        <a id="" onclick="paySubscription(${
+                      ${
+                        data[i].status == "NOT PAID" ? 
+                        `<a id="" onclick="paySubscription(${
                           (data[i].id,
                           data[i].amount,
                           data[i].subscription_id,
                           data[i].description)
-                        })" href="#" class="btn btn-primary" hidden>
+                        })" href="#" class="btn btn-primary">
                                  Pay Now
-                            </a>
+                            </a>` : ``
+                      }"
+                     
+            
 
                     </td>
                    </tr>

@@ -402,7 +402,7 @@ class BursaryService
     {
         $StudentRepository = new StudentRepository();
         $active_student = $StudentRepository->allStudentCount();
-        $PortalSubscriptionModel = PortalSubscription::get();
+        $PortalSubscriptionModel = PortalSubscription::orderBy('id', 'DESC')->get();
         if ($PortalSubscriptionModel[0]->status == "NOT PAID") {
             $PortalSubscriptionModel[0]->description = "₦1,000 MULTIPLIED BY " . $active_student . " ACTIVE STUDENT";
             $PortalSubscriptionModel[0]->amount = $active_student * 1000;
