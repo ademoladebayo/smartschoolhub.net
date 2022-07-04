@@ -192,10 +192,15 @@ function getCurrentSession() {
       if (data.success) {
         localStorage.setItem("current_session", data["session"].session);
         localStorage.setItem("current_term", data["session"].term);
-        document.getElementById(
+        if( document.getElementById(
           "session_term"
-        ).innerHTML = `<div id="" class="item-number"><span class="counter"
-            >${data["session"].session} - ${data["session"].term}</span></div>`;
+        ).innerHTML != null){
+          document.getElementById(
+            "session_term"
+          ).innerHTML = `<div id="" class="item-number"><span class="counter"
+              >${data["session"].session} - ${data["session"].term}</span></div>`;
+        }
+       
       } else {
         document.getElementById(
           "session_term"
