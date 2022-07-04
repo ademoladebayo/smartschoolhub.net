@@ -50,6 +50,10 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
+        <a id="portal-subscription" href="portal-subscription" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
+    </li>
+
+    <li class="nav-item">
         <a  id="change-password" href="#?change-password.html" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
@@ -1162,6 +1166,104 @@ function syncLatestDebitor() {
   }
 }
 
+//PAYMENT SUBCRIPTION
+function getPortalSubscription() {
+  fetch(ip + "/api/bursary/portal-subscription", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("subscription_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("subscription_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td>${data[i].subscription_id}</td>
+                    <td>${data[i].description}</td>  
+                    <td><span style="color:white" class="badge ${
+                      data[i].status == "NOT PAID" ? `bg-danger` : `bg-success`
+                    }"><b>${data[i].status}</b></span></td>
+                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    <td>   
+                     
+                        <a id="" onclick="paySubscription(${
+                          (data[i].id, data[i].amount, data[i].subscription_id,data[i].description)
+                        })" href="#" class="btn btn-primary" hidden>
+                                 Pay Now
+                            </a>
+
+                    </td>
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      } else {
+        document.getElementById(
+          "subscription_table"
+        ).innerHTML = `NO DATA FOUND`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function paySubscription(id, amount, subscription_id, description) {
+  trans_response = payWithPaystack(amount);
+
+  if (trans_response == "TRANSACTION FAILED") {
+    return 0;
+  }
+
+  //UPDATE THE SUBCRIPTION TABLE
+  subscription_id += trans_response;
+  warningtoast("Completing process please wait ... ");
+  fetch(ip + "/api/bursary/portal-subscription", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      subscription_id: subscription_id,
+      amount: amount,
+      description:description
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+     if(data.success){
+      successtoast(data.message)
+      getPortalSubscription();
+     }else{
+       errortoast(data.message)
+     }
+    })
+    .catch((err) => console.log(err));
+}
+
 // SEARCH DEBOUCER
 const searchPaymentDebouncer = debounce((search_data) =>
   searchPayment(search_data)
@@ -1231,6 +1333,50 @@ function getAllStudent(class_id) {
       }
     })
     .catch((err) => console.log(err));
+}
+
+function payWithPaystack(amount) {
+  var handler = PaystackPop.setup({
+    key: "pk_live_b42624c22740c8a99ce5172681d43670e8423156", //put your public key here
+    email: "", //put your customer's email here
+    amount: amount * 100, //amount the customer is supposed to pay
+    currency: "NGN",
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Mobile Number",
+          variable_name: "mobile_number",
+          value: "", //customer's mobile number
+        },
+      ],
+    },
+    callback: function (response) {
+      //after the transaction have been completed
+      //make post call  to the server with to verify payment
+      //using transaction reference as post data
+      $.post(
+        "verify.php",
+        { reference: response.reference },
+        function (status) {
+          if (status == "success") {
+            //successful transaction
+            alert("Transaction was successful");
+            return response.reference;
+          }
+          //transaction failed
+          else {
+            alert(response);
+            return "TRANSACTION FAILED";
+          }
+        }
+      );
+    },
+    onClose: function () {
+      //when the user close the payment modal
+      alert("Transaction cancelled");
+    },
+  });
+  handler.openIframe(); //open the paystack's payment modal
 }
 
 // GET TODAY'S DATE

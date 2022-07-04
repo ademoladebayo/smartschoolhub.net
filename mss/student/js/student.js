@@ -40,8 +40,8 @@ function loadSideNav(page) {
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
     <li class="nav-item">
-        <a  id="timetable" href="timetable.html" class="nav-link"><i
-                class="flaticon-calendar"></i><span>Timetable</span></a>
+        <a  id="timetable" href="?#timetable.html" class="nav-link"><i
+                class="flaticon-calendar"></i><span>Timetable<sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">

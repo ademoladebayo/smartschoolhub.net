@@ -10,6 +10,7 @@ use App\Model\FeeModel;
 use App\Model\ExpenseModel;
 use App\Model\PaymentHistoryModel;
 use App\Model\OptionalFeeRequestModel;
+use App\Model\PortalSubscription;
 use App\Model\StudentModel;
 use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
@@ -63,7 +64,7 @@ class BursaryService
                 // PART SETTLEMENT
                 $total_arrears = $total_arrears + intval(str_replace(str_split('₦,()'), '', explode("PAID", explode("AND", $description->payment_description)[0])[1]));
             }
-        } 
+        }
 
 
         // GET TOTAL MANUAL PAYMENT
@@ -381,7 +382,7 @@ class BursaryService
     {
         $bursaryService = new BursaryService();
         $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
-     
+
         $expected_fee = 0;
         $optional_fee = 0;
         $total_paid = 0;
@@ -394,5 +395,29 @@ class BursaryService
 
         $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
         return $percentage_paid;
+    }
+
+
+    function getPortalSubscription()
+    {
+        $StudentRepository = new StudentRepository();
+        $active_student = $StudentRepository->allStudentCount();
+        $PortalSubscriptionModel = PortalSubscription::get();
+        if ($PortalSubscriptionModel[0]->status == "NOT PAID") {
+            $PortalSubscriptionModel[0]->description = "₦1,000 MULTIPLIED BY " . $active_student . " ACTIVE STUDENT";
+            $PortalSubscriptionModel[0]->amount = $active_student * 1000;
+        }
+
+        return  $PortalSubscriptionModel;
+    }
+
+    function editPortalSubscription(Request $request)
+    {
+        $PortalSubscriptionModel = PortalSubscription::find($request->id);
+        $PortalSubscriptionModel->status = "PAID";
+        $PortalSubscriptionModel->subscription_id = $request->subscription_id;
+        $PortalSubscriptionModel->description = $request->description;
+        $PortalSubscriptionModel->save();
+        return response(['success' => true, 'message' => "Payment has successfully been recorded."]);
     }
 }

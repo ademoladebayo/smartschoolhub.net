@@ -382,6 +382,19 @@ Route::middleware('auth:sanctum')->group(function () {
     // BURSARY {DASHBOARD INFO}
     Route::post('bursary/dashboard-information', 'BursaryController@getDashboardInfo', function () {
     })->middleware(Cors::class);
+
+    // BURSARY {PORTAL SUBSCRIPTION}
+    Route::post('bursary/portal-subscription', 'BursaryController@createPortalSubscription', function () {
+    })->middleware(Cors::class);
+
+    Route::get('bursary/portal-subscription', 'BursaryController@getPortalSubscription', function () {
+    })->middleware(Cors::class);
+
+    Route::put('bursary/portal-subscription', 'BursaryController@editPortalSubscription', function () {
+    })->middleware(Cors::class);
+
+    Route::delete('bursary/portal-subscription/{id}', 'BursaryController@deletePortalSubscription', function () {
+    })->middleware(Cors::class);
 });
 
 // =============================================================================

@@ -123,4 +123,18 @@ class BursaryController extends Controller
         $BursaryService = new BursaryService();
         return $BursaryService->getDashboardInfo($request);
     }
+
+    // PORTAL SUBSCRIPTION
+    public function getPortalSubscription(){
+        $BursaryService = new BursaryService();
+        return $BursaryService->getPortalSubscription();
+    }
+
+    public function editPortalSubscription(Request $request)
+    {
+        $BursaryService = new BursaryService();
+        return $BursaryService->editPortalSubscription($request);
+    }
 }
+
+
