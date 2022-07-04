@@ -50,7 +50,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a id="portal-subscription" href="portal-subscription.htmlcl" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
+        <a id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
     </li>
 
     <li class="nav-item">
