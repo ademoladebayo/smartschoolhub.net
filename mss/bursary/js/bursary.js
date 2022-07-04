@@ -194,7 +194,7 @@ function getCurrentSession() {
         localStorage.setItem("current_term", data["session"].term);
         if( document.getElementById(
           "session_term"
-        ).innerHTML != null){
+        ) != null){
           document.getElementById(
             "session_term"
           ).innerHTML = `<div id="" class="item-number"><span class="counter"
