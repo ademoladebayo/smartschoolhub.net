@@ -192,15 +192,13 @@ function getCurrentSession() {
       if (data.success) {
         localStorage.setItem("current_session", data["session"].session);
         localStorage.setItem("current_term", data["session"].term);
-        if( document.getElementById(
-          "session_term"
-        ) != null){
+        var element = document.getElementById("session_term")
+        if (typeof element != "undefined" && element != null) {
           document.getElementById(
             "session_term"
           ).innerHTML = `<div id="" class="item-number"><span class="counter"
               >${data["session"].session} - ${data["session"].term}</span></div>`;
         }
-       
       } else {
         document.getElementById(
           "session_term"
@@ -1207,7 +1205,10 @@ function getPortalSubscription() {
                     <td>   
                      
                         <a id="" onclick="paySubscription(${
-                          (data[i].id, data[i].amount, data[i].subscription_id,data[i].description)
+                          (data[i].id,
+                          data[i].amount,
+                          data[i].subscription_id,
+                          data[i].description)
                         })" href="#" class="btn btn-primary" hidden>
                                  Pay Now
                             </a>
@@ -1247,7 +1248,7 @@ function paySubscription(id, amount, subscription_id, description) {
       id: id,
       subscription_id: subscription_id,
       amount: amount,
-      description:description
+      description: description,
     }),
   })
     .then(function (res) {
@@ -1259,12 +1260,12 @@ function paySubscription(id, amount, subscription_id, description) {
     })
 
     .then((data) => {
-     if(data.success){
-      successtoast(data.message)
-      getPortalSubscription();
-     }else{
-       errortoast(data.message)
-     }
+      if (data.success) {
+        successtoast(data.message);
+        getPortalSubscription();
+      } else {
+        errortoast(data.message);
+      }
     })
     .catch((err) => console.log(err));
 }
