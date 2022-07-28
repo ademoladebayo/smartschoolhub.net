@@ -1,3 +1,10 @@
+
+:root {
+  --front-color:#ff9d01; 
+  --back-color: #051f3e;
+}
+
+
 * {
   margin: 00px;
   padding: 00px;
@@ -20,14 +27,14 @@
   width: 250px;
   position: relative;
   border-radius: 15px;
-  border-color: #042954;
+  border-color: var(--back-color);
   border-style: solid;
 }
 
 .top {
   height: 30%;
   width: 100%;
-  background-color: rgb(116, 150, 187) !important;
+  background-color: var(--front-color) !important;
   position: relative;
   z-index: 5;
   border-top-left-radius: 10px;
@@ -97,9 +104,9 @@
   height: 375px;
   width: 250px;
   border-radius: 10px;
-  background-color: #042954 !important;
+  background-color: var(--back-color) !important;
   border-style: solid;
-  border-color: #042954;
+  border-color: var(--back-color);
 }
 .qrcode {
   /* padding: 10px; */

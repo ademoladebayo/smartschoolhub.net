@@ -3,11 +3,11 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/amazingbotim";
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var ip = "https://smartschoolhub.net/backend/amazingbotim";
 var domain = "https://amazingbotim.smartschoolhub.net";
 
 // // REMOTE ACCESS
@@ -188,10 +188,10 @@ function loadSideNav(page) {
     <a  onclick="goTo('subject-registration.html')"  id="subject-registration" href="#" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
     </li>
 
-    <li class="nav-item">
+    <!-- <li class="nav-item">
     <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
     <span>Attendance Card</span></a>
-    </li>
+    </li> --!>
 
 
     <li class="nav-item">
@@ -358,8 +358,9 @@ function getAllStudentForTable() {
       var c = 1;
       if (data.length > 0) {
         for (i in data) {
+          student_class = data[i].class == null ? `GRADUATED` : data[i].class.id
           if (
-            data[i].class.id !=
+            student_class !=
             JSON.parse(localStorage["user_data"]).data.assigned_class.id
           ) {
             continue;
@@ -557,11 +558,13 @@ function getAllStudentForTable() {
 
           c = c + 1;
         }
+        //paginateTable();
       } else {
         document.getElementById(
           "student_table"
         ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
+  
     })
     .catch((err) => console.log(err));
 }
@@ -3092,6 +3095,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           "student_registered"
         ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
+     // paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -3910,6 +3914,11 @@ function getSchoolDetails() {
     .catch((err) => console.log(err));
 }
 
+// PAGENATION
+function paginateTable() {
+  $("#paginate").DataTable();
+  $(".dataTables_length").addClass("bs-select");
+}
 // TOAST
 function successtoast(message, time) {
   toastr.success(message, "", {

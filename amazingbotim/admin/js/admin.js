@@ -3,11 +3,11 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/amazingbotim";
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var ip = "https://smartschoolhub.net/backend/amazingbotim";
 var domain = "https://amazingbotim.smartschoolhub.net";
 
 // // REMOTE ACCESS
@@ -23,6 +23,7 @@ window.addEventListener("offline", () =>
 
 getSchoolDetails();
 getCurrentSession();
+loadSchoolColor();
 
 function changeLogo() {
   document.getElementById("logo").innerHTML =
@@ -1351,6 +1352,7 @@ function getAllStudentForTable() {
 
           c = c + 1;
         }
+        //paginateTable();
       } else {
         document.getElementById(
           "student_table"
@@ -3396,6 +3398,7 @@ function getAllGradeForTable() {
       } else {
         document.getElementById("grade_table").innerHTML = `NO DATA FOUND`;
       }
+      //kkkkpaginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -4324,7 +4327,7 @@ function getInventory() {
     .then((data) => {
       c = 1;
       document.getElementById("inventory_table").innerHTML = ``;
-      if(data.length > 0){
+      if (data.length > 0) {
         data.forEach((data) => {
           document.getElementById("inventory_table").innerHTML += `
           <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}id="${data.id}">
@@ -4362,10 +4365,11 @@ function getInventory() {
         </tr>`;
           c += 1;
         });
-      }else{
-        document.getElementById("inventory_table").innerHTML = `NO ITEM IN THE INVENTORY`;
+      } else {
+        document.getElementById(
+          "inventory_table"
+        ).innerHTML = `NO ITEM IN THE INVENTORY`;
       }
-     
     })
     .catch((err) => console.log(err));
 }
@@ -4513,8 +4517,34 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
+      localStorage.setItem("SCHOOL_COLOR", data[0].school_color);
     })
     .catch((err) => console.log(err));
+}
+
+// LOAD SCHOOL COLOR
+function loadSchoolColor() {
+  if (localStorage["SCHOOL_COLOR"] != "-") {
+    var r = document.querySelector(":root");
+    var rs = getComputedStyle(r);
+    // alert("The value of --blue is: " + rs.getPropertyValue('--blue'));
+    // SET SCHOOL COLOR
+
+    r.style.setProperty(
+      "--front-color",
+      localStorage["SCHOOL_COLOR"].split("~")[0]
+    );
+    r.style.setProperty(
+      "--back-color",
+      localStorage["SCHOOL_COLOR"].split("~")[1]
+    );
+  }
+}
+
+// PAGENATION
+function paginateTable() {
+  $("#paginate").DataTable();
+  $(".dataTables_length").addClass("bs-select");
 }
 
 // TOAST

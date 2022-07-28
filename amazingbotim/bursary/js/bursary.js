@@ -1,9 +1,9 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/amazingbotim";
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var ip = "https://smartschoolhub.net/backend/amazingbotim";
 var domain = "https://amazingbotim.smartschoolhub.net";
 
 // // REMOTE ACCESS
@@ -47,6 +47,10 @@ function loadSideNav(page) {
     
     <li class="nav-item">
         <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment History</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
     </li>
 
     <li class="nav-item">
@@ -188,10 +192,13 @@ function getCurrentSession() {
       if (data.success) {
         localStorage.setItem("current_session", data["session"].session);
         localStorage.setItem("current_term", data["session"].term);
-        document.getElementById(
-          "session_term"
-        ).innerHTML = `<div id="" class="item-number"><span class="counter"
-            >${data["session"].session} - ${data["session"].term}</span></div>`;
+        var element = document.getElementById("session_term");
+        if (typeof element != "undefined" && element != null) {
+          document.getElementById(
+            "session_term"
+          ).innerHTML = `<div id="" class="item-number"><span class="counter"
+              >${data["session"].session} - ${data["session"].term}</span></div>`;
+        }
       } else {
         document.getElementById(
           "session_term"
@@ -365,6 +372,7 @@ function getAllFee() {
           c = c + 1;
         }
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -572,6 +580,7 @@ function getAllExpense() {
           c = c + 1;
         }
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -819,6 +828,7 @@ function getAllManualPayment() {
           c = c + 1;
         }
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -1007,6 +1017,7 @@ function getAllPaymentHistory() {
                     `;
           c = c + 1;
         }
+        paginateTable();
       }
     })
     .catch((err) => console.log(err));
@@ -1117,6 +1128,7 @@ function getAllDebitor() {
           "debitors_table"
         ).innerHTML = `NO DEBITOR FOUND`;
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -1160,6 +1172,65 @@ function syncLatestDebitor() {
       })
       .catch((err) => console.log(err));
   }
+}
+
+//PAYMENT SUBCRIPTION
+function getPortalSubscription() {
+  fetch(ip + "/api/bursary/portal-subscription", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("subscription_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("subscription_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td>${data[i].subscription_id}</td>
+                    <td>${data[i].description}</td>  
+                    <td><span style="color:white" class="badge ${
+                      data[i].status == "NOT PAID" ? `bg-danger` : `bg-success`
+                    }"><b>${data[i].status}</b></span></td>
+                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    <td>   
+                      ${
+                        data[i].status == "NOT PAID"
+                          ? `<a id="" onclick="payWithPaystack('${data[i].id}',
+                          '${data[i].amount}',
+                          '${data[i].subscription_id}',
+                          '${data[i].description}'
+                        )" href="#" class="btn btn-primary">
+                                 Pay Now
+                            </a>`
+                          : ``
+                      }
+                    </td>
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      } else {
+        document.getElementById(
+          "subscription_table"
+        ).innerHTML = `NO DATA FOUND`;
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // SEARCH DEBOUCER
@@ -1217,7 +1288,8 @@ function getAllStudent(class_id) {
       document.getElementById("student").innerHTML = ``;
       if (data.length > 0) {
         for (i in data) {
-          if (data[i].class.id != class_id) {
+          student_class = data[i].class == null ? `GRADUATED` : data[i].class.id
+          if (student_class != class_id) {
             continue;
           }
           document.getElementById("student").innerHTML += `<option value="${
@@ -1231,6 +1303,95 @@ function getAllStudent(class_id) {
       }
     })
     .catch((err) => console.log(err));
+}
+
+function payWithPaystack(id, amount, subscription_id, description) {
+  var handler = PaystackPop.setup({
+    key: "pk_live_b42624c22740c8a99ce5172681d43670e8423156", //put your public key here
+    email: localStorage["SCHOOL_EMAIL"], //put your customer's email here
+    amount: amount * 100, //amount the customer is supposed to pay
+    currency: "NGN",
+    metadata: {
+      custom_fields: [
+        {
+          display_name: localStorage["SCHOOL_NAME"],
+          variable_name: localStorage["SCHOOL_NAME"],
+          value: localStorage["SCHOOL_PHONE"], //customer's mobile number
+        },
+      ],
+    },
+    callback: function (response) {
+      console.table(response);
+
+      //after the transaction have been completed
+
+      //make post call  to the server with to verify payment
+      //UPDATE THE SUBCRIPTION TABLE
+      fetch(
+        "https://api.paystack.co/transaction/verify/" + response.reference,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+            Authorization:
+              "Bearer sk_live_6ea7e2c92ca25c4d803f2c33362bd61363e0020e",
+          },
+        }
+      )
+        .then(function (res) {
+          return res.json();
+        })
+
+        .then((resp) => {
+          console.table(resp);
+          if (resp.data.status == "success") {
+            //UPDATE THE SUBCRIPTION TABLE
+            warningtoast("Recording payment ... please wait");
+            fetch(ip + "/api/bursary/portal-subscription", {
+              method: "PUT",
+              headers: {
+                Accept: "application/json",
+                "Content-type": "application/json",
+                Authorization: "Bearer " + localStorage["token"],
+              },
+              body: JSON.stringify({
+                id: id,
+                subscription_id: subscription_id + "-" + response.reference,
+                amount: amount,
+                description: description,
+              }),
+            })
+              .then(function (res) {
+                console.log(res.status);
+                if (res.status == 401) {
+                  window.location.href = "index.html";
+                }
+                return res.json();
+              })
+              .then((data) => {
+                if (data.success) {
+                  toastr.remove();
+                  successtoast(data.message);
+                  getPortalSubscription();
+                } else {
+                  errortoast(data.message);
+                }
+              })
+              .catch((err) => console.log(err));
+          } else {
+            errortoast("TRANSACTION FAILED");
+          }
+        })
+        .catch((err) => console.log(err));
+      //using transaction reference as post data
+    },
+    onClose: function () {
+      //when the user close the payment modal
+      alert("Transaction cancelled");
+    },
+  });
+  handler.openIframe(); //open the paystack's payment modal
 }
 
 // GET TODAY'S DATE
@@ -1313,8 +1474,16 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
+      localStorage.setItem("SCHOOL_PHONE", data[0].school_phone);
+      localStorage.setItem("SCHOOL_EMAIL", data[0].school_email);
     })
     .catch((err) => console.log(err));
+}
+
+// PAGENATION
+function paginateTable(){
+  $("#paginate").DataTable();
+  $(".dataTables_length").addClass("bs-select");
 }
 
 // TOAST
@@ -1377,4 +1546,112 @@ function errortoast(message, time) {
     hideMethod: "fadeOut",
     tapToDismiss: false,
   });
+}
+
+// $(document).ready(function () {
+//   $('#dtBasicExample').DataTable();
+//   $('.dataTables_length').addClass('bs-select');
+// });
+
+// Basic example
+// $(document).ready(function () {
+//   $('#dtBasicExample').DataTable({
+//     "pagingType": "simple" // "simple" option for 'Previous' and 'Next' buttons only
+//   });
+//   $('.dataTables_length').addClass('bs-select');
+// });
+
+
+
+
+
+// STUDENT
+function getAllStudentForTable() {
+  fetch(ip + "/api/admin/all-student", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log(data);
+      document.getElementById("student_table").innerHTML = ``;
+      c = 1;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("student_table").innerHTML += `
+          <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+          <td>${c}.</td>
+          <td>${data[i].student_id}</td>
+          <td>${data[i].first_name + " " + data[i].last_name}</td>
+          <td>${data[i].gender}</td>
+          ${data[i].profile_status == "ENABLED" ? 
+          `<td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>`:
+              
+          ` <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td> `}
+          <td>${
+            data[i].class == null ? `GRADUATED` : data[i].class.class_name
+          }</td>
+          <td>
+            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
+            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+              data[i]
+            ).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+
+            ${data[i].profile_status == "ENABLED" ? 
+            ` <a onclick="updateStudentProfileStatus(${
+              data[i].id
+            })" class="btn gradient-orange-peel"><i
+                class="fas fa-lock"></i> Disable</a>  `:
+                
+            `  <a onclick="updateStudentProfileStatus(${
+              data[i].id
+            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
+            
+            `}
+          
+
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-secondary text-white"><i
+                        class="fas fa-id-card"></i>
+                    ID Card</a> 
+            
+            <a onclick="deleteStudent(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                        class="fas fa-trash"></i>
+                    Delete</a>
+            </td>
+
+      <tr>`;
+
+          c = c + 1;
+        }
+      } else {
+        document.getElementById(
+          "student_table"
+        ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
 }

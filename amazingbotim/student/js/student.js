@@ -1,9 +1,9 @@
 // DEVELOPMENT IP
-var ip = "http://127.0.0.1:8000";
-var domain = "http://localhost/smartschoolhub.net/amazingbotim";
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var ip = "https://smartschoolhub.net/backend/amazingbotim";
 var domain = "https://amazingbotim.smartschoolhub.net";
 
 // // REMOTE ACCESS
@@ -22,6 +22,7 @@ window.addEventListener("offline", () =>
 
 getSchoolDetails();
 getCurrentSession();
+loadSchoolColor();
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
@@ -40,19 +41,19 @@ function loadSideNav(page) {
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
     <li class="nav-item">
-        <a  id="timetable" href="timetable.html" class="nav-link"><i
-                class="flaticon-calendar"></i><span>Timetable</span></a>
+        <a  id="timetable" href="?#timetable.html" class="nav-link"><i
+                class="flaticon-calendar"></i><span>Timetable<sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">
-    <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
-    <span>My Attendance</span></a>
+        <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
+        <span>My Attendance</span></a>
     </li>
 
-    <li class="nav-item">
+    <!--  <li class="nav-item">
     <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
     <span>Attendance Card</span></a>
-    </li>
+    </li>  --!>
 
     <li class="nav-item">
         <a   id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
@@ -1961,6 +1962,7 @@ function getAllPaymentHistory() {
           c = c + 1;
         }
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -2251,6 +2253,7 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
+      localStorage.setItem("SCHOOL_COLOR", data[0].school_color);
     })
     .catch((err) => console.log(err));
 }
@@ -2265,6 +2268,24 @@ function getDate() {
   date = dd + "/" + mm + "/" + yyyy;
 
   return time + "~" + date;
+}
+
+// LOAD SCHOOL COLOR
+function loadSchoolColor(){
+  if(localStorage["SCHOOL_COLOR"] != "-"){
+    var r = document.querySelector(':root');
+    var rs = getComputedStyle(r);
+   // alert("The value of --blue is: " + rs.getPropertyValue('--blue'));
+   // SET SCHOOL COLOR
+    r.style.setProperty('--front-color', localStorage["SCHOOL_COLOR"].split("~")[0]);
+    r.style.setProperty('--back-color', localStorage["SCHOOL_COLOR"].split("~")[1]);
+  }
+}
+
+// PAGENATION
+function paginateTable(){
+  $("#paginate").DataTable();
+  $(".dataTables_length").addClass("bs-select");
 }
 
 // TOAST

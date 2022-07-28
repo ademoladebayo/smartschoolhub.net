@@ -251,8 +251,9 @@ class BursaryService
         foreach ($all_student as $student) {
 
             $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
+            $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
             $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
-            $balance = $total_payable - $total_paid;
+            $balance = ($total_payable + $optional_fee) - $total_paid;
 
             if ($balance > 0) {
                 // ADD STUDENT TO DEBITOR TABLE
@@ -270,6 +271,13 @@ class BursaryService
                     $debitorModel->save();
                 }
             }
+
+            // SCHOOL OWES STUDENT 
+            if ($balance < 0) {
+                // TO BE IMPLEMENTED IN THE FUTURE 
+            }
+
+            
             $c = $c + 1;
         }
         return response(['success' => true, 'message' => "{" . $c . "} Sync was successful."]);
@@ -364,7 +372,6 @@ class BursaryService
 
 
 
-
             $student["expected_fee"] = $expected_fee + $optional_fee;
             $student["total_paid"] = $total_paid;
             $student["balance"] = ($expected_fee + $optional_fee) - $total_paid;
@@ -404,8 +411,9 @@ class BursaryService
         $active_student = $StudentRepository->allStudentCount();
         $PortalSubscriptionModel = PortalSubscription::orderBy('id', 'DESC')->get();
         if ($PortalSubscriptionModel[0]->status == "NOT PAID") {
-            $PortalSubscriptionModel[0]->description = "₦1,000 MULTIPLIED BY " . $active_student . " ACTIVE STUDENT";
+            $PortalSubscriptionModel[0]->description = "1,000 MULTIPLIED BY " . $active_student . " STUDENT";
             $PortalSubscriptionModel[0]->amount = $active_student * 1000;
+            //  $PortalSubscriptionModel[0]->amount = 200;
         }
 
         return  $PortalSubscriptionModel;
@@ -417,6 +425,7 @@ class BursaryService
         $PortalSubscriptionModel->status = "PAID";
         $PortalSubscriptionModel->subscription_id = $request->subscription_id;
         $PortalSubscriptionModel->description = $request->description;
+        $PortalSubscriptionModel->amount = $request->amount;
         $PortalSubscriptionModel->save();
         return response(['success' => true, 'message' => "Payment has successfully been recorded."]);
     }

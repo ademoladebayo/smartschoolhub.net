@@ -10,6 +10,7 @@ use App\Model\FeeModel;
 use App\Model\ExpenseModel;
 use App\Model\PaymentHistoryModel;
 use App\Model\OptionalFeeRequestModel;
+use App\Model\PortalSubscription;
 use App\Model\StudentModel;
 use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
@@ -63,7 +64,7 @@ class BursaryService
                 // PART SETTLEMENT
                 $total_arrears = $total_arrears + intval(str_replace(str_split('₦,()'), '', explode("PAID", explode("AND", $description->payment_description)[0])[1]));
             }
-        } 
+        }
 
 
         // GET TOTAL MANUAL PAYMENT
@@ -250,8 +251,9 @@ class BursaryService
         foreach ($all_student as $student) {
 
             $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
+            $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
             $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
-            $balance = $total_payable - $total_paid;
+            $balance = ($total_payable + $optional_fee) - $total_paid;
 
             if ($balance > 0) {
                 // ADD STUDENT TO DEBITOR TABLE
@@ -269,6 +271,13 @@ class BursaryService
                     $debitorModel->save();
                 }
             }
+
+            // SCHOOL OWES STUDENT 
+            if ($balance < 0) {
+                // TO BE IMPLEMENTED IN THE FUTURE 
+            }
+
+            
             $c = $c + 1;
         }
         return response(['success' => true, 'message' => "{" . $c . "} Sync was successful."]);
@@ -363,7 +372,6 @@ class BursaryService
 
 
 
-
             $student["expected_fee"] = $expected_fee + $optional_fee;
             $student["total_paid"] = $total_paid;
             $student["balance"] = ($expected_fee + $optional_fee) - $total_paid;
@@ -381,7 +389,7 @@ class BursaryService
     {
         $bursaryService = new BursaryService();
         $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
-     
+
         $expected_fee = 0;
         $optional_fee = 0;
         $total_paid = 0;
@@ -394,5 +402,31 @@ class BursaryService
 
         $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
         return $percentage_paid;
+    }
+
+
+    function getPortalSubscription()
+    {
+        $StudentRepository = new StudentRepository();
+        $active_student = $StudentRepository->allStudentCount();
+        $PortalSubscriptionModel = PortalSubscription::orderBy('id', 'DESC')->get();
+        if ($PortalSubscriptionModel[0]->status == "NOT PAID") {
+            $PortalSubscriptionModel[0]->description = "1,000 MULTIPLIED BY " . $active_student . " STUDENT";
+            $PortalSubscriptionModel[0]->amount = $active_student * 1000;
+            //  $PortalSubscriptionModel[0]->amount = 200;
+        }
+
+        return  $PortalSubscriptionModel;
+    }
+
+    function editPortalSubscription(Request $request)
+    {
+        $PortalSubscriptionModel = PortalSubscription::find($request->id);
+        $PortalSubscriptionModel->status = "PAID";
+        $PortalSubscriptionModel->subscription_id = $request->subscription_id;
+        $PortalSubscriptionModel->description = $request->description;
+        $PortalSubscriptionModel->amount = $request->amount;
+        $PortalSubscriptionModel->save();
+        return response(['success' => true, 'message' => "Payment has successfully been recorded."]);
     }
 }
