@@ -1307,7 +1307,7 @@ function getAllStudent(class_id) {
 
 function payWithPaystack(id, amount, subscription_id, description) {
   var handler = PaystackPop.setup({
-    key: "pk_live_b42624c22740c8a99ce5172681d43670e8423156", //put your public key here
+    key: "", //put your public key here
     email: localStorage["SCHOOL_EMAIL"], //put your customer's email here
     amount: amount * 100, //amount the customer is supposed to pay
     currency: "NGN",
@@ -1335,7 +1335,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
             Accept: "application/json",
             "Content-type": "application/json",
             Authorization:
-              "Bearer sk_live_6ea7e2c92ca25c4d803f2c33362bd61363e0020e",
+              "Bearer ",
           },
         }
       )
