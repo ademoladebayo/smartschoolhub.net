@@ -200,6 +200,7 @@ class StudentService
             $arrears = 0;
         }
 
+        $percentage_paid = 0;
         if($expected_fee !=0  || $optional_fee !=0){
             $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
         }
