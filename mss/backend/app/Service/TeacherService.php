@@ -333,7 +333,7 @@ class TeacherService
     {
         // StudentModel::where('class', $request->old_class)->update(['class' => $request->new_class]);
         // DB::table('student')->where('class', $request->old_class)->update(['class' => $request->new_class]);
-        DB::select("update student set class =" + $request->new_class + " where class =" + $request->old_class);
+        DB::select("update student set class =" + intVal($request->new_class) + " where class =" + $request->old_class);
         return response()->json(['success' => true, 'message' => 'Students have been promoted successfully.']);
     }
 

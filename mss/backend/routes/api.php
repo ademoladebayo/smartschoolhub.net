@@ -417,7 +417,7 @@ Route::get('general/current-session', 'GeneralController@getCurrentSession', fun
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('general/all-session', 'GeneralController@allSession', function () {
+    Route::get('general/all-session/{desc}', 'GeneralController@allSession', function () {
     })->middleware(Cors::class);
 });
 // ===================================================================

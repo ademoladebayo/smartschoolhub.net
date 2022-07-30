@@ -1492,7 +1492,7 @@ function paginateTable() {
 function loadCustomSessionTerm() {
   term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
 
-  fetch(ip + "/api/general/all-session", {
+  fetch(ip + "/api/general/all-session/desc", {
     method: "GET",
     headers: {
       Accept: "application/json",
