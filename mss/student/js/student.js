@@ -163,7 +163,7 @@ function getCurrentSession() {
 
 function allSession() {
   session = [];
-  fetch(ip + "/api/general/all-session", {
+  fetch(ip + "/api/general/all-session/ASC", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -1159,7 +1159,7 @@ async function getTranscript() {
   var terms = ["FIRST TERM", "SECOND TERM", "THIRD TERM"];
 
   // CALL API THAT GET ALL SESSION
-  fetch(ip + "/api/general/all-session", {
+  fetch(ip + "/api/general/all-session/ASC", {
     method: "GET",
     headers: {
       Accept: "application/json",
