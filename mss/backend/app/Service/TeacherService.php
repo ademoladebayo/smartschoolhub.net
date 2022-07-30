@@ -331,9 +331,13 @@ class TeacherService
     // PROMOTE STUDENT
     public function promoteStudents(Request $request)
     {
+        foreach (StudentModel::where('class', $request->old_class)->get() as $student) {
+            $student->class = $request->new_class;
+            $student->save();
+        }
         // StudentModel::where('class', $request->old_class)->update(['class' => $request->new_class]);
         // DB::table('student')->where('class', $request->old_class)->update(['class' => $request->new_class]);
-        DB::select("update student set class =".$request->new_class." where class =" . $request->old_class);
+        //DB::select("update student set class =" . $request->new_class . " where class =" . $request->old_class);
         return response()->json(['success' => true, 'message' => 'Students have been promoted successfully.']);
     }
 
