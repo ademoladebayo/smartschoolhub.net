@@ -200,7 +200,11 @@ class StudentService
             $arrears = 0;
         }
 
-        $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
+        $percentage_paid = 0;
+        if($expected_fee !=0  || $optional_fee !=0){
+            $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
+        }
+        
 
         return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
     }

@@ -246,7 +246,7 @@ class BursaryService
     {
 
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class")->get();
+        $all_student = StudentModel::select("id", "class")->whereNotIn('class', ['GRADUATED'])->get();
         $c = 0;
         foreach ($all_student as $student) {
 
@@ -353,7 +353,7 @@ class BursaryService
         $total_balance = 0;
 
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->with("class")->get();
+        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->whereNotIn('class', ['GRADUATED'])->with("class")->get();
         $c = 0;
         foreach ($all_student as $student) {
             // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE

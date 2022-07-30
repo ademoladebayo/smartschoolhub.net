@@ -331,7 +331,13 @@ class TeacherService
     // PROMOTE STUDENT
     public function promoteStudents(Request $request)
     {
-        StudentModel::where('class', $request->old_class)->update(['class' => $request->new_class]);
+        foreach (StudentModel::where('class', $request->old_class)->get() as $student) {
+            $student->class = $request->new_class;
+            $student->save();
+        }
+        // StudentModel::where('class', $request->old_class)->update(['class' => $request->new_class]);
+        // DB::table('student')->where('class', $request->old_class)->update(['class' => $request->new_class]);
+        //DB::select("update student set class =" . $request->new_class . " where class =" . $request->old_class);
         return response()->json(['success' => true, 'message' => 'Students have been promoted successfully.']);
     }
 
@@ -354,7 +360,7 @@ class TeacherService
     // LESSON NOTE
     public function lessonPlan(Request $request)
     {
-        return LessonPlanModel::where('subject_id',$request->subject_id)->where('term',$request->term)->where('week',$request->week)->get()[0];
+        return LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('week', $request->week)->get()[0];
     }
 
     public function savelessonPlan(Request $request)
@@ -362,7 +368,7 @@ class TeacherService
         $LessonPlanModel = LessonPlanModel::find($request->id);
         $LessonPlanModel->week = $request->week;
         $LessonPlanModel->instructional_material = $request->instructional_material;
-        $LessonPlanModel->previous_knowledge =$request->previous_knowledge;
+        $LessonPlanModel->previous_knowledge = $request->previous_knowledge;
         $LessonPlanModel->previous_lesson = $request->previous_lesson;
         $LessonPlanModel->behavioural_objective = $request->behavioural_objective;
         $LessonPlanModel->content = $request->content;

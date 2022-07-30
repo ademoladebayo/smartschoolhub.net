@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
- var ip = "https://smartschoolhub.net/backend/amazingbotim";
-var domain = "https://amazingbotim.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var domain = "https://amazingbotim.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -21,7 +21,7 @@ var questions_number = [];
 var answer = [];
 
 getSchoolDetails();
-getCurrentSession();
+//getCurrentSession();
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
@@ -3919,6 +3919,49 @@ function paginateTable() {
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
 }
+
+// CUSTOM SESSION TERM
+function loadCustomSessionTerm() {
+  term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
+
+  fetch(ip + "/api/general/all-session/DESC", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/teacher/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term0").innerHTML = ``;
+      data.forEach((sessions) => {
+        term.forEach((term) => {
+          document.getElementById(
+            "session_term0"
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + "-" + term
+          }</option>`;
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
+function useCustomSessionTerm(session_term) {
+  console.log(session_term);
+  localStorage.setItem("current_session", session_term.split("-")[0]);
+  localStorage.setItem("current_term", session_term.split("-")[1]);
+  //getDashboardInfo();
+}
+
 // TOAST
 function successtoast(message, time) {
   toastr.success(message, "", {

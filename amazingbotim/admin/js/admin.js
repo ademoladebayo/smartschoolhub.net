@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
- var ip = "https://smartschoolhub.net/backend/amazingbotim";
-var domain = "https://amazingbotim.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var domain = "https://amazingbotim.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -22,7 +22,7 @@ window.addEventListener("offline", () =>
 );
 
 getSchoolDetails();
-getCurrentSession();
+//getCurrentSession();
 loadSchoolColor();
 
 function changeLogo() {
@@ -4546,6 +4546,7 @@ function paginateTable() {
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
 }
+
 
 // TOAST
 function successtoast(message, time) {

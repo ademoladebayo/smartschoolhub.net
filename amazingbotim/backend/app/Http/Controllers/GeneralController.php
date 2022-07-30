@@ -24,8 +24,11 @@ class GeneralController extends Controller
     }
 
     // ALL SESSION
-    function allSession()
+    function allSession($sort)
     {
+        if($sort == "DESC"){
+            return DB::table('session')->select('session')->orderBy('id', 'DESC')->get();
+        }
         return DB::table('session')->select('session')->get();
     }
 }

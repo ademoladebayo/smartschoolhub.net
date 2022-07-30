@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="../css/fullcalendar.min.css">
     <!-- Animate CSS -->
     <link rel="stylesheet" href="../css/animate.min.css">
+    <!-- Select 2 CSS -->
+    <link rel="stylesheet" href="../css/select2.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
     <script src="https://checkout.flutterwave.com/v3.js"></script>
@@ -34,7 +36,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('index');getCurrentSession(); getDashboardInfo(); loadDashBoardInformation()">
+<body onload="loadSideNav('index');getCurrentSession(); loadCustomSessionTerm(); getDashboardInfo(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -116,7 +118,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -143,7 +146,12 @@
                         <li style="font-weight: bold;font-family: Rowdies">Dashboard</li>
                     </ul>
                     <br>
-                    <h3 id="session_term" style="font-weight: bold;font-family: Rowdies">Loading ... </h3>
+                    <!-- <h3 id="session_term" style="font-weight: bold;font-family: Rowdies">Loading ... </h3> -->
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <select onchange="useCustomSessionTerm(this.value)" id="session_term" class="select2">
+                            <option>SESSION - TERM</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="row gutters-20">
@@ -479,6 +487,8 @@
     <script src="../js/jquery.scrollUp.min.js"></script>
     <!-- Full Calender Js -->
     <script src="../js/fullcalendar.min.js"></script>
+    <!-- Select 2 Js -->
+    <script src="../js/select2.min.js"></script>
     <!-- Chart Js -->
     <script src="../js/Chart.min.js"></script>
     <!-- Custom Js -->
