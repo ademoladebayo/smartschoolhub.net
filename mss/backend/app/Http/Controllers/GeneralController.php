@@ -26,6 +26,6 @@ class GeneralController extends Controller
     // ALL SESSION
     function allSession()
     {
-        return DB::table('session')->select('session')->get();
+        return DB::table('session')->select('session')->orderBy('id', 'DESC')->get();
     }
 }
