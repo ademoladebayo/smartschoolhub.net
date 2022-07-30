@@ -1,17 +1,17 @@
 // DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
- var ip = "https://smartschoolhub.net/backend/mss";
-var domain = "https://mss.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/mss";
+// var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.ng";
 
 getSchoolDetails();
-getCurrentSession();
+// getCurrentSession();
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
@@ -190,6 +190,7 @@ function getCurrentSession() {
 
     .then((data) => {
       if (data.success) {
+        console.log("SAVED SESSION");
         localStorage.setItem("current_session", data["session"].session);
         localStorage.setItem("current_term", data["session"].term);
         var element = document.getElementById("session_term");
@@ -1288,7 +1289,8 @@ function getAllStudent(class_id) {
       document.getElementById("student").innerHTML = ``;
       if (data.length > 0) {
         for (i in data) {
-          student_class = data[i].class == null ? `GRADUATED` : data[i].class.id
+          student_class =
+            data[i].class == null ? `GRADUATED` : data[i].class.id;
           if (student_class != class_id) {
             continue;
           }
@@ -1481,9 +1483,51 @@ function getSchoolDetails() {
 }
 
 // PAGENATION
-function paginateTable(){
+function paginateTable() {
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
+}
+
+// CUSTOM SESSION TERM
+function loadCustomSessionTerm() {
+  term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
+
+  fetch(ip + "/api/general/all-session", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/bursary/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term").innerHTML = ``;
+      data.forEach((sessions) => {
+        term.forEach((term) => {
+          document.getElementById(
+            "session_term"
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + "-" + term
+          }</option>`;
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
+function useCustomSessionTerm(session_term) {
+  console.log(session_term);
+  localStorage.setItem("current_session", session_term.split("-")[0]);
+  localStorage.setItem("current_term", session_term.split("-")[1]);
+  getDashboardInfo();
 }
 
 // TOAST
@@ -1561,10 +1605,6 @@ function errortoast(message, time) {
 //   $('.dataTables_length').addClass('bs-select');
 // });
 
-
-
-
-
 // STUDENT
 function getAllStudentForTable() {
   fetch(ip + "/api/admin/all-student", {
@@ -1594,10 +1634,11 @@ function getAllStudentForTable() {
           <td>${data[i].student_id}</td>
           <td>${data[i].first_name + " " + data[i].last_name}</td>
           <td>${data[i].gender}</td>
-          ${data[i].profile_status == "ENABLED" ? 
-          `<td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>`:
-              
-          ` <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td> `}
+          ${
+            data[i].profile_status == "ENABLED"
+              ? `<td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>`
+              : ` <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td> `
+          }
           <td>${
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
@@ -1615,17 +1656,14 @@ function getAllStudentForTable() {
             )})" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
-            ${data[i].profile_status == "ENABLED" ? 
-            ` <a onclick="updateStudentProfileStatus(${
-              data[i].id
-            })" class="btn gradient-orange-peel"><i
-                class="fas fa-lock"></i> Disable</a>  `:
-                
-            `  <a onclick="updateStudentProfileStatus(${
-              data[i].id
-            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
+            ${
+              data[i].profile_status == "ENABLED"
+                ? ` <a onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
+                class="fas fa-lock"></i> Disable</a>  `
+                : `  <a onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
             
-            `}
+            `
+            }
           
 
             <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
