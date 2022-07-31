@@ -1509,7 +1509,9 @@ function loadCustomSessionTerm() {
     })
 
     .then((data) => {
-      document.getElementById("session_term").innerHTML = ``;
+      document.getElementById("session_term").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]}">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
       data.forEach((sessions) => {
         term.forEach((term) => {
           document.getElementById(
