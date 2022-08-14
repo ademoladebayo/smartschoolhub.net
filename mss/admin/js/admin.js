@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-var ip = "http://127.0.0.1:8000";
-var domain = "http://localhost/smartschoolhub.net/mss";
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-//var ip = "https://smartschoolhub.net/backend/mss";
-// var domain = "https://mss.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/mss";
+var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
