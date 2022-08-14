@@ -11,6 +11,7 @@ use App\Model\ExpenseModel;
 use App\Model\PaymentHistoryModel;
 use App\Model\OptionalFeeRequestModel;
 use App\Model\PortalSubscription;
+use App\Model\SessionModel;
 use App\Model\StudentModel;
 use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
@@ -249,7 +250,6 @@ class BursaryService
         $all_student = StudentModel::select("id", "class")->whereNotIn('class', ['GRADUATED'])->get();
         $c = 0;
         foreach ($all_student as $student) {
-
             $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
             $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
             $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
@@ -277,7 +277,7 @@ class BursaryService
                 // TO BE IMPLEMENTED IN THE FUTURE 
             }
 
-            
+
             $c = $c + 1;
         }
         return response(['success' => true, 'message' => "{" . $c . "} Sync was successful."]);
@@ -353,14 +353,32 @@ class BursaryService
         $total_balance = 0;
 
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->whereNotIn('class', ['GRADUATED'])->with("class")->get();
+        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id","graduation")->with("class")->get();
+        //$all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->whereNotIn('class', ['GRADUATED'])->with("class")->get();
         $c = 0;
         foreach ($all_student as $student) {
-            // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
-            $expected_fee = $this->getPayableForClass($student->class, $request->session, $request->term);
-            $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
-            $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
-            $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
+
+            if ($student->class == "GRADUATED") {
+                Log::alert("GRADUATION : " . $student->graduation);
+                $class_before_graduation =  explode("_", $student->graduation)[0];
+                $session_before_graduation = explode("_", $student->graduation)[1];
+                $term_before_graduation = explode("_", $student->graduation)[2];
+                $student->graduation_details = "GRADUATED (".$session_before_graduation."-".$term_before_graduation.")";
+
+
+                // SO FOR EACH GRADUATED STUDENT GET THEIR LAST CLASS_SESSION_TERM
+                // $expected_fee = $this->getPayableForClass($class_before_graduation, $session_before_graduation, $term_before_graduation);
+                // $optional_fee = $this->getOptionalFeeRequest($student->id, $session_before_graduation, $term_before_graduation);
+                // $total_paid =  $this->getTotalPaid($student->id, $session_before_graduation, $term_before_graduation);
+                $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
+            } else {
+                // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+                $expected_fee = $this->getPayableForClass($student->class, $request->session, $request->term);
+                $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
+                $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
+                $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
+            }
+
             Log::alert("ARREARS : " . $arrears);
 
             if (count($arrears) > 0) {
@@ -407,13 +425,20 @@ class BursaryService
 
     function getPortalSubscription()
     {
-        $StudentRepository = new StudentRepository();
-        $active_student = $StudentRepository->allStudentCount();
         $PortalSubscriptionModel = PortalSubscription::orderBy('id', 'DESC')->get();
-        if ($PortalSubscriptionModel[0]->status == "NOT PAID") {
-            $PortalSubscriptionModel[0]->description = "1,000 MULTIPLIED BY " . $active_student . " STUDENT";
-            $PortalSubscriptionModel[0]->amount = $active_student * 1000;
-            //  $PortalSubscriptionModel[0]->amount = 200;
+
+        // GET CURRENT SESSION
+        $session_term = SessionModel::where("session_status", "CURRENT")->get()[0];
+        $session = str_replace("/", "", $session_term->session);
+        $term = str_replace(" ", "", $session_term->term);
+
+        foreach ($PortalSubscriptionModel as $portalSubscription) {
+
+            if ($portalSubscription->subscription_id == $session . "" . $term) {
+                $portalSubscription->status = "USAGE IN-PROGRESS";
+                $portalSubscription->description = "CALCULATION WILL BE DONE AT THE END OF THE TERM";
+                $portalSubscription->amount = "0";
+            }
         }
 
         return  $PortalSubscriptionModel;

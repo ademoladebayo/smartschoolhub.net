@@ -5,4 +5,5 @@ document.getElementById("common-library").innerHTML += `
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap" rel="stylesheet">
 <link href="assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
 <link href="assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="https://js.paystack.co/v1/inline.js"></script>
 `;

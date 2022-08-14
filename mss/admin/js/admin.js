@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
- var domain = "https://mss.smartschoolhub.net";
+//var ip = "https://smartschoolhub.net/backend/mss";
+// var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -24,6 +24,11 @@ window.addEventListener("offline", () =>
 getSchoolDetails();
 //getCurrentSession();
 loadSchoolColor();
+
+// if(!window.location.href.includes("portal-subcription")){
+//   checkPortalSubscription();
+// }
+
 
 function changeLogo() {
   document.getElementById("logo").innerHTML =
@@ -65,6 +70,7 @@ function signIn() {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
+          getStoredCredential();
           username = JSON.parse(localStorage["user_data"]).data.username;
 
           if (username.includes("SECURITY")) {
@@ -4547,6 +4553,154 @@ function paginateTable() {
   $(".dataTables_length").addClass("bs-select");
 }
 
+function checkPortalSubscription() {
+  fetch(ip + "/api/bursary/portal-subscription", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      for (i in data) {
+        if (data[i].status == "NOT PAID") {
+          alert("YOU HAVE AN UNPAID PORTAL USAGE");
+          window.parent.location.assign(
+            domain + "/bursary/portal-subscription.html"
+          );
+          payWithPaystack(
+            data[i].id,
+            data[i].amount,
+            data[i].subscription_id,
+            data[i].description
+          );
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+//GET CREDENTIALS
+function getStoredCredential() {
+  fetch(ip + "/api/general/stored-credential", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      localStorage.setItem("PSPK", data.PSPK);
+      localStorage.setItem("PSSK", data.PSSK);
+    })
+    .catch((err) => console.log(err));
+}
+
+function payWithPaystack(id, amount, subscription_id, description) {
+  var handler = PaystackPop.setup({
+    key: localStorage["PSPK"], //put your public key here
+    email: localStorage["SCHOOL_EMAIL"], //put your customer's email here
+    amount: amount * 100, //amount the customer is supposed to pay
+    currency: "NGN",
+    metadata: {
+      custom_fields: [
+        {
+          display_name: localStorage["SCHOOL_NAME"],
+          variable_name: localStorage["SCHOOL_NAME"],
+          value: localStorage["SCHOOL_PHONE"], //customer's mobile number
+        },
+      ],
+    },
+    callback: function (response) {
+      console.table(response);
+
+      //after the transaction have been completed
+
+      //make post call  to the server with to verify payment
+      //UPDATE THE SUBCRIPTION TABLE
+      fetch(
+        "https://api.paystack.co/transaction/verify/" + response.reference,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+            Authorization: "Bearer " + localStorage["PSSK"],
+          },
+        }
+      )
+        .then(function (res) {
+          return res.json();
+        })
+
+        .then((resp) => {
+          console.table(resp);
+          if (resp.data.status == "success") {
+            //UPDATE THE SUBCRIPTION TABLE
+            warningtoast("Recording payment ... please wait");
+            fetch(ip + "/api/bursary/portal-subscription", {
+              method: "PUT",
+              headers: {
+                Accept: "application/json",
+                "Content-type": "application/json",
+                Authorization: "Bearer " + localStorage["token"],
+              },
+              body: JSON.stringify({
+                id: id,
+                subscription_id: subscription_id + "-" + response.reference,
+                amount: amount,
+                description: description,
+              }),
+            })
+              .then(function (res) {
+                console.log(res.status);
+                if (res.status == 401) {
+                  window.location.href = "index.html";
+                }
+                return res.json();
+              })
+              .then((data) => {
+                if (data.success) {
+                  toastr.remove();
+                  successtoast(data.message);
+                  getPortalSubscription();
+                } else {
+                  errortoast(data.message);
+                }
+              })
+              .catch((err) => console.log(err));
+          } else {
+            errortoast("TRANSACTION FAILED");
+          }
+        })
+        .catch((err) => console.log(err));
+      //using transaction reference as post data
+    },
+    onClose: function () {
+      //when the user close the payment modal
+      alert("Transaction cancelled");
+    },
+  });
+  handler.openIframe(); //open the paystack's payment modal
+}
 
 // TOAST
 function successtoast(message, time) {

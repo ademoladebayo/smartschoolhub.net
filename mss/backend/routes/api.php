@@ -253,7 +253,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('teacher/lesson-plan', 'TeacherController@lessonPlan', function () {
     })->middleware(Cors::class);
-
 });
 
 // =============================================================================
@@ -323,6 +322,9 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('bursary/signin', 'BursaryController@signIn', function () {
 })->middleware(Cors::class);
 
+Route::get('bursary/portal-subscription', 'BursaryController@getPortalSubscription', function () {
+})->middleware(Cors::class);
+
 Route::middleware('auth:sanctum')->group(function () {
     // BURSARY {FEE MANAGEMENT}
     Route::post('bursary/create-fee', 'BursaryController@createFee', function () {
@@ -387,8 +389,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('bursary/portal-subscription', 'BursaryController@createPortalSubscription', function () {
     })->middleware(Cors::class);
 
-    Route::get('bursary/portal-subscription', 'BursaryController@getPortalSubscription', function () {
-    })->middleware(Cors::class);
+    // Route::get('bursary/portal-subscription', 'BursaryController@getPortalSubscription', function () {
+    // })->middleware(Cors::class);
 
     Route::put('bursary/portal-subscription', 'BursaryController@editPortalSubscription', function () {
     })->middleware(Cors::class);
@@ -416,8 +418,14 @@ Route::get('general/current-session', 'GeneralController@getCurrentSession', fun
 })->middleware(Cors::class);
 
 
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('general/all-session/{sort}', 'GeneralController@allSession', function () {
+    })->middleware(Cors::class);
+
+    // GET STORED CREDENTIALS
+    Route::get('general/stored-credential', 'GeneralController@storedCredentials', function () {
     })->middleware(Cors::class);
 });
 // ===================================================================

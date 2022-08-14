@@ -31,4 +31,8 @@ class GeneralController extends Controller
         }
         return DB::table('session')->select('session')->get();
     }
+
+    function storedCredentials(){
+        return response(['PSPK' => env('PAYSTACK_PRIVATE_KEY'), 'PSSK' => env('PAYSTACK_SECRET_KEY')]);
+    }
 }

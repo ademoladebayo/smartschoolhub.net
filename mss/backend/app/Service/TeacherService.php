@@ -331,8 +331,13 @@ class TeacherService
     // PROMOTE STUDENT
     public function promoteStudents(Request $request)
     {
+        $session_term = SessionModel::where("session_status", "CURRENT")->get();
         foreach (StudentModel::where('class', $request->old_class)->get() as $student) {
             $student->class = $request->new_class;
+
+            if($request->new_class == "GRADUATED"){
+                $student->graduation = $request->old_class."_".$session_term[0]->session."_".$session_term[0]->term;
+            }
             $student->save();
         }
         // StudentModel::where('class', $request->old_class)->update(['class' => $request->new_class]);

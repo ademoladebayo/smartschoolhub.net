@@ -1,10 +1,10 @@
 // DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/mss";
+var ip = "http://127.0.0.1:8000";
+var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
- var domain = "https://mss.smartschoolhub.net";
+//var ip = "https://smartschoolhub.net/backend/mss";
+// var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
@@ -12,6 +12,9 @@ var ip = "https://smartschoolhub.net/backend/mss";
 
 getSchoolDetails();
 // getCurrentSession();
+// if (!window.location.href.includes("portal-subcription")) {
+//   checkPortalSubscription();
+// }
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
@@ -133,6 +136,7 @@ function signIn() {
         if (data.success) {
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
+          getStoredCredential();
           setTimeout(function () {
             window.location.href = "dashboard.html";
           }, 1000);
@@ -1113,7 +1117,7 @@ function getAllDebitor() {
                     <td>${c}.</td>
                     <td>${data[i].student_id}</td>
                     <td>${data[i].first_name + " " + data[i].last_name}</td>  
-                    <td>${data[i].class.class_name}</td>
+                    <td>${data[i].class == null ? data[i].graduation_details :data[i].class.class_name}</td>
                     <td>${formatNumber(parseInt(data[i].expected_fee))}</td>
                     <td>${formatNumber(parseInt(data[i].total_paid))}</td>
                     <td>${formatNumber(parseInt(data[i].balance))}</td>
@@ -1205,7 +1209,11 @@ function getPortalSubscription() {
                     <td>${data[i].subscription_id}</td>
                     <td>${data[i].description}</td>  
                     <td><span style="color:white" class="badge ${
-                      data[i].status == "NOT PAID" ? `bg-danger` : `bg-success`
+                      data[i].status == "NOT PAID"
+                        ? `bg-danger`
+                        : data[i].status == "USAGE IN-PROGRESS"
+                        ? `bg-warning`
+                        : `bg-success`
                     }"><b>${data[i].status}</b></span></td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     <td>   
@@ -1224,6 +1232,15 @@ function getPortalSubscription() {
                    </tr>
                     `;
           c = c + 1;
+
+          if (data[i].status == "NOT PAID") {
+            payWithPaystack(
+              data[i].id,
+              data[i].amount,
+              data[i].subscription_id,
+              data[i].description
+            );
+          }
         }
       } else {
         document.getElementById(
@@ -1309,7 +1326,7 @@ function getAllStudent(class_id) {
 
 function payWithPaystack(id, amount, subscription_id, description) {
   var handler = PaystackPop.setup({
-    key: "pk_live_b42624c22740c8a99ce5172681d43670e8423156", //put your public key here
+    key: localStorage["PSPK"], //put your public key here
     email: localStorage["SCHOOL_EMAIL"], //put your customer's email here
     amount: amount * 100, //amount the customer is supposed to pay
     currency: "NGN",
@@ -1336,8 +1353,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
           headers: {
             Accept: "application/json",
             "Content-type": "application/json",
-            Authorization:
-              "Bearer sk_live_6ea7e2c92ca25c4d803f2c33362bd61363e0020e",
+            Authorization: "Bearer " + localStorage["PSSK"],
           },
         }
       )
@@ -1509,7 +1525,9 @@ function loadCustomSessionTerm() {
     })
 
     .then((data) => {
-      document.getElementById("session_term").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]}">${
+      document.getElementById("session_term").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
         localStorage["current_session"] + "-" + localStorage["current_term"]
       }</option>`;
       data.forEach((sessions) => {
@@ -1530,6 +1548,68 @@ function useCustomSessionTerm(session_term) {
   localStorage.setItem("current_session", session_term.split("-")[0]);
   localStorage.setItem("current_term", session_term.split("-")[1]);
   getDashboardInfo();
+}
+
+//CHECK PORTAL SUBSCRIPTION
+function checkPortalSubscription() {
+  fetch(ip + "/api/bursary/portal-subscription", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      for (i in data) {
+        if (data[i].status == "NOT PAID") {
+          alert("YOU HAVE AN UNPAID PORTAL USAGE");
+          window.parent.location.assign(
+            domain + "/bursary/portal-subscription.html"
+          );
+          payWithPaystack(
+            data[i].id,
+            data[i].amount,
+            data[i].subscription_id,
+            data[i].description
+          );
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+//GET CREDENTIALS
+function getStoredCredential() {
+  fetch(ip + "/api/general/stored-credential", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      localStorage.setItem("PSPK", data.PSPK);
+      localStorage.setItem("PSSK", data.PSSK);
+    })
+    .catch((err) => console.log(err));
 }
 
 // TOAST
@@ -1620,7 +1700,6 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
       }
       return res.json();
     })

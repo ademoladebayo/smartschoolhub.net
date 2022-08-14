@@ -186,7 +186,7 @@ class AdminController extends Controller
     public function getAllSession()
     {
         $SessionModel = new SessionModel();
-        return $SessionModel->get();
+        return $SessionModel->orderBy('id','DESC')->get();
     }
 
     //eInventory SETTINGS

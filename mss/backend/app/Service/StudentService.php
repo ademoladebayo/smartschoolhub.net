@@ -348,4 +348,10 @@ class StudentService
         $absent = intval($opened) - intval($present);
         return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary]);
     }
+
+
+    //GET PREVIOUS CLASS
+    public function getPreviousClass($student){
+        return SubjectRegistrationModel::where("student_id",$student)->orderBy("id","DESC")->get()[0]->class;
+    }
 }
