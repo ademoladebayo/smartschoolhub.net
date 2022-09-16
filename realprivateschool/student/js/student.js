@@ -4,12 +4,12 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
 //var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/mss";
+//var domain = "http://localhost/smartschoolhub.net/realprivatechool";
 
 
 // LIVE IP
- var ip = "https://smartschoolhub.net/backend/mss";
- var domain = "https://mss.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/realprivatechool";
+ var domain = "https://realprivatechool.smartschoolhub.net";
 
 // CBT VARIABLE
 answer = [];
