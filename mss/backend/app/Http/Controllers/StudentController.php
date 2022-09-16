@@ -91,4 +91,12 @@ class StudentController extends Controller
         $StudentService = new StudentService();
         return $StudentService->attendanceSummary($request);
     }
+
+    
+    // CHANGE PASSWORD
+    public function changePassword(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->changePassword($request);
+    }
 }

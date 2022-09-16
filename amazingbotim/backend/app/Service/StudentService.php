@@ -24,6 +24,8 @@ use App\Util\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 
 class StudentService
 {
@@ -201,10 +203,10 @@ class StudentService
         }
 
         $percentage_paid = 0;
-        if($expected_fee !=0  || $optional_fee !=0){
+        if ($expected_fee != 0  || $optional_fee != 0) {
             $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
         }
-        
+
 
         return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
     }
@@ -347,5 +349,28 @@ class StudentService
         $present = count($AttendanceSummary);
         $absent = intval($opened) - intval($present);
         return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary]);
+    }
+
+
+    //GET PREVIOUS CLASS
+    public function getPreviousClass($student)
+    {
+        return SubjectRegistrationModel::where("student_id", $student)->orderBy("id", "DESC")->get()[0]->class;
+    }
+
+    // CHANGE PASSWORD
+    public function changePassword(Request $request)
+    {
+        $StudentRepository = new StudentRepository();
+        // CHECK IF PREVIOUS PASSWORD IS CORRECT
+        $previous_password =  $StudentRepository->getPassword($request->student_id);
+        //  if (!Hash::check($request->current_password, $previous_password)) {
+        if ($request->current_password != $previous_password) {
+            return response()->json(['success' => false, 'message' => 'Current password is incorrect!']);
+        } else {
+            //  $StudentRepository->updatePassword($request->student_id, Hash::make($request->new_password));
+            $StudentRepository->updatePassword($request->student_id, $request->new_password);
+            return response()->json(['success' => true, 'message' => 'Password has been changed successfully.']);
+        }
     }
 }

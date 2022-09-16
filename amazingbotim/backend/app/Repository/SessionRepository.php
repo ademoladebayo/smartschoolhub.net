@@ -2,10 +2,12 @@
 
 namespace App\Repository;
 
+use App\Model\PortalSubscription;
 use App\Model\SessionModel;
 use App\Service\AdminService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class SessionRepository
 {
@@ -24,6 +26,26 @@ class SessionRepository
         $SessionModel->session_status = "CURRENT";
         $SessionModel->save();
 
+        // CREATE A SUBSCRIPTION ID FOR THIS SESSION-TERM
+        if (!PortalSubscription::where('subscription_id', 'LIKE', '%' . str_replace("/", "", $request->session) . '' . str_replace(" ", "", $request->term) . '%')->exists()) {
+            $portalSubcription = new PortalSubscription();
+            $portalSubcription->subscription_id = str_replace("/", "", $request->session) . "" . str_replace(" ", "", $request->term);
+            $portalSubcription->description = '';
+            $portalSubcription->status = 'NOT PAID';
+            $portalSubcription->amount = 0;
+
+            // UPDATE USAGE OF PAST OF PREVIOUS SESSION TERM
+            $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
+            $StudentRepository = new StudentRepository();
+            $student = $StudentRepository->allStudentCount();
+            $previousPortalSubcription = PortalSubscription::orderBy("id","DESC")->get()[0];
+            $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
+            $previousPortalSubcription->amount = $student * intval($subscription_fee);
+            $previousPortalSubcription->save();
+            $portalSubcription->save();
+        }
+
+
         return response()->json(['success' => true, 'message' => 'Session was created successfully.']);
     }
 
@@ -33,6 +55,26 @@ class SessionRepository
         $SessionModel->session =  $request->session;
         $SessionModel->term =  $request->term;
         $SessionModel->save();
+
+        // CREATE A SUBSCRIPTION ID FOR THIS SESSION-TERM
+        if (!PortalSubscription::where('subscription_id', 'LIKE', '%' . str_replace("/", "", $request->session) . '' . str_replace(" ", "", $request->term) . '%')->exists()) {
+            $portalSubcription = new PortalSubscription();
+            $portalSubcription->subscription_id = str_replace("/", "", $request->session) . "" . str_replace(" ", "", $request->term);
+            $portalSubcription->description = '';
+            $portalSubcription->status = 'NOT PAID';
+            $portalSubcription->amount = 0;
+
+            // UPDATE USAGE OF PAST OF PREVIOUS SESSION TERM
+            $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
+            $StudentRepository = new StudentRepository();
+            $student = $StudentRepository->allStudentCount();
+            $previousPortalSubcription = PortalSubscription::orderBy("id","DESC")->get()[0];
+            $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
+            $previousPortalSubcription->amount = $student * intval($subscription_fee);
+            $previousPortalSubcription->save();
+
+            $portalSubcription->save();
+        }
 
         return response()->json(['success' => true, 'message' => 'Session updated successfully.']);
     }

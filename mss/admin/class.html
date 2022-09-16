@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html class="no-js" lang="">
 
@@ -44,7 +43,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body   onload="loadSideNav('class'); getAllClassForTable(); loadDashBoardInformation()">
+<body style="font-family: Poppins; font-weight: bold;" onload="loadSideNav('class'); getAllClassForTable(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -125,7 +124,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -144,12 +144,12 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Rowdies;">CLASS MANAGEMENT</h3>
+                    <h3 style="font-weight: bold; font-family: Poppins;">CLASS MANAGEMENT</h3>
                     <ul>
                         <li>
-                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
+                            <a style="font-weight: bold; font-family: Poppins;" href="dashboard.html">Home</a>
                         </li>
-                        <li style="font-weight: bold; font-family: Rowdies;">Class</li>
+                        <li style="font-weight: bold; font-family: Poppins;">Class</li>
                     </ul>
                 </div>
 
@@ -158,7 +158,7 @@
                         <div class="card-body">
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h3 style="font-weight: bold; font-family: Rowdies;">ALL CLASSES</h3>
+                                    <h3 style="font-weight: bold; font-family: Poppins;">ALL CLASSES</h3>
                                 </div>
 
                             </div>
@@ -171,17 +171,18 @@
                                             Class</b></button>
                                 </div>
 
-                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
                                     <input oninput="searchClass(this.value)" type="text"
                                         placeholder="Search by Class Name" class="form-control">
                                 </div>
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="table-responsive">
-                                <table class="table display data-table text-nowrap">
+                                <table id="paginate" class="table table-striped table table-sm" cellspacing="0"
+                                    width="100%">
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
@@ -227,7 +228,7 @@
                             <!--Content-->
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
-                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
                                         id="exampleModalLabel">CREATE NEW CLASS</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
@@ -256,7 +257,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
                                         id="exampleModalLabel">Student Information</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
@@ -383,7 +384,7 @@
                             <!--Content-->
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
-                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
                                         id="exampleModalLabel">EDIT CLASS DETAILS</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>

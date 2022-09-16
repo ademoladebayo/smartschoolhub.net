@@ -13,9 +13,13 @@ class StudentRepository
 
     public function createStudent(StudentModel $studentModel)
     {
+        if (StudentModel::where('first_name', $studentModel->first_name)->where('middle_name', $studentModel->middle_name)->where('last_name', $studentModel->last_name)->exists()) {
+            return response()->json(['success' => false, 'message' => 'This student already exist']);
+        }
+
         $studentModel->profile_status = 'ENABLED';
         // hash::make(strtolower($studentModel->last_name));
-        $studentModel->password = strtolower($studentModel->last_name);
+        $studentModel->password = env("DEFAULT_PASSWORD");
         $studentModel->save();
 
         // CREATE STUDENT ID
@@ -113,5 +117,12 @@ class StudentRepository
     public function allStudentCount()
     {
         return DB::select('select count(id) as student_no from student where profile_status = "ENABLED"')[0]->student_no;
+    }
+
+    public function updatePassword($student_id, $password)
+    {
+        DB::table('student')
+            ->where('student_id', $student_id)
+            ->update(['password' => $password]);
     }
 }

@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nova+Square&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rhodium+Libre&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rowdies&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Scope+One&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&amp;display=swap">
     <!-- CSS only -->
@@ -48,7 +48,7 @@
 
 </head>
 
-<body  onload="loadSideNav('result'); getAllstudentForSubjectResultUpload(); loadDashBoardInformation();">
+<body style="font-family: Poppins; font-weight: bold;"  onload="loadSideNav('result'); getAllstudentForSubjectResultUpload(); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -147,12 +147,12 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Rowdies;">RESULT UPLOAD</h3>
+                    <h3 style="font-weight: bold; font-family: Poppins;">RESULT UPLOAD</h3>
                     <ul>
                         <li>
-                            <a style="font-weight: bold;font-family: Rowdies, serif;" href="dashboard.html">Home</a>
+                            <a style="font-weight: bold;font-family: Poppins, serif;" href="dashboard.html">Home</a>
                         </li>
-                        <li style="font-weight: bold;font-family: Rowdies, serif;">Upload Result</li>
+                        <li style="font-weight: bold;font-family: Poppins, serif;">Upload Result</li>
                     </ul>
                 </div>
 
@@ -162,7 +162,7 @@
                             <div class="heading-layout1">
                                 <div class="item-title">
                                     <h3 id="result_subject_class"
-                                        style="font-weight: bold;font-family: Rowdies, serif;">UPLOAD RESULT FOR
+                                        style="font-weight: bold;font-family: Poppins, serif;">UPLOAD RESULT FOR
                                     </h3>
                                     <br>
                                     <div style="border: black dotted; margin-left: 10px;" class="row">
@@ -181,9 +181,9 @@
                             </div>
 
                             <div class="table-responsive">
-                                <!-- <table id="paginate" class="table table-striped table table-sm" cellspacing="0" width="100%"> -->
-                                <table id="my_id" class="table display data-table text-nowrap"
-                                    style=" border-spacing: 0.3em;">
+                                <table id="paginate" class="table table-striped table table-sm" cellspacing="0" width="100%">
+                                <!-- <table id="paginate" class="table table-striped table table-sm"
+                                    style=" border-spacing: 0.3em;"> -->
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
@@ -270,7 +270,7 @@
 </body>
 
 <script>
-    $("#my_id").keydown(function (e) {
+    $("#paginate").keydown(function (e) {
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
             ((e.keyCode == 65 || e.keyCode == 86 || e.keyCode == 67) && (e.ctrlKey === true || e.metaKey === true)) ||
             (e.keyCode >= 35 && e.keyCode <= 40)) {

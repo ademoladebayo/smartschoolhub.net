@@ -189,7 +189,7 @@ class AdminController extends Controller
         return $SessionModel->orderBy('id','DESC')->get();
     }
 
-    //eInventory SETTINGS
+    //GRADE SETTINGS
     public function createGrade(Request $request)
     {
         $AdminService = new AdminService();
@@ -205,7 +205,7 @@ class AdminController extends Controller
     public function getAllGrade()
     {
         $GradeSettingsModel = new GradeSettingsModel();
-        return $GradeSettingsModel->get();
+        return $GradeSettingsModel->orderBy('id','DESC')->get();
     }
 
     public function deleteGrade($grade_id)
@@ -288,6 +288,13 @@ class AdminController extends Controller
     {
         $AdminService = new AdminService();
         return $AdminService->deleteInventory($id);
+    }
+
+    // RESET ACCOUNT
+    public function resetAccount(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->resetAccount($request);
     }
 
 }

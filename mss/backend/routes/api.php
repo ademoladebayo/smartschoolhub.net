@@ -178,6 +178,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('admin/inventory/{id}', 'AdminController@deleteInventory', function () {
     })->middleware(Cors::class);
 
+    
+    // RESET USER ACCOUNT
+    Route::post('admin/reset-account', 'AdminController@resetAccount', function () {
+    })->middleware(Cors::class);
 
     // =============================================================================
     //               END OF ADMIN ROUTE
@@ -247,6 +251,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('teacher/promote-students', 'TeacherController@promoteStudents', function () {
     })->middleware(Cors::class);
 
+    // TEACHER {PROMOTE STUDENT}
+    Route::post('teacher/change-password', 'TeacherController@changePassword', function () {
+    })->middleware(Cors::class);
+
     // TEACHER {LESSON PLAN}
     Route::post('teacher/save-lesson-plan', 'TeacherController@saveLessonPlan', function () {
     })->middleware(Cors::class);
@@ -305,6 +313,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // STUDENT {ATTENDANCE}
     Route::post('student/attendance-summary', 'StudentController@attendanceSummary', function () {
     })->middleware(Cors::class);
+
+     // STUDENT {CHANGE PASSWORD}
+     Route::post('student/change-password', 'StudentController@changePassword', function () {
+    })->middleware(Cors::class);
+
 });
 
 // =============================================================================

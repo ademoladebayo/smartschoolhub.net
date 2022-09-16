@@ -1,14 +1,15 @@
+// SOUND VARIABLES
+var successSound = new Audio("../asset/sound/verified.mp3");
+var errorSound = new Audio("../asset/sound/error1.mp3");
+
 // DEVELOPMENT IP
 //var ip = "http://127.0.0.1:8000";
 //var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
-// LIVE IP
-var ip = "https://smartschoolhub.net/backend/amazingbotim";
- var domain = "https://amazingbotim.smartschoolhub.net";
 
-// // REMOTE ACCESS
-// var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
-// var domain = "http://192.168.42.168/smartschoolhub.ng";
+// LIVE IP
+ var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var domain = "https://amazingbotim.smartschoolhub.net";
 
 // CBT VARIABLE
 answer = [];
@@ -68,15 +69,15 @@ function loadSideNav(page) {
                 and History</span></a>
     </li>
 
-    ${
-      // <li class="nav-item">
-      //   <a id="change-password" href="change-password.html" class="nav-link">
-      //     <i class="flaticon-settings"></i>
-      //     <span>Change Password</span>
-      //   </a>
-      // </li>
-      ""
-    }
+    
+    <li class="nav-item">
+      <a id="change-password" href="change-password.html" class="nav-link">
+        <i class="flaticon-settings"></i>
+        <span>Change Password</span>
+      </a>
+    </li>
+      
+    
     <li class="nav-item">
         <a href="../index.html" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
@@ -120,7 +121,7 @@ function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
       ? ""
-      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+      : `<h1 style="font-weight: bold; font-family: Poppins; color:white;">
         <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
 
@@ -367,7 +368,7 @@ function getCBTForSubject() {
   // localStorage["cbt_subject_class"];
 
   // GET CBT
-  fetch(ip + "/api/teacher/all-cbt", {
+  fetch(ip + "/api/student/all-cbt", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -800,7 +801,7 @@ function getAllSubjectForTable() {
                   <td>${c}.</td>
                   <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
                   <td>${data[i].subject_type}</td>
-                  <td>${data[i].teacher}</td>
+                  <td>${data[i].student}</td>
                   
                
                   
@@ -1125,6 +1126,15 @@ async function getTranscript() {
     "/backend/storage/app/public/fileupload/student/" +
     user_data.data.student_id +
     ".png";
+
+    
+  // SCHOOL LOGO URL
+  school_logo_url =
+  domain +
+  "/backend/storage/app/public/fileupload/school_logo.png";
+
+    // SCHOOL_LOGO
+  document.getElementById("school_logo").src = school_logo_url;
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
@@ -2146,7 +2156,7 @@ function print() {
   var a = window.open("", "", "height=1000, width=1000");
   a.document.write("<html>");
   a.document.write(head);
-  a.document.write("<body>");
+  a.document.write(`<body style="font-family: Poppins; font-weight: bold;">`);
   a.document
     .write(`<iframe id="iframe" src="./transcript.html" title="description" style="border:none;"
   title="Iframe Example" scrolling="no"></iframe>`);
@@ -2159,12 +2169,6 @@ function print() {
   </html>`);
   a.print();
   a.document.close();
-
-  // originalPage = document.body.innerHTML;
-  // document.body.innerHTML =
-  //   "<html><head><title></title></head><body>" + printData + "</body>";
-  /// window.print();
-  // document.body.innerHTML = originalData;
 }
 
 function print1(section) {
@@ -2174,7 +2178,7 @@ function print1(section) {
   var a = window.open("", "", "height=1000, width=1000");
   a.document.write("<html>");
   a.document.write(head);
-  a.document.write("<body>");
+  a.document.write(`<body style="font-family: Poppins; font-weight: bold;">`);
   a.document.write(divContents);
   a.document.write(`
   </body>
@@ -2286,6 +2290,74 @@ function loadSchoolColor(){
 function paginateTable(){
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
+}
+
+// CHANGE PASSWORD
+function changePassword() {
+  var current_password = document
+    .getElementById("current_password")
+    .value.trim();
+  var new_password = document.getElementById("new_password").value.trim();
+  var c_new_password = document.getElementById("c_new_password").value.trim();
+
+  if (current_password == "" || new_password == "" || c_new_password == "") {
+    warningtoast("Please check no field is empty");
+    return 0;
+  }
+
+  if (new_password !== c_new_password) {
+    say("Password do not match");
+    errortoast("Password do not match");
+    return 0;
+  }
+  warningtoast("Processing... Please wait");
+  fetch(ip + "/api/student/change-password", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.student_id,
+      current_password: current_password,
+      new_password: new_password,
+      c_new_password: c_new_password,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/student/");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          window.parent.location.reload();
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// TEXT TO SPEECH
+function say(text) {
+  let speech = new SpeechSynthesisUtterance();
+  voices = speechSynthesis.getVoices();
+  speech.lang = "en-US";
+  speech.text = text;
+  // speech.voice = voices[1];
+  speech.volume = 1;
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
 }
 
 // TOAST

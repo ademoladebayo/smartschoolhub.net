@@ -20,6 +20,7 @@ use App\Repository\SessionRepository;
 use App\Repository\GradeSettingsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminService
 {
@@ -102,6 +103,7 @@ class AdminService
     // STUDENT
     public function createStudent(Request $request)
     {
+        
         $studentModel = new StudentModel();
         $studentRepository = new StudentRepository();
 
@@ -518,5 +520,18 @@ class AdminService
         InventoryModel::find($id)->delete();
         return response()->json(['success' => true, 'message' => 'Item was deleted successfully.']);
    
+    }
+
+    // RESET ACCOUNT
+    public function resetAccount(Request $request)
+    {
+        $StudentRepository = new StudentRepository();
+        $TeacherRepository = new TeacherRepository();
+        if($request->user_type == "STUDENT"){
+            $StudentRepository->updatePassword($request->id,env("DEFAULT_PASSWORD"));
+        }else if($request->user_type == "STAFF"){
+            $TeacherRepository->updatePassword($request->id,Hash::make(env("DEFAULT_PASSWORD")));
+        }
+        return response()->json(['success' => true, 'message' => 'Account reset was successful.']);
     }
 }

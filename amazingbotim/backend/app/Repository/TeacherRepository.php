@@ -15,6 +15,10 @@ class TeacherRepository
     public function createTeacher(TeacherModel $TeacherModel)
     {
 
+        if (TeacherModel::where('first_name', $TeacherModel->first_name)->where('middle_name', $TeacherModel->middle_name)->where('last_name', $TeacherModel->last_name)->exists()) {
+            return response()->json(['success' => false, 'message' => 'This staff already exist']);
+        }
+
         $TeacherModel->profile_status = 'ENABLED';
         $TeacherModel->password = Hash::make(strtolower($TeacherModel->first_name . "." . $TeacherModel->last_name));
         $TeacherModel->save();
@@ -34,7 +38,7 @@ class TeacherRepository
     public function getAllTeacher()
     {
         $TeacherModel =  new TeacherModel();
-        return  $TeacherModel->with('assigned_class')->get();
+        return  $TeacherModel->with('assigned_class')->orderBy('id','DESC')->get();
     }
     public function updateTeacherClass($teacher_id, $class_id)
     {

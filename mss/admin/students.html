@@ -43,7 +43,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body onload="loadSideNav('students'); getAllStudentForTable(); loadDashBoardInformation()">
+<body style="font-family: Poppins; font-weight: bold;" onload="loadSideNav('students'); getAllStudentForTable(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -144,12 +144,13 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Rowdies;">STUDENT MANAGEMENT</h3>
+                    <h3 style="font-weight: bold; font-family: Poppins;"><i class="flaticon-classmates"></i> STUDENT
+                        MANAGEMENT</h3>
                     <ul>
                         <li>
-                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
+                            <a style="font-weight: bold; font-family: Poppins;" href="dashboard.html">Home</a>
                         </li>
-                        <li style="font-weight: bold; font-family: Rowdies;">Students</li>
+                        <li style="font-weight: bold; font-family: Poppins;">Students</li>
                     </ul>
                 </div>
 
@@ -158,7 +159,7 @@
                         <div class="card-body">
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h3 style="font-weight: bold; font-family: Rowdies;">ALL STUDENT</h3>
+                                    <h3 style="font-weight: bold; font-family: Poppins;">ALL STUDENT</h3>
                                 </div>
 
                             </div>
@@ -171,18 +172,18 @@
                                             Student</b></button>
                                 </div>
 
-                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
                                     <input oninput="searchStudent(this.value)" type="text"
                                         placeholder="Search by Student ID or Name" class="form-control">
                                 </div>
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="table-responsive">
-                                <!-- <table id="paginate" class="table table-striped table table-sm" cellspacing="0" width="100%"> -->
-                                <table class="table display data-table text-nowrap">
+                                <table id="paginate" class="table table-striped table table-sm" cellspacing="0"
+                                    width="100%">
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
@@ -236,7 +237,7 @@
                             <!--Content-->
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
-                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
                                         id="exampleModalLabel">CREATE NEW STUDENT</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
@@ -265,7 +266,7 @@
                         <div class="modal-dialog modal-lg modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
                                         id="exampleModalLabel">STUDENT INFORMATION</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
@@ -413,7 +414,7 @@
                             <!--Content-->
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
-                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
                                         id="exampleModalLabel">EDIT STUDENT DETAILS</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>

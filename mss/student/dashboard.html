@@ -34,7 +34,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body   onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
+<body style="font-family: Poppins; font-weight: bold;"   onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -135,15 +135,15 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Rowdies;">STUDENT DASHBOARD</h3>
+                    <h3 style="font-weight: bold; font-family: Poppins;">STUDENT DASHBOARD</h3>
                     <ul>
                         <li>
-                            <a style="font-weight: bold; font-family: Rowdies;" href="index.html">Home</a>
+                            <a style="font-weight: bold; font-family: Poppins;" href="index.html">Home</a>
                         </li>
-                        <li style="font-weight: bold; font-family: Rowdies;">Dashboard</li>
+                        <li style="font-weight: bold; font-family: Poppins;">Dashboard</li>
                     </ul>
                     <br>
-                    <h3 id="session_term" style="font-weight: bold;font-family: Rowdies">Loading ... </h3>
+                    <h3 id="session_term" style="font-weight: bold;font-family: Poppins">Loading ... </h3>
                 </div>
                 <div class="row">
                     <!-- STATISTIC -->
@@ -160,7 +160,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="item-content">
-                                                <div style="color: black; font-family: Rowdies;" class="item-title">
+                                                <div style="color: black; font-family: Poppins;" class="item-title">
                                                     <b>No of CBT</b>
                                                 </div>
                                                 <div class="item-number"><span class="counter"
@@ -182,7 +182,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="item-content">
-                                                <div style="color: black; font-family: Rowdies;" class="item-title">
+                                                <div style="color: black; font-family: Poppins;" class="item-title">
                                                     <b>Attendance</b>
                                                 </div>
                                                 <div class="item-number"><span class="counter"
@@ -207,7 +207,7 @@
                                                     class="fas fa-sync-alt">
                                                 </i>
                                                 <br>
-                                                <div style="color: black; font-family: Rowdies;"
+                                                <div style="color: black; font-family: Poppins;"
                                                     class="item-title text-blue"><b>Due Balance </b><br><span
                                                         id="due_balance" style="font-style: bold; color: black;">Loading
                                                         ...</span></div>
@@ -216,11 +216,10 @@
 
                                                 <a href="#"
                                                     onclick="makePayment(JSON.parse(localStorage['fee']).due_balance)"
-                                                    class="text-green"><b>Click to pay
+                                                    class="text-green"><b>Pay
                                                         now</b></a><br>
                                                 <a href="#" onclick="reloadBreakdownFrame();" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal" class="text-blue"><b>See
-                                                        breakdown</b></a>
+                                                    data-bs-target="#viewModal" class="text-blue"><b>Breakdown</b></a>
                                             </div>
                                         </div>
                                     </div>
@@ -238,7 +237,7 @@
                             <div class="card-body">
                                 <div class="heading-layout1">
                                     <div class="item-title">
-                                        <h3 style="font-weight: bold;font-family: Rowdies"><b>About Me</b></h3>
+                                        <h3 style="font-weight: bold;font-family: Poppins"><b>About Me</b></h3>
                                     </div>
 
                                 </div>
@@ -271,7 +270,7 @@
                             <div class="card-body">
                                 <div class="heading-layout1 mg-b-17">
                                     <div class="item-title">
-                                        <h3 style="font-weight: bold; font-family: Rowdies;">Notifications</h3>
+                                        <h3 style="font-weight: bold; font-family: Poppins;">Notifications</h3>
                                     </div>
                                     <div class="dropdown">
                                         <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -331,7 +330,7 @@
                             <div class="card-body">
                                 <div class="heading-layout1">
                                     <div class="item-title">
-                                        <h3 style="font-weight: bold; font-family: Rowdies;">Event Calender</h3>
+                                        <h3 style="font-weight: bold; font-family: Poppins;">Event Calender</h3>
                                     </div>
                                     <div class="dropdown">
                                         <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -364,7 +363,7 @@
                                 <!--Content-->
                                 <div class="modal-content">
                                     <div class="modal-header justify-content-center">
-                                        <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                        <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
                                             id="exampleModalLabel">DUE BALANCE BREAKDOWN</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>

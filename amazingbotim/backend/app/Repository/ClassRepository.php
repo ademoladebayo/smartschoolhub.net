@@ -12,12 +12,17 @@ class ClassRepository
 {
     public function createClass(ClassModel $ClassModel)
     {
+
+        if (ClassModel::where('class_name', $ClassModel->class_name)->exists()) {
+            return response()->json(['success' => false, 'message' => 'This class already exist']);
+        }
+
         $AdminService = new AdminService();
-        $ClassModel->save();
 
         // UPDATE THE TEACHER ASSIGNED CLASS
         if ($ClassModel->class_teacher != "-") {
             $this->removeTeacherFromClass($ClassModel->class_teacher);
+            $ClassModel->save();
             $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->id);
         }
         return response()->json(['success' => true, 'message' => 'Class was created successfully.']);
@@ -56,7 +61,7 @@ class ClassRepository
 
     public function getAllClass()
     {
-        $classes = ClassModel::with('class_teacher')->get();
+        $classes = ClassModel::with('class_teacher')->orderBy('id','DESC')->get();
         foreach ($classes as $class) {
             $student_no =  $this->getNumberOfStudent($class->id);
             $class['student_no'] = $student_no;

@@ -5,7 +5,7 @@
 <head id="common-library">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>SSHUB | Class Students</title>
+    <title>SSHUB | Manual Payment</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -43,7 +43,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;" onload="loadSideNav('debitors');  getAllStudentForTable(); loadDashBoardInformation()">
+<body   onload="loadSideNav('students'); getAllStudentForTable(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -94,7 +94,7 @@
                             aria-expanded="false">
                             <div class="admin-title">
                                 <h5 id="user_name" class="item-title"></h5>
-                                <span id="user_type">ADMIN</span>
+                                <span id="user_type">BURSARY</span>
                             </div>
                             <div id="user_img" class="admin-img">
                                 <img src="../img/figure/admin.jpg" alt="Admin">
@@ -109,8 +109,7 @@
                                     <li><a href="my-profile.html"><i class="flaticon-user"></i>My Profile</a></li>
                                     <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
                                             Settings</a></li>
-                                    <li><a onclick="localStorage.removeItem('token')" href="index.html"><i
-                                                class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -124,8 +123,7 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div style="font-family: Poppins; font-weight: bold;"
-                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -144,12 +142,12 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Poppins;">STUDENT MANAGEMENT</h3>
+                    <h3 style="font-weight: bold; font-family: Rowdies;"><i class="flaticon-classmates"></i> STUDENT MANAGEMENT</h3>
                     <ul>
                         <li>
-                            <a style="font-weight: bold; font-family: Poppins;" href="dashboard.html">Home</a>
+                            <a style="font-weight: bold; font-family: Rowdies;" href="dashboard.html">Home</a>
                         </li>
-                        <li style="font-weight: bold; font-family: Poppins;">Students</li>
+                        <li style="font-weight: bold; font-family: Rowdies;">Manual Payment</li>
                     </ul>
                 </div>
 
@@ -158,7 +156,8 @@
                         <div class="card-body">
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h3 style="font-weight: bold; font-family: Poppins;">ALL STUDENT</h3>
+                                    <h3 id="fee_session" style="font-weight: bold; font-family: Rowdies;">MANUAL
+                                        PAYMENTS FOR </h3>
                                 </div>
 
                             </div>
@@ -167,21 +166,21 @@
                                     class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <button type="button" style="box-shadow: 10px;" class="btn-lg btn-primary"
                                         data-bs-toggle="modal" data-bs-target="#modalYT"><i class="fas fa-plus"></i>
-                                        <b>Add
-                                            Student</b></button>
+                                        <b>New
+                                            Payment</b></button>
                                 </div>
 
-                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <input oninput="searchStudent(this.value)" type="text"
+                                <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                    <input oninput="searchStudentDebouncer(this.value)" type="text"
                                         placeholder="Search by Student ID or Name" class="form-control">
                                 </div>
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="table-responsive">
-                                <table id="paginate" class="table table-striped table table-sm" >
+                                <table id="paginate" class="table table-striped table table-sm" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
                                             <th>S/N</th>
@@ -219,11 +218,7 @@
 
                                     </tbody>
                                 </table>
-                            </div> 
-                       
-                           
-                       
-                       
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -239,8 +234,8 @@
                             <!--Content-->
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
-                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
-                                        id="exampleModalLabel">CREATE NEW STUDENT</h5>
+                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                        id="exampleModalLabel">ADD NEW MANUAL PAYMENT</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -249,7 +244,7 @@
                                 <div class="modal-body mb-0 p-0">
 
                                     <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                        <iframe class="embed-responsive-item" src="./add-student.html"
+                                        <iframe class="embed-responsive-item" src="./frame-add-new-manual-payment.html"
                                             allowfullscreen></iframe>
                                     </div>
 
@@ -268,15 +263,14 @@
                         <div class="modal-dialog modal-lg modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
-                                        id="exampleModalLabel">STUDENT INFORMATION</h5>
+                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                        id="exampleModalLabel">Student Information</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-12">
-
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div class="heading-layout1">
@@ -287,26 +281,6 @@
                                                     </div>
                                                     <form class="new-added-form">
                                                         <div class="row">
-
-                                                            <div class="col-12 form-group">
-                                                                <div class="container">
-                                                                    <!-- <h1><b>STUDENT IMAGE</b>
-                                                                    </h1> -->
-                                                                    <div class="avatar-upload">
-                                                                        <!-- <div class="avatar-edit">
-                                                                            <input type='file' id="imageUpload"
-                                                                                accept=".png, .jpg, .jpeg" />
-                                                                            <label for="imageUpload"></label>
-                                                                        </div> -->
-                                                                        <div class="avatar-preview">
-                                                                            <div id="imagePreview"
-                                                                                style="background-image: url(../assets/img/sample_image.png);  height: 100%;">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
                                                             <div class="col-xl-3 col-lg-6 col-12 form-group">
                                                                 <label>First Name</label>
                                                                 <input id="first_name" type="text" placeholder=""
@@ -346,12 +320,12 @@
                                                                     class="form-control" readonly>
                                                                 <i class="far fa-calendar-alt"></i>
                                                             </div>
-                                                            <!-- <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                                            <div class="col-xl-3 col-lg-6 col-12 form-group">
                                                                 <label>Joining Session</label>
                                                                 <input id="joining_session" type="text" placeholder=""
                                                                     class="form-control" readonly>
 
-                                                            </div> -->
+                                                            </div>
                                                             <div class="col-lg-6 col-12 form-group">
                                                                 <label>Home Address</label>
                                                                 <textarea id="home_address"
@@ -416,8 +390,8 @@
                             <!--Content-->
                             <div class="modal-content">
                                 <div class="modal-header justify-content-center">
-                                    <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
-                                        id="exampleModalLabel">EDIT STUDENT DETAILS</h5>
+                                    <h5 style="font-weight: bold; font-family: Rowdies;" class="modal-title"
+                                        id="exampleModalLabel">EDIT MANUAL PAYMENT</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -426,8 +400,8 @@
                                 <div class="modal-body mb-0 p-0">
 
                                     <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                        <iframe id="edit_frame" class="embed-responsive-item" src="./edit-student.html"
-                                            allowfullscreen></iframe>
+                                        <iframe id="edit_frame" class="embed-responsive-item"
+                                            src="./frame-add-edit-manual-payment.html" allowfullscreen></iframe>
                                     </div>
 
                                 </div>
@@ -477,7 +451,7 @@
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
     <script src="../js/myscript.js"></script>
-    <script src="./js/bursary.js"></script>
+    <script src="./js/admin.js"></script>
     <script src="../common-library.js"></script>
     <!-- Select 2 Js -->
     <script src="../js/select2.min.js"></script>
@@ -496,98 +470,6 @@
     <style>
         .table>:not(:last-child)>:last-child>* {
             border-bottom-color: #e1e1e1;
-        }
-    </style>
-
-    <style>
-        body {
-            background: whitesmoke;
-            font-family: "Open Sans", sans-serif;
-        }
-
-        .container {
-            max-width: 960px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        h1 {
-            /* font-size: 20px; */
-            text-align: center;
-            /* margin: 20px 0 20px; */
-        }
-
-        h1 small {
-            display: block;
-            font-size: 15px;
-            padding-top: 8px;
-            color: gray;
-        }
-
-        .avatar-upload {
-            position: relative;
-            max-width: 205px;
-            margin: 50px auto;
-        }
-
-        .avatar-upload .avatar-edit {
-            position: absolute;
-            right: 12px;
-            z-index: 1;
-            top: 10px;
-        }
-
-        .avatar-upload .avatar-edit input {
-            display: none;
-        }
-
-        .avatar-upload .avatar-edit input+label {
-            display: inline-block;
-            width: 34px;
-            height: 34px;
-            margin-bottom: 0;
-            border-radius: 100%;
-            background: #ffffff;
-            border: 1px solid transparent;
-            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
-            cursor: pointer;
-            font-weight: normal;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .avatar-upload .avatar-edit input+label:hover {
-            background: #f1f1f1;
-            border-color: #d6d6d6;
-        }
-
-        .avatar-upload .avatar-edit input+label:after {
-            content: "\f040";
-            font-family: "FontAwesome";
-            color: #757575;
-            position: absolute;
-            top: 10px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            margin: auto;
-        }
-
-        .avatar-upload .avatar-preview {
-            width: 192px;
-            height: 192px;
-            position: relative;
-            border-radius: 100%;
-            border: 6px solid #f8f8f8;
-            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
-        }
-
-        .avatar-upload .avatar-preview>div {
-            width: 100%;
-            height: 100%;
-            border-radius: 100%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
         }
     </style>
 

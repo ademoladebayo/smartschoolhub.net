@@ -15,6 +15,10 @@ class SubjectRepository
 
     public function createSubject(SubjectModel $SubjectModel)
     {
+        if (SubjectModel::where('subject_name', $SubjectModel->subject_name)->where('class', $SubjectModel->class)->exists()) {
+            return response()->json(['success' => false, 'message' => 'This subject already exist']);
+        }
+
         $SubjectModel->save();
         $AdminService = new AdminService();
         //CREATE LESSON PLAN
@@ -24,7 +28,7 @@ class SubjectRepository
 
     public function getAllSubject()
     {
-        $Subjects =  SubjectModel::with('teacher', 'class')->get();
+        $Subjects =  SubjectModel::with('teacher', 'class')->orderBy('id','DESC')->get();
 
         foreach ($Subjects as $subject) {
             $student_no = $this->getNoSubjectRegistration($subject->id);

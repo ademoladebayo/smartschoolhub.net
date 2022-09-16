@@ -7,12 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var ip = "https://smartschoolhub.net/backend/amazingbotim";
  var domain = "https://amazingbotim.smartschoolhub.net";
-
-// // REMOTE ACCESS
-// var ip = "http://192.168.42.168/smartschoolhub.ng/SSHUB_BACKEND/server.php";
-// var domain = "http://192.168.42.168/smartschoolhub.ng";
 
 // CBT VARIABLES
 var question = [];
@@ -34,7 +30,7 @@ function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
       ? ""
-      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+      : `<h1 style="font-weight: bold; font-family: Poppins; color:white;">
         <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
 
@@ -348,223 +344,60 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        window.parent.location.assign(domain + "/admin/");
       }
       return res.json();
     })
     .then((data) => {
-      console.log(data);
       document.getElementById("student_table").innerHTML = ``;
       var c = 1;
       if (data.length > 0) {
         for (i in data) {
-          student_class = data[i].class == null ? `GRADUATED` : data[i].class.id
+          student_class =
+            data[i].class == null ? `GRADUATED` : data[i].class.id;
           if (
             student_class !=
             JSON.parse(localStorage["user_data"]).data.assigned_class.id
           ) {
             continue;
           }
-          if (c % 2 == 0) {
-            if (data[i].profile_status == "ENABLED") {
-              document.getElementById("student_table").innerHTML += `
-              <tr class="even">
-    
-              <td>${c}.</td>
-              <td>${data[i].student_id}</td>
-              <td>${data[i].first_name + " " + data[i].last_name}</td>
-              <td>${data[i].gender}</td>
-              <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-              <td>${data[i].class.class_name}</td>
-              <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                      data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                data[i]
-              ).replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-  
-              
-              <a onclick="updateStudentProfileStatus(${
-                data[i].id
-              })" class="btn btn-secondary text-black"><i
-                  class="fas fa-lock"></i> Disable</a>  
-
-              
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
-                          class="fas fa-poll"></i>
-                      Result</a>
-              
-              
-              <a onclick="deleteStudent(${
-                data[i].id
-              })" class="btn btn-danger text-white"><i
-                          class="fas fa-trash"></i>
-                      Delete</a>
-              </td>
-    
-          <tr>`;
-            } else {
-              document.getElementById("student_table").innerHTML += `
-              <tr class="even">
-    
-              <td>${c}.</td>
-              <td>${data[i].student_id}</td>
-              <td>${data[i].first_name + " " + data[i].last_name}</td>
-              <td>${data[i].gender}</td>
-              <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-              <td>${data[i].class.class_name}</td>
-              <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                      data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                data[i]
-              ).replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-  
-              
-              <a onclick="updateStudentProfileStatus(${
-                data[i].id
-              })" class="btn btn-secondary text-black"><i
-                  class="fas fa-unlock-alt"></i> Enable</a>  
-
-              
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
-                          class="fas fa-poll"></i>
-                      Result</a> 
-              
-              <a onclick="deleteStudent(${
-                data[i].id
-              })" class="btn btn-danger text-white"><i
-                          class="fas fa-trash"></i>
-                      Delete</a>
-              </td>
-    
-          <tr>`;
-            }
-          } else {
-            if (data[i].profile_status == "ENABLED") {
-              document.getElementById("student_table").innerHTML += `
-              <tr class="odd">
-    
-              <td>${c}.</td>
-              <td>${data[i].student_id}</td>
-              <td>${data[i].first_name + " " + data[i].last_name}</td>
-              <td>${data[i].gender}</td>
-              <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-              <td>${data[i].class.class_name}</td>
-              <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                      data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                data[i]
-              ).replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-  
-              
-              <a onclick="updateStudentProfileStatus(${
-                data[i].id
-              })" class="btn btn-secondary text-black"><i
-                  class="fas fa-lock"></i> Disable</a>  
-
-              
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
-                          class="fas fa-poll"></i>
-                      Result</a>
-              
-              <a onclick="deleteStudent(${
-                data[i].id
-              })" class="btn btn-danger text-white"><i
-                          class="fas fa-trash"></i>
-                      Delete</a>
-              </td>
-    
-          <tr>`;
-            } else {
-              document.getElementById("student_table").innerHTML += `
-              <tr class="odd">
-    
-              <td>${c}.</td>
-              <td>${data[i].student_id}</td>
-              <td>${data[i].first_name + " " + data[i].last_name}</td>
-              <td>${data[i].gender}</td>
-              <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-              <td>${data[i].class.class_name}</td>
-              <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                      data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                data[i]
-              ).replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-  
-              
-              <a onclick="updateStudentProfileStatus(${
-                data[i].id
-              })" class="btn btn-secondary text-black"><i
-                  class="fas fa-unlock-alt"></i> Enable</a>  
-
-              
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
-                          class="fas fa-poll"></i>
-                      Result</a> 
-              
-              <a onclick="deleteStudent(${
-                data[i].id
-              })" class="btn btn-danger text-white"><i
-                          class="fas fa-trash"></i>
-                      Delete</a>
-              </td>
-    
-          <tr>`;
-            }
-          }
+          document.getElementById("student_table").innerHTML += `
+          <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+      
+          <td>${c}.</td>
+          <td>${data[i].student_id}</td>
+          <td>${data[i].first_name + " " + data[i].last_name}</td>
+          <td>${data[i].gender}</td>
+          <td class="text-white">${
+            data[i].profile_status == "ENABLED"
+              ? `<span class="badge bg-success"><b>ENABLED</b></span>`
+              : `<span class="badge bg-danger"><b>DISABLED</b></span>`
+          }</td>
+          <td>${
+            data[i].class == null ? `GRADUATED` : data[i].class.class_name
+          }</td>
+          <td>
+          <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+            /"/g,
+            "'"
+          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                                                  data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
+          <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(
+            /"/g,
+            "'"
+          )})" class="btn gradient-orange-peel text-black"><i
+                      class="fas fa-poll"></i>
+                  Result</a>
+      </tr>`;
 
           c = c + 1;
         }
-        //paginateTable();
       } else {
         document.getElementById(
           "student_table"
         ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
-  
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -1111,6 +944,13 @@ function getTranscript() {
     "/backend/storage/app/public/fileupload/student/" +
     user_data.student_id +
     ".png";
+
+  // SCHOOL LOGO URL
+  school_logo_url =
+    domain + "/backend/storage/app/public/fileupload/school_logo.png";
+
+  // SCHOOL_LOGO
+  document.getElementById("school_logo").src = school_logo_url;
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
@@ -3087,7 +2927,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           
           
 
-      <tr>`;
+      </tr>`;
           c = c + 1;
         }
       } else {
@@ -3095,7 +2935,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           "student_registered"
         ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
-     // paginateTable();
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -3539,16 +3379,9 @@ function loadLessonPage(value) {
 function changePassword() {
   var current_password = document
     .getElementById("current_password")
-    .value.toLowerCase()
-    .trim();
-  var new_password = document
-    .getElementById("new_password")
-    .value.toLowerCase()
-    .trim();
-  var c_new_password = document
-    .getElementById("c_new_password")
-    .value.toLowerCase()
-    .trim();
+    .value.trim();
+  var new_password = document.getElementById("new_password").value.trim();
+  var c_new_password = document.getElementById("c_new_password").value.trim();
 
   if (current_password == "" || new_password == "" || c_new_password == "") {
     warningtoast("Please check no field is empty");
@@ -3630,7 +3463,7 @@ function getDate() {
 //   var a = window.open("", "", "height=500, width=500");
 //   a.document.write("<html>");
 //   a.document.write(header);
-//   a.document.write("<body style="font-family: Poppins; font-weight: bold;"  > <h1>Div contents are <br>");
+//   a.document.write("<body style="font-family: Poppins; font-weight: bold;" style="font-family: Poppins; font-weight: bold;"  > <h1>Div contents are <br>");
 //   a.document.write(divContents);
 //   a.document.write("</body></html>");
 //   a.document.close();
@@ -3678,7 +3511,7 @@ function print() {
   var a = window.open("", "", "height=1000, width=1000");
   a.document.write("<html>");
   a.document.write(head);
-  a.document.write("<body>");
+  a.document.write(`<body style="font-family: Poppins; font-weight: bold;"`);
   a.document
     .write(`<iframe id="iframe" src="./transcript.html" title="description" style="border:none;"
   title="Iframe Example" scrolling="no"></iframe>`);
@@ -3691,12 +3524,6 @@ function print() {
   </html>`);
   a.print();
   a.document.close();
-
-  // originalPage = document.body.innerHTML;
-  // document.body.innerHTML =
-  //   "<html><head><title></title></head><body>" + printData + "</body>";
-  /// window.print();
-  // document.body.innerHTML = originalData;
 }
 
 function print1(section) {
@@ -3706,7 +3533,7 @@ function print1(section) {
   var a = window.open("", "", "height=1000, width=1000");
   a.document.write("<html>");
   a.document.write(head);
-  a.document.write("<body>");
+  a.document.write(`<body style="font-family: Poppins; font-weight: bold;">`);
   a.document.write(divContents);
   a.document.write(`
   </body>
@@ -3941,7 +3768,11 @@ function loadCustomSessionTerm() {
     })
 
     .then((data) => {
-      document.getElementById("session_term0").innerHTML = ``;
+      document.getElementById("session_term0").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
       data.forEach((sessions) => {
         term.forEach((term) => {
           document.getElementById(

@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
-var domain = "https://mss.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/mss";
+ var domain = "https://mss.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -29,12 +29,11 @@ loadSchoolColor();
 //   checkPortalSubscription();
 // }
 
-
 function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
       ? ""
-      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+      : `<h1 style="font-weight: bold; font-family: Poppins; color:white;">
       <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
 
@@ -316,7 +315,6 @@ function reloadEditFrame() {
 }
 
 // TEACHER
-
 function getAllTeacherForClass() {
   fetch(ip + "/api/admin/all-teacher", {
     method: "GET",
@@ -406,200 +404,59 @@ function getAllTeacherForTable() {
       document.getElementById("teacher_table").innerHTML = ``;
       var c = 1;
       for (i in data) {
-        if (c % 2 == 0) {
-          if (data[i].profile_status == "ENABLED") {
-            document.getElementById("teacher_table").innerHTML += `
-            <tr class="even">
-  
-            <td>${c}.</td>
-            <td>${data[i].teacher_id}</td>
-            <td>${
-              data[i].title + " " + data[i].first_name + " " + data[i].last_name
-            }</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-           
-            <td>
-            <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
+        document.getElementById("teacher_table").innerHTML += `
+        <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+    
+        <td>${c}.</td>
+        <td>${data[i].teacher_id}</td>
+        <td>${
+          data[i].title + " " + data[i].first_name + " " + data[i].last_name
+        }</td>
+        <td>${data[i].gender}</td>
+        <td class="text-white">${
+          data[i].profile_status == "ENABLED"
+            ? `<span class="badge bg-success"><b>ENABLED</b></span>`
+            : `<span class="badge bg-danger"><b>DISABLED</b></span>`
+        }</td>
+        <td>
+        <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
+          /"/g,
+          "'"
+        )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                                                data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
+        <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
+          data[i]
+        ).replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
+        data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+    
+        
+        <a onclick="updateTeacherProfileStatus(${
+          data[i].id
+        })" class="btn gradient-orange-peel"><i
+            class='${
+              data[i].profile_status == "ENABLED"
+                ? "fas fa-lock"
+                : "fas fa-unlock-alt"
+            }'></i></a>  
             
-            <a onclick="updateTeacherProfileStatus(${
-              data[i].id
-            })" class="btn gradient-orange-peel"><i
-                class="fas fa-lock"></i> Disable</a>  
-
-            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a> 
-            
-            <a onclick="deleteTeacher(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          } else {
-            document.getElementById("teacher_table").innerHTML += `
-            <tr class="even">
-  
-            <td>${c}.</td>
-            <td>${data[i].teacher_id}</td>
-            <td>${
-              data[i].title + " " + data[i].first_name + " " + data[i].last_name
-            }</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-            
-            <td>
-            <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
-            
-            <a onclick="updateTeacherProfileStatus(${
-              data[i].id
-            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
-
-            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a>
-            
-            <a onclick="deleteTeacher(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          }
-        } else {
-          if (data[i].profile_status == "ENABLED") {
-            document.getElementById("teacher_table").innerHTML += `
-            <tr class="odd">
-  
-            <td>${c}.</td>
-            <td>${data[i].teacher_id}</td>
-            <td>${
-              data[i].title + " " + data[i].first_name + " " + data[i].last_name
-            }</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-            
-            <td>
-            <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
-            
-            <a onclick="updateTeacherProfileStatus(${
-              data[i].id
-            })" href="#" class="btn gradient-orange-peel"><i
-                class="fas fa-lock"></i> Disable</a>  
-            
-            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a>    
-            
-            <a onclick="deleteTeacher(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          } else {
-            document.getElementById("teacher_table").innerHTML += `
-            <tr class="odd">
-  
-            <td>${c}.</td>
-            <td>${data[i].teacher_id}</td>
-            <td>${
-              data[i].title + " " + data[i].first_name + " " + data[i].last_name
-            }</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-            
-            <td>
-            <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
-            
-            <a onclick="updateTeacherProfileStatus(${
-              data[i].id
-            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
-
-            <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a>
-            
-            <a onclick="deleteTeacher(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          }
-        }
-
+        <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+          /"/g,
+          "'"
+        )})" class="btn btn-secondary text-white">
+          <i class="fas fa-id-card"></i>
+               </a> 
+        
+        <a onclick="resetAccount('STAFF','${
+          data[i].teacher_id
+        }')" class="btn btn-success text-white">
+        <i class="fas fa-sync-alt"></i>
+                </a>
+        </td>
+    
+    </tr>`;
         c = c + 1;
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -738,7 +595,8 @@ function createTeacher() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
+          parent.getAllTeacherForTable();
+          parent.$("#modalYT").modal("hide");
           }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
@@ -814,8 +672,9 @@ function updateTeacher() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllTeacherForTable();
+            parent.$("#editModal").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -852,9 +711,9 @@ function updateTeacherProfileStatus(id) {
       toastr.remove();
       if (data.success) {
         successtoast("<b>" + data.message + "</b>");
-        setTimeout(function () {
-          window.parent.location.reload();
-        }, 1000);
+        // setTimeout(function () {
+        getAllTeacherForTable();
+        // }, 1000);
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
@@ -888,9 +747,9 @@ function deleteTeacher(id) {
       toastr.remove();
       if (data.success) {
         successtoast("<b>" + data.message + "</b>");
-        setTimeout(function () {
-          location.reload();
-        }, 1000);
+        // setTimeout(function () {
+        getAllTeacherForTable();
+        // }, 1000);
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
@@ -1159,213 +1018,80 @@ function getAllStudentForTable() {
       return res.json();
     })
     .then((data) => {
-      console.log(data);
       document.getElementById("student_table").innerHTML = ``;
       var c = 1;
       if (data.length > 0) {
         for (i in data) {
-          if (c % 2 == 0) {
-            if (data[i].profile_status == "ENABLED") {
-              document.getElementById("student_table").innerHTML += `
-            <tr class="even">
-  
-            <td>${c}.</td>
-            <td>${data[i].student_id}</td>
-            <td>${data[i].first_name + " " + data[i].last_name}</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-            <td>${
-              data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
-            <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
-            
-            <a onclick="updateStudentProfileStatus(${
-              data[i].id
-            })" class="btn gradient-orange-peel"><i
-                class="fas fa-lock"></i> Disable</a>  
-
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a> 
-            
-            <a onclick="deleteStudent(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-            } else {
-              document.getElementById("student_table").innerHTML += `
-            <tr class="even">
-  
-            <td>${c}.</td>
-            <td>${data[i].student_id}</td>
-            <td>${data[i].first_name + " " + data[i].last_name}</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-             <td>${
-               data[i].class == null ? `GRADUATED` : data[i].class.class_name
-             }</td>
-            <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
-            
-            <a onclick="updateStudentProfileStatus(${
-              data[i].id
-            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
-
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a> 
-            
-            <a onclick="deleteStudent(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-            }
-          } else {
-            if (data[i].profile_status == "ENABLED") {
-              document.getElementById("student_table").innerHTML += `
-            <tr class="odd">
-  
-            <td>${c}.</td>
-            <td>${data[i].student_id}</td>
-            <td>${data[i].first_name + " " + data[i].last_name}</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-             <td>${
-               data[i].class == null ? `GRADUATED` : data[i].class.class_name
-             }</td>
-            <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
-            
-            <a onclick="updateStudentProfileStatus(${
-              data[i].id
-            })" href="#" class="btn gradient-orange-peel"><i
-                class="fas fa-lock"></i> Disable</a>  
-
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a> 
-            
-            <a onclick="deleteStudent(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-            } else {
-              document.getElementById("student_table").innerHTML += `
-            <tr class="odd">
-  
-            <td>${c}.</td>
-            <td>${data[i].student_id}</td>
-            <td>${data[i].first_name + " " + data[i].last_name}</td>
-            <td>${data[i].gender}</td>
-            <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-             <td>${
-               data[i].class == null ? `GRADUATED` : data[i].class.class_name
-             }</td>
-            <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
-                                                    data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-
-            
-            <a onclick="updateStudentProfileStatus(${
-              data[i].id
-            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
-
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a> 
-            
-            <a onclick="deleteStudent(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-            }
-          }
+          document.getElementById("student_table").innerHTML += `
+          <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+      
+          <td>${c}.</td>
+          <td>${data[i].student_id}</td>
+          <td>${data[i].first_name + " " + data[i].last_name}</td>
+          <td>${data[i].gender}</td>
+          <td class="text-white">${
+            data[i].profile_status == "ENABLED"
+              ? `<span class="badge bg-success"><b>ENABLED</b></span>`
+              : `<span class="badge bg-danger"><b>DISABLED</b></span>`
+          }</td>
+          <td>${
+            data[i].class == null ? `GRADUATED` : data[i].class.class_name
+          }</td>
+          <td>
+          <a data-bs-placement="top" data-bs-toggle="tooltip" title="View" onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+            /"/g,
+            "'"
+          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                                                  data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
+          <a data-bs-placement="top" data-bs-toggle="tooltip" title="Edit"  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            data[i]
+          ).replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
+          data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+      
+          
+          <a data-bs-placement="top" data-bs-toggle="tooltip" title="Change Status"  onclick="updateStudentProfileStatus(${
+            data[i].id
+          })" class="btn gradient-orange-peel"><i
+              class='${
+                data[i].profile_status == "ENABLED"
+                  ? "fas fa-lock"
+                  : "fas fa-unlock-alt"
+              }'></i></a>  
+              
+          <a data-bs-placement="top" data-bs-toggle="tooltip" title="ID Card" onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+            /"/g,
+            "'"
+          )})" class="btn btn-secondary text-white">
+            <i class="fas fa-id-card"></i>
+                 </a> 
+          
+          <a data-bs-placement="top" data-bs-toggle="tooltip" title="Reset Account"  onclick="resetAccount('STUDENT','${
+            data[i].student_id
+          }')" class="btn btn-success text-white">
+          <i class="fas fa-sync-alt"></i>
+                  </a>
+          </td>
+      
+      </tr>`;
 
           c = c + 1;
         }
-        //paginateTable();
       } else {
         document.getElementById(
           "student_table"
         ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
+}
+
+{
+  /* <a onclick="deleteStudent(${
+  data[i].id
+})" class="btn btn-danger text-white"><i
+            class="fas fa-trash"></i>
+        Delete</a> */
 }
 
 function viewStudent(json) {
@@ -1521,8 +1247,9 @@ function createStudent() {
       .then((data) => {
         if (data.success) {
           //UPLOAD IMAGE WITH STUDENT ID RESPONSE
-          uploadImage(image[0], data.student_id);
+          uploadImage1(image[0], data.student_id);
         } else {
+          toastr.remove();
           errortoast("<b>" + data.message + "</b>");
         }
       })
@@ -1621,8 +1348,9 @@ function updateStudent() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllStudentForTable();
+            parent.$("#editModal").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -1659,9 +1387,9 @@ function updateStudentProfileStatus(id) {
       toastr.remove();
       if (data.success) {
         successtoast("<b>" + data.message + "</b>");
-        setTimeout(function () {
-          window.parent.location.reload();
-        }, 1000);
+        // setTimeout(function () {
+        getAllStudentForTable();
+        // }, 1000);
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
@@ -1694,9 +1422,9 @@ function deleteStudent(id) {
       toastr.remove();
       if (data.success) {
         successtoast("<b>" + data.message + "</b>");
-        setTimeout(function () {
-          location.reload();
-        }, 1000);
+        // setTimeout(function () {
+        getAllStudentForTable();
+        // }, 1000);
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
@@ -1940,7 +1668,7 @@ function viewStaffIDCard(data) {
   window.parent.location.assign(domain + "/admin/staff-id-card.html");
 }
 
-function uploadImage(image, student_id) {
+function uploadImage1(image, student_id) {
   const formData = new FormData();
 
   formData.append("file", image);
@@ -1972,8 +1700,10 @@ function uploadImage(image, student_id) {
         toastr.remove();
         successtoast("<b>" + student_id + " was created successfully. </b>");
         setTimeout(function () {
-          window.parent.location.reload();
-        }, 1000);
+          parent.getAllStudentForTable();
+          parent.$("#modalYT").modal("hide");
+          }, 1000);
+        
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
@@ -1987,8 +1717,9 @@ function uploadImage(image, student_id) {
   // input.addEventListener("change", onSelectFile, false);
 }
 
-// DUAL TYPE UPLOAD
+// DUAL TYPE UPLOAD (MAIN)
 function uploadImage(type) {
+  console.log("TYPE : " + type);
   // CHECK IMAGE
   const input = document.getElementById("imageUpload");
   console.log(input.files);
@@ -2036,7 +1767,12 @@ function uploadImage(type) {
         toastr.remove();
         successtoast("<b>" + data.message + "</b>");
         setTimeout(function () {
-          window.parent.location.reload();
+          if (type == "STUDENT") {
+            parent.getAllStudentForTable();
+          } else {
+            parent.getAllTeacherForTable();
+          }
+          parent.$("#modalYT").modal("hide");
         }, 1000);
       } else {
         errortoast("<b>" + data.message + "</b>");
@@ -2164,11 +1900,9 @@ function getAllClassForTable() {
       document.getElementById("class_table").innerHTML = ``;
       var c = 1;
       for (i in data) {
-        if (c % 2 == 0) {
-          if (data[i].class_teacher != null) {
-            document.getElementById("class_table").innerHTML += `
-            <tr class="even">
-  
+        if (data[i].class_teacher != null) {
+          document.getElementById("class_table").innerHTML += `
+            <tr class='${c % 2 == 0 ? "even" : "odd"}'>
             <td>${c}.</td>
             <td>${data[i].class_name}</td>
             <td>${data[i].class_sector}</td>
@@ -2184,14 +1918,14 @@ function getAllClassForTable() {
             <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
               data[i].id
             }~${data[i].class_name}~${
-              data[i].class_teacher.title +
-              " " +
-              data[i].class_teacher.first_name +
-              " " +
-              data[i].class_teacher.last_name
-            }~${data[i].class_teacher.id}~${
-              data[i].class_sector
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+            data[i].class_teacher.title +
+            " " +
+            data[i].class_teacher.first_name +
+            " " +
+            data[i].class_teacher.last_name
+          }~${data[i].class_teacher.id}~${
+            data[i].class_sector
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                 <a onclick="deleteClass(${
                   data[i].id
@@ -2200,54 +1934,21 @@ function getAllClassForTable() {
                     Delete</a>
             </td>
   
-        <tr>`;
-          } else {
-            document.getElementById("class_table").innerHTML += `
-            <tr class="even">
-  
-            <td>${c}.</td>
-            <td>${data[i].class_name}</td>
-            <td>${data[i].class_sector}</td>
-            <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-            <td>${data[i].student_no}</td>
-            <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~~${data[i].class_sector}')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          }
+        </tr>`;
         } else {
-          if (data[i].class_teacher != null) {
-            document.getElementById("class_table").innerHTML += `
-            <tr class="odd">
-  
+          document.getElementById("class_table").innerHTML += `
+            <tr class='${c % 2 == 0 ? "even" : "odd"}'>
             <td>${c}.</td>
             <td>${data[i].class_name}</td>
             <td>${data[i].class_sector}</td>
-            <td>${
-              data[i].class_teacher.title +
-              " " +
-              data[i].class_teacher.first_name +
-              " " +
-              data[i].class_teacher.last_name
-            }</td>
+            <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>${data[i].student_no}</td>
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
               data[i].id
-            }~${data[i].class_name}~${
-              data[i].class_teacher.title +
-              " " +
-              data[i].class_teacher.first_name +
-              " " +
-              data[i].class_teacher.last_name
-            }~${data[i].class_teacher.id}~${
-              data[i].class_sector
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+            }~${data[i].class_name}~~~${
+            data[i].class_sector
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                 <a onclick="deleteClass(${
                   data[i].id
@@ -2256,30 +1957,12 @@ function getAllClassForTable() {
                     Delete</a>
             </td>
   
-        <tr>`;
-          } else {
-            document.getElementById("class_table").innerHTML += `
-            <tr class="odd">
-  
-            <td>${c}.</td>
-            <td>${data[i].class_name}</td>
-            <td>${data[i].class_sector}</td>
-            <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-            <td>${data[i].student_no}</td>
-            <td>
-                <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~~${data[i].class_sector}')" class="btn btn-warning" data-bs-toggle="modal"
-                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          }
+        </tr>`;
         }
 
         c = c + 1;
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -2371,8 +2054,9 @@ function createClass() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllClassForTable();
+            parent.$("#modalYT").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -2417,8 +2101,9 @@ function updateClass() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllClassForTable();
+            parent.$("#editModal").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -2639,8 +2324,9 @@ function createSubject() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllSubjectForTable();
+            parent.$("#modalYT").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -2671,12 +2357,12 @@ function getAllSubjectForTable() {
       document.getElementById("subject_table").innerHTML = ``;
       var c = 1;
       for (i in data) {
-        if (c % 2 == 0) {
+       
           if (data[i].teacher != null) {
             console.log("DEBUG not null: " + data[i].teacher);
             console.log(data[i].teacher);
             document.getElementById("subject_table").innerHTML += `
-            <tr class="even">
+            <tr class='${c % 2 == 0 ? "even" : "odd"}'>
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
@@ -2711,12 +2397,12 @@ function getAllSubjectForTable() {
                     Delete</a>
             </td>
   
-        <tr>`;
+        </tr>`;
           } else {
             console.log("DEBUG null: " + data[i].teacher);
             console.log(data[i].teacher);
             document.getElementById("subject_table").innerHTML += `
-            <tr class="even">
+            <tr class='${c % 2 == 0 ? "even" : "odd"}'>
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
@@ -2739,80 +2425,13 @@ function getAllSubjectForTable() {
                     Delete</a>
             </td>
   
-        <tr>`;
+        </tr>`;
           }
-        } else {
-          if (data[i].teacher != null) {
-            document.getElementById("subject_table").innerHTML += `
-            <tr class="odd">
-  
-            <td>${c}.</td>
-            <td>${data[i].subject_name}</td>
-             <td>${
-               data[i].class == null ? `GRADUATED` : data[i].class.class_name
-             }</td>
-            <td>${
-              data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
-            }</td>
-            <td>${data[i].student_no}</td>
-            <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
-              data[i].id
-            }~${data[i].subject_name}~${
-              data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
-            }~${data[i].teacher.id}~${data[i].class.class_name}~${
-              data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteSubject(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          } else {
-            document.getElementById("subject_table").innerHTML += `
-            <tr class="odd">
-  
-            <td>${c}.</td>
-            <td>${data[i].subject_name}</td>
-             <td>${
-               data[i].class == null ? `GRADUATED` : data[i].class.class_name
-             }</td>
-            <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-            <td>${data[i].student_no}</td>
-            <td>
-                <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
-                  data[i].id
-                }~${data[i].subject_name}~null~null~${
-              data[i].class.class_name
-            }~${
-              data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
-                    data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteSubject(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
-          }
-        }
+      
 
         c = c + 1;
       }
+      paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -2883,8 +2502,9 @@ function updateSubject() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllSubjectForTable();
+            parent.$("#editModal").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -3341,8 +2961,9 @@ function createGrade() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllGradeForTable();
+            parent.$("#modalYT").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -3460,8 +3081,9 @@ function updateGrade() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-            window.parent.location.reload();
-          }, 1000);
+            parent.getAllGradeForTable();
+            parent.$("#editModal").modal("hide");
+            }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -4300,9 +3922,9 @@ function saveInventoryItem() {
         toastr.remove();
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
-          setTimeout(function () {
-            getInventory();
-          }, 1000);
+          // setTimeout(function () {
+          getInventory();
+          // }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -4589,7 +4211,7 @@ function checkPortalSubscription() {
     .catch((err) => console.log(err));
 }
 
-//GET CREDENTIALS
+//GET CREADENTIALS
 function getStoredCredential() {
   fetch(ip + "/api/general/stored-credential", {
     method: "GET",
@@ -4701,6 +4323,40 @@ function payWithPaystack(id, amount, subscription_id, description) {
   });
   handler.openIframe(); //open the paystack's payment modal
 }
+
+// RESET ACCOUNT
+function resetAccount(user_type,id) {
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/reset-account", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      user_type: user_type,
+      id: id,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast("<b>" + data.message + "</b>");
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
 
 // TOAST
 function successtoast(message, time) {

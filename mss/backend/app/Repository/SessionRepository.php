@@ -7,6 +7,7 @@ use App\Model\SessionModel;
 use App\Service\AdminService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class SessionRepository
 {
@@ -34,11 +35,12 @@ class SessionRepository
             $portalSubcription->amount = 0;
 
             // UPDATE USAGE OF PAST OF PREVIOUS SESSION TERM
+            $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
             $StudentRepository = new StudentRepository();
             $student = $StudentRepository->allStudentCount();
             $previousPortalSubcription = PortalSubscription::orderBy("id","DESC")->get()[0];
             $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
-            $previousPortalSubcription->amount = $student * 1000;
+            $previousPortalSubcription->amount = $student * intval($subscription_fee);
             $previousPortalSubcription->save();
             $portalSubcription->save();
         }
@@ -63,11 +65,12 @@ class SessionRepository
             $portalSubcription->amount = 0;
 
             // UPDATE USAGE OF PAST OF PREVIOUS SESSION TERM
+            $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
             $StudentRepository = new StudentRepository();
             $student = $StudentRepository->allStudentCount();
             $previousPortalSubcription = PortalSubscription::orderBy("id","DESC")->get()[0];
             $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
-            $previousPortalSubcription->amount = $student * 1000;
+            $previousPortalSubcription->amount = $student * intval($subscription_fee);
             $previousPortalSubcription->save();
 
             $portalSubcription->save();

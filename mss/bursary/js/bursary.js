@@ -4,8 +4,8 @@
 
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/mss";
-var domain = "https://mss.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/mss";
+ var domain = "https://mss.smartschoolhub.net";
 
 getSchoolDetails();
 // getCurrentSession();
@@ -152,7 +152,7 @@ function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
       ? ""
-      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+      : `<h1 style="font-weight: bold; font-family: Poppins; color:white;">
           <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
 

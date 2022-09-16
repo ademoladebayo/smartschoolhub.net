@@ -4,7 +4,8 @@
 
 <!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/account-settings.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:28 GMT -->
 
-<head>
+<head> 
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title></title>
@@ -36,7 +37,7 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body>
+<body style="font-family: Poppins; font-weight: bold;">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -52,6 +53,10 @@
                         <div class="card">
                             <div style="margin-top: 20px;" class="card-body">
                                 <div class="heading-layout1">
+                                    <i onclick="window.location.reload();"
+                                        style="color: black; float: right; margin-right: 3px; cursor: pointer;"
+                                        class="fas fa-sync-alt">
+                                    </i>
                                     <div class="item-title">
                                         <h3>Please fill all Asterisk (*) field</h3>
                                     </div>
@@ -70,15 +75,18 @@
                                     </div>
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                                         <label>First Name *</label>
-                                        <input oninput="this.value = this.value.toUpperCase()" id="first_name" type="text" placeholder="" class="form-control">
+                                        <input oninput="this.value = this.value.toUpperCase()" id="first_name"
+                                            type="text" placeholder="" class="form-control">
                                     </div>
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                                         <label>Middle Name </label>
-                                        <input oninput="this.value = this.value.toUpperCase()" id="middle_name" type="text" placeholder="" class="form-control">
+                                        <input oninput="this.value = this.value.toUpperCase()" id="middle_name"
+                                            type="text" placeholder="" class="form-control">
                                     </div>
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                                         <label>Last Name *</label>
-                                        <input oninput="this.value = this.value.toUpperCase()" id="last_name" type="text" placeholder="" class="form-control">
+                                        <input oninput="this.value = this.value.toUpperCase()" id="last_name"
+                                            type="text" placeholder="" class="form-control">
                                     </div>
 
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
@@ -96,7 +104,8 @@
                                     </div>
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                                         <label>Staff's E-Mail</label>
-                                        <input oninput="this.value = this.value.toLowerCase()" id="teacher_email" type="email" placeholder="" class="form-control">
+                                        <input oninput="this.value = this.value.toLowerCase()" id="teacher_email"
+                                            type="email" placeholder="" class="form-control">
                                     </div>
 
 
@@ -124,8 +133,8 @@
 
                                     <div class="col-lg-6 col-12 form-group">
                                         <label>Home Address *</label>
-                                        <textarea oninput="this.value = this.value.toUpperCase()" id="home_address" class="textarea form-control" name="message"
-                                            cols="10" rows="4"></textarea>
+                                        <textarea oninput="this.value = this.value.toUpperCase()" id="home_address"
+                                            class="textarea form-control" name="message" cols="10" rows="4"></textarea>
                                     </div>
                                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                                         <label>State Of Origin *</label>
