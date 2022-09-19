@@ -121,7 +121,7 @@ function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
       ? ""
-      : `<h1 style="font-weight: bold; font-family: Poppins; color:white;">
+      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
         <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
 
@@ -417,7 +417,7 @@ function getCBTForSubject() {
           <td>
               <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary"   ${
                 data[i].cbt_status == "OPEN"
-                  ? `onclick="startCBT(${JSON.stringify(data[i]).replace(
+                  ? `onclick="startCBT(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                       /"/g,
                       "'"
                     )})"`

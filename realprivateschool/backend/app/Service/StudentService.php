@@ -140,13 +140,17 @@ class StudentService
     // CBT
     public function checkIfStudenHasTakenCBT($cbt_id, $student_id)
     {
-        // $studentHasTakenCBT = false;
         count(CBTResultModel::where('cbt_id', $cbt_id)->where('student_id', $student_id)->get()) < 1 ?  $studentHasTakenCBT = false :  $studentHasTakenCBT = true;
         return  response(['taken' => $studentHasTakenCBT]);;
     }
 
     public function submitCBT(Request $request)
     {
+        // CHECK DUPLICATE SUBMISSION
+        if (count(CBTResultModel::where('cbt_id', $request->cbt_id)->where('student_id', $request->student_id)->get()) > 0) {
+            return  response(['result' => "You have already submitted !"]);
+        }
+
         $CBTResult = new CBTResultModel();
         $CBTResult->cbt_id = $request->cbt_id;
         $CBTResult->student_id = $request->student_id;

@@ -9,9 +9,9 @@
 
 getSchoolDetails();
 // getCurrentSession();
-// if (!window.location.href.includes("portal-subcription")) {
-//   checkPortalSubscription();
-// }
+if (!window.location.href.includes("portal-subscription") && localStorage["token"] != null) {
+  checkPortalSubscription();
+}
 
 function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
@@ -49,9 +49,9 @@ function loadSideNav(page) {
         <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment History</span></a>
     </li>
 
-    <li class="nav-item">
+    <!-- <li class="nav-item">
         <a id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
-    </li>
+    </li> --!>
 
     <li class="nav-item">
         <a  id="change-password" href="#?change-password.html" class="nav-link"><i
@@ -62,11 +62,11 @@ function loadSideNav(page) {
                 Out</span></a>
     </li>
 
-    <li class="nav-item">
+   <!-- <li class="nav-item">
        <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
          domain + "/admin/dashboard.html"
        }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
-    </li>
+    </li> --!>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
@@ -152,7 +152,7 @@ function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
       ? ""
-      : `<h1 style="font-weight: bold; font-family: Poppins; color:white;">
+      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
           <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
 
@@ -1321,94 +1321,6 @@ function getAllStudent(class_id) {
     .catch((err) => console.log(err));
 }
 
-function payWithPaystack(id, amount, subscription_id, description) {
-  var handler = PaystackPop.setup({
-    key: localStorage["PSPK"], //put your public key here
-    email: localStorage["SCHOOL_EMAIL"], //put your customer's email here
-    amount: amount * 100, //amount the customer is supposed to pay
-    currency: "NGN",
-    metadata: {
-      custom_fields: [
-        {
-          display_name: localStorage["SCHOOL_NAME"],
-          variable_name: localStorage["SCHOOL_NAME"],
-          value: localStorage["SCHOOL_PHONE"], //customer's mobile number
-        },
-      ],
-    },
-    callback: function (response) {
-      console.table(response);
-
-      //after the transaction have been completed
-
-      //make post call  to the server with to verify payment
-      //UPDATE THE SUBCRIPTION TABLE
-      fetch(
-        "https://api.paystack.co/transaction/verify/" + response.reference,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-type": "application/json",
-            Authorization: "Bearer " + localStorage["PSSK"],
-          },
-        }
-      )
-        .then(function (res) {
-          return res.json();
-        })
-
-        .then((resp) => {
-          console.table(resp);
-          if (resp.data.status == "success") {
-            //UPDATE THE SUBCRIPTION TABLE
-            warningtoast("Recording payment ... please wait");
-            fetch(ip + "/api/bursary/portal-subscription", {
-              method: "PUT",
-              headers: {
-                Accept: "application/json",
-                "Content-type": "application/json",
-                Authorization: "Bearer " + localStorage["token"],
-              },
-              body: JSON.stringify({
-                id: id,
-                subscription_id: subscription_id + "-" + response.reference,
-                amount: amount,
-                description: description,
-              }),
-            })
-              .then(function (res) {
-                console.log(res.status);
-                if (res.status == 401) {
-                  window.location.href = "index.html";
-                }
-                return res.json();
-              })
-              .then((data) => {
-                if (data.success) {
-                  toastr.remove();
-                  successtoast(data.message);
-                  getPortalSubscription();
-                } else {
-                  errortoast(data.message);
-                }
-              })
-              .catch((err) => console.log(err));
-          } else {
-            errortoast("TRANSACTION FAILED");
-          }
-        })
-        .catch((err) => console.log(err));
-      //using transaction reference as post data
-    },
-    onClose: function () {
-      //when the user close the payment modal
-      alert("Transaction cancelled");
-    },
-  });
-  handler.openIframe(); //open the paystack's payment modal
-}
-
 // GET TODAY'S DATE
 function getDate() {
   var today = new Date();
@@ -1568,20 +1480,103 @@ function checkPortalSubscription() {
     .then((data) => {
       for (i in data) {
         if (data[i].status == "NOT PAID") {
-          alert("YOU HAVE AN UNPAID PORTAL USAGE");
+          alert("YOU HAVE AN UNPAID PORTAL USAGE CONTACT YOUR ADMIN !");
+          localStorage.clear()
           window.parent.location.assign(
-            domain + "/bursary/portal-subscription.html"
-          );
-          payWithPaystack(
-            data[i].id,
-            data[i].amount,
-            data[i].subscription_id,
-            data[i].description
+            domain + "/bursary/"
           );
         }
       }
     })
     .catch((err) => console.log(err));
+}
+
+function payWithPaystack(id, amount, subscription_id, description) {
+  var handler = PaystackPop.setup({
+    key: localStorage["PSPK"], //put your public key here
+    email: localStorage["SCHOOL_EMAIL"], //put your customer's email here
+    amount: amount * 100, //amount the customer is supposed to pay
+    currency: "NGN",
+    metadata: {
+      custom_fields: [
+        {
+          display_name: localStorage["SCHOOL_NAME"],
+          variable_name: localStorage["SCHOOL_NAME"],
+          value: localStorage["SCHOOL_PHONE"], //customer's mobile number
+        },
+      ],
+    },
+    callback: function (response) {
+      console.table(response);
+
+      //after the transaction have been completed
+
+      //make post call  to the server with to verify payment
+      //UPDATE THE SUBCRIPTION TABLE
+      fetch(
+        "https://api.paystack.co/transaction/verify/" + response.reference,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-type": "application/json",
+            Authorization: "Bearer " + localStorage["PSSK"],
+          },
+        }
+      )
+        .then(function (res) {
+          return res.json();
+        })
+
+        .then((resp) => {
+          console.table(resp);
+          if (resp.data.status == "success") {
+            //UPDATE THE SUBCRIPTION TABLE
+            warningtoast("Recording payment ... please wait");
+            fetch(ip + "/api/bursary/portal-subscription", {
+              method: "PUT",
+              headers: {
+                Accept: "application/json",
+                "Content-type": "application/json",
+                Authorization: "Bearer " + localStorage["token"],
+              },
+              body: JSON.stringify({
+                id: id,
+                subscription_id: subscription_id + "-" + response.reference,
+                amount: amount,
+                description: description,
+              }),
+            })
+              .then(function (res) {
+                console.log(res.status);
+                if (res.status == 401) {
+                  window.location.href = "index.html";
+                }
+                return res.json();
+              })
+              .then((data) => {
+                if (data.success) {
+                  toastr.remove();
+                  successtoast(data.message);
+                  getPortalSubscription();
+                } else {
+                  errortoast(data.message);
+                }
+              })
+              .catch((err) => console.log(err));
+          } else {
+            errortoast("TRANSACTION FAILED");
+          }
+        })
+        .catch((err) => console.log(err));
+      //using transaction reference as post data
+    },
+    onClose: function () {
+      //when the user close the payment modal
+      alert("Transaction cancelled");
+    },
+  });
+  handler.openIframe(); //open the paystack's payment modal
 }
 
 //GET CREDENTIALS
@@ -1721,7 +1716,7 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
@@ -1744,7 +1739,7 @@ function getAllStudentForTable() {
             }
           
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})" class="btn btn-secondary text-white"><i

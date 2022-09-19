@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
- var ip = "https://smartschoolhub.net/backend/realprivateschool";
- var domain = "https://realprivateschool.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/realprivateschool";
+var domain = "https://realprivateschool.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -22,7 +22,9 @@ window.addEventListener("offline", () =>
 );
 
 getSchoolDetails();
-//getCurrentSession();
+if (!window.location.href.includes("portal-subscription") && localStorage["token"] != null) {
+  checkPortalSubscription();
+}
 loadSchoolColor();
 
 // if(!window.location.href.includes("portal-subcription")){
@@ -33,8 +35,17 @@ function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
       ? ""
-      : `<h1 style="font-weight: bold; font-family: Poppins; color:white;">
+      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
       <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
+}
+
+function formatNumber(number) {
+  console.log("NUMBER: " + number);
+  return number.toLocaleString(
+    undefined, // leave undefined to use the visitor's browser
+    // locale or a string like 'en-US' to override it.
+    { minimumFractionDigits: 0 }
+  );
 }
 
 function signIn() {
@@ -238,6 +249,9 @@ function loadSideNav(page) {
         <span>Inventory <small><sup><span style="color:white" class="badge bg-success"><b>NEW</b></span></sup></small></span></a>
     </li>
 
+    <li class="nav-item">
+        <a id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
+    </li>
 
     <li class="nav-item">
         <a  id="events-timetable" href="#?events.html" class="nav-link"><i
@@ -259,11 +273,11 @@ function loadSideNav(page) {
                 Out</span></a>
     </li>
 
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
         domain + "/bursary/dashboard.html"
       }')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
-    </li>
+    </li> !-->
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
     <a href="" class="nav-link"><i class=""></i><span></span></a>
@@ -419,7 +433,7 @@ function getAllTeacherForTable() {
             : `<span class="badge bg-danger"><b>DISABLED</b></span>`
         }</td>
         <td>
-        <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
+        <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
           /"/g,
           "'"
         )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
@@ -439,7 +453,7 @@ function getAllTeacherForTable() {
                 : "fas fa-unlock-alt"
             }'></i></a>  
             
-        <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+        <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
           /"/g,
           "'"
         )})" class="btn btn-secondary text-white">
@@ -595,8 +609,8 @@ function createTeacher() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           setTimeout(function () {
-          parent.getAllTeacherForTable();
-          parent.$("#modalYT").modal("hide");
+            parent.getAllTeacherForTable();
+            parent.$("#modalYT").modal("hide");
           }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
@@ -674,7 +688,7 @@ function updateTeacher() {
           setTimeout(function () {
             parent.getAllTeacherForTable();
             parent.$("#editModal").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -801,14 +815,13 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
              
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                data[i]
-              ).replace(
+               data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-warning" data-bs-toggle="modal"
@@ -820,7 +833,7 @@ function searchTeacher(search_data) {
               })" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-secondary text-white"><i
@@ -852,14 +865,13 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                data[i]
-              ).replace(
+               data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-warning" data-bs-toggle="modal"
@@ -870,7 +882,7 @@ function searchTeacher(search_data) {
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-secondary text-white"><i
@@ -904,14 +916,13 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                data[i]
-              ).replace(
+               data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-warning" data-bs-toggle="modal"
@@ -923,7 +934,7 @@ function searchTeacher(search_data) {
               })" href="#" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
               
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-secondary text-white"><i
@@ -955,14 +966,13 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                data[i]
-              ).replace(
+               data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-warning" data-bs-toggle="modal"
@@ -973,7 +983,7 @@ function searchTeacher(search_data) {
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
                 /"/g,
                 "'"
               )})" class="btn btn-secondary text-white"><i
@@ -1038,18 +1048,16 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a data-bs-placement="top" data-bs-toggle="tooltip" title="View" onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+          <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
             /"/g,
             "'"
           )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a data-bs-placement="top" data-bs-toggle="tooltip" title="Edit"  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-            data[i]
-          ).replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
+          <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
           data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
       
           
-          <a data-bs-placement="top" data-bs-toggle="tooltip" title="Change Status"  onclick="updateStudentProfileStatus(${
+          <a  onclick="updateStudentProfileStatus(${
             data[i].id
           })" class="btn gradient-orange-peel"><i
               class='${
@@ -1058,14 +1066,14 @@ function getAllStudentForTable() {
                   : "fas fa-unlock-alt"
               }'></i></a>  
               
-          <a data-bs-placement="top" data-bs-toggle="tooltip" title="ID Card" onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+          <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
             /"/g,
             "'"
           )})" class="btn btn-secondary text-white">
             <i class="fas fa-id-card"></i>
                  </a> 
           
-          <a data-bs-placement="top" data-bs-toggle="tooltip" title="Reset Account"  onclick="resetAccount('STUDENT','${
+          <a onclick="resetAccount('STUDENT','${
             data[i].student_id
           }')" class="btn btn-success text-white">
           <i class="fas fa-sync-alt"></i>
@@ -1350,7 +1358,7 @@ function updateStudent() {
           setTimeout(function () {
             parent.getAllStudentForTable();
             parent.$("#editModal").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -1471,7 +1479,7 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
@@ -1490,7 +1498,7 @@ function searchStudent(search_data) {
             })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})" class="btn btn-secondary text-white"><i
@@ -1518,7 +1526,7 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
@@ -1536,7 +1544,7 @@ function searchStudent(search_data) {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})" class="btn btn-secondary text-white"><i
@@ -1566,7 +1574,7 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
@@ -1585,7 +1593,7 @@ function searchStudent(search_data) {
             })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})" class="btn btn-secondary text-white"><i
@@ -1613,7 +1621,7 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(
+            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
@@ -1631,7 +1639,7 @@ function searchStudent(search_data) {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
               /"/g,
               "'"
             )})" class="btn btn-secondary text-white"><i
@@ -1702,8 +1710,7 @@ function uploadImage1(image, student_id) {
         setTimeout(function () {
           parent.getAllStudentForTable();
           parent.$("#modalYT").modal("hide");
-          }, 1000);
-        
+        }, 1000);
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
@@ -2056,7 +2063,7 @@ function createClass() {
           setTimeout(function () {
             parent.getAllClassForTable();
             parent.$("#modalYT").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -2103,7 +2110,7 @@ function updateClass() {
           setTimeout(function () {
             parent.getAllClassForTable();
             parent.$("#editModal").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -2326,7 +2333,7 @@ function createSubject() {
           setTimeout(function () {
             parent.getAllSubjectForTable();
             parent.$("#modalYT").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -2357,11 +2364,10 @@ function getAllSubjectForTable() {
       document.getElementById("subject_table").innerHTML = ``;
       var c = 1;
       for (i in data) {
-       
-          if (data[i].teacher != null) {
-            console.log("DEBUG not null: " + data[i].teacher);
-            console.log(data[i].teacher);
-            document.getElementById("subject_table").innerHTML += `
+        if (data[i].teacher != null) {
+          console.log("DEBUG not null: " + data[i].teacher);
+          console.log(data[i].teacher);
+          document.getElementById("subject_table").innerHTML += `
             <tr class='${c % 2 == 0 ? "even" : "odd"}'>
   
             <td>${c}.</td>
@@ -2381,14 +2387,14 @@ function getAllSubjectForTable() {
             <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
             }~${data[i].subject_name}~${
-              data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
-            }~${data[i].teacher.id}~${data[i].class.class_name}~${
-              data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+            data[i].teacher.title +
+            " " +
+            data[i].teacher.first_name +
+            " " +
+            data[i].teacher.last_name
+          }~${data[i].teacher.id}~${data[i].class.class_name}~${
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                 <a onclick="deleteSubject(${
                   data[i].id
@@ -2398,10 +2404,10 @@ function getAllSubjectForTable() {
             </td>
   
         </tr>`;
-          } else {
-            console.log("DEBUG null: " + data[i].teacher);
-            console.log(data[i].teacher);
-            document.getElementById("subject_table").innerHTML += `
+        } else {
+          console.log("DEBUG null: " + data[i].teacher);
+          console.log(data[i].teacher);
+          document.getElementById("subject_table").innerHTML += `
             <tr class='${c % 2 == 0 ? "even" : "odd"}'>
   
             <td>${c}.</td>
@@ -2415,8 +2421,8 @@ function getAllSubjectForTable() {
             <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
             }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
-              data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                 <a onclick="deleteClass(${
                   data[i].id
@@ -2426,8 +2432,7 @@ function getAllSubjectForTable() {
             </td>
   
         </tr>`;
-          }
-      
+        }
 
         c = c + 1;
       }
@@ -2504,7 +2509,7 @@ function updateSubject() {
           setTimeout(function () {
             parent.getAllSubjectForTable();
             parent.$("#editModal").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -2963,7 +2968,7 @@ function createGrade() {
           setTimeout(function () {
             parent.getAllGradeForTable();
             parent.$("#modalYT").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -3083,7 +3088,7 @@ function updateGrade() {
           setTimeout(function () {
             parent.getAllGradeForTable();
             parent.$("#editModal").modal("hide");
-            }, 1000);
+          }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
         }
@@ -4145,10 +4150,12 @@ function getSchoolDetails() {
       console.log(data);
       localStorage.setItem("SCHOOL_NAME", data[0].school_name);
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
-      localStorage.setItem("SCHOOL_COLOR", data[0].school_color);
+      localStorage.setItem("SCHOOL_PHONE", data[0].school_phone);
+      localStorage.setItem("SCHOOL_EMAIL", data[0].school_email);
     })
     .catch((err) => console.log(err));
 }
+
 
 // LOAD SCHOOL COLOR
 function loadSchoolColor() {
@@ -4175,6 +4182,78 @@ function paginateTable() {
   $(".dataTables_length").addClass("bs-select");
 }
 
+//CHECK PORTAL SUBSCRIPTION
+function getPortalSubscription() {
+  fetch(ip + "/api/bursary/portal-subscription", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("subscription_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("subscription_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td>${data[i].subscription_id}</td>
+                    <td>${data[i].description}</td>  
+                    <td><span style="color:white" class="badge ${
+                      data[i].status == "NOT PAID"
+                        ? `bg-danger`
+                        : data[i].status == "USAGE IN-PROGRESS"
+                        ? `bg-warning`
+                        : `bg-success`
+                    }"><b>${data[i].status}</b></span></td>
+                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    <td>   
+                      ${
+                        data[i].status == "NOT PAID"
+                          ? `<a id="" onclick="payWithPaystack('${data[i].id}',
+                          '${data[i].amount}',
+                          '${data[i].subscription_id}',
+                          '${data[i].description}'
+                        )" href="#" class="btn btn-primary">
+                                 Pay Now
+                            </a>`
+                          : ``
+                      }
+                    </td>
+                   </tr>
+                    `;
+          c = c + 1;
+
+          if (data[i].status == "NOT PAID") {
+            payWithPaystack(
+              data[i].id,
+              data[i].amount,
+              data[i].subscription_id,
+              data[i].description
+            );
+          }
+        }
+      } else {
+        document.getElementById(
+          "subscription_table"
+        ).innerHTML = `NO DATA FOUND`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
 function checkPortalSubscription() {
   fetch(ip + "/api/bursary/portal-subscription", {
     method: "GET",
@@ -4197,7 +4276,7 @@ function checkPortalSubscription() {
         if (data[i].status == "NOT PAID") {
           alert("YOU HAVE AN UNPAID PORTAL USAGE");
           window.parent.location.assign(
-            domain + "/bursary/portal-subscription.html"
+            domain + "/admin/portal-subscription.html"
           );
           payWithPaystack(
             data[i].id,
@@ -4207,31 +4286,6 @@ function checkPortalSubscription() {
           );
         }
       }
-    })
-    .catch((err) => console.log(err));
-}
-
-//GET CREADENTIALS
-function getStoredCredential() {
-  fetch(ip + "/api/general/stored-credential", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-  })
-    .then(function (res) {
-      console.log(res.status);
-      if (res.status == 401) {
-        window.location.href = "index.html";
-      }
-      return res.json();
-    })
-
-    .then((data) => {
-      localStorage.setItem("PSPK", data.PSPK);
-      localStorage.setItem("PSSK", data.PSSK);
     })
     .catch((err) => console.log(err));
 }
@@ -4324,8 +4378,33 @@ function payWithPaystack(id, amount, subscription_id, description) {
   handler.openIframe(); //open the paystack's payment modal
 }
 
+//GET CREDENTIALS
+function getStoredCredential() {
+  fetch(ip + "/api/general/stored-credential", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      localStorage.setItem("PSPK", data.PSPK);
+      localStorage.setItem("PSSK", data.PSSK);
+    })
+    .catch((err) => console.log(err));
+}
+
 // RESET ACCOUNT
-function resetAccount(user_type,id) {
+function resetAccount(user_type, id) {
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/reset-account", {
     method: "POST",
@@ -4356,7 +4435,6 @@ function resetAccount(user_type,id) {
     })
     .catch((err) => console.log(err));
 }
-
 
 // TOAST
 function successtoast(message, time) {
