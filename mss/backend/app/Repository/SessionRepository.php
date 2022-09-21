@@ -13,6 +13,11 @@ class SessionRepository
 {
     public function createSession(Request $request)
     {
+
+        if (SessionModel::where('session', $request->session)->exists()) {
+            return response()->json(['success' => false, 'message' => 'This session already exist']);
+        }
+
         $PrevSessionModel = SessionModel::where('session_status', 'CURRENT')->first();
         Log::debug($PrevSessionModel);
         if ($PrevSessionModel != "") {
@@ -35,13 +40,15 @@ class SessionRepository
             $portalSubcription->amount = 0;
 
             // UPDATE USAGE OF PAST OF PREVIOUS SESSION TERM
-            $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
-            $StudentRepository = new StudentRepository();
-            $student = $StudentRepository->allStudentCount();
-            $previousPortalSubcription = PortalSubscription::orderBy("id","DESC")->get()[0];
-            $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
-            $previousPortalSubcription->amount = $student * intval($subscription_fee);
-            $previousPortalSubcription->save();
+            if (count(PortalSubscription::orderBy("id", "DESC")->get()) > 0) {
+                $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
+                $StudentRepository = new StudentRepository();
+                $student = $StudentRepository->allStudentCount();
+                $previousPortalSubcription = PortalSubscription::orderBy("id", "DESC")->get()[0];
+                $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
+                $previousPortalSubcription->amount = $student * intval($subscription_fee);
+                $previousPortalSubcription->save();
+            }
             $portalSubcription->save();
         }
 
@@ -65,14 +72,15 @@ class SessionRepository
             $portalSubcription->amount = 0;
 
             // UPDATE USAGE OF PAST OF PREVIOUS SESSION TERM
-            $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
-            $StudentRepository = new StudentRepository();
-            $student = $StudentRepository->allStudentCount();
-            $previousPortalSubcription = PortalSubscription::orderBy("id","DESC")->get()[0];
-            $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
-            $previousPortalSubcription->amount = $student * intval($subscription_fee);
-            $previousPortalSubcription->save();
-
+            if (count(PortalSubscription::orderBy("id", "DESC")->get()) > 0) {
+                $subscription_fee = DB::table('school_details')->get()[0]->subscription_fee;
+                $StudentRepository = new StudentRepository();
+                $student = $StudentRepository->allStudentCount();
+                $previousPortalSubcription = PortalSubscription::orderBy("id", "DESC")->get()[0];
+                $previousPortalSubcription->description = "USAGE CHARGE FOR " . $student . " STUDENTS";
+                $previousPortalSubcription->amount = $student * intval($subscription_fee);
+                $previousPortalSubcription->save();
+            }
             $portalSubcription->save();
         }
 

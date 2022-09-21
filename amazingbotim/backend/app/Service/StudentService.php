@@ -265,7 +265,8 @@ class StudentService
 
 
         $result =  SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class', 'subject')->get();
-        $no_student = DB::select('select count(distinct student_id) as no_student from subject_registration where class_id ="' . $request->class_id . '" and session ="' . $request->session . '" and term ="' . $request->term . '"')[0]->no_student;
+
+        $no_student = DB::select('select count(distinct student_id) as no_student from subject_registration where class_id ="' . $result->class->id . '" and session ="' . $request->session . '" and term ="' . $request->term . '"')[0]->no_student;
 
         // LOOP THROUGH RESULT AND ATTACH GRADE
         foreach ($result as $data) {

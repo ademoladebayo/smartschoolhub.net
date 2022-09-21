@@ -24,6 +24,8 @@ class ClassRepository
             $this->removeTeacherFromClass($ClassModel->class_teacher);
             $ClassModel->save();
             $AdminService->updateTeacherClass($ClassModel->class_teacher, $ClassModel->id);
+        }else{
+            $ClassModel->save();
         }
         return response()->json(['success' => true, 'message' => 'Class was created successfully.']);
     }
