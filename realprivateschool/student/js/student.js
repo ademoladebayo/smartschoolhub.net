@@ -79,7 +79,7 @@ function loadSideNav(page) {
       
     
     <li class="nav-item">
-        <a href="../index.html" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
     <a href="" class="nav-link"><i class=""></i><span></span></a>

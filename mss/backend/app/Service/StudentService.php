@@ -260,6 +260,7 @@ class StudentService
         $percentage = 0;
         $score_accumulator = 0;
         $no_subject = 0;
+        $no_student = 0;
         $grade_position = '';
 
 
