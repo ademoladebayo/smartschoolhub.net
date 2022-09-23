@@ -4152,6 +4152,7 @@ function getSchoolDetails() {
       localStorage.setItem("SCHOOL_ADDRESS", data[0].school_address);
       localStorage.setItem("SCHOOL_PHONE", data[0].school_phone);
       localStorage.setItem("SCHOOL_EMAIL", data[0].school_email);
+      localStorage.setItem("SCHOOL_COLOR", data[0].school_color);
     })
     .catch((err) => console.log(err));
 }
