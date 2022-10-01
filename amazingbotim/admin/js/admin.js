@@ -21,6 +21,8 @@ window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
 
+//STARTERS
+getCurrentSession();
 getSchoolDetails();
 if (!window.location.href.includes("portal-subscription") && localStorage["token"] != null) {
   checkPortalSubscription();
@@ -1807,6 +1809,12 @@ async function getStudentIDCard() {
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
 
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+  domain +
+  "/backend/storage/app/public/fileupload/school_logo_mini.png";
+   document.getElementById("school_logo_mini").src = school_logo_mini;
+
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
     JSON.parse(student_id).first_name + " " + JSON.parse(student_id).last_name;
@@ -1853,6 +1861,12 @@ async function getStaffIDCard() {
 
   // staff_IMAGE
   document.getElementById("staff_image").src = url;
+
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+  domain +
+  "/backend/storage/app/public/fileupload/school_logo_mini.png";
+   document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
