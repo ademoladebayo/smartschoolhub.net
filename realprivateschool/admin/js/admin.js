@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/realprivateschool";
-var domain = "https://realprivateschool.smartschoolhub.net";
+// var ip = "https://smartschoolhub.net/backend/realprivateschool";
+// var domain = "https://realprivateschool.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -24,7 +24,10 @@ window.addEventListener("offline", () =>
 //STARTERS
 getCurrentSession();
 getSchoolDetails();
-if (!window.location.href.includes("portal-subscription") && localStorage["token"] != null) {
+if (
+  !window.location.href.includes("portal-subscription") &&
+  localStorage["token"] != null
+) {
   checkPortalSubscription();
 }
 loadSchoolColor();
@@ -209,7 +212,12 @@ function loadSideNav(page) {
         <span>Staff Management</span></a>
     </li>
 
-    
+    <li class="nav-item">
+        <a  id="card-generator" href="card-generator.html" class="nav-link"> <i
+        class="fas fa-id-card"></i>
+        <span>ID Card Generator</span></a>
+    </li>
+
     <li class="nav-item">
         <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
         <span>Class Management</span></a>
@@ -435,10 +443,12 @@ function getAllTeacherForTable() {
             : `<span class="badge bg-danger"><b>DISABLED</b></span>`
         }</td>
         <td>
-        <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-          /"/g,
-          "'"
-        )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+        <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+          .replace(/'/g, "")
+          .replace(
+            /"/g,
+            "'"
+          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                 data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
         <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
           data[i]
@@ -455,10 +465,9 @@ function getAllTeacherForTable() {
                 : "fas fa-unlock-alt"
             }'></i></a>  
             
-        <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-          /"/g,
-          "'"
-        )})" class="btn btn-secondary text-white">
+        <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+          .replace(/'/g, "")
+          .replace(/"/g, "'")})" class="btn btn-secondary text-white">
           <i class="fas fa-id-card"></i>
                </a> 
         
@@ -473,6 +482,29 @@ function getAllTeacherForTable() {
         c = c + 1;
       }
       paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function getAllStaff() {
+  return fetch(ip + "/api/admin/all-teacher", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      return data;
     })
     .catch((err) => console.log(err));
 }
@@ -817,16 +849,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
              
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -835,10 +872,9 @@ function searchTeacher(search_data) {
               })" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a> 
               
@@ -867,16 +903,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -884,10 +925,9 @@ function searchTeacher(search_data) {
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
@@ -918,16 +958,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -936,10 +981,9 @@ function searchTeacher(search_data) {
               })" href="#" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
               
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>    
               
@@ -968,16 +1012,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -985,10 +1034,9 @@ function searchTeacher(search_data) {
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
@@ -1050,12 +1098,21 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+          <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
+          <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            data[i]
+          )
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-warning" data-bs-toggle="modal"
           data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
       
           
@@ -1068,10 +1125,9 @@ function getAllStudentForTable() {
                   : "fas fa-unlock-alt"
               }'></i></a>  
               
-          <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})" class="btn btn-secondary text-white">
+          <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(/"/g, "'")})" class="btn btn-secondary text-white">
             <i class="fas fa-id-card"></i>
                  </a> 
           
@@ -1095,7 +1151,27 @@ function getAllStudentForTable() {
     })
     .catch((err) => console.log(err));
 }
-
+function getAllStudent() {
+  return fetch(ip + "/api/admin/all-student", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
+}
 {
   /* <a onclick="deleteStudent(${
   data[i].id
@@ -1481,10 +1557,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1500,10 +1578,9 @@ function searchStudent(search_data) {
             })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1528,10 +1605,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1546,10 +1625,9 @@ function searchStudent(search_data) {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1576,10 +1654,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1595,10 +1675,9 @@ function searchStudent(search_data) {
             })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1623,10 +1702,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1641,10 +1722,9 @@ function searchStudent(search_data) {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1807,13 +1887,15 @@ async function getStudentIDCard() {
     ".png";
 
   // STUDENT_IMAGE
-  document.getElementById("student_image").src = url;
+  document.getElementById("user_image").src = url;
+   // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+    document.getElementById("type").innerHTML = "STUDENT";
 
   // MINI SCHOOL LOGO
-   school_logo_mini =
-   domain +
-   "/backend/storage/app/public/fileupload/school_logo_mini.png";
-    document.getElementById("school_logo_mini").src = school_logo_mini;
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+  document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
@@ -1860,13 +1942,14 @@ async function getStaffIDCard() {
     ".png";
 
   // staff_IMAGE
-  document.getElementById("staff_image").src = url;
+  document.getElementById("user_image").src = url;
+
+  document.getElementById("type").innerHTML = "STAFF";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-  domain +
-  "/backend/storage/app/public/fileupload/school_logo_mini.png";
-   document.getElementById("school_logo_mini").src = school_logo_mini;
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+  document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
@@ -4171,7 +4254,6 @@ function getSchoolDetails() {
     .catch((err) => console.log(err));
 }
 
-
 // LOAD SCHOOL COLOR
 function loadSchoolColor() {
   if (localStorage["SCHOOL_COLOR"] != "-") {
@@ -4450,6 +4532,160 @@ function resetAccount(user_type, id) {
     })
     .catch((err) => console.log(err));
 }
+
+// ID CARD GENERATOR
+async function generateIDCard() {
+  document.getElementById("idcard_list").innerHTML = ``;
+  user_type =
+    document.getElementById("user_type_card").value == ""
+      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
+      : document.getElementById("user_type_card").value;
+
+  user_class_sector = document.getElementById("user_class_sector").value =
+    document.getElementById("user_class_sector").value;
+
+  await getSchoolDetails();
+  // STUDENT_IMAGE
+  user_image = domain + "/backend/storage/app/public/fileupload";
+  // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+
+  if (user_type == "STUDENT") {
+    user_image = user_image + "/student/";
+  }else{
+    user_image = user_image + "/staff/";
+  }
+
+
+    response = user_type == "STUDENT" ?  getAllStudent() : getAllStaff();
+      c = 1;
+      response.then(function (data) {
+        // CREATE TEMPLATE
+        for (i in data) {
+          if (user_type == "STUDENT" && (data[i].class == null || data[i].class == "GRADUATED")) {
+            continue;
+          }
+          document.getElementById(
+            "idcard_list"
+          ).innerHTML += `<div style="margin-top: 20px;" class="container">
+      <div class="padding">
+          <div class="font">
+              <div class="top">
+                  <b>
+                      <h4 id="school_name"
+                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                         ${localStorage["SCHOOL_NAME"]}
+                      </h4>
+                  </b>
+                  <div
+                      style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
+                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+                  </div>
+
+
+                  <img id="user_image"
+                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                      src="${
+                        user_type == "STUDENT"
+                          ? user_image + data[i].student_id + ".png"
+                          : user_image + data[i].teacher_id + ".png"
+                      }" width="">
+
+
+              </div>
+              <div class="bottom">
+                  <div style="margin-bottom:5px">
+                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
+                      <p id="id" style="margin-bottom: 1px; color: black; ">${
+                        user_type == "STUDENT"
+                          ? data[i].student_id
+                          : data[i].teacher_id
+                      }</p>
+
+                      <small>
+                          <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                              ${data[i].gender}</p>
+                      </small>
+
+                  </div>
+                  <br>
+
+
+                  <div style="display: flex; justify-content: center; margin-top: 0px">
+                      <img id="school_logo_mini"
+                          style="border-color: white; border-style: solid;padding: 0%;" src=""
+                          width="px">
+                  </div>
+
+                  <div style="margin-top: 20px;margin-bottom: 210px;">
+                      <h5 id ="user_type" style="font-family: Poppins
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+      <div class="back">
+          <h1 style="margin-bottom: 0; font-family: Poppins
+          ;" class="Details">INFORMATION</h1>
+          <hr style="background-color: white !important;">
+          <small>
+              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+              </h6>
+          </small>
+          <div style="margin-top: 0%;" class="qrcode">
+              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${c}">
+              </div>
+          </div>
+          <div class="details-info">
+              <h6 style="text-align: center;color: white !important;">if found please return to
+              </h6>
+              <h6 id="school_address"
+                  style="text-align: center;color: white !important; margin-bottom: 10px;">
+                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+
+          </div>
+      </div>
+    </div>
+          `;
+
+         //  QR CODE
+        var QRDATA =  user_type == "STUDENT"
+        ? "StudentATDCard~" +
+          data[i].id +
+          "~" +
+          data[i].class.id +
+          "~" +
+          data[i].first_name
+        : "TeacherATDCard~" + data[i].id + "~" + data[i].first_name;
+
+         var qrdiv =  "IDQR" + c;
+          var qrcode = new QRCode(qrdiv, {
+            text: QRDATA,
+            width: 128,
+            height: 128,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H,
+          });
+
+          console.log(qrcode);
+
+
+          c = c + 1;
+        }
+    });
+  }
+
+
 
 // TOAST
 function successtoast(message, time) {

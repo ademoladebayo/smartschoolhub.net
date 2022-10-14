@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="../fonts/flaticon.css">
     <!-- Full Calender CSS -->
     <link rel="stylesheet" href="../css/fullcalendar.min.css">
+    <!-- Select 2 CSS -->
+    <link rel="stylesheet" href="../css/select2.min.css">
     <!-- Animate CSS -->
     <link rel="stylesheet" href="../css/animate.min.css">
     <!-- Custom CSS -->
@@ -41,7 +43,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="loadSideNav('students'); getStudentIDCard(); loadDashBoardInformation()">
+    onload="loadSideNav('card-generator'); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -151,8 +153,43 @@
                         </ul>
                     </div>
                 </div>
-                <div id="print-content">
-                    <div style="margin-top: 20px;" class="container">
+
+                <h2 style="text-align: center; font-weight: bold; font-family: Poppins; text-align: center">
+                    ID CARD GENERATOR
+                </h2>
+
+                <div class="row">
+                    <div class="col-4-xxxl col-12">
+                        <div class="card height-auto">
+                            <div class="card-body">
+                                <div class="row gutters-8">
+                                    <div class="col-lg-5 col-12 form-group">
+                                        <select id="user_type_card" class="select2">
+                                            <option value="">SELECT STUDENT OR STAFF</option>
+                                            <option value="STUDENT">STUDENT</option>
+                                            <option value="STAFF">STAFF</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-5 col-12 form-group">
+                                        <select id="user_class_sector" class="select2">
+                                            <option value="ALL STUDENT">IF STUDENT, SELECT CLASS SECTOR</option>
+                                            <option value="ALL CLASS">ALL CLASS</option>
+                                            <option value="PRIMARY">PRIMARY</option>
+                                            <option value="JUNIOR SECONDARY">JUNIOR SECONDARY</option>
+                                            <option value="SENIOR SECONDARY">SENIOR SECONDARY</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2 col-12 form-group">
+                                        <button onclick="generateIDCard('')" class="fw-btn-fill btn-gradient-yellow">Generate ID Card</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="idcard_list">
+                    <!-- <div style="margin-top: 20px;" class="container">
                         <div class="padding">
                             <div class="font">
                                 <div class="top">
@@ -196,7 +233,7 @@
                                     </div>
 
                                     <div style="margin-top: 20px;margin-bottom: 210px;">
-                                        <h5 id ="type" style="font-family: Poppins
+                                        <h5 id ="user_type" style="font-family: Poppins
                                     ;color: black; text-align: center;">_______________</h5>
                                     </div>
 
@@ -224,9 +261,9 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
-
+                   
                 </div>
 
                 <footer class="footer-wrap-layout1">
@@ -261,6 +298,8 @@
     <script src="../js/fullcalendar.min.js"></script>
     <!-- Chart Js -->
     <script src="../js/Chart.min.js"></script>
+    <!-- Select 2 Js -->
+    <script src="../js/select2.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
     <!-- Custom Js -->
