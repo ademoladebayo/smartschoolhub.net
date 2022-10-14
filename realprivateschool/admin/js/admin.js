@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
-// var ip = "https://smartschoolhub.net/backend/realprivateschool";
-// var domain = "https://realprivateschool.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/realprivateschool";
+ var domain = "https://realprivateschool.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
