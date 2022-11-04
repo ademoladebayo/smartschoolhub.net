@@ -24,4 +24,5 @@ class SubjectRegistrationModel extends Model
     {
         return $this->hasOne(SubjectModel::class, 'id', 'subject_id');
     }
+
 }

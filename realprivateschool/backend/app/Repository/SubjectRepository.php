@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Model\ClassModel;
 use App\Model\SessionModel;
 use App\Model\SubjectModel;
 use App\Model\SubjectRegistrationModel;
@@ -26,9 +27,71 @@ class SubjectRepository
         return response()->json(['success' => true, 'message' => 'Subject was created successfully.']);
     }
 
+    public function multiCreateSubject(Request $request)
+    {
+        $count = 0;
+        $class_sector = $request->class_id;
+
+        if ($class_sector == "ALL") {
+            // CREATE FPR ALL CLASS
+            $classes =  ClassModel::select('id')->get();
+            if (count($classes) < 1) {
+                return response()->json(['success' => false, 'message' => 'No class available for subject creation.']);
+            }
+
+            foreach ($classes as $class) {
+
+                $SubjectModel = new SubjectModel();
+                $SubjectModel->subject_name =  $request->subject_name;
+                $SubjectModel->teacher =  $request->teacher;
+                $SubjectModel->class =  $request->class_id;
+                $SubjectModel->class = $class->id;
+
+                if (SubjectModel::where('subject_name', $SubjectModel->subject_name)->where('class', $class_sector)->exists()) {
+                    continue;
+                }
+
+                $SubjectModel->save();
+                $AdminService = new AdminService();
+                //CREATE LESSON PLAN
+                $AdminService->createlessonPlan($SubjectModel->id);
+
+                $count = $count + 1;
+            }
+        } else if ($class_sector == "NURSERY SCHOOL" || $class_sector == "PRIMARY SCHOOL" || $class_sector == "JUNIOR SECONDARY SCHOOL" || $class_sector == "SENIOR SECONDARY SCHOOL") {
+
+            // DO MULTIPLE CREATION
+            $classes =  ClassModel::select('id')->where('class_sector', $class_sector)->get();
+            if (count($classes) < 1) {
+                return response()->json(['success' => false, 'message' => 'No class available for subject creation.']);
+            }
+
+            foreach ($classes as $class) {
+                $SubjectModel = new SubjectModel();
+                $SubjectModel->subject_name =  $request->subject_name;
+                $SubjectModel->teacher =  $request->teacher;
+                $SubjectModel->class =  $request->class_id;
+
+                $SubjectModel->class = $class->id;
+                if (SubjectModel::where('subject_name', $SubjectModel->subject_name)->where('class', $SubjectModel->class)->exists()) {
+                    continue;
+                }
+
+                $SubjectModel->save();
+                $AdminService = new AdminService();
+                //CREATE LESSON PLAN
+                $AdminService->createlessonPlan($SubjectModel->id);
+
+                $count = $count + 1;
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Subject was created for ' . $count . ' class(es)']);
+    }
+
     public function getAllSubject()
     {
-        $Subjects =  SubjectModel::with('teacher', 'class')->orderBy('id','DESC')->get();
+        $Subjects =  SubjectModel::with('teacher', 'class')->orderBy('id', 'DESC')->get();
 
         foreach ($Subjects as $subject) {
             $student_no = $this->getNoSubjectRegistration($subject->id);

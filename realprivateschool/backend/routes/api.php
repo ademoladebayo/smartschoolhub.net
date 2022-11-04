@@ -70,6 +70,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('admin/search-subject/{subject_name}', 'AdminController@searchSubject', function () {
     })->middleware(Cors::class);
 
+    Route::post('admin/subject/import-sheet', 'AdminController@importSubjectSheet', function () {
+    })->middleware(Cors::class);
+
+    Route::post('admin/subject/export-sheet', 'AdminController@exportSubjectSheet', function () {
+    })->middleware(Cors::class);
+
+
     // ADMIN {STUDENT}
     Route::post('admin/create-student', 'AdminController@createStudent', function () {
     })->middleware(Cors::class);

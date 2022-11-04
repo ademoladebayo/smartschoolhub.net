@@ -3,8 +3,8 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/realprivateschool";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
  var ip = "https://smartschoolhub.net/backend/realprivateschool";
@@ -1888,9 +1888,9 @@ async function getStudentIDCard() {
 
   // STUDENT_IMAGE
   document.getElementById("user_image").src = url;
-   // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+  // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
 
-    document.getElementById("type").innerHTML = "STUDENT";
+  document.getElementById("type").innerHTML = "STUDENT";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
@@ -2219,6 +2219,9 @@ function updateClass() {
 }
 
 function deleteClass(class_id) {
+  if (!confirm("You are about to delete this class ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-class/" + class_id, {
     method: "GET",
@@ -2480,6 +2483,7 @@ function getAllSubjectForTable() {
               data[i].teacher.last_name
             }</td>
             <td>${data[i].student_no}</td>
+
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
@@ -2492,12 +2496,24 @@ function getAllSubjectForTable() {
           }~${data[i].teacher.id}~${data[i].class.class_name}~${
             data[i].class.id
           }')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteSubject(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+            <a onclick="deleteSubject(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a>
+
+            <a onclick="exportSubjectSheet('${data[i].id}','${
+            data[i].subject_name
+          }','${data[i].class.class_name}'
+            )" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
             </td>
   
         </tr>`;
@@ -2520,12 +2536,24 @@ function getAllSubjectForTable() {
             }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
             data[i].class.id
           }')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
+            data-bs-target="#editModal"><i class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+            <a onclick="deleteSubject(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a>
+
+            <a onclick="downloadResultSheet(${
+              data[i].id
+            })" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
             </td>
   
         </tr>`;
@@ -2585,7 +2613,7 @@ function updateSubject() {
         Authorization: "Bearer " + localStorage["token"],
       },
       body: JSON.stringify({
-        subject_id: localStorage["editSubject"][0],
+        subject_id: localStorage["editSubject"].split("~")[0],
         class_id: class_id,
         subject_name: subject_name,
         teacher: teacher,
@@ -2618,6 +2646,9 @@ function updateSubject() {
 }
 
 function deleteSubject(subject_id) {
+  if (!confirm("You are about to delete this subject ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-subject/" + subject_id, {
     method: "GET",
@@ -2820,6 +2851,46 @@ function searchSubject(subject_name) {
     })
     .catch((err) => console.log(err));
 }
+
+function exportSubjectSheet(subject_id, subject_name, class_name) {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/subject/export-sheet", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: subject_id,
+      session: localStorage["current_session"],
+      subject_name: subject_name,
+      class_name: class_name,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = subject_name+"_"+class_name+"_"+getDate().split("~")[1]+".xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();    
+      a.remove();  //afterwards we remove the element again  
+    })
+    .catch((err) => console.log(err));
+}
+
+function importSubjectSheet() {}
 
 // SESSION
 function createSession() {
@@ -3197,6 +3268,9 @@ function updateGrade() {
 }
 
 function deleteGrade(id) {
+  if (!confirm("You are about to delete this grade ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-grade/" + id, {
     method: "GET",
@@ -4181,6 +4255,9 @@ function updateInventoryItem(id) {
 }
 
 function deleteInventoryItem(id) {
+  if (!confirm("You are about to delete this Inventory ?")) {
+    return 0;
+  }
   fetch(ip + "/api/admin/inventory/" + id, {
     method: "DELETE",
     headers: {
@@ -4544,9 +4621,16 @@ async function generateIDCard() {
   user_class_sector = document.getElementById("user_class_sector").value =
     document.getElementById("user_class_sector").value;
 
+  document.getElementById("generate_idcard").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+
+  document.getElementById("generate_idcard").disabled = true;
+
   await getSchoolDetails();
   // STUDENT_IMAGE
-  user_image = domain + "/backend/storage/app/public/fileupload";
+  //user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image =
+    "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload";
   // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
 
   // MINI SCHOOL LOGO
@@ -4555,22 +4639,25 @@ async function generateIDCard() {
 
   if (user_type == "STUDENT") {
     user_image = user_image + "/student/";
-  }else{
+  } else {
     user_image = user_image + "/staff/";
   }
 
-
-    response = user_type == "STUDENT" ?  getAllStudent() : getAllStaff();
-      c = 1;
-      response.then(function (data) {
-        // CREATE TEMPLATE
-        for (i in data) {
-          if (user_type == "STUDENT" && (data[i].class == null || data[i].class == "GRADUATED")) {
-            continue;
-          }
-          document.getElementById(
-            "idcard_list"
-          ).innerHTML += `<div style="margin-top: 20px;" class="container">
+  response = user_type == "STUDENT" ? getAllStudent() : getAllStaff();
+  json_to_generate_qr = [];
+  c = 1;
+  response.then(function (data) {
+    // CREATE TEMPLATE
+    for (i in data) {
+      if (
+        user_type == "STUDENT" &&
+        (data[i].class == null || data[i].class == "GRADUATED")
+      ) {
+        continue;
+      }
+      document.getElementById(
+        "idcard_list"
+      ).innerHTML += `<div style="margin-top: 20px;" class="container">
       <div class="padding">
           <div class="font">
               <div class="top">
@@ -4642,7 +4729,9 @@ async function generateIDCard() {
               </h6>
           </small>
           <div style="margin-top: 0%;" class="qrcode">
-              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${c}">
+              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+                data[i].id
+              }">
               </div>
           </div>
           <div class="details-info">
@@ -4655,10 +4744,22 @@ async function generateIDCard() {
           </div>
       </div>
     </div>
+    <div style="break-after:page"></div>
           `;
 
-         //  QR CODE
-        var QRDATA =  user_type == "STUDENT"
+      json_to_generate_qr.push(data[i]);
+
+      c = c + 1;
+    }
+    makeQRCode(json_to_generate_qr, user_type);
+  });
+}
+
+async function makeQRCode(data, user_type) {
+  //  QR CODE
+  for (i in data) {
+    var QRDATA =
+      user_type == "STUDENT"
         ? "StudentATDCard~" +
           data[i].id +
           "~" +
@@ -4667,25 +4768,29 @@ async function generateIDCard() {
           data[i].first_name
         : "TeacherATDCard~" + data[i].id + "~" + data[i].first_name;
 
-         var qrdiv =  "IDQR" + c;
-          var qrcode = new QRCode(qrdiv, {
-            text: QRDATA,
-            width: 128,
-            height: 128,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H,
-          });
-
-          console.log(qrcode);
-
-
-          c = c + 1;
-        }
+    var qrdiv = "IDQR" + data[i].id;
+    qrcode = new QRCode(qrdiv, {
+      text: QRDATA,
+      width: 128,
+      height: 128,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H,
     });
   }
+}
 
-
+function downloadAsPDF(container) {
+  const file = this.document.getElementById(container);
+  var opt = {
+    margin: 1,
+    filename: "idcards.pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+  html2pdf().from(file).set(opt).save();
+}
 
 // TOAST
 function successtoast(message, time) {
