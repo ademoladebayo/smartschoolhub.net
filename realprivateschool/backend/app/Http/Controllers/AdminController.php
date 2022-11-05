@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportStaffList;
+use App\Exports\ExportStudentList;
 use App\Exports\ExportSubjectSheet;
 use App\Model\AdminModel;
 use App\Model\ControlPanelModel;
@@ -146,6 +148,11 @@ class AdminController extends Controller
         return $AdminService->uploadImage($request);
     }
 
+    public function exportStudentList()
+    {
+        return Excel::download(new ExportStudentList(), 'file.xlsx');
+    }
+
 
 
     // TEACHER
@@ -184,6 +191,12 @@ class AdminController extends Controller
         $TeacherRepository = new TeacherRepository();
         return $TeacherRepository->updateTeacherProfileStatus($id);
     }
+
+    public function exportStaffList()
+    {
+        return Excel::download(new ExportStaffList(), 'file.xlsx');
+    }
+
     // SESSION
     public function createSession(Request $request)
     {

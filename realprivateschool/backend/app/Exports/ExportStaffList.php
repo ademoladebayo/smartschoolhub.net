@@ -12,29 +12,17 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Log;
 
-class ExportSubjectSheet implements FromCollection, ShouldAutoSize, WithEvents, WithHeadings
+class ExportStaffList implements FromCollection, ShouldAutoSize, WithEvents, WithHeadings
 {
     use Exportable;
     public $request;
     public $row_lenght;
 
-    function __construct($request)
-    {
-        $this->request = $request;
-    }
 
     public function collection()
     {
-        $request = $this->request;
-
-        $data =  DB::table('subject_registration')
-            ->where("subject_id", $request->subject_id)
-            ->where("session", $request->session)
-            ->where("term", $request->term)
-            ->join('student', 'subject_registration.student_id', '=', 'student.id')
-            ->join('subject', 'subject_registration.subject_id', '=', 'subject.id')
-            ->join('class', 'subject_registration.class_id', '=', 'class.id')
-            ->select(DB::raw('CONCAT(subject_registration.subject_id, "-", student.id) as reg_id'), 'subject.subject_name', 'class.class_name', DB::raw('CONCAT(student.first_name, " ", student.last_name) as student'), 'subject_registration.first_ca', 'subject_registration.second_ca', 'subject_registration.examination')
+        $data =  DB::table('teacher')
+            ->select('teacher.teacher_id', DB::raw('CONCAT(teacher.title," ",teacher.first_name, " ", teacher.last_name) as teacher'), 'teacher.gender', 'teacher.profile_status','teacher.phone')
             ->get();
 
         $this->row_lenght = count($data) + 1;
@@ -44,7 +32,7 @@ class ExportSubjectSheet implements FromCollection, ShouldAutoSize, WithEvents, 
 
     public function headings(): array
     {
-        return ['REG ID', 'SUBJECT', 'CLASS', 'STUDENT', 'TEST 1', 'TEST 2', 'EXAMINATION'];
+        return ['STAFF ID', 'FULLNAME', 'GENDER', 'STATUS', 'PHONE'];
     }
 
 
@@ -52,7 +40,7 @@ class ExportSubjectSheet implements FromCollection, ShouldAutoSize, WithEvents, 
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cell_range = [1, 1, 7, $this->row_lenght];
+                $cell_range = [1, 1, 5, $this->row_lenght];
                 $sheet = $event->sheet->getDelegate();
                 $sheet->getStyle($cell_range)->applyFromArray([
                     'font' => [

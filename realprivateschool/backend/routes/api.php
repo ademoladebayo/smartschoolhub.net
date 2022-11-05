@@ -100,6 +100,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('admin/upload-image', 'AdminController@uploadImage', function () {
     })->middleware(Cors::class);
 
+    Route::get('admin/student/export-list', 'AdminController@exportStudentList', function () {
+    })->middleware(Cors::class);
+
 
 
 
@@ -120,6 +123,9 @@ Route::middleware('auth:sanctum')->group(function () {
     })->middleware(Cors::class);
 
     Route::get('admin/search-teacher/{search_data}', 'AdminController@searchTeacher', function () {
+    })->middleware(Cors::class);
+
+    Route::get('admin/staff/export-list', 'AdminController@exportStaffList', function () {
     })->middleware(Cors::class);
 
 

@@ -32,7 +32,7 @@ class TeacherRepository
             $TeacherModel->teacher_id = date("Y") . "-STF-" . $TeacherModel->id;
         }
         $TeacherModel->save();
-        return response()->json(['success' => true, 'message' => 'Teacher was created successfully.']);
+        return response()->json(['success' => true, 'message' => 'Staff was created successfully.']);
     }
 
     public function getAllTeacher()

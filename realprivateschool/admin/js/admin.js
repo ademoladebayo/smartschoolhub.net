@@ -1060,6 +1060,38 @@ function searchTeacher(search_data) {
     .catch((err) => console.log(err));
 }
 
+// EXPORT LIST
+function exportStaffList() {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/staff/export-list", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = "staff-list.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();    
+      a.remove();  //afterwards we remove the element again  
+    })
+    .catch((err) => console.log(err));
+}
+
 // STUDENT
 function getAllStudentForTable() {
   fetch(ip + "/api/admin/all-student", {
@@ -1344,6 +1376,39 @@ function createStudent() {
     warningtoast("<b>Please check that no field is empty.</b>");
   }
 }
+
+// EXPORT LIST
+function exportStudentList() {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/student/export-list", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.location.href = "index.html";
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = "student-list.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();    
+      a.remove();  //afterwards we remove the element again  
+    })
+    .catch((err) => console.log(err));
+}
+
 
 //STUDENT UPLOAD IMAGE
 function readURL(input) {
@@ -1890,7 +1955,7 @@ async function getStudentIDCard() {
   document.getElementById("user_image").src = url;
   // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
 
-  document.getElementById("type").innerHTML = "STUDENT";
+  document.getElementById("user_type").innerHTML = "STUDENT";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
@@ -1944,7 +2009,7 @@ async function getStaffIDCard() {
   // staff_IMAGE
   document.getElementById("user_image").src = url;
 
-  document.getElementById("type").innerHTML = "STAFF";
+  document.getElementById("user_type").innerHTML = "STAFF";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
@@ -4628,10 +4693,10 @@ async function generateIDCard() {
 
   await getSchoolDetails();
   // STUDENT_IMAGE
-  //user_image = domain + "/backend/storage/app/public/fileupload";
-  user_image =
-    "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload";
-  // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+  user_image = domain + "/backend/storage/app/public/fileupload";
+  // user_image =
+  //   "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload";
+  // // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
