@@ -2947,7 +2947,7 @@ function exportSubjectSheet(subject_id, subject_name, class_name) {
       var url = window.URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url;
-      a.download = subject_name+"_"+class_name+"_"+localStorage["current_session"]+"_"+localStorage["current_term"].xlsx;
+      a.download = subject_name+"_"+class_name+"_"+localStorage["current_session"]+"_"+localStorage["current_term"]+".xlsx";
       document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
       a.click();    
       a.remove();  //afterwards we remove the element again  
