@@ -3,8 +3,8 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/realprivateschool";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
  var ip = "https://smartschoolhub.net/backend/realprivateschool";
@@ -377,15 +377,19 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+          <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})" class="btn gradient-orange-peel text-black"><i
+          <a onclick="viewStudentResult(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn gradient-orange-peel text-black"><i
                       class="fas fa-poll"></i>
                   Result</a>
       </tr>`;
@@ -742,16 +746,21 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -761,10 +770,12 @@ function searchStudent(search_data) {
                   class="fas fa-lock"></i> Disable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
@@ -787,16 +798,21 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -806,10 +822,12 @@ function searchStudent(search_data) {
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
@@ -834,16 +852,21 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -853,10 +876,12 @@ function searchStudent(search_data) {
                   class="fas fa-lock"></i> Disable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
 
@@ -879,16 +904,21 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -898,10 +928,12 @@ function searchStudent(search_data) {
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
@@ -1830,10 +1862,16 @@ function getCBTForSubject() {
   
           <td>
               <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary" onclick="viewCBT(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(/"/g, "'")})"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})"
                  ><i class="fas fa-eye"></i> View</button>
               <button style="text-decoration: none; cursor: pointer;" onclick=" reloadEditFrame(); editCBT(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(/"/g, "'")})"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})"
                   class="btn-sm btn-warning" data-bs-toggle="modal"
                   data-bs-target="#editModal"><i class="fas fa-edit"></i>
                   Edit</button>

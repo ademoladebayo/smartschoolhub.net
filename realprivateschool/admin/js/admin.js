@@ -213,30 +213,24 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
+          <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Class Management</span></a>
+    </li>
+
+    <li class="nav-item">
+          <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Subject Management</span></a>
+    </li>
+
+    <li class="nav-item">
+          <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
+          <span>Session Management</span></a>
+    </li>
+
+    <li class="nav-item">
         <a  id="card-generator" href="card-generator.html" class="nav-link"> <i
         class="fas fa-id-card"></i>
         <span>ID Card Generator</span></a>
-    </li>
-
-    <li class="nav-item">
-        <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
-        <span>Class Management</span></a>
-    </li>
-
-    <li class="nav-item">
-        <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
-        <span>Subject Management</span></a>
-    </li>
-
-    <li class="nav-item">
-        <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
-        <span>Session Management</span></a>
-    </li>
-
-
-    <li class="nav-item">
-        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
-        <span>Grade Settings</span></a>
     </li>
 
     <li class="nav-item">
@@ -248,6 +242,17 @@ function loadSideNav(page) {
         <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Staff Attendance</span></a>
     </li>
+
+  
+    <li class="nav-item">
+        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
+        <span>Grade Settings</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+    </li>
+
 
     <li class="nav-item">
         <a  id="control-panel" href="control-panel.html" class="nav-link"> <i class="flaticon-settings-work-tool"></i></i>
@@ -1070,7 +1075,7 @@ function exportStaffList() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
-    }
+    },
   })
     .then(function (res) {
       console.log(res.status);
@@ -1082,12 +1087,12 @@ function exportStaffList() {
 
     .then((blob) => {
       var url = window.URL.createObjectURL(blob);
-      var a = document.createElement('a');
+      var a = document.createElement("a");
       a.href = url;
       a.download = "staff-list.xlsx";
       document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-      a.click();    
-      a.remove();  //afterwards we remove the element again  
+      a.click();
+      a.remove(); //afterwards we remove the element again
     })
     .catch((err) => console.log(err));
 }
@@ -1387,7 +1392,7 @@ function exportStudentList() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
-    }
+    },
   })
     .then(function (res) {
       console.log(res.status);
@@ -1399,16 +1404,15 @@ function exportStudentList() {
 
     .then((blob) => {
       var url = window.URL.createObjectURL(blob);
-      var a = document.createElement('a');
+      var a = document.createElement("a");
       a.href = url;
       a.download = "student-list.xlsx";
       document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-      a.click();    
-      a.remove();  //afterwards we remove the element again  
+      a.click();
+      a.remove(); //afterwards we remove the element again
     })
     .catch((err) => console.log(err));
 }
-
 
 //STUDENT UPLOAD IMAGE
 function readURL(input) {
@@ -1955,7 +1959,7 @@ async function getStudentIDCard() {
   document.getElementById("user_image").src = url;
   // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
 
-  document.getElementById("user_type").innerHTML = "STUDENT";
+  document.getElementById("type").innerHTML = "STUDENT";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
@@ -2009,7 +2013,7 @@ async function getStaffIDCard() {
   // staff_IMAGE
   document.getElementById("user_image").src = url;
 
-  document.getElementById("user_type").innerHTML = "STAFF";
+  document.getElementById("type").innerHTML = "STAFF";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
@@ -2945,12 +2949,20 @@ function exportSubjectSheet(subject_id, subject_name, class_name) {
 
     .then((blob) => {
       var url = window.URL.createObjectURL(blob);
-      var a = document.createElement('a');
+      var a = document.createElement("a");
       a.href = url;
-      a.download = subject_name+"_"+class_name+"_"+localStorage["current_session"]+"_"+localStorage["current_term"]+".xlsx";
+      a.download =
+        subject_name +
+        "_" +
+        class_name +
+        "_" +
+        localStorage["current_session"] +
+        "_" +
+        localStorage["current_term"] +
+        ".xlsx";
       document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-      a.click();    
-      a.remove();  //afterwards we remove the element again  
+      a.click();
+      a.remove(); //afterwards we remove the element again
     })
     .catch((err) => console.log(err));
 }
@@ -4693,9 +4705,9 @@ async function generateIDCard() {
 
   await getSchoolDetails();
   // STUDENT_IMAGE
-  user_image = domain + "/backend/storage/app/public/fileupload";
-  // user_image =
-  //   "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload";
+  //user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image =
+    "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload";
   // // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
 
   // MINI SCHOOL LOGO
@@ -4820,6 +4832,145 @@ async function generateIDCard() {
   });
 }
 
+async function generateIDCard2() {
+  document.getElementById("idcard_list").innerHTML = ``;
+  user_type =
+    document.getElementById("user_type_card").value == ""
+      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
+      : document.getElementById("user_type_card").value;
+
+  user_class_sector = document.getElementById("user_class_sector").value =
+    document.getElementById("user_class_sector").value;
+
+  document.getElementById("generate_idcard").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+
+  document.getElementById("generate_idcard").disabled = true;
+
+  await getSchoolDetails();
+  // STUDENT_IMAGE
+  //user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image =
+    "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload";
+  // // "https://realprivateschool.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+
+  if (user_type == "STUDENT") {
+    user_image = user_image + "/student/";
+  } else {
+    user_image = user_image + "/staff/";
+  }
+
+  response = user_type == "STUDENT" ? getAllStudent() : getAllStaff();
+  json_to_generate_qr = [];
+  c = 1;
+  response.then(function (data) {
+    // CREATE TEMPLATE
+    for (i in data) {
+      if (
+        user_type == "STUDENT" &&
+        (data[i].class == null || data[i].class == "GRADUATED")
+      ) {
+        continue;
+      }
+      document.getElementById(
+        "idcard_list"
+      ).innerHTML += `<div style="margin-top: 20px;" class="container">
+      <div class="padding">
+          <div class="font">
+              <div class="top">
+                  <b>
+                      <h4 id="school_name"
+                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                         ${localStorage["SCHOOL_NAME"]}
+                      </h4>
+                  </b>
+                  
+
+                  <img id="user_image"
+                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                      src="${
+                        user_type == "STUDENT"
+                          ? user_image + data[i].student_id + ".png"
+                          : user_image + data[i].teacher_id + ".png"
+                      }" width="">
+
+
+              </div>
+              <div class="bottom">
+                  <div style="margin-bottom:5px">
+                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
+                      <p id="id" style="margin-bottom: 1px; color: black; ">${
+                        user_type == "STUDENT"
+                          ? data[i].student_id
+                          : data[i].teacher_id
+                      }</p>
+
+                      <small>
+                          <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                              ${data[i].gender}</p>
+                      </small>
+
+                  </div>
+                  <br>
+
+                  <div
+                      style="display: flex; justify-content: center; margin-top: 0px">
+                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+                  </div>
+
+
+                  <div style="margin-top: 20px;margin-bottom: 210px;">
+                      <h5 id ="user_type" style="font-family: Poppins
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+      <div class="back">
+          <h1 style="margin-bottom: 0; font-family: Poppins
+          ;" class="Details">INFORMATION</h1>
+          <hr style="background-color: white !important;">
+          <small>
+              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+              </h6>
+          </small>
+          <div style="margin-top: 0%;" class="qrcode">
+              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+                data[i].id
+              }">
+              </div>
+          </div>
+          <div class="details-info">
+              <h6 style="text-align: center;color: white !important;">if found please return to
+              </h6>
+              <h6 id="school_address"
+                  style="text-align: center;color: white !important; margin-bottom: 10px;">
+                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+
+          </div>
+      </div>
+    </div>
+    <div style="break-after:page"></div>
+          `;
+
+      json_to_generate_qr.push(data[i]);
+
+      c = c + 1;
+    }
+    makeQRCode(json_to_generate_qr, user_type);
+  });
+}
+
 async function makeQRCode(data, user_type) {
   //  QR CODE
   for (i in data) {
@@ -4845,17 +4996,327 @@ async function makeQRCode(data, user_type) {
   }
 }
 
+// RESULT UPLOAD
+function getAllstudentForSubjectResultUpload(refresh) {
+  document.getElementById("proceed").innerHTML = `<i
+  class="fa fa-spinner fa-spin"></i> Processing ...`;
+  // if (!refresh) {
+  //   document.getElementById("result_subject_class").innerHTML +=
+  //     localStorage["result_upload_subject_name"] +
+  //     " " +
+  //     localStorage["result_upload_subject_class"];
+  // }
+  fetch(ip + "/api/teacher/student-registered", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: document.getElementById("subject_class").value,
+      session: document.getElementById("session_term").value.split("-")[0],
+      term: document.getElementById("session_term").value.split("-")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      document.getElementById("proceed").innerHTML = "Proceed";
+      console.log(data);
+      document.getElementById("student_registered").innerHTML = ``;
+      // RESULT SUMMARY
+      document.getElementById("ave").innerHTML = parseFloat(data.avg).toFixed(
+        0
+      );
+      document.getElementById("min").innerHTML = data.min;
+      document.getElementById("max").innerHTML = data.max;
+      var c = 1;
+      if (data.result.length > 0) {
+        for (i in data.result) {
+          document.getElementById("student_registered").innerHTML += `
+          <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
+
+          <td>${c}.</td>
+          <td>${
+            data.result[i].student.first_name +
+            " " +
+            data.result[i].student.last_name
+          }</td>
+          
+          <td class="allownumeric" oninput="uploadResultDebouncer('${
+            data.result[i].id
+          }','first_ca',this.innerHTML)" contenteditable="true" >${
+            data.result[i].first_ca
+          }</td>
+          <td oninput="uploadResultDebouncer('${
+            data.result[i].id
+          }','second_ca',this.innerHTML)" contenteditable="true">${
+            data.result[i].second_ca
+          }</td>
+          <td oninput="uploadResultDebouncer('${
+            data.result[i].id
+          }','examination',this.innerHTML)" contenteditable="true">${
+            data.result[i].examination
+          }</td>
+          <td style="font-size:20px; font-style:bold;"><b>${
+            data.result[i].total
+          }</b></td>
+          <td> 
+            <div class="select">
+                <select onChange="uploadResultDebouncer('${
+                  data.result[i].id
+                }','grade',this.value)" id="standard-select" id="grade" value="${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }" class="select2">
+                <option value="<b>${
+                  data.result[i].grade == `-` ? `-` : `${data.result[i].grade}`
+                }</b>">${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }</option>
+          ${
+            // <option value="A">A</option>
+            // <option value="B">B</option>
+            // <option value="C">C</option>
+            // <option value="D">D</option>
+            // <option value="E">E</option>
+            // <option value="F">F</option>
+           ``
+          }
+                </select>
+           
+               <span class="focus"></span>
+            <div>
+          </td>
+          <td> 
+          <div class="select">
+              <select onChange="uploadResultDebouncer('${
+                data.result[i].id
+              }','remark',this.value)" id="standard-select" id="remark" value="<b>${
+            data.result[i].grade == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</b>" class="select2">
+              <option value="${
+                data.result[i].remark == `-` ? `-` : `${data.result[i].remark}`
+              }">${
+            data.result[i].remark == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</option>
+               ${
+                 //<option value="EXCELLENT">EXCELLENT</option>
+                 // <option value="VERY GOOD">VERY GOOD</option>
+                 // <option value="GOOD">GOOD</option>
+                 // <option value="FAIR">FAIR</option>
+                 // <option value="POOR">POOR</option>
+                 // <option value="VERY POOR">VERY POOR</option>
+                 ``
+               }
+              </select>
+              <span class="focus"></span>
+            <div>
+          </td>
+          
+          
+
+      </tr>`;
+          c = c + 1;
+        }
+      } else {
+        document.getElementById(
+          "student_registered"
+        ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function uploadResult(id, result_type, score) {
+  if (result_type == "grade" || result_type == "remark") {
+    document.getElementById("result_upload_style_grade_remark").innerHTML = `
+    :root {
+      --select-border: #777;
+      --select-focus: #fc8c03;
+      --select-arrow: var(--select-border);
+  }`;
+  } else {
+    document.getElementById("result_upload_style").innerHTML = `
+    [contenteditable] {
+
+      outline-color: #fc8c03;
+    }`;
+  }
+
+  fetch(ip + "/api/teacher/upload-result", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      result_type: result_type,
+      score: score,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (data.success) {
+        if (result_type == "grade" || result_type == "remark") {
+          document.getElementById(
+            "result_upload_style_grade_remark"
+          ).innerHTML = `
+          :root {
+            --select-border: #777;
+            --select-focus: #105c05;
+            --select-arrow: var(--select-border);
+        }`;
+        } else {
+          document.getElementById("result_upload_style").innerHTML = `
+          [contenteditable] {
+          
+            outline-color: #105c05;
+          }`;
+          getAllstudentForSubjectResultUpload(true);
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+
+  console.log(score);
+}
+
+// CUSTOM SUBJECT CLASS
+function loadCustomSubjectClass() {
+  fetch(ip + "/api/admin/all-subject", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        //  window.parent.location.assign(domain +"/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("subject_class").innerHTML = "";
+      for (i in data) {
+        document.getElementById(
+          "subject_class"
+        ).innerHTML += `<option value="${data[i].id}">${data[i].subject_name} (${data[i].class.class_name})</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// CUSTOM SESSION TERM
+function loadCustomSessionTerm() {
+  term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
+
+  fetch(ip + "/api/general/all-session/DESC", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
+      data.forEach((sessions) => {
+        term.forEach((term) => {
+          document.getElementById(
+            "session_term"
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + "-" + term
+          }</option>`;
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
 function downloadAsPDF(container) {
   const file = this.document.getElementById(container);
   var opt = {
-    margin: 1,
-    filename: "idcards.pdf",
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    // margin: 1,
+    // filename: "idcards.pdf",
+    // image: { type: "png", quality: 0.98 },
+    // html2canvas: { scale: 2 },
+    // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    margin: 0,
+    filename: "time_sheet_report.pdf",
+    image: { type: "jpeg", quality: 0.2 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "a4", orientation: "p" },
   };
   html2pdf().from(file).set(opt).save();
 }
+
+function print() {
+  var divContents = document.getElementById("idcard_list").innerHTML;
+  var head = document.getElementById("common-library").innerHTML;
+  console.log(divContents);
+  var a = window.open("", "", "height=1000, width=1000");
+  a.document.write("<html>");
+  a.document.write(head);
+  a.document.write(divContents);
+  a.document.write(`</body></html>`);
+  a.print();
+  a.document.close();
+}
+
+// RESULT UPLOAD DEBOUCER
+// DEBOUNCER
+function debounce(func, timeout = 2000) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+}
+
+const uploadResultDebouncer = debounce((id, result_type, score) =>
+  uploadResult(id, result_type, score)
+);
 
 // TOAST
 function successtoast(message, time) {

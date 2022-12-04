@@ -36,7 +36,8 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;" onload="loadSideNav('index');getCurrentSession(); loadCustomSessionTerm(); getDashboardInfo(); loadDashBoardInformation()">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('index');getCurrentSession(); loadCustomSessionTerm(); getDashboardInfo(); getDashboardInfo(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -147,6 +148,9 @@
                     </ul>
                     <br>
                     <!-- <h3 id="session_term" style="font-weight: bold;font-family: Poppins">Loading ... </h3> -->
+                    <i onclick="window.location.reload();"
+                        style="color: black; float: right; margin-right: 3px; cursor: pointer;" class="fas fa-sync-alt">
+                    </i>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <select onchange="useCustomSessionTerm(this.value)" id="session_term" class="select2">
                             <option>SESSION - TERM</option>
