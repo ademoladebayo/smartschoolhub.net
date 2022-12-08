@@ -8,6 +8,10 @@
     <title>SSHUB | Upload Result</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- NO CACHE -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans&amp;display=swap">
@@ -42,13 +46,15 @@
     <!-- Select 2 CSS -->
     <link rel="stylesheet" href="../css/select2.min.css">
     <!-- Data Table CSS -->
-    <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
+    <!-- <link rel="stylesheet" href="../css/jquery.dataTables.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"  onload="loadSideNav('result'); loadCustomSubjectClass(); loadCustomSessionTerm();  loadDashBoardInformation();">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('result'); loadCustomSubjectClass(); loadCustomSessionTerm();  loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -128,7 +134,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -149,7 +156,7 @@
                 <br>
 
                 <h2 id="" style="text-align: center; font-weight: bold; font-family: Poppins; text-align: center">
-                  RESULT UPLOAD
+                    RESULT UPLOAD
                 </h2>
 
                 <div class="row">
@@ -159,7 +166,8 @@
                             <div class="card-body">
                                 <div class="heading-layout1">
                                     <div class="item-title">
-                                        <h5 style="font-weight: bold; font-family: Poppins;">SELECT SUBJECT AND SESSION</h3>
+                                        <h5 style="font-weight: bold; font-family: Poppins;">SELECT SUBJECT AND SESSION
+                                            </h3>
                                     </div>
                                 </div>
 
@@ -175,7 +183,8 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-2 col-12 form-group">
-                                        <button id="proceed" onclick="getAllstudentForSubjectResultUpload('')" class="fw-btn-fill btn-gradient-yellow">Proceed</button>
+                                        <button id="proceed" onclick="getAllstudentForSubjectResultUpload('')"
+                                            class="fw-btn-fill btn-gradient-yellow">Proceed</button>
                                     </div>
                                 </div>
 
@@ -209,9 +218,9 @@
                             </div>
 
                             <div class="table-responsive">
-                                <table id="paginate" class="table table-striped table table-sm" cellspacing="0"
-                                width="100%">
-                                <!-- <table id="paginate" class="table table-striped table table-sm"
+                                <table id="paginatee" class="table table-striped table table-sm" cellspacing="0"
+                                    width="100%">
+                                    <!-- <table id="paginate" class="table table-striped table table-sm"
                                     style=" border-spacing: 0.3em;"> -->
                                     <thead>
                                         <tr>
@@ -227,7 +236,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="student_registered">
-                                        <tr>
+                                        <tr class="odd">
                                             <td>...</td>
                                             <td>...</td>
                                             <td>...</td>
@@ -238,10 +247,10 @@
                                             <td>...</td>
 
                                         </tr>
-
-
-
-
+                                        <!-- <tr class="odd">
+                                            <td valign="top" colspan="8" class="dataTables_empty">No data available in
+                                                table</td>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
@@ -252,8 +261,9 @@
                     <!-- <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
                         reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div> -->
 
-                        <div class="copyright" style="display: flex; justify-content:center;">©Copyrights <a href="https://www.smartschoolhub.net"> <b>SMARTSCHOOLHUB.NET</b> </a> 2022. All rights
-                            reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
+                    <div class="copyright" style="display: flex; justify-content:center;">©Copyrights <a
+                            href="https://www.smartschoolhub.net"> <b>SMARTSCHOOLHUB.NET</b> </a> 2022. All rights
+                        reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
                 </footer>
             </div>
             <!-- Social Media End Here -->
@@ -291,7 +301,8 @@
     <!-- Chart Js -->
     <script src="../js/Chart.min.js"></script>
     <!-- Data Table Js -->
-    <script src="../js/jquery.dataTables.min.js"></script>
+    <!-- <script src="../js/jquery.dataTables.min.js"></script> -->
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <!-- Custom Js -->
     <script src="../js/main.js"></script>
     <script src="../js/myscript.js"></script>
@@ -302,7 +313,7 @@
 </body>
 
 <script>
-    $("#paginate").keydown(function (e) {
+    $("#paginatee").keydown(function (e) {
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
             ((e.keyCode == 65 || e.keyCode == 86 || e.keyCode == 67) && (e.ctrlKey === true || e.metaKey === true)) ||
             (e.keyCode >= 35 && e.keyCode <= 40)) {

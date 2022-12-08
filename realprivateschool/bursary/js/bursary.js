@@ -1,6 +1,6 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/realprivateschool";
+ //var ip = "http://127.0.0.1:8000";
+ //var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 
 // LIVE IP
@@ -1412,6 +1412,7 @@ function paginateTable() {
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
 }
+
 
 // CUSTOM SESSION TERM
 function loadCustomSessionTerm() {

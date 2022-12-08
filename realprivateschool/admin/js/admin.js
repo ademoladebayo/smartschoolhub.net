@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/realprivateschool";
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
- var ip = "https://smartschoolhub.net/backend/realprivateschool";
- var domain = "https://realprivateschool.smartschoolhub.net";
+var ip = "https://smartschoolhub.net/backend/realprivateschool";
+var domain = "https://realprivateschool.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -4433,6 +4433,7 @@ function paginateTable() {
   $(".dataTables_length").addClass("bs-select");
 }
 
+
 //CHECK PORTAL SUBSCRIPTION
 function getPortalSubscription() {
   fetch(ip + "/api/bursary/portal-subscription", {
@@ -5000,12 +5001,6 @@ async function makeQRCode(data, user_type) {
 function getAllstudentForSubjectResultUpload(refresh) {
   document.getElementById("proceed").innerHTML = `<i
   class="fa fa-spinner fa-spin"></i> Processing ...`;
-  // if (!refresh) {
-  //   document.getElementById("result_subject_class").innerHTML +=
-  //     localStorage["result_upload_subject_name"] +
-  //     " " +
-  //     localStorage["result_upload_subject_class"];
-  // }
   fetch(ip + "/api/teacher/student-registered", {
     method: "POST",
     headers: {
@@ -5029,6 +5024,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
     .then((data) => {
       document.getElementById("proceed").innerHTML = "Proceed";
       console.log(data);
+      $('#paginate').DataTable().clear();
       document.getElementById("student_registered").innerHTML = ``;
       // RESULT SUMMARY
       document.getElementById("ave").innerHTML = parseFloat(data.avg).toFixed(
@@ -5040,104 +5036,105 @@ function getAllstudentForSubjectResultUpload(refresh) {
       if (data.result.length > 0) {
         for (i in data.result) {
           document.getElementById("student_registered").innerHTML += `
-          <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
+            <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
 
-          <td>${c}.</td>
-          <td>${
-            data.result[i].student.first_name +
-            " " +
-            data.result[i].student.last_name
-          }</td>
-          
-          <td class="allownumeric" oninput="uploadResultDebouncer('${
-            data.result[i].id
-          }','first_ca',this.innerHTML)" contenteditable="true" >${
+            <td>${c}.</td>
+            <td>${
+              data.result[i].student.first_name +
+              " " +
+              data.result[i].student.middle_name +
+              " " +
+              data.result[i].student.last_name
+            }</td>
+            
+            <td class="allownumeric" oninput="uploadResultDebouncer('${
+              data.result[i].id
+            }','first_ca',this.innerHTML)" contenteditable="true" >${
             data.result[i].first_ca
           }</td>
-          <td oninput="uploadResultDebouncer('${
-            data.result[i].id
-          }','second_ca',this.innerHTML)" contenteditable="true">${
+            <td oninput="uploadResultDebouncer('${
+              data.result[i].id
+            }','second_ca',this.innerHTML)" contenteditable="true">${
             data.result[i].second_ca
           }</td>
-          <td oninput="uploadResultDebouncer('${
-            data.result[i].id
-          }','examination',this.innerHTML)" contenteditable="true">${
+            <td oninput="uploadResultDebouncer('${
+              data.result[i].id
+            }','examination',this.innerHTML)" contenteditable="true">${
             data.result[i].examination
           }</td>
-          <td style="font-size:20px; font-style:bold;"><b>${
-            data.result[i].total
-          }</b></td>
-          <td> 
-            <div class="select">
-                <select onChange="uploadResultDebouncer('${
-                  data.result[i].id
-                }','grade',this.value)" id="standard-select" id="grade" value="${
+            <td style="font-size:20px; font-style:bold;"><b>${
+              data.result[i].total
+            }</b></td>
+            <td> 
+              <div class="select">
+                  <select onChange="uploadResultDebouncer('${
+                    data.result[i].id
+                  }','grade',this.value)" id="standard-select" id="grade" value="${
             data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
           }" class="select2">
-                <option value="<b>${
-                  data.result[i].grade == `-` ? `-` : `${data.result[i].grade}`
-                }</b>">${
+                  <option value="<b>${
+                    data.result[i].grade == `-`
+                      ? `-`
+                      : `${data.result[i].grade}`
+                  }</b>">${
             data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
           }</option>
-          ${
-            // <option value="A">A</option>
-            // <option value="B">B</option>
-            // <option value="C">C</option>
-            // <option value="D">D</option>
-            // <option value="E">E</option>
-            // <option value="F">F</option>
-           ``
-          }
-                </select>
-           
-               <span class="focus"></span>
-            <div>
-          </td>
-          <td> 
-          <div class="select">
-              <select onChange="uploadResultDebouncer('${
-                data.result[i].id
-              }','remark',this.value)" id="standard-select" id="remark" value="<b>${
+            ${
+              // <option value="A">A</option>
+              // <option value="B">B</option>
+              // <option value="C">C</option>
+              // <option value="D">D</option>
+              // <option value="E">E</option>
+              // <option value="F">F</option>
+              ``
+            }
+                  </select>
+            
+                <span class="focus"></span>
+              <div>
+            </td>
+            <td> 
+            <div class="select">
+                <select onChange="uploadResultDebouncer('${
+                  data.result[i].id
+                }','remark',this.value)" id="standard-select" id="remark" value="<b>${
             data.result[i].grade == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
           }</b>" class="select2">
-              <option value="${
-                data.result[i].remark == `-` ? `-` : `${data.result[i].remark}`
-              }">${
+                <option value="${
+                  data.result[i].remark == `-`
+                    ? `-`
+                    : `${data.result[i].remark}`
+                }">${
             data.result[i].remark == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
           }</option>
-               ${
-                 //<option value="EXCELLENT">EXCELLENT</option>
-                 // <option value="VERY GOOD">VERY GOOD</option>
-                 // <option value="GOOD">GOOD</option>
-                 // <option value="FAIR">FAIR</option>
-                 // <option value="POOR">POOR</option>
-                 // <option value="VERY POOR">VERY POOR</option>
-                 ``
-               }
-              </select>
-              <span class="focus"></span>
-            <div>
-          </td>
-          
-          
+                ${
+                  //<option value="EXCELLENT">EXCELLENT</option>
+                  // <option value="VERY GOOD">VERY GOOD</option>
+                  // <option value="GOOD">GOOD</option>
+                  // <option value="FAIR">FAIR</option>
+                  // <option value="POOR">POOR</option>
+                  // <option value="VERY POOR">VERY POOR</option>
+                  ``
+                }
+                </select>
+                <span class="focus"></span>
+              <div>
+            </td>
+            
+            
 
-      </tr>`;
+        </tr>`;
           c = c + 1;
         }
-      } else {
-        document.getElementById(
-          "student_registered"
-        ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
-      paginateTable();
     })
     .catch((err) => console.log(err));
 }
