@@ -96,6 +96,12 @@ class TeacherController extends Controller
         return $TeacherService->uploadResult($request);
     }
 
+    public function uploadResultBulk(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->uploadResultBulk($request);
+    }
+
     public function uploadCommentAndRating(Request $request)
     {
         $TeacherService = new TeacherService();

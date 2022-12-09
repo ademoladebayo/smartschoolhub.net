@@ -3,8 +3,8 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/realprivateschool";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
 var ip = "https://smartschoolhub.net/backend/realprivateschool";
@@ -24,13 +24,16 @@ window.addEventListener("offline", () =>
 //STARTERS
 getCurrentSession();
 getSchoolDetails();
+loadSchoolColor();
 if (
   !window.location.href.includes("portal-subscription") &&
   localStorage["token"] != null
 ) {
   checkPortalSubscription();
 }
-loadSchoolColor();
+
+// VAR
+result_list = {};
 
 // if(!window.location.href.includes("portal-subcription")){
 //   checkPortalSubscription();
@@ -4433,7 +4436,6 @@ function paginateTable() {
   $(".dataTables_length").addClass("bs-select");
 }
 
-
 //CHECK PORTAL SUBSCRIPTION
 function getPortalSubscription() {
   fetch(ip + "/api/bursary/portal-subscription", {
@@ -5022,9 +5024,19 @@ function getAllstudentForSubjectResultUpload(refresh) {
       return res.json();
     })
     .then((data) => {
+      // CLEAR RESUL LIST
+      result_list = {};
+
       document.getElementById("proceed").innerHTML = "Proceed";
       console.log(data);
-      $('#paginate').DataTable().clear();
+
+      document.getElementById("class_summary").innerHTML =
+        "<b>CLASS SUMMARY FOR " +
+        document.getElementById("subject_class").options[
+          document.getElementById("subject_class").selectedIndex
+        ].text +
+        "</b>";
+
       document.getElementById("student_registered").innerHTML = ``;
       // RESULT SUMMARY
       document.getElementById("ave").innerHTML = parseFloat(data.avg).toFixed(
@@ -5047,17 +5059,17 @@ function getAllstudentForSubjectResultUpload(refresh) {
               data.result[i].student.last_name
             }</td>
             
-            <td class="allownumeric" oninput="uploadResultDebouncer('${
+            <td class="allownumeric" oninput="addToResultList('${
               data.result[i].id
             }','first_ca',this.innerHTML)" contenteditable="true" >${
             data.result[i].first_ca
           }</td>
-            <td oninput="uploadResultDebouncer('${
+            <td oninput="addToResultList('${
               data.result[i].id
             }','second_ca',this.innerHTML)" contenteditable="true">${
             data.result[i].second_ca
           }</td>
-            <td oninput="uploadResultDebouncer('${
+            <td oninput="addToResultList('${
               data.result[i].id
             }','examination',this.innerHTML)" contenteditable="true">${
             data.result[i].examination
@@ -5067,7 +5079,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
             }</b></td>
             <td> 
               <div class="select">
-                  <select onChange="uploadResultDebouncer('${
+                  <select onChange="addToResultList('${
                     data.result[i].id
                   }','grade',this.value)" id="standard-select" id="grade" value="${
             data.result[i].grade == "-"
@@ -5099,7 +5111,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
             </td>
             <td> 
             <div class="select">
-                <select onChange="uploadResultDebouncer('${
+                <select onChange="addToResultList('${
                   data.result[i].id
                 }','remark',this.value)" id="standard-select" id="remark" value="<b>${
             data.result[i].grade == "-"
@@ -5199,6 +5211,53 @@ function uploadResult(id, result_type, score) {
     .catch((err) => console.log(err));
 
   console.log(score);
+}
+
+function addToResultList(id, result_type, score) {
+  let result_obj = {};
+
+  // CHECK IF KEY EXIST
+  if (result_list[id]) {
+    result_list[id][result_type] = score;
+  } else {
+    result_obj[result_type] = score;
+    result_list[id] = result_obj;
+  }
+  console.log(result_list);
+}
+
+function uploadBulkResult() {
+  if (Object.keys(result_list).length === 0) {
+    errortoast("No result found");
+    return 0;
+  }
+  warningtoast("Uploading result please wait ...");
+  fetch(ip + "/api/teacher/upload-result/bulk", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify(result_list),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/admin/");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        getAllstudentForSubjectResultUpload(true);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // CUSTOM SUBJECT CLASS

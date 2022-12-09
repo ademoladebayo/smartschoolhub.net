@@ -48,6 +48,9 @@
     <!-- Data Table CSS -->
     <!-- <link rel="stylesheet" href="../css/jquery.dataTables.min.css"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    
+    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 
@@ -203,7 +206,7 @@
                                     </h3> -->
                                     <br>
                                     <div style="border: black dotted; margin-left: 10px;" class="row">
-                                        <h4 style="display: flex; justify-content: center;">CLASS SUMMARY</h4>
+                                        <h4 id="class_summary" style="display: flex; justify-content: center;">CLASS SUMMARY</h4>
                                         <h6 class="col-md-4"><b>AVERAGE :: <b id="ave"> </b></b>
                                         </h6>
                                         <h6 class="col-md-4"><b>LOWEST :: <b id="min"></b></b>
@@ -253,6 +256,12 @@
                                         </tr> -->
                                     </tbody>
                                 </table>
+                            </div>
+
+                            <div class="col-lg-2 col-12 form-group">
+                                <br>
+                                <button id="upload" onclick="uploadBulkResult()"
+                                    class="fw-btn-fill btn-gradient-yellow"><i class="fas fa-file-upload"></i> Upload</button>
                             </div>
                         </div>
                     </div>
@@ -308,6 +317,11 @@
     <script src="../js/myscript.js"></script>
     <script src="./js/admin.js"></script>
     <script src="../common-library.js"></script>
+    
+    <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+    <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
 
 
 </body>

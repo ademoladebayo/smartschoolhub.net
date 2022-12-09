@@ -251,6 +251,9 @@ Route::middleware([ActivityLog::class])->group(function () {
         Route::post('teacher/upload-result', 'TeacherController@uploadResult', function () {
         })->middleware(Cors::class);
 
+        Route::post('teacher/upload-result/bulk', 'TeacherController@uploadResultBulk', function () {
+        })->middleware(Cors::class);
+
         Route::post('teacher/upload-comment-rating', 'TeacherController@uploadCommentAndRating', function () {
         })->middleware(Cors::class);
 

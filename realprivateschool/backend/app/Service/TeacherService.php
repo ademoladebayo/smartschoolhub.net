@@ -311,6 +311,20 @@ class TeacherService
         return response()->json(['success' => true, 'message' => 'Result updated']);
     }
 
+    public function uploadResultBulk(Request $request)
+    {
+        $data = request()->all();
+        foreach ($data as $keys => $value) {
+            $result = SubjectRegistrationModel::find($keys);
+            foreach ($data[$keys] as $key => $value) {
+                $result[$key] = $value;
+            }
+            $result->total =  $result["first_ca"]+ $result["second_ca"] +  $result["examination"];
+            $result->save();
+        }
+        return response()->json(['success' => true, 'message' => 'Result upload was successful.']);
+    }
+
 
     public function uploadCommentAndRating(Request $request)
     {
@@ -335,8 +349,8 @@ class TeacherService
         foreach (StudentModel::where('class', $request->old_class)->get() as $student) {
             $student->class = $request->new_class;
 
-            if($request->new_class == "GRADUATED"){
-                $student->graduation = $request->old_class."_".$session_term[0]->session."_".$session_term[0]->term;
+            if ($request->new_class == "GRADUATED") {
+                $student->graduation = $request->old_class . "_" . $session_term[0]->session . "_" . $session_term[0]->term;
             }
             $student->save();
         }

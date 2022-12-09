@@ -1558,12 +1558,12 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
               <td style="color: ${
-                result.grade == "F" ? "red" : "blue"
+                result.grade.includes("F") ? "red" : result.grade.includes("A") ? "blue" : "black"
               } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
               <td style="color: ${
-                result.grade == "F" ? "red" : "blue"
+                result.grade.includes("F") ? "red" : result.grade.includes("A") ? "blue" : "black"
               } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
