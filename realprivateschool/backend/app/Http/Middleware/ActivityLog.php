@@ -56,6 +56,9 @@ class ActivityLog
         $activityLog->request = $request_method . " | " . $request_url . "\n" . json_encode($request_data). "\n" . $request->header("User-Agent");
         $activityLog->date_time = $response->getdate();
         $response = strlen($response_content) > 500 ? "RETURNED A LONG DATA" : $response_content;
+        $req = strlen($activityLog->request) > 500 ? $request_method . " | " . $request_url . "\n"  . $request->header("User-Agent") : $activityLog->request;
+
+        $activityLog->request = $req;
         $activityLog->response = $response_status . " :::: " . $response;
         $utils->logUserActivity($token, $activityLog);
     }
