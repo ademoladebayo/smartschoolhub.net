@@ -77,7 +77,7 @@ function signIn() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -88,8 +88,10 @@ function signIn() {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
-          getStoredCredential();
+          parent.getStoredCredential();
           username = JSON.parse(localStorage["user_data"]).data.username;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", username);
 
           if (username.includes("SECURITY")) {
             setTimeout(function () {
@@ -104,6 +106,57 @@ function signIn() {
           errortoast("<b>" + data.message + "</b>");
         }
 
+        document.getElementById("signin").innerHTML = `Sign In`;
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
+function reAuth() {
+  var id = localStorage["user_id"];
+  var password = document.getElementById("password").value;
+  if (id != "" && password != "") {
+    // PUSH TO API
+    document.getElementById("signin").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Processing ...`;
+    fetch(ip + "/api/admin/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        password: password,
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+         openAuthenticationModal()
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
+          parent.getStoredCredential();
+          username = JSON.parse(localStorage["user_data"]).data.username;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", username);
+          setTimeout(function () {
+            parent.$("#authenticationModal").modal("hide");
+            parent.document.getElementById("authenticationModal").remove();
+          }, 1000);
+        } else {
+          errortoast(data.message);
+        }
         document.getElementById("signin").innerHTML = `Sign In`;
       })
       .catch((err) => console.log(err));
@@ -133,7 +186,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -359,7 +412,7 @@ function getAllTeacherForClass() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -397,7 +450,7 @@ function getAllTeacherForDropDown() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -426,7 +479,7 @@ function getAllTeacherForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -506,7 +559,7 @@ function getAllStaff() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -641,7 +694,7 @@ function createTeacher() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -718,7 +771,7 @@ function updateTeacher() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -758,7 +811,7 @@ function updateTeacherProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -794,7 +847,7 @@ function deleteTeacher(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -825,7 +878,7 @@ function searchTeacher(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1083,7 +1136,7 @@ function exportStaffList() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.blob();
     })
@@ -1113,7 +1166,7 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1203,7 +1256,7 @@ function getAllStudent() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1365,7 +1418,7 @@ function createStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1400,7 +1453,7 @@ function exportStudentList() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.blob();
     })
@@ -1496,7 +1549,7 @@ function updateStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -1536,7 +1589,7 @@ function updateStudentProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1571,7 +1624,7 @@ function deleteStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1602,7 +1655,7 @@ function searchStudent(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1851,7 +1904,7 @@ function uploadImage1(image, student_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1917,7 +1970,7 @@ function uploadImage(type) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2066,7 +2119,7 @@ function getAllClassForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2220,7 +2273,7 @@ function createClass() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2267,7 +2320,7 @@ function updateClass() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2306,7 +2359,7 @@ function deleteClass(class_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2337,7 +2390,7 @@ function searchClass(class_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2493,7 +2546,7 @@ function createSubject() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2527,7 +2580,7 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2694,7 +2747,7 @@ function updateSubject() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2733,7 +2786,7 @@ function deleteSubject(subject_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2764,7 +2817,7 @@ function searchSubject(subject_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2945,7 +2998,7 @@ function exportSubjectSheet(subject_id, subject_name, class_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.blob();
     })
@@ -2995,7 +3048,7 @@ function createSession() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -3029,7 +3082,7 @@ function getAllSessionForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3155,7 +3208,7 @@ function updateSession() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -3204,7 +3257,7 @@ function createGrade() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -3239,7 +3292,7 @@ function getAllGradeForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3324,7 +3377,7 @@ function updateGrade() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -3363,7 +3416,7 @@ function deleteGrade(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3471,7 +3524,7 @@ function takeAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3546,7 +3599,7 @@ function takeAttendanceByStudentID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3644,7 +3697,7 @@ function getAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3775,7 +3828,7 @@ function takeTeacherAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3850,7 +3903,7 @@ function takeAttendanceByStaffID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3947,7 +4000,7 @@ function getTeacherAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4002,7 +4055,7 @@ function getDashboardInfo() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4047,7 +4100,7 @@ function saveControl() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4076,7 +4129,7 @@ function getControl() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4169,7 +4222,7 @@ function saveInventoryItem() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -4203,7 +4256,7 @@ function getInventory() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4315,7 +4368,7 @@ function updateInventoryItem(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4349,7 +4402,7 @@ function deleteInventoryItem(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4449,7 +4502,7 @@ function getPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4520,7 +4573,7 @@ function checkPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4603,7 +4656,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
               .then(function (res) {
                 console.log(res.status);
                 if (res.status == 401) {
-                  window.location.href = "index.html";
+                 openAuthenticationModal()
                 }
                 return res.json();
               })
@@ -4645,7 +4698,7 @@ function getStoredCredential() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4656,7 +4709,6 @@ function getStoredCredential() {
     })
     .catch((err) => console.log(err));
 }
-
 // RESET ACCOUNT
 function resetAccount(user_type, id) {
   warningtoast("<b>Processing ... Please wait</b>");
@@ -4675,7 +4727,7 @@ function resetAccount(user_type, id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -5019,7 +5071,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -5059,17 +5111,17 @@ function getAllstudentForSubjectResultUpload(refresh) {
               data.result[i].student.last_name
             }</td>
             
-            <td class="allownumeric" oninput="addToResultList('${
+            <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${
               data.result[i].id
             }','first_ca',this.innerHTML)" contenteditable="true" >${
             data.result[i].first_ca
           }</td>
-            <td oninput="addToResultList('${
+            <td oninput="scoreLimit(this); addToResultList('${
               data.result[i].id
             }','second_ca',this.innerHTML)" contenteditable="true">${
             data.result[i].second_ca
           }</td>
-            <td oninput="addToResultList('${
+            <td oninput="scoreLimit(this); addToResultList('${
               data.result[i].id
             }','examination',this.innerHTML)" contenteditable="true">${
             data.result[i].examination
@@ -5183,7 +5235,7 @@ function uploadResult(id, result_type, score) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -5244,7 +5296,7 @@ function uploadBulkResult() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -5304,7 +5356,7 @@ function loadCustomSessionTerm() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -5373,6 +5425,132 @@ function debounce(func, timeout = 2000) {
 const uploadResultDebouncer = debounce((id, result_type, score) =>
   uploadResult(id, result_type, score)
 );
+
+function scoreLimit(element) {
+  var max_chars = 2;
+  if (element.innerHTML.length > max_chars) {
+    element.innerHTML = element.innerHTML.substr(0, max_chars);
+    element.blur();
+  }
+}
+
+$(document).click(function (e) {
+  if (!$(e.target).closest("#authenticationModal").length) {
+    modalExist = parent.document.getElementById("authenticationModal");
+    if(modalExist != null){
+      modalExist.remove();
+    }
+  }
+});
+
+// RE - AUTHENTICATION MODAL
+function openAuthenticationModal() {
+modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="authenticationModalTitle">
+                <b>Session Timeout !</b>
+            </h4>
+
+        </div>
+        <div class="modal-body text-center">
+            <div class="row">
+                <div class="col-lg-12 img-box">
+                    <img src="../asset/images/login-banner.png" alt="">
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <div class="login-box">
+                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                        <div style="display: flex;
+                        justify-content: center;" class="row">
+
+                            <b>
+                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                    <i style="color: #051f3e;"
+                                        class="fas fa-graduation-cap fa-xs"></i>
+                                    SMARTSCHOOLHUB.net
+                                </h3>
+                            </b>
+
+                        </div>
+                        <br>
+
+                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                           ${localStorage["username"]},</script> please
+                            signin
+                            to continue
+                        </h5>
+                       <form autocomplete="off">   
+                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                            <div class="login-row row no-margin">
+                               
+                                <input id="password" type="password" autocomplete="new-password"
+                                    class="form-control form-control-sm">
+                                    <br>
+                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
+                            </div>
+                        </form>    
+                        <br>
+                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+
+
+                        <div class="login-row btnroo row no-margin">
+                            <button id="signin" onclick="reAuth()"
+                                class="btn btn-primary btn-sm ">Sign
+                                In</button>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <footer class="footer">
+                        <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                                href="../#"><b>
+                                    Dextroux Technologies</b></a></div>
+                    </footer>
+                </div>
+
+            </div>
+            <script>
+                const password = document.querySelector('#password');
+                togglePass.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                })
+            </script>
+            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+        </div>
+    </div>
+</div>
+</div>
+`;
+
+  modalExist = parent.document.getElementById("authenticationModal");
+  parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
+    console.log(el);
+    el.remove();
+  });
+
+
+parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
+    console.log(el);
+    el.remove();
+  });
+
+  parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal("show");
+}
 
 // TOAST
 function successtoast(message, time) {

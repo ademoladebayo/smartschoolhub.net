@@ -317,8 +317,9 @@ class TeacherService
         foreach ($data as $keys => $value) {
             $result = SubjectRegistrationModel::find($keys);
             foreach ($data[$keys] as $key => $value) {
-                $result[$key] = $value;
+                $result[$key] = $value == null ? "-" : $value;
             }
+
             $first_ca = $result->first_ca != "-" ? $result->first_ca : 0;
             $second_ca = $result->second_ca != "-" ? $result->second_ca : 0;
             $examination = $result->examination != "-" ? $result->examination : 0;

@@ -24,14 +24,16 @@ window.addEventListener("offline", () =>
 //STARTERS
 getCurrentSession();
 getSchoolDetails();
+loadSchoolColor();
 if (
   !window.location.href.includes("portal-subscription") &&
   localStorage["token"] != null
 ) {
   checkPortalSubscription();
 }
-loadSchoolColor();
 
+// VAR
+result_list = {};
 
 // if(!window.location.href.includes("portal-subcription")){
 //   checkPortalSubscription();
@@ -75,7 +77,7 @@ function signIn() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -86,8 +88,10 @@ function signIn() {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
-          getStoredCredential();
+          parent.getStoredCredential();
           username = JSON.parse(localStorage["user_data"]).data.username;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", username);
 
           if (username.includes("SECURITY")) {
             setTimeout(function () {
@@ -102,6 +106,57 @@ function signIn() {
           errortoast("<b>" + data.message + "</b>");
         }
 
+        document.getElementById("signin").innerHTML = `Sign In`;
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
+function reAuth() {
+  var id = localStorage["user_id"];
+  var password = document.getElementById("password").value;
+  if (id != "" && password != "") {
+    // PUSH TO API
+    document.getElementById("signin").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Processing ...`;
+    fetch(ip + "/api/admin/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        password: password,
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+         openAuthenticationModal()
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
+          parent.getStoredCredential();
+          username = JSON.parse(localStorage["user_data"]).data.username;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", username);
+          setTimeout(function () {
+            parent.$("#authenticationModal").modal("hide");
+            parent.document.getElementById("authenticationModal").remove();
+          }, 1000);
+        } else {
+          errortoast(data.message);
+        }
         document.getElementById("signin").innerHTML = `Sign In`;
       })
       .catch((err) => console.log(err));
@@ -131,7 +186,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -213,26 +268,25 @@ function loadSideNav(page) {
         <span>Staff Management</span></a>
     </li>
 
-    
     <li class="nav-item">
-        <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
-        <span>Class Management</span></a>
+          <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Class Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
-        <span>Subject Management</span></a>
+          <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Subject Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
-        <span>Session Management</span></a>
+          <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
+          <span>Session Management</span></a>
     </li>
 
-
     <li class="nav-item">
-        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
-        <span>Grade Settings</span></a>
+        <a  id="card-generator" href="card-generator.html" class="nav-link"> <i
+        class="fas fa-id-card"></i>
+        <span>ID Card Generator</span></a>
     </li>
 
     <li class="nav-item">
@@ -244,6 +298,17 @@ function loadSideNav(page) {
         <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Staff Attendance</span></a>
     </li>
+
+  
+    <li class="nav-item">
+        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
+        <span>Grade Settings</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+    </li>
+
 
     <li class="nav-item">
         <a  id="control-panel" href="control-panel.html" class="nav-link"> <i class="flaticon-settings-work-tool"></i></i>
@@ -347,7 +412,7 @@ function getAllTeacherForClass() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -385,7 +450,7 @@ function getAllTeacherForDropDown() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -414,7 +479,7 @@ function getAllTeacherForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -478,6 +543,29 @@ function getAllTeacherForTable() {
         c = c + 1;
       }
       paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function getAllStaff() {
+  return fetch(ip + "/api/admin/all-teacher", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      return data;
     })
     .catch((err) => console.log(err));
 }
@@ -606,7 +694,7 @@ function createTeacher() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -683,7 +771,7 @@ function updateTeacher() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -723,7 +811,7 @@ function updateTeacherProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -759,7 +847,7 @@ function deleteTeacher(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -790,7 +878,7 @@ function searchTeacher(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1033,6 +1121,38 @@ function searchTeacher(search_data) {
     .catch((err) => console.log(err));
 }
 
+// EXPORT LIST
+function exportStaffList() {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/staff/export-list", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+       openAuthenticationModal()
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "staff-list.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    })
+    .catch((err) => console.log(err));
+}
+
 // STUDENT
 function getAllStudentForTable() {
   fetch(ip + "/api/admin/all-student", {
@@ -1046,7 +1166,7 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1124,7 +1244,27 @@ function getAllStudentForTable() {
     })
     .catch((err) => console.log(err));
 }
-
+function getAllStudent() {
+  return fetch(ip + "/api/admin/all-student", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
+}
 {
   /* <a onclick="deleteStudent(${
   data[i].id
@@ -1278,7 +1418,7 @@ function createStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1296,6 +1436,38 @@ function createStudent() {
   } else {
     warningtoast("<b>Please check that no field is empty.</b>");
   }
+}
+
+// EXPORT LIST
+function exportStudentList() {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/student/export-list", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+       openAuthenticationModal()
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "student-list.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    })
+    .catch((err) => console.log(err));
 }
 
 //STUDENT UPLOAD IMAGE
@@ -1377,7 +1549,7 @@ function updateStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -1417,7 +1589,7 @@ function updateStudentProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1452,7 +1624,7 @@ function deleteStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1483,7 +1655,7 @@ function searchStudent(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1732,7 +1904,7 @@ function uploadImage1(image, student_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1798,7 +1970,7 @@ function uploadImage(type) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1840,15 +2012,15 @@ async function getStudentIDCard() {
     ".png";
 
   // STUDENT_IMAGE
-  document.getElementById("student_image").src = url;
+  document.getElementById("user_image").src = url;
+  // "https://mss.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
 
-   // MINI SCHOOL LOGO
-   school_logo_mini =
-   domain +
-   "/backend/storage/app/public/fileupload/school_logo_mini.png";
-    document.getElementById("school_logo_mini").src = school_logo_mini;
+  document.getElementById("type").innerHTML = "STUDENT";
 
-
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+  document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
@@ -1895,13 +2067,14 @@ async function getStaffIDCard() {
     ".png";
 
   // staff_IMAGE
-  document.getElementById("staff_image").src = url;
+  document.getElementById("user_image").src = url;
+
+  document.getElementById("type").innerHTML = "STAFF";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-  domain +
-  "/backend/storage/app/public/fileupload/school_logo_mini.png";
-   document.getElementById("school_logo_mini").src = school_logo_mini;
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+  document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
@@ -1946,7 +2119,7 @@ function getAllClassForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2100,7 +2273,7 @@ function createClass() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2147,7 +2320,7 @@ function updateClass() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2171,6 +2344,9 @@ function updateClass() {
 }
 
 function deleteClass(class_id) {
+  if (!confirm("You are about to delete this class ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-class/" + class_id, {
     method: "GET",
@@ -2183,7 +2359,7 @@ function deleteClass(class_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2214,7 +2390,7 @@ function searchClass(class_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2370,7 +2546,7 @@ function createSubject() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2404,7 +2580,7 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2432,6 +2608,7 @@ function getAllSubjectForTable() {
               data[i].teacher.last_name
             }</td>
             <td>${data[i].student_no}</td>
+
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
@@ -2444,12 +2621,24 @@ function getAllSubjectForTable() {
           }~${data[i].teacher.id}~${data[i].class.class_name}~${
             data[i].class.id
           }')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteSubject(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+            <a onclick="deleteSubject(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a>
+
+            <a onclick="exportSubjectSheet('${data[i].id}','${
+            data[i].subject_name
+          }','${data[i].class.class_name}'
+            )" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
             </td>
   
         </tr>`;
@@ -2472,12 +2661,24 @@ function getAllSubjectForTable() {
             }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
             data[i].class.id
           }')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
+            data-bs-target="#editModal"><i class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+            <a onclick="deleteSubject(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a>
+
+            <a onclick="downloadResultSheet(${
+              data[i].id
+            })" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
             </td>
   
         </tr>`;
@@ -2537,7 +2738,7 @@ function updateSubject() {
         Authorization: "Bearer " + localStorage["token"],
       },
       body: JSON.stringify({
-        subject_id: localStorage["editSubject"][0],
+        subject_id: localStorage["editSubject"].split("~")[0],
         class_id: class_id,
         subject_name: subject_name,
         teacher: teacher,
@@ -2546,7 +2747,7 @@ function updateSubject() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2570,6 +2771,9 @@ function updateSubject() {
 }
 
 function deleteSubject(subject_id) {
+  if (!confirm("You are about to delete this subject ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-subject/" + subject_id, {
     method: "GET",
@@ -2582,7 +2786,7 @@ function deleteSubject(subject_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2613,7 +2817,7 @@ function searchSubject(subject_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2773,6 +2977,54 @@ function searchSubject(subject_name) {
     .catch((err) => console.log(err));
 }
 
+function exportSubjectSheet(subject_id, subject_name, class_name) {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/subject/export-sheet", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: subject_id,
+      session: localStorage["current_session"],
+      subject_name: subject_name,
+      class_name: class_name,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+       openAuthenticationModal()
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download =
+        subject_name +
+        "_" +
+        class_name +
+        "_" +
+        localStorage["current_session"] +
+        "_" +
+        localStorage["current_term"] +
+        ".xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    })
+    .catch((err) => console.log(err));
+}
+
+function importSubjectSheet() {}
+
 // SESSION
 function createSession() {
   var session = document.getElementById("session").value;
@@ -2796,7 +3048,7 @@ function createSession() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -2830,7 +3082,7 @@ function getAllSessionForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2956,7 +3208,7 @@ function updateSession() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -3005,7 +3257,7 @@ function createGrade() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -3040,7 +3292,7 @@ function getAllGradeForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3125,7 +3377,7 @@ function updateGrade() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -3149,6 +3401,9 @@ function updateGrade() {
 }
 
 function deleteGrade(id) {
+  if (!confirm("You are about to delete this grade ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-grade/" + id, {
     method: "GET",
@@ -3161,7 +3416,7 @@ function deleteGrade(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3269,7 +3524,7 @@ function takeAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3344,7 +3599,7 @@ function takeAttendanceByStudentID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3442,7 +3697,7 @@ function getAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3573,7 +3828,7 @@ function takeTeacherAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3648,7 +3903,7 @@ function takeAttendanceByStaffID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3745,7 +4000,7 @@ function getTeacherAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3800,7 +4055,7 @@ function getDashboardInfo() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3845,7 +4100,7 @@ function saveControl() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -3874,7 +4129,7 @@ function getControl() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -3967,7 +4222,7 @@ function saveInventoryItem() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+         openAuthenticationModal()
         }
         return res.json();
       })
@@ -4001,7 +4256,7 @@ function getInventory() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4113,7 +4368,7 @@ function updateInventoryItem(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4133,6 +4388,9 @@ function updateInventoryItem(id) {
 }
 
 function deleteInventoryItem(id) {
+  if (!confirm("You are about to delete this Inventory ?")) {
+    return 0;
+  }
   fetch(ip + "/api/admin/inventory/" + id, {
     method: "DELETE",
     headers: {
@@ -4144,7 +4402,7 @@ function deleteInventoryItem(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4244,7 +4502,7 @@ function getPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4315,7 +4573,7 @@ function checkPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4398,7 +4656,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
               .then(function (res) {
                 console.log(res.status);
                 if (res.status == 401) {
-                  window.location.href = "index.html";
+                 openAuthenticationModal()
                 }
                 return res.json();
               })
@@ -4440,7 +4698,7 @@ function getStoredCredential() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4451,7 +4709,6 @@ function getStoredCredential() {
     })
     .catch((err) => console.log(err));
 }
-
 // RESET ACCOUNT
 function resetAccount(user_type, id) {
   warningtoast("<b>Processing ... Please wait</b>");
@@ -4470,7 +4727,7 @@ function resetAccount(user_type, id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+       openAuthenticationModal()
       }
       return res.json();
     })
@@ -4483,6 +4740,816 @@ function resetAccount(user_type, id) {
       }
     })
     .catch((err) => console.log(err));
+}
+
+// ID CARD GENERATOR
+async function generateIDCard() {
+  document.getElementById("idcard_list").innerHTML = ``;
+  user_type =
+    document.getElementById("user_type_card").value == ""
+      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
+      : document.getElementById("user_type_card").value;
+
+  user_class_sector = document.getElementById("user_class_sector").value =
+    document.getElementById("user_class_sector").value;
+
+  document.getElementById("generate_idcard").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+
+  document.getElementById("generate_idcard").disabled = true;
+
+  await getSchoolDetails();
+  // STUDENT_IMAGE
+  //user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image =
+    "https://mss.smartschoolhub.net/backend/storage/app/public/fileupload";
+  // // "https://mss.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+
+  if (user_type == "STUDENT") {
+    user_image = user_image + "/student/";
+  } else {
+    user_image = user_image + "/staff/";
+  }
+
+  response = user_type == "STUDENT" ? getAllStudent() : getAllStaff();
+  json_to_generate_qr = [];
+  c = 1;
+  response.then(function (data) {
+    // CREATE TEMPLATE
+    for (i in data) {
+      if (
+        user_type == "STUDENT" &&
+        (data[i].class == null || data[i].class == "GRADUATED")
+      ) {
+        continue;
+      }
+      document.getElementById(
+        "idcard_list"
+      ).innerHTML += `<div style="margin-top: 20px;" class="container">
+      <div class="padding">
+          <div class="font">
+              <div class="top">
+                  <b>
+                      <h4 id="school_name"
+                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                         ${localStorage["SCHOOL_NAME"]}
+                      </h4>
+                  </b>
+                  <div
+                      style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
+                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+                  </div>
+
+
+                  <img id="user_image"
+                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                      src="${
+                        user_type == "STUDENT"
+                          ? user_image + data[i].student_id + ".png"
+                          : user_image + data[i].teacher_id + ".png"
+                      }" width="">
+
+
+              </div>
+              <div class="bottom">
+                  <div style="margin-bottom:5px">
+                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
+                      <p id="id" style="margin-bottom: 1px; color: black; ">${
+                        user_type == "STUDENT"
+                          ? data[i].student_id
+                          : data[i].teacher_id
+                      }</p>
+
+                      <small>
+                          <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                              ${data[i].gender}</p>
+                      </small>
+
+                  </div>
+                  <br>
+
+
+                  <div style="display: flex; justify-content: center; margin-top: 0px">
+                      <img id="school_logo_mini"
+                          style="border-color: white; border-style: solid;padding: 0%;" src=""
+                          width="px">
+                  </div>
+
+                  <div style="margin-top: 20px;margin-bottom: 210px;">
+                      <h5 id ="user_type" style="font-family: Poppins
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+      <div class="back">
+          <h1 style="margin-bottom: 0; font-family: Poppins
+          ;" class="Details">INFORMATION</h1>
+          <hr style="background-color: white !important;">
+          <small>
+              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+              </h6>
+          </small>
+          <div style="margin-top: 0%;" class="qrcode">
+              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+                data[i].id
+              }">
+              </div>
+          </div>
+          <div class="details-info">
+              <h6 style="text-align: center;color: white !important;">if found please return to
+              </h6>
+              <h6 id="school_address"
+                  style="text-align: center;color: white !important; margin-bottom: 10px;">
+                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+
+          </div>
+      </div>
+    </div>
+    <div style="break-after:page"></div>
+          `;
+
+      json_to_generate_qr.push(data[i]);
+
+      c = c + 1;
+    }
+    makeQRCode(json_to_generate_qr, user_type);
+  });
+}
+
+async function generateIDCard2() {
+  document.getElementById("idcard_list").innerHTML = ``;
+  user_type =
+    document.getElementById("user_type_card").value == ""
+      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
+      : document.getElementById("user_type_card").value;
+
+  user_class_sector = document.getElementById("user_class_sector").value =
+    document.getElementById("user_class_sector").value;
+
+  document.getElementById("generate_idcard").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+
+  document.getElementById("generate_idcard").disabled = true;
+
+  await getSchoolDetails();
+  // STUDENT_IMAGE
+  //user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image =
+    "https://mss.smartschoolhub.net/backend/storage/app/public/fileupload";
+  // // "https://mss.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+
+  if (user_type == "STUDENT") {
+    user_image = user_image + "/student/";
+  } else {
+    user_image = user_image + "/staff/";
+  }
+
+  response = user_type == "STUDENT" ? getAllStudent() : getAllStaff();
+  json_to_generate_qr = [];
+  c = 1;
+  response.then(function (data) {
+    // CREATE TEMPLATE
+    for (i in data) {
+      if (
+        user_type == "STUDENT" &&
+        (data[i].class == null || data[i].class == "GRADUATED")
+      ) {
+        continue;
+      }
+      document.getElementById(
+        "idcard_list"
+      ).innerHTML += `<div style="margin-top: 20px;" class="container">
+      <div class="padding">
+          <div class="font">
+              <div class="top">
+                  <b>
+                      <h4 id="school_name"
+                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                         ${localStorage["SCHOOL_NAME"]}
+                      </h4>
+                  </b>
+                  
+
+                  <img id="user_image"
+                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                      src="${
+                        user_type == "STUDENT"
+                          ? user_image + data[i].student_id + ".png"
+                          : user_image + data[i].teacher_id + ".png"
+                      }" width="">
+
+
+              </div>
+              <div class="bottom">
+                  <div style="margin-bottom:5px">
+                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
+                      <p id="id" style="margin-bottom: 1px; color: black; ">${
+                        user_type == "STUDENT"
+                          ? data[i].student_id
+                          : data[i].teacher_id
+                      }</p>
+
+                      <small>
+                          <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                              ${data[i].gender}</p>
+                      </small>
+
+                  </div>
+                  <br>
+
+                  <div
+                      style="display: flex; justify-content: center; margin-top: 0px">
+                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+                  </div>
+
+
+                  <div style="margin-top: 20px;margin-bottom: 210px;">
+                      <h5 id ="user_type" style="font-family: Poppins
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+      <div class="back">
+          <h1 style="margin-bottom: 0; font-family: Poppins
+          ;" class="Details">INFORMATION</h1>
+          <hr style="background-color: white !important;">
+          <small>
+              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+              </h6>
+          </small>
+          <div style="margin-top: 0%;" class="qrcode">
+              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+                data[i].id
+              }">
+              </div>
+          </div>
+          <div class="details-info">
+              <h6 style="text-align: center;color: white !important;">if found please return to
+              </h6>
+              <h6 id="school_address"
+                  style="text-align: center;color: white !important; margin-bottom: 10px;">
+                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+
+          </div>
+      </div>
+    </div>
+    <div style="break-after:page"></div>
+          `;
+
+      json_to_generate_qr.push(data[i]);
+
+      c = c + 1;
+    }
+    makeQRCode(json_to_generate_qr, user_type);
+  });
+}
+
+async function makeQRCode(data, user_type) {
+  //  QR CODE
+  for (i in data) {
+    var QRDATA =
+      user_type == "STUDENT"
+        ? "StudentATDCard~" +
+          data[i].id +
+          "~" +
+          data[i].class.id +
+          "~" +
+          data[i].first_name
+        : "TeacherATDCard~" + data[i].id + "~" + data[i].first_name;
+
+    var qrdiv = "IDQR" + data[i].id;
+    qrcode = new QRCode(qrdiv, {
+      text: QRDATA,
+      width: 128,
+      height: 128,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H,
+    });
+  }
+}
+
+// RESULT UPLOAD
+function getAllstudentForSubjectResultUpload(refresh) {
+  document.getElementById("proceed").innerHTML = `<i
+  class="fa fa-spinner fa-spin"></i> Processing ...`;
+  fetch(ip + "/api/teacher/student-registered", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: document.getElementById("subject_class").value,
+      session: document.getElementById("session_term").value.split("-")[0],
+      term: document.getElementById("session_term").value.split("-")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      // CLEAR RESUL LIST
+      result_list = {};
+
+      document.getElementById("proceed").innerHTML = "Proceed";
+      console.log(data);
+
+      document.getElementById("class_summary").innerHTML =
+        "<b>CLASS SUMMARY FOR " +
+        document.getElementById("subject_class").options[
+          document.getElementById("subject_class").selectedIndex
+        ].text +
+        "</b>";
+
+      document.getElementById("student_registered").innerHTML = ``;
+      // RESULT SUMMARY
+      document.getElementById("ave").innerHTML = parseFloat(data.avg).toFixed(
+        0
+      );
+      document.getElementById("min").innerHTML = data.min;
+      document.getElementById("max").innerHTML = data.max;
+      var c = 1;
+      if (data.result.length > 0) {
+        for (i in data.result) {
+          document.getElementById("student_registered").innerHTML += `
+            <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
+
+            <td>${c}.</td>
+            <td>${
+              data.result[i].student.first_name +
+              " " +
+              data.result[i].student.middle_name +
+              " " +
+              data.result[i].student.last_name
+            }</td>
+            
+            <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${
+              data.result[i].id
+            }','first_ca',this.innerHTML)" contenteditable="true" >${
+            data.result[i].first_ca
+          }</td>
+            <td oninput="scoreLimit(this); addToResultList('${
+              data.result[i].id
+            }','second_ca',this.innerHTML)" contenteditable="true">${
+            data.result[i].second_ca
+          }</td>
+            <td oninput="scoreLimit(this); addToResultList('${
+              data.result[i].id
+            }','examination',this.innerHTML)" contenteditable="true">${
+            data.result[i].examination
+          }</td>
+            <td style="font-size:20px; font-style:bold;"><b>${
+              data.result[i].total
+            }</b></td>
+            <td> 
+              <div class="select">
+                  <select onChange="addToResultList('${
+                    data.result[i].id
+                  }','grade',this.value)" id="standard-select" id="grade" value="${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }" class="select2">
+                  <option value="<b>${
+                    data.result[i].grade == `-`
+                      ? `-`
+                      : `${data.result[i].grade}`
+                  }</b>">${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }</option>
+            ${
+              // <option value="A">A</option>
+              // <option value="B">B</option>
+              // <option value="C">C</option>
+              // <option value="D">D</option>
+              // <option value="E">E</option>
+              // <option value="F">F</option>
+              ``
+            }
+                  </select>
+            
+                <span class="focus"></span>
+              <div>
+            </td>
+            <td> 
+            <div class="select">
+                <select onChange="addToResultList('${
+                  data.result[i].id
+                }','remark',this.value)" id="standard-select" id="remark" value="<b>${
+            data.result[i].grade == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</b>" class="select2">
+                <option value="${
+                  data.result[i].remark == `-`
+                    ? `-`
+                    : `${data.result[i].remark}`
+                }">${
+            data.result[i].remark == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</option>
+                ${
+                  //<option value="EXCELLENT">EXCELLENT</option>
+                  // <option value="VERY GOOD">VERY GOOD</option>
+                  // <option value="GOOD">GOOD</option>
+                  // <option value="FAIR">FAIR</option>
+                  // <option value="POOR">POOR</option>
+                  // <option value="VERY POOR">VERY POOR</option>
+                  ``
+                }
+                </select>
+                <span class="focus"></span>
+              <div>
+            </td>
+            
+            
+
+        </tr>`;
+          c = c + 1;
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function uploadResult(id, result_type, score) {
+  if (result_type == "grade" || result_type == "remark") {
+    document.getElementById("result_upload_style_grade_remark").innerHTML = `
+    :root {
+      --select-border: #777;
+      --select-focus: #fc8c03;
+      --select-arrow: var(--select-border);
+  }`;
+  } else {
+    document.getElementById("result_upload_style").innerHTML = `
+    [contenteditable] {
+
+      outline-color: #fc8c03;
+    }`;
+  }
+
+  fetch(ip + "/api/teacher/upload-result", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      result_type: result_type,
+      score: score,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (data.success) {
+        if (result_type == "grade" || result_type == "remark") {
+          document.getElementById(
+            "result_upload_style_grade_remark"
+          ).innerHTML = `
+          :root {
+            --select-border: #777;
+            --select-focus: #105c05;
+            --select-arrow: var(--select-border);
+        }`;
+        } else {
+          document.getElementById("result_upload_style").innerHTML = `
+          [contenteditable] {
+          
+            outline-color: #105c05;
+          }`;
+          getAllstudentForSubjectResultUpload(true);
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+
+  console.log(score);
+}
+
+function addToResultList(id, result_type, score) {
+  let result_obj = {};
+
+  // CHECK IF KEY EXIST
+  if (result_list[id]) {
+    result_list[id][result_type] = score;
+  } else {
+    result_obj[result_type] = score;
+    result_list[id] = result_obj;
+  }
+  console.log(result_list);
+}
+
+function uploadBulkResult() {
+  if (Object.keys(result_list).length === 0) {
+    errortoast("No result found");
+    return 0;
+  }
+  warningtoast("Uploading result please wait ...");
+  fetch(ip + "/api/teacher/upload-result/bulk", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify(result_list),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        getAllstudentForSubjectResultUpload(true);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// CUSTOM SUBJECT CLASS
+function loadCustomSubjectClass() {
+  fetch(ip + "/api/admin/all-subject", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        //  window.parent.location.assign(domain +"/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("subject_class").innerHTML = "";
+      for (i in data) {
+        document.getElementById(
+          "subject_class"
+        ).innerHTML += `<option value="${data[i].id}">${data[i].subject_name} (${data[i].class.class_name})</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// CUSTOM SESSION TERM
+function loadCustomSessionTerm() {
+  term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
+
+  fetch(ip + "/api/general/all-session/DESC", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
+      data.forEach((sessions) => {
+        term.forEach((term) => {
+          document.getElementById(
+            "session_term"
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + "-" + term
+          }</option>`;
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
+function downloadAsPDF(container) {
+  const file = this.document.getElementById(container);
+  var opt = {
+    // margin: 1,
+    // filename: "idcards.pdf",
+    // image: { type: "png", quality: 0.98 },
+    // html2canvas: { scale: 2 },
+    // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    margin: 0,
+    filename: "time_sheet_report.pdf",
+    image: { type: "jpeg", quality: 0.2 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "a4", orientation: "p" },
+  };
+  html2pdf().from(file).set(opt).save();
+}
+
+function print() {
+  var divContents = document.getElementById("idcard_list").innerHTML;
+  var head = document.getElementById("common-library").innerHTML;
+  console.log(divContents);
+  var a = window.open("", "", "height=1000, width=1000");
+  a.document.write("<html>");
+  a.document.write(head);
+  a.document.write(divContents);
+  a.document.write(`</body></html>`);
+  a.print();
+  a.document.close();
+}
+
+// RESULT UPLOAD DEBOUCER
+// DEBOUNCER
+function debounce(func, timeout = 2000) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+}
+
+const uploadResultDebouncer = debounce((id, result_type, score) =>
+  uploadResult(id, result_type, score)
+);
+
+function scoreLimit(element) {
+  var max_chars = 2;
+  if (element.innerHTML.length > max_chars) {
+    element.innerHTML = element.innerHTML.substr(0, max_chars);
+    element.blur();
+  }
+}
+
+$(document).click(function (e) {
+  if (!$(e.target).closest("#authenticationModal").length) {
+    modalExist = parent.document.getElementById("authenticationModal");
+    if(modalExist != null){
+      modalExist.remove();
+    }
+  }
+});
+
+// RE - AUTHENTICATION MODAL
+function openAuthenticationModal() {
+modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="authenticationModalTitle">
+                <b>Session Timeout !</b>
+            </h4>
+
+        </div>
+        <div class="modal-body text-center">
+            <div class="row">
+                <div class="col-lg-12 img-box">
+                    <img src="../asset/images/login-banner.png" alt="">
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <div class="login-box">
+                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                        <div style="display: flex;
+                        justify-content: center;" class="row">
+
+                            <b>
+                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                    <i style="color: #051f3e;"
+                                        class="fas fa-graduation-cap fa-xs"></i>
+                                    SMARTSCHOOLHUB.net
+                                </h3>
+                            </b>
+
+                        </div>
+                        <br>
+
+                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                           ${localStorage["username"]},</script> please
+                            signin
+                            to continue
+                        </h5>
+                       <form autocomplete="off">   
+                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                            <div class="login-row row no-margin">
+                               
+                                <input id="password" type="password" autocomplete="new-password"
+                                    class="form-control form-control-sm">
+                                    <br>
+                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
+                            </div>
+                        </form>    
+                        <br>
+                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+
+
+                        <div class="login-row btnroo row no-margin">
+                            <button id="signin" onclick="reAuth()"
+                                class="btn btn-primary btn-sm ">Sign
+                                In</button>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <footer class="footer">
+                        <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                                href="../#"><b>
+                                    Dextroux Technologies</b></a></div>
+                    </footer>
+                </div>
+
+            </div>
+            <script>
+                const password = document.querySelector('#password');
+                togglePass.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                })
+            </script>
+            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+        </div>
+    </div>
+</div>
+</div>
+`;
+
+  modalExist = parent.document.getElementById("authenticationModal");
+  parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
+    console.log(el);
+    el.remove();
+  });
+
+
+parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
+    console.log(el);
+    el.remove();
+  });
+
+  parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal("show");
 }
 
 // TOAST

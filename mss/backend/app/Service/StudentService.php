@@ -323,7 +323,7 @@ class StudentService
 
         $percentage = $no_subject != 0 ? $score_accumulator / $no_subject  : 0;
 
-        $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($percentage);
+        $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark(floor($percentage));
         $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
 
 

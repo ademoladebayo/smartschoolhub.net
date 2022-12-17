@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-//  var ip = "http://127.0.0.1:8000";
-//  var domain = "http://localhost/smartschoolhub.net/realprivateschool";
+// var ip = "http://127.0.0.1:8000";
+// var domain = "http://localhost/smartschoolhub.net/realprivateschool";
 
 // LIVE IP
- var ip = "https://smartschoolhub.net/backend/realprivateschool";
- var domain = "https://realprivateschool.smartschoolhub.net";
+  var ip = "https://smartschoolhub.net/backend/realprivateschool";
+  var domain = "https://realprivateschool.smartschoolhub.net";
 
 // CBT VARIABLES
 var question = [];
@@ -18,6 +18,9 @@ var answer = [];
 
 getSchoolDetails();
 //getCurrentSession();
+
+// VAR
+result_list = {};
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
@@ -55,7 +58,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -272,7 +275,7 @@ function signIn() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -282,6 +285,9 @@ function signIn() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
+          username = JSON.parse(localStorage["user_data"]).data.first_name;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", JSON.parse(localStorage["user_data"]).data.teacher_id);
           localStorage.setItem("token", data.token);
           setTimeout(function () {
             window.location.href = "dashboard.html";
@@ -290,6 +296,57 @@ function signIn() {
           errortoast("<b>" + data.message + "</b>");
         }
 
+        document.getElementById("signin").innerHTML = `Sign In`;
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
+function reAuth() {
+  var id = localStorage["user_id"];
+  var password = document.getElementById("password").value;
+  if (id != "" && password != "") {
+    // PUSH TO API
+    document.getElementById("signin").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Processing ...`;
+    fetch(ip + "/api/teacher/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        password: password,
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+         openAuthenticationModal()
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
+          //parent.getStoredCredential();
+          username = JSON.parse(localStorage["user_data"]).data.first_name;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", JSON.parse(localStorage["user_data"]).data.teacher_id);
+          setTimeout(function () {
+            parent.$("#authenticationModal").modal("hide");
+            parent.document.getElementById("authenticationModal").remove();
+          }, 1000);
+        } else {
+          errortoast(data.message);
+        }
         document.getElementById("signin").innerHTML = `Sign In`;
       })
       .catch((err) => console.log(err));
@@ -344,7 +401,7 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+     openAuthenticationModal()
       }
       return res.json();
     })
@@ -531,7 +588,7 @@ function createStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -616,7 +673,7 @@ function updateStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -652,7 +709,7 @@ function updateStudentProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -684,7 +741,7 @@ function deleteStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -715,7 +772,7 @@ function searchStudent(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1303,7 +1360,7 @@ function getResult(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1407,7 +1464,7 @@ function getCommentsAndPsycho(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1473,7 +1530,7 @@ function uploadCommentAndRating(type, value, rating_type) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1511,7 +1568,7 @@ function getAttendanceSummary(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1547,7 +1604,7 @@ function getPreviousSubjectRegistration() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1582,7 +1639,7 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1721,7 +1778,7 @@ function registerSubject() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.location.href = "index.html";
+           openAuthenticationModal()
           }
           return res.json();
         })
@@ -1763,7 +1820,7 @@ function getAssignedSubject() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        // window.parent.location.assign(domain + "/teacher/");
+        // openAuthenticationModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1830,7 +1887,7 @@ function getCBTForSubject() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2197,7 +2254,7 @@ function saveCBT() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2616,7 +2673,7 @@ function updateCBT() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2649,7 +2706,7 @@ function deleteCBT(cbt_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2673,7 +2730,7 @@ function changeCBTStatus(cbt_id, status) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2708,7 +2765,7 @@ function getResultForCBT() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2758,7 +2815,7 @@ function useCBTResultFor() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2789,7 +2846,7 @@ function getAssignedSubjectForResultUpload() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2831,6 +2888,9 @@ function showResultUpload(subject_name, subject_id, class_name, class_id) {
 }
 
 function getAllstudentForSubjectResultUpload(refresh) {
+  // CLEAR RESUL LIST
+  result_list = {};
+
   if (!refresh) {
     document.getElementById("result_subject_class").innerHTML +=
       localStorage["result_upload_subject_name"] +
@@ -2853,7 +2913,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2881,17 +2941,17 @@ function getAllstudentForSubjectResultUpload(refresh) {
             data.result[i].student.last_name
           }</td>
           
-          <td class="allownumeric" oninput="uploadResultDebouncer('${
+          <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${
             data.result[i].id
           }','first_ca',this.innerHTML)" contenteditable="true" >${
             data.result[i].first_ca
           }</td>
-          <td oninput="uploadResultDebouncer('${
+          <td oninput="scoreLimit(this); addToResultList('${
             data.result[i].id
           }','second_ca',this.innerHTML)" contenteditable="true">${
             data.result[i].second_ca
           }</td>
-          <td oninput="uploadResultDebouncer('${
+          <td oninput="scoreLimit(this); addToResultList('${
             data.result[i].id
           }','examination',this.innerHTML)" contenteditable="true">${
             data.result[i].examination
@@ -2901,7 +2961,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           }</b></td>
           <td> 
             <div class="select">
-                <select onChange="uploadResultDebouncer('${
+                <select onChange="addToResultList('${
                   data.result[i].id
                 }','grade',this.value)" id="standard-select" id="grade" value="${
             data.result[i].grade == "-"
@@ -2931,7 +2991,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           </td>
           <td> 
           <div class="select">
-              <select onChange="uploadResultDebouncer('${
+              <select onChange="addToResultList('${
                 data.result[i].id
               }','remark',this.value)" id="standard-select" id="remark" value="<b>${
             data.result[i].grade == "-"
@@ -2969,7 +3029,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           "student_registered"
         ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
-      paginateTable();
+      //paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -3006,7 +3066,7 @@ function uploadResult(id, result_type, score) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3034,6 +3094,53 @@ function uploadResult(id, result_type, score) {
     .catch((err) => console.log(err));
 
   console.log(score);
+}
+
+function addToResultList(id, result_type, score) {
+  let result_obj = {};
+
+  // CHECK IF KEY EXIST
+  if (result_list[id]) {
+    result_list[id][result_type] = score;
+  } else {
+    result_obj[result_type] = score;
+    result_list[id] = result_obj;
+  }
+  console.log(result_list);
+}
+
+function uploadBulkResult() {
+  if (Object.keys(result_list).length === 0) {
+    errortoast("No result found");
+    return 0;
+  }
+  warningtoast("Uploading result please wait ...");
+  fetch(ip + "/api/teacher/upload-result/bulk", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify(result_list),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+     openAuthenticationModal()
+      }
+      return res.json();
+    })
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        getAllstudentForSubjectResultUpload(true);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // ATTENDANCE
@@ -3115,7 +3222,7 @@ function takeAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+       openAuthenticationModal()
         }
         return res.json();
       })
@@ -3159,7 +3266,7 @@ function getAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3224,7 +3331,7 @@ function takeAttendanceByStudentID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3269,7 +3376,7 @@ function getLessonPlan(week) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3321,7 +3428,7 @@ function getAssignedSubjectForLearningHub() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        // window.parent.location.assign(domain + "/teacher/");
+        // openAuthenticationModal();
         openAuthenticationModal();
         return 0;
       }
@@ -3388,7 +3495,7 @@ function saveLessonPlan() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3445,7 +3552,7 @@ function changePassword() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3648,7 +3755,7 @@ function promoteStudent() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.parent.location.assign(domain + "/teacher/");
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -3691,43 +3798,6 @@ const uploadCommentAndRatingDebouncer = debounce((type, value, rating_type) =>
   uploadCommentAndRating(type, value, rating_type)
 );
 
-function openAuthenticationModal() {
-  authenticationModal = `
-  <div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog" aria-labelledby="endModalTitle"
-                aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title col-12 text-center" id="authenticationModalTitle"><b>RE-Authentication Needed</b></h1>
-
-                        </div>
-                        <div class="modal-body text-center">
-                            <h3 class="modal-title col-12 text-center" id="authenticationModalTitle"><b>Are you ? </b></h3> <br>
-                            <p style="text-align: center;">
-                                <b>Input your password.</b>.
-                            </p>
-                            <input type="password"/>
-
-                            <button onclick="submitCBT()" class="btn btn-lg btn-primary">
-                                <span role="status" aria-hidden="true"></span>
-                                Login</button>
-
-                            <button onclick="submitCBT()" class="btn btn-lg btn-danger">
-                            <span role="status" aria-hidden="true"></span>
-                            Logout</button>
-                        </div>
-                    </div>
-                </div>
-  </div>
-  `;
-  // $("#exampleModal").modal("show");
-
-  //window.top.document.body.innerHTML += authenticationModal;
-  console.log(window.top.document.body);
-  // // document.getElementById("backdrop").style.display = "block";
-  // document.getElementById("authenticationModal").style.display = "block";
-  // document.getElementById("authenticationModal").classList.add("show");
-}
 
 // COUNT ARRAY DISTINT VALUE
 function countDistinct(arr, n) {
@@ -3796,7 +3866,7 @@ function loadCustomSessionTerm() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3825,6 +3895,133 @@ function useCustomSessionTerm(session_term) {
   localStorage.setItem("current_session", session_term.split("-")[0]);
   localStorage.setItem("current_term", session_term.split("-")[1]);
   //getDashboardInfo();
+}
+
+
+function scoreLimit(element) {
+  var max_chars = 2;
+  if (element.innerHTML.length > max_chars) {
+    element.innerHTML = element.innerHTML.substr(0, max_chars);
+    element.blur();
+  }
+}
+
+$(document).click(function (e) {
+  if (!$(e.target).closest("#authenticationModal").length) {
+    modalExist = parent.document.getElementById("authenticationModal");
+    if(modalExist != null){
+      modalExist.remove();
+    }
+  }
+});
+
+// RE - AUTHENTICATION MODAL
+function openAuthenticationModal() {
+modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="authenticationModalTitle">
+                <b>Session Timeout !</b>
+            </h4>
+
+        </div>
+        <div class="modal-body text-center">
+            <div class="row">
+                <div class="col-lg-12 img-box">
+                    <img src="../asset/images/login-banner.png" alt="">
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <div class="login-box">
+                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                        <div style="display: flex;
+                        justify-content: center;" class="row">
+
+                            <b>
+                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                    <i style="color: #051f3e;"
+                                        class="fas fa-graduation-cap fa-xs"></i>
+                                    SMARTSCHOOLHUB.net
+                                </h3>
+                            </b>
+
+                        </div>
+                        <br>
+
+                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                           ${localStorage["username"]},</script> please
+                            signin
+                            to continue
+                        </h5>
+                       <form autocomplete="off">   
+                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                            <div class="login-row row no-margin">
+                               
+                                <input id="password" type="password" autocomplete="new-password"
+                                    class="form-control form-control-sm">
+                                    <br>
+                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
+                            </div>
+                        </form>    
+                        <br>
+                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+
+
+                        <div class="login-row btnroo row no-margin">
+                            <button id="signin" onclick="reAuth()"
+                                class="btn btn-primary btn-sm ">Sign
+                                In</button>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <footer class="footer">
+                        <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                                href="../#"><b>
+                                    Dextroux Technologies</b></a></div>
+                    </footer>
+                </div>
+
+            </div>
+            <script>
+                const password = document.querySelector('#password');
+                togglePass.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                })
+            </script>
+            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+        </div>
+    </div>
+</div>
+</div>
+`;
+
+  modalExist = parent.document.getElementById("authenticationModal");
+  parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
+    console.log(el);
+    el.remove();
+  });
+
+
+parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
+    console.log(el);
+    el.remove();
+  });
+
+  parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal("show");
 }
 
 // TOAST

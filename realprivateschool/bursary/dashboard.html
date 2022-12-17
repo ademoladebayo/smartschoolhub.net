@@ -148,9 +148,9 @@
                     </ul>
                     <br>
                     <!-- <h3 id="session_term" style="font-weight: bold;font-family: Poppins">Loading ... </h3> -->
-                    <i onclick="window.location.reload();"
+                    <!-- <i onclick="window.location.reload();"
                         style="color: black; float: right; margin-right: 3px; cursor: pointer;" class="fas fa-sync-alt">
-                    </i>
+                    </i> -->
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <select onchange="useCustomSessionTerm(this.value)" id="session_term" class="select2">
                             <option>SESSION - TERM</option>
@@ -199,7 +199,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-sm-6 col-12">
+                    <div onclick="document.getElementById('total').innerHTML = '<small><i> Refreshing ...</i></small>'; getDashboardInfo()" class="col-xl-3 col-sm-6 col-12">
                         <div class="dashboard-summery-one mg-b-20">
                             <div class="row align-items-center">
                                 <div class="col-6">
@@ -212,7 +212,10 @@
                                         <div style="font-family: Poppins; color: black;" class="item-title">Manual
                                             Payment</div>
                                         <div id="manual_payment" style="font-family: Poppins; color: black;">
-                                            <span>₦</span><span id="total_manual_payment">0</span>
+                                            <span id="total">0</span>
+                                            <br>
+                                            <small>This Term : ₦</small><small id="total_manual_payment">0</small>
+                                            <br>
                                             <small>Arrears : ₦</small><small id="total_arrears">0</small>
                                         </div>
                                     </div>

@@ -1,7 +1,9 @@
+
 :root {
-  --front-color: #ff9d01;
+  --front-color:#ff9d01; 
   --back-color: #051f3e;
 }
+
 
 * {
   margin: 00px;
@@ -21,7 +23,7 @@
 }
 
 .font {
-  height: 400px;
+  height: 375px;
   width: 250px;
   position: relative;
   border-radius: 15px;
@@ -49,9 +51,9 @@
   border-top-right-radius: 10px;
 } */
 
+
 .bottom {
-  margin-top: 10%;
-  height: 50%;
+  height: 70%;
   width: 100%;
   background-color: white !important;
   position: absolute;
@@ -59,13 +61,13 @@
   border-bottom-right-radius: 15px;
 }
 
-.top #user_image {
+.top img {
   height: 100px;
   width: 100px;
   background-color: #e6ebe0 !important;
   border-radius: 10px;
   position: absolute;
-  top: 90px;
+  top: 60px;
   left: 75px;
 }
 .bottom p {
@@ -99,7 +101,7 @@
 }
 
 .back {
-  height: 400px;
+  height: 375px;
   width: 250px;
   border-radius: 10px;
   background-color: var(--back-color) !important;
@@ -134,7 +136,7 @@
   height: 40px;
   width: 150px;
   padding: 40px;
-}
+}   
 
 .logo img {
   height: 100%;

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportStaffList;
+use App\Exports\ExportStudentList;
+use App\Exports\ExportSubjectSheet;
 use App\Model\AdminModel;
 use App\Model\ControlPanelModel;
 use App\Repository\ClassRepository;
@@ -14,11 +17,12 @@ use App\Model\SessionModel;
 use App\Model\GradeSettingsModel;
 use App\Model\InventoryModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportUser;
+use App\Exports\ExportUser;
 
 class AdminController extends Controller
-{
+{   
     // SIGNIN
     public function signIn(Request $request)
     {
@@ -88,6 +92,18 @@ class AdminController extends Controller
         return $subjectRepository->searchSubject($subject_name);
     }
 
+    public function exportSubjectSheet(Request $request)
+    {
+        return Excel::download(new ExportSubjectSheet($request), 'file.xlsx');
+    }
+
+
+    public function importSubjectSheet(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->createSubject($request);
+    }
+
     // STUDENT
     public function createStudent(Request $request)
     {
@@ -132,6 +148,11 @@ class AdminController extends Controller
         return $AdminService->uploadImage($request);
     }
 
+    public function exportStudentList()
+    {
+        return Excel::download(new ExportStudentList(), 'file.xlsx');
+    }
+
 
 
     // TEACHER
@@ -170,6 +191,12 @@ class AdminController extends Controller
         $TeacherRepository = new TeacherRepository();
         return $TeacherRepository->updateTeacherProfileStatus($id);
     }
+
+    public function exportStaffList()
+    {
+        return Excel::download(new ExportStaffList(), 'file.xlsx');
+    }
+
     // SESSION
     public function createSession(Request $request)
     {
@@ -186,7 +213,7 @@ class AdminController extends Controller
     public function getAllSession()
     {
         $SessionModel = new SessionModel();
-        return $SessionModel->orderBy('id','DESC')->get();
+        return $SessionModel->orderBy('id', 'DESC')->get();
     }
 
     //GRADE SETTINGS
@@ -205,7 +232,7 @@ class AdminController extends Controller
     public function getAllGrade()
     {
         $GradeSettingsModel = new GradeSettingsModel();
-        return $GradeSettingsModel->orderBy('id','DESC')->get();
+        return $GradeSettingsModel->orderBy('id', 'DESC')->get();
     }
 
     public function deleteGrade($grade_id)
@@ -250,7 +277,7 @@ class AdminController extends Controller
 
     public function getControl()
     {
-     return ControlPanelModel::select("*")->get()[0];
+        return ControlPanelModel::select("*")->get()[0];
     }
 
 
@@ -281,7 +308,7 @@ class AdminController extends Controller
 
     public function getInventory()
     {
-       return InventoryModel::orderBy('id','DESC')->get();
+        return InventoryModel::orderBy('id', 'DESC')->get();
     }
 
     public function deleteInventory($id)
@@ -296,5 +323,4 @@ class AdminController extends Controller
         $AdminService = new AdminService();
         return $AdminService->resetAccount($request);
     }
-
 }
