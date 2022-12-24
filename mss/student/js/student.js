@@ -3,13 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
-
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-  var ip = "https://smartschoolhub.net/backend/mss";
-  var domain = "https://mss.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/mss";
+ var domain = "https://mss.smartschoolhub.net";
 
 // CBT VARIABLE
 answer = [];
@@ -332,7 +331,10 @@ function signIn() {
           localStorage.setItem("token", data.token);
           username = JSON.parse(localStorage["user_data"]).data.first_name;
           localStorage.setItem("username", username);
-          localStorage.setItem("user_id", JSON.parse(localStorage["user_data"]).data.student_id);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.student_id
+          );
           setTimeout(function () {
             window.location.href = "dashboard.html";
           }, 1000);
@@ -369,7 +371,7 @@ function reAuth() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal()
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -383,7 +385,10 @@ function reAuth() {
           //parent.getStoredCredential();
           username = JSON.parse(localStorage["user_data"]).data.first_name;
           localStorage.setItem("username", username);
-          localStorage.setItem("user_id", JSON.parse(localStorage["user_data"]).data.student_id);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.student_id
+          );
           setTimeout(function () {
             parent.$("#authenticationModal").modal("hide");
             parent.document.getElementById("authenticationModal").remove();
@@ -471,10 +476,9 @@ function getCBTForSubject() {
           <td>
               <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary"   ${
                 data[i].cbt_status == "OPEN"
-                  ? `onclick="startCBT(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                      /"/g,
-                      "'"
-                    )})"`
+                  ? `onclick="startCBT(${JSON.stringify(data[i])
+                      .replace(/'/g, "")
+                      .replace(/"/g, "'")})"`
                   : `onclick="alert('CBT Closed!')"`
               }
                  ><i class="fas fa-play"></i> START CBT</button>
@@ -988,7 +992,7 @@ function registerSubject() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-           openAuthenticationModal()
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -1181,13 +1185,11 @@ async function getTranscript() {
     user_data.data.student_id +
     ".png";
 
-    
   // SCHOOL LOGO URL
   school_logo_url =
-  domain +
-  "/backend/storage/app/public/fileupload/school_logo.png";
+    domain + "/backend/storage/app/public/fileupload/school_logo.png";
 
-    // SCHOOL_LOGO
+  // SCHOOL_LOGO
   document.getElementById("school_logo").src = school_logo_url;
 
   // STUDENT_IMAGE
@@ -1220,30 +1222,37 @@ async function getTranscript() {
   });
 
   var sessions = [];
-  var terms = ["FIRST TERM", "SECOND TERM", "THIRD TERM"];
+  var terms = [];
 
-  // CALL API THAT GET ALL SESSION
-  fetch(ip + "/api/general/all-session/ASC", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-  })
-    .then(function (res) {
-      console.log(res.status);
-      if (res.status == 401) {
-        openAuthenticationModal();
-      }
-      return res.json();
+    // CALL API THAT GET ALL SESSION
+    fetch(ip + "/api/general/all-session/STD-" + user_data.data.id, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
     })
-
-    .then((data) => {
-      // STORE IN SESSIONS ARRAY
-      data.forEach((data) => {
-        sessions.push(data.session);
-      });
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          openAuthenticationModal();
+        }
+        return res.json();
+      })
+  
+      .then((data) => {
+        // STORE IN SESSIONS ARRAY
+        data.forEach((data) => {
+          if(!sessions.includes(data.session)){
+            sessions.push(data.session);
+          }
+  
+          if(!terms.includes(data.term)){
+            terms.push(data.term);
+          }
+          
+        });
       // CREATE RESULT TEMPLATE
       if (sessions.length > 0) {
         document.getElementById("result_div").innerHTML = ``;
@@ -1529,7 +1538,7 @@ function getResult(value) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      user_type:"STUDENT",
+      user_type: "STUDENT",
       student_id: JSON.parse(localStorage["user_data"]).data.id,
       class_id: JSON.parse(localStorage["user_data"]).data.class.id,
       session: value.split("_")[1],
@@ -1612,12 +1621,20 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
               <td style="color: ${
-                result.grade.includes("F") ? "red" : result.grade.includes("A") ? "blue" : "black"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
               <td style="color: ${
-                result.grade.includes("F") ? "red" : result.grade.includes("A") ? "blue" : "black"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
@@ -1917,7 +1934,7 @@ function getFee() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1999,7 +2016,7 @@ function getAllPaymentHistory() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2078,7 +2095,7 @@ function generatePayment() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2329,19 +2346,25 @@ function getDate() {
 }
 
 // LOAD SCHOOL COLOR
-function loadSchoolColor(){
-  if(localStorage["SCHOOL_COLOR"] != "-"){
-    var r = document.querySelector(':root');
+function loadSchoolColor() {
+  if (localStorage["SCHOOL_COLOR"] != "-") {
+    var r = document.querySelector(":root");
     var rs = getComputedStyle(r);
-   // alert("The value of --blue is: " + rs.getPropertyValue('--blue'));
-   // SET SCHOOL COLOR
-    r.style.setProperty('--front-color', localStorage["SCHOOL_COLOR"].split("~")[0]);
-    r.style.setProperty('--back-color', localStorage["SCHOOL_COLOR"].split("~")[1]);
+    // alert("The value of --blue is: " + rs.getPropertyValue('--blue'));
+    // SET SCHOOL COLOR
+    r.style.setProperty(
+      "--front-color",
+      localStorage["SCHOOL_COLOR"].split("~")[0]
+    );
+    r.style.setProperty(
+      "--back-color",
+      localStorage["SCHOOL_COLOR"].split("~")[1]
+    );
   }
 }
 
 // PAGENATION
-function paginateTable(){
+function paginateTable() {
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
 }
@@ -2425,7 +2448,7 @@ function scoreLimit(element) {
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
     modalExist = parent.document.getElementById("authenticationModal");
-    if(modalExist != null){
+    if (modalExist != null) {
       modalExist.remove();
     }
   }
@@ -2433,7 +2456,7 @@ $(document).click(function (e) {
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
-modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -2524,17 +2547,13 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 </div>
 `;
 
-  modalExist = parent.document.getElementById("authenticationModal");
-  parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
-    console.log(el);
-    el.remove();
-  });
+  authenticationModal = parent.document.getElementById("authenticationModal");
+  if (authenticationModal != null) {
+    return 0;
+  }
 
-  parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
-    console.log(el);
-    el.remove();
-  });
   parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
   parent.$("#authenticationModal").modal("show");
 }
 

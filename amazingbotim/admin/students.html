@@ -43,7 +43,8 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;" onload="loadSideNav('students'); getAllStudentForTable(); loadDashBoardInformation()">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('students'); getAllStudentForTable(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -170,7 +171,20 @@
                                         data-bs-toggle="modal" data-bs-target="#modalYT"><i class="fas fa-plus"></i>
                                         <b>Add
                                             Student</b></button>
+                                           
+
+                                    <button type="button" style="box-shadow: 10px;margin-top: 10px;" class="btn-lg btn-warning"
+                                        onclick="exportStudentList()"><i class="fas fa-file-download"></i>
+                                        <b>Export Students</b></button>
                                 </div>
+
+                                <!-- <div style="margin-right: 10px; margin-top: 5px;"
+                                    class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                                    <button type="button" style="box-shadow: 10px;" class="btn-lg btn-primary"
+                                        data-bs-toggle="modal" data-bs-target="#modalYT"><i class="fas fa-plus"></i>
+                                        <b>Add
+                                            Student</b></button>
+                                </div> -->
 
                                 <!-- <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
                                     <input oninput="searchStudent(this.value)" type="text"

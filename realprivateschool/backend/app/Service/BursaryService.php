@@ -247,7 +247,7 @@ class BursaryService
     {
 
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class")->whereNotIn('class', ['GRADUATED'])->get();
+        $all_student = StudentModel::select("id", "class")->where("status","ENABLED")->whereNotIn('class', ['GRADUATED'])->get();
         $c = 0;
         foreach ($all_student as $student) {
             $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
@@ -346,33 +346,37 @@ class BursaryService
     // DEBITORS LIST
     public function allDebitor(Request $request)
     {
-        $expected_fee = 0;
-        $optional_fee = 0;
-        $total_paid = 0;
-        $arrears = 0;
-        $total_balance = 0;
-
+        $last_checked = "";
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id","graduation")->with("class")->get();
+        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id","graduation","profile_status")->orderBy('id','DESC')->with("class")->get();
         //$all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->whereNotIn('class', ['GRADUATED'])->with("class")->get();
         $c = 0;
         foreach ($all_student as $student) {
+            $expected_fee = 0;
+            $optional_fee = 0;
+            $total_paid = 0;
+            $arrears = 0;
+            $total_balance = 0;
 
-            if ($student->class == "GRADUATED") {
-                Log::alert("GRADUATION : " . $student->graduation);
-                $class_before_graduation =  explode("_", $student->graduation)[0];
-                $session_before_graduation = explode("_", $student->graduation)[1];
-                $term_before_graduation = explode("_", $student->graduation)[2];
-                $student->graduation_details = "GRADUATED (".$session_before_graduation."-".$term_before_graduation.")";
-
-
+            if ($student->class == "GRADUATED" || $student->profile_status == "DISABLED" ) {
+                Log::alert("IF : " . $student->first_name);
+                if( $student->class == "GRADUATED"){
+                    Log::alert("GRADUATION : " . $student->graduation);
+                    $class_before_graduation =  explode("_", $student->graduation)[0];
+                    $session_before_graduation = explode("_", $student->graduation)[1];
+                    $term_before_graduation = explode("_", $student->graduation)[2];
+                    $student->graduation_details = "GRADUATED (".$session_before_graduation."-".$term_before_graduation.")";
+               }
+               
                 // SO FOR EACH GRADUATED STUDENT GET THEIR LAST CLASS_SESSION_TERM
                 // $expected_fee = $this->getPayableForClass($class_before_graduation, $session_before_graduation, $term_before_graduation);
                 // $optional_fee = $this->getOptionalFeeRequest($student->id, $session_before_graduation, $term_before_graduation);
                 // $total_paid =  $this->getTotalPaid($student->id, $session_before_graduation, $term_before_graduation);
+                $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
                 $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
             } else {
                 // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+                Log::alert("ELSE : " . $student->first_name);
                 $expected_fee = $this->getPayableForClass($student->class, $request->session, $request->term);
                 $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
                 $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
@@ -382,7 +386,7 @@ class BursaryService
             Log::alert("ARREARS : " . $arrears);
 
             if (count($arrears) > 0) {
-                $student["last_checked"] = $arrears[0]->last_checked;
+                $last_checked = $arrears[0]->last_checked;
                 $arrears = $arrears[0]->amount;
             } else {
                 $arrears = 0;
@@ -395,12 +399,10 @@ class BursaryService
             $student["balance"] = ($expected_fee + $optional_fee) - $total_paid;
             $student["arrears"] = $arrears;
             $student["total_balance"] = intval($arrears) + intval($student["balance"]);
-
             $c = $c + 1;
         }
 
-
-        return $all_student;
+        return response(['content' => $all_student, 'last_checked' => $last_checked]);
     }
 
     function getStudentPercentagePaid(Request $request)

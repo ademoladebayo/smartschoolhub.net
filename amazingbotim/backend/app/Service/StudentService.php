@@ -252,6 +252,11 @@ class StudentService
                 if (!$AdminService->isResultAccessOpened()) {
                     return  response(['success' => false, 'message' => "RESULT FOR " . $request->session . " " . $request->term . " IS COMING SOON ..."]);
                 }
+
+                $StudentModel =  StudentModel::find($request->student_id);
+                if ($StudentModel->can_access_transcript == "NO") {
+                    return  response(['success' => false, 'message' => "ACCESS TO " . $request->session . " " . $request->term . " RESULT DENIED, PLEASE CONTACT YOUR SCHOOL ADMIN."]);
+                }
             }
         }
 
@@ -323,7 +328,7 @@ class StudentService
 
         $percentage = $no_subject != 0 ? $score_accumulator / $no_subject  : 0;
 
-        $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($percentage);
+        $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark(floor($percentage));
         $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
 
 

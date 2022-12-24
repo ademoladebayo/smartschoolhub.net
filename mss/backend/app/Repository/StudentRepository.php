@@ -101,11 +101,19 @@ class StudentRepository
         return response()->json(['success' => true, 'message' => 'Profile updated successfully.']);
     }
 
+    public function updateStudentTranscriptAccess($id)
+    {
+        $StudentModel =  StudentModel::find($id);
+        $StudentModel->can_access_transcript =  $StudentModel->can_access_transcript == 'YES' ? 'NO' : 'YES';
+        $StudentModel->save();
+        return response()->json(['success' => true, 'message' => 'Transcript access updated successfully.']);
+    }
+
     public function getNoOfClassStudent($class_id)
     {
-        $class_no =  DB::select('select count(class) as class_no from student where class =' . $class_id)[0]->class_no;
-        $male = DB::select('select count(class) as male from student where class =' . $class_id . ' and gender = "MALE"')[0]->male;
-        $female =  DB::select('select count(class) as female from student where class =' . $class_id . ' and gender = "FEMALE"')[0]->female;
+        $class_no =  DB::select('select count(class) as class_no from student where profile_status ="ENABLED" and  class =' . $class_id)[0]->class_no;
+        $male = DB::select('select count(class) as male from student where profile_status = "ENABLED" and class =' . $class_id . ' and gender = "MALE"')[0]->male;
+        $female =  DB::select('select count(class) as female from student where profile_status = "ENABLED" and class =' . $class_id . ' and gender = "FEMALE"')[0]->female;
         return [$class_no, $male, $female];
     }
 

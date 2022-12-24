@@ -3,12 +3,12 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-  var ip = "https://smartschoolhub.net/backend/mss";
-  var domain = "https://mss.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/mss";
+ var domain = "https://mss.smartschoolhub.net";
 
 // CBT VARIABLES
 var question = [];
@@ -287,7 +287,10 @@ function signIn() {
           localStorage.setItem("user_data", JSON.stringify(data));
           username = JSON.parse(localStorage["user_data"]).data.first_name;
           localStorage.setItem("username", username);
-          localStorage.setItem("user_id", JSON.parse(localStorage["user_data"]).data.teacher_id);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.teacher_id
+          );
           localStorage.setItem("token", data.token);
           setTimeout(function () {
             window.location.href = "dashboard.html";
@@ -325,7 +328,7 @@ function reAuth() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal()
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -339,7 +342,10 @@ function reAuth() {
           //parent.getStoredCredential();
           username = JSON.parse(localStorage["user_data"]).data.first_name;
           localStorage.setItem("username", username);
-          localStorage.setItem("user_id", JSON.parse(localStorage["user_data"]).data.teacher_id);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.teacher_id
+          );
           setTimeout(function () {
             parent.$("#authenticationModal").modal("hide");
             parent.document.getElementById("authenticationModal").remove();
@@ -401,7 +407,7 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-     openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1424,12 +1430,20 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
               <td style="color: ${
-                result.grade.includes("F") ? "red" : result.grade.includes("A") ? "blue" : "black"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
               <td style="color: ${
-                result.grade.includes("F") ? "red" : result.grade.includes("A") ? "blue" : "black"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
@@ -1778,7 +1792,7 @@ function registerSubject() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-           openAuthenticationModal()
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -3127,7 +3141,7 @@ function uploadBulkResult() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-     openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3222,7 +3236,7 @@ function takeAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-       openAuthenticationModal()
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3798,7 +3812,6 @@ const uploadCommentAndRatingDebouncer = debounce((type, value, rating_type) =>
   uploadCommentAndRating(type, value, rating_type)
 );
 
-
 // COUNT ARRAY DISTINT VALUE
 function countDistinct(arr, n) {
   let res = 1;
@@ -3897,7 +3910,6 @@ function useCustomSessionTerm(session_term) {
   //getDashboardInfo();
 }
 
-
 function scoreLimit(element) {
   var max_chars = 2;
   if (element.innerHTML.length > max_chars) {
@@ -3909,7 +3921,7 @@ function scoreLimit(element) {
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
     modalExist = parent.document.getElementById("authenticationModal");
-    if(modalExist != null){
+    if (modalExist != null) {
       modalExist.remove();
     }
   }
@@ -3917,7 +3929,7 @@ $(document).click(function (e) {
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
-modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -4008,19 +4020,14 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 </div>
 `;
 
-  modalExist = parent.document.getElementById("authenticationModal");
-  parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
-    console.log(el);
-    el.remove();
-  });
-
-
-parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
-    console.log(el);
-    el.remove();
-  });
+  authenticationModal = parent.document.getElementById("authenticationModal");
+ if (authenticationModal != null) {
+    return 0;
+  }
+  
 
   parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
   parent.$("#authenticationModal").modal("show");
 }
 

@@ -40,7 +40,8 @@
 
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"   onload="loadSideNav('students'); getStudentIDCard(); loadDashBoardInformation()">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('students'); getStudentIDCard(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -122,7 +123,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -144,52 +146,32 @@
                     <div class="header-elements">
                         <ul>
                             <!-- <li><a href="#"><i class="far fa-edit"></i></a></li> -->
-                            <li><a onclick="print1('print-content')" href="#"><i class="fas fa-print"></i></a></li>
+                            <li><a onclick="downloadAsPDF('print-content')" href="#"><i class="fas fa-print"></i></a>
+                            </li>
                             <!-- <li><a href="#"><i class="fas fa-download"></i></a></li> -->
                         </ul>
                     </div>
                 </div>
                 <div id="print-content">
-                    <div style="margin-top: 20px;" class="container">
+                    <!-- <div style="margin-top: 20px;" class="container">
                         <div class="padding">
                             <div class="font">
                                 <div class="top">
-
-
-                                    <!-- <h1
-                                        style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%;">
-                                        <i style="color: white !important;" class="fas fa-graduation-cap fa-xs"></i>
-                                        SSHUB
-
-                                    </h1> -->
-
                                     <b>
                                         <h4 id="school_name"
                                             style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
                                             ________________
                                         </h4>
                                     </b>
+                                    <div
+                                        style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
+                                        <img id="school_logo_mini" style="padding: 0%;" src="" width="px">
+                                    </div>
 
 
-                                    <!-- <h5> <small
-                                            style="display: flex;
-                                        justify-content: center; color:white !important; margin-top: 0%; margin-bottom: 5px; font-family: Poppins;"><b>Attendance
-                                                Card</b></small></h5> -->
-
-
-
-
-
-
-
-                                    <!-- <br> -->
-                                    <!-- <img style="border-color: #042954; border-style: solid;padding: 0%; margin-top: 5px;"
-                                        src="../assets/img/sample_image.png" width="150px"> -->
-
-                                    <img id="student_image"
+                                    <img id="user_image"
                                         style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
                                         src="../assets/img/sample_image.png" width="">
-
 
 
                                 </div>
@@ -215,14 +197,9 @@
                                     </div>
 
                                     <div style="margin-top: 20px;margin-bottom: 210px;">
-                                        <h5 style="font-family: Poppins
-                                    ;color: black; text-align: center;">STUDENT</h5>
+                                        <h5 id="type" style="font-family: Poppins
+                                    ;color: black; text-align: center;">_______________</h5>
                                     </div>
-
-
-
-
-
 
                                 </div>
                             </div>
@@ -246,14 +223,84 @@
                                     style="text-align: center;color: white !important; margin-bottom: 10px;">
                                     ________________</h6>
 
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div style="margin-top: 20px;" class="container">
+                        <div class="padding">
+                            <div class="font">
+                                <div class="top">
+                                    <b>
+                                        <h4 id="school_name"
+                                            style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                                            ________________
+                                        </h4>
+                                    </b>
+                                    <div
+                                        style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
+                                        <img id="school_logo_mini" style="padding: 0%;" src="" width="px">
+                                    </div>
+
+
+                                    <img id="user_image"
+                                        style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                                        src="../assets/img/sample_image.png" width="">
+
+
+                                </div>
+                                <div class="bottom">
+                                    <div style="margin-bottom:5px">
+                                        <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                                    ;color: black;">________________</p>
+                                        <p id="id" style="margin-bottom: 1px; color: black; ">________________</p>
+
+                                        <small>
+                                            <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                                                ________________</p>
+                                        </small>
+
+                                    </div>
+                                    <br>
+
+
+                                    <div style="display: flex; justify-content: center; margin-top: 0px">
+                                        <img id="school_logo_mini"
+                                            style="border-color: white; border-style: solid;padding: 0%;" src=""
+                                            width="px">
+                                    </div>
+
+                                    <div style="margin-top: 20px;margin-bottom: 210px;">
+                                        <h5 id="type" style="font-family: Poppins
+                                    ;color: black; text-align: center;">_______________</h5>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="back">
+                            <h1 style="margin-bottom: 0; font-family: Poppins
+                            ;" class="Details">INFORMATION</h1>
+                            <hr style="background-color: white !important;">
+                            <small>
+                                <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+                                </h6>
+                            </small>
+                            <div style="margin-top: 0%;" class="qrcode">
+                                <div style="display: flex; justify-content: center; text-align: center;" id="IDQR">
+                                </div>
+                            </div>
+                            <div class="details-info">
+                                <h6 style="text-align: center;color: white !important;">if found please return to
+                                </h6>
+                                <h6 id="school_address"
+                                    style="text-align: center;color: white !important; margin-bottom: 10px;">
+                                    ________________</h6>
 
                             </div>
-
-
-
-
                         </div>
-                    </div>
+                    </div> 
+
                 </div>
 
                 <footer class="footer-wrap-layout1">

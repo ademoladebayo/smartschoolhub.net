@@ -1,9 +1,7 @@
-
 :root {
-  --front-color:#ff9d01; 
+  --front-color: #ff9d01;
   --back-color: #051f3e;
 }
-
 
 * {
   margin: 00px;
@@ -23,7 +21,7 @@
 }
 
 .font {
-  height: 375px;
+  height: 400px;
   width: 250px;
   position: relative;
   border-radius: 15px;
@@ -51,9 +49,9 @@
   border-top-right-radius: 10px;
 } */
 
-
 .bottom {
-  height: 70%;
+  margin-top: 10%;
+  height: 50%;
   width: 100%;
   background-color: white !important;
   position: absolute;
@@ -61,13 +59,13 @@
   border-bottom-right-radius: 15px;
 }
 
-.top img {
+.top #user_image {
   height: 100px;
   width: 100px;
   background-color: #e6ebe0 !important;
   border-radius: 10px;
   position: absolute;
-  top: 60px;
+  top: 90px;
   left: 75px;
 }
 .bottom p {
@@ -101,7 +99,7 @@
 }
 
 .back {
-  height: 375px;
+  height: 400px;
   width: 250px;
   border-radius: 10px;
   background-color: var(--back-color) !important;

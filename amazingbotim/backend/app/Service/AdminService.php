@@ -87,10 +87,16 @@ class AdminService
         $SubjectModel->class =  $request->class_id;
 
 
-        if ($SubjectModel->subject_name !=  '' && $SubjectModel->class != '') {
-            return  $SubjectRepository->createSubject($SubjectModel);
+
+        if ($SubjectModel->class == "ALL" || $SubjectModel->class == "NURSERY SCHOOL" || $SubjectModel->class == "PRIMARY SCHOOL" || $SubjectModel->class == "JUNIOR SECONDARY SCHOOL" || $SubjectModel->class == "SENIOR SECONDARY SCHOOL") {
+            // CREATE FOR ALL CLASS OR DO MULTIPLE CREATION
+           return $SubjectRepository->multiCreateSubject($request);
         } else {
-            return response()->json(['success' => false, 'message' => 'Please check that no field is left empty.']);
+            if ($SubjectModel->subject_name !=  '' && $SubjectModel->class != '') {
+                return  $SubjectRepository->createSubject($SubjectModel);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Please check that no field is left empty.']);
+            }
         }
     }
 
@@ -103,7 +109,7 @@ class AdminService
     // STUDENT
     public function createStudent(Request $request)
     {
-        
+
         $studentModel = new StudentModel();
         $studentRepository = new StudentRepository();
 
@@ -425,7 +431,7 @@ class AdminService
         $StudentRepository = new StudentRepository();
         $TeacherRepository = new TeacherRepository();
 
-        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount() , 'inventory'=> InventoryModel::get()->count()]);
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'inventory' => InventoryModel::get()->count()]);
     }
 
     public function lessonPlan()
@@ -460,7 +466,7 @@ class AdminService
 
 
 
-        return "Lesson Note Created for ". $c ." subjects.";
+        return "Lesson Note Created for " . $c . " subjects.";
     }
 
     public function createlessonPlan($subject_id)
@@ -468,27 +474,25 @@ class AdminService
         $term = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
         $week = ['WEEK 1', 'WEEK 2', 'WEEK 3', 'WEEK 4', 'WEEK 5', 'WEEK 6', 'WEEK 7', 'WEEK 8', 'WEEK 9', 'WEEK 10', 'WEEK 11', 'WEEK 12', 'WEEK 13'];
 
-        
-            for ($i = 0; $i < count($term); $i++) {
-                for ($j = 0; $j < count($week); $j++) {
-                    $LessonPlanModel = new  LessonPlanModel();
-                    $LessonPlanModel->subject_id = $subject_id;
-                    $LessonPlanModel->term = $term[$i];
-                    $LessonPlanModel->week = $week[$j];
-                    $LessonPlanModel->instructional_material = "instructional_material for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->previous_knowledge = "previous_knowledge for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->previous_lesson = "previous_lesson for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->behavioural_objective = "behavioural_objective for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->content = "content for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->presentation = "presentation for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->evaluation = "evaluation for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->conclusion = "conclusion for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->assignment = "assignment for " . $week[$j] . " " . $term[$i];
-                    $LessonPlanModel->save();
-                }
-            }
-        
 
+        for ($i = 0; $i < count($term); $i++) {
+            for ($j = 0; $j < count($week); $j++) {
+                $LessonPlanModel = new  LessonPlanModel();
+                $LessonPlanModel->subject_id = $subject_id;
+                $LessonPlanModel->term = $term[$i];
+                $LessonPlanModel->week = $week[$j];
+                $LessonPlanModel->instructional_material = "instructional_material for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->previous_knowledge = "previous_knowledge for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->previous_lesson = "previous_lesson for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->behavioural_objective = "behavioural_objective for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->content = "content for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->presentation = "presentation for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->evaluation = "evaluation for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->conclusion = "conclusion for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->assignment = "assignment for " . $week[$j] . " " . $term[$i];
+                $LessonPlanModel->save();
+            }
+        }
     }
 
     // INVENTORY
@@ -519,7 +523,6 @@ class AdminService
     {
         InventoryModel::find($id)->delete();
         return response()->json(['success' => true, 'message' => 'Item was deleted successfully.']);
-   
     }
 
     // RESET ACCOUNT
@@ -527,10 +530,10 @@ class AdminService
     {
         $StudentRepository = new StudentRepository();
         $TeacherRepository = new TeacherRepository();
-        if($request->user_type == "STUDENT"){
-            $StudentRepository->updatePassword($request->id,env("DEFAULT_PASSWORD"));
-        }else if($request->user_type == "STAFF"){
-            $TeacherRepository->updatePassword($request->id,Hash::make(env("DEFAULT_PASSWORD")));
+        if ($request->user_type == "STUDENT") {
+            $StudentRepository->updatePassword($request->id, env("DEFAULT_PASSWORD"));
+        } else if ($request->user_type == "STAFF") {
+            $TeacherRepository->updatePassword($request->id, Hash::make(env("DEFAULT_PASSWORD")));
         }
         return response()->json(['success' => true, 'message' => 'Account reset was successful.']);
     }

@@ -1,15 +1,17 @@
 // DEVELOPMENT IP
-// var ip = "http://127.0.0.1:8000";
-// var domain = "http://localhost/smartschoolhub.net/mss";
-
+//var ip = "http://127.0.0.1:8000";
+//var domain = "http://localhost/smartschoolhub.net/mss";
 
 // LIVE IP
-  var ip = "https://smartschoolhub.net/backend/mss";
-  var domain = "https://mss.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/mss";
+ var domain = "https://mss.smartschoolhub.net";
 
 getSchoolDetails();
 // getCurrentSession();
-if (!window.location.href.includes("portal-subscription") && localStorage["token"] != null) {
+if (
+  !window.location.href.includes("portal-subscription") &&
+  localStorage["token"] != null
+) {
   checkPortalSubscription();
 }
 
@@ -173,7 +175,7 @@ function reAuth() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal();
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -353,7 +355,7 @@ function createFee() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal();
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -391,7 +393,7 @@ function getAllFee() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -484,7 +486,7 @@ function updateFee() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal();
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -518,7 +520,7 @@ function deleteFee(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -563,7 +565,7 @@ function createExpense() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal();
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -601,7 +603,7 @@ function getAllExpense() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -681,7 +683,7 @@ function updateExpense() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal();
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -715,7 +717,7 @@ function deleteExpense(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -800,7 +802,7 @@ function createManualPayment() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-           openAuthenticationModal()
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -839,7 +841,7 @@ function getAllManualPayment() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -973,7 +975,7 @@ function updateManualPayment() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal();
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1007,7 +1009,7 @@ function deleteManualPayment(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1044,7 +1046,7 @@ function getAllPaymentHistory() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1148,7 +1150,7 @@ function getAllDebitor() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1156,25 +1158,45 @@ function getAllDebitor() {
     .then((data) => {
       c = 1;
       document.getElementById("debitors_table").innerHTML = ``;
-      if (data.length > 0) {
+      if (data.content.length > 0) {
         document.getElementById("last_checked").innerHTML +=
-          typeof data[0].last_checked == "undefined"
+          typeof data.last_checked == "undefined"
             ? " FOR ARREARS HAS NOT BEEN SYNCED"
-            : " WAS LAST UPDATED AT " + data[0].last_checked;
+            : " WAS LAST UPDATED AT " + data.last_checked;
 
-        for (i in data) {
+        for (i in data.content) {
           document.getElementById("debitors_table").innerHTML += `
                     <tr class='${c % 2 == 0 ? "even" : "odd"}'>
             
                     <td>${c}.</td>
-                    <td>${data[i].student_id}</td>
-                    <td>${data[i].first_name + " " + data[i].last_name}</td>  
-                    <td>${data[i].class == null ? data[i].graduation_details :data[i].class.class_name}</td>
-                    <td>${formatNumber(parseInt(data[i].expected_fee))}</td>
-                    <td>${formatNumber(parseInt(data[i].total_paid))}</td>
-                    <td>${formatNumber(parseInt(data[i].balance))}</td>
-                    <td>${formatNumber(parseInt(data[i].arrears))}</td>
-                    <td>${formatNumber(parseInt(data[i].total_balance))}</td>
+                    <td>${data.content[i].student_id}</td>
+                    <td>${data.content[i].first_name + " " + data.content[i].last_name}</td>  
+                    <td>${
+                      data.content[i].class == null
+                        ? data.content[i].graduation_details
+                        : data.content[i].class.class_name
+                    }</td>
+                    <td style="color:blue"><b>${formatNumber(parseInt(data.content[i].expected_fee))}</b></td>
+                    <td style="color: ${
+                      data.content[i].total_paid > 0
+                        ? "green"
+                        : "black"
+                    } "><b>${formatNumber(parseInt(data.content[i].total_paid))}</b></td>
+                    <td style="color: ${
+                      data.content[i].balance > 0
+                        ? "red"
+                        : "black"
+                    } "><b>${formatNumber(parseInt(data.content[i].balance))}</b></td>
+                    <td style="color: ${
+                      data.content[i].arrears > 0
+                        ? "red"
+                        : "black"
+                    } "><b>${formatNumber(parseInt(data.content[i].arrears))}</b></td>
+                    <td style="color: ${
+                      data.content[i].total_balance > 0
+                        ? "red"
+                        : "black"
+                    } "><b>${formatNumber(parseInt(data.content[i].total_balance))}</b></td>
                     
                    </tr>
                     `;
@@ -1214,7 +1236,7 @@ function syncLatestDebitor() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-         openAuthenticationModal();
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1244,7 +1266,7 @@ function getPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1415,7 +1437,7 @@ function getDashboardInfo() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-      openAuthenticationModal();
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1432,9 +1454,11 @@ function getDashboardInfo() {
         parseInt(data.total_arrears)
       );
 
-      document.getElementById("total").innerHTML =   "₦"+formatNumber(
-        parseInt(data.total_arrears) +  parseInt(data.total_manual_payment)
-      );
+      document.getElementById("total").innerHTML =
+        "₦" +
+        formatNumber(
+          parseInt(data.total_arrears) + parseInt(data.total_manual_payment)
+        );
 
       document.getElementById("total_expense").innerHTML = formatNumber(
         parseInt(data.total_expense)
@@ -1442,9 +1466,9 @@ function getDashboardInfo() {
     })
     .catch((err) => console.log(err));
 
-    // if(document.getElementById("total").innerHTML == "---"){
+  // if(document.getElementById("total").innerHTML == "---"){
 
-    // }
+  // }
 }
 
 // GET SCHOOL DETAILS
@@ -1475,7 +1499,6 @@ function paginateTable() {
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
 }
-
 
 // CUSTOM SESSION TERM
 function loadCustomSessionTerm() {
@@ -1536,7 +1559,7 @@ function checkPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1545,10 +1568,8 @@ function checkPortalSubscription() {
       for (i in data) {
         if (data[i].status == "NOT PAID") {
           alert("YOU HAVE AN UNPAID PORTAL USAGE CONTACT YOUR ADMIN !");
-          localStorage.clear()
-          window.parent.location.assign(
-            domain + "/bursary/"
-          );
+          localStorage.clear();
+          window.parent.location.assign(domain + "/bursary/");
         }
       }
     })
@@ -1614,7 +1635,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
               .then(function (res) {
                 console.log(res.status);
                 if (res.status == 401) {
-                 openAuthenticationModal()
+                  openAuthenticationModal();
                 }
                 return res.json();
               })
@@ -1656,7 +1677,7 @@ function getStoredCredential() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-       openAuthenticationModal()
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1679,7 +1700,7 @@ function scoreLimit(element) {
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
     modalExist = parent.document.getElementById("authenticationModal");
-    if(modalExist != null){
+    if (modalExist != null) {
       modalExist.remove();
     }
   }
@@ -1687,7 +1708,7 @@ $(document).click(function (e) {
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
-modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -1778,19 +1799,14 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 </div>
 `;
 
-  modalExist = parent.document.getElementById("authenticationModal");
-  parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
-    console.log(el);
-    el.remove();
-  });
-
-
-parent.document.querySelectorAll(".modal-backdrop").forEach(el => {
-    console.log(el);
-    el.remove();
-  });
+  authenticationModal = parent.document.getElementById("authenticationModal");
+ if (authenticationModal != null) {
+    return 0;
+  }
+  
 
   parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
   parent.$("#authenticationModal").modal("show");
 }
 
@@ -1906,10 +1922,12 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1929,10 +1947,9 @@ function getAllStudentForTable() {
             }
           
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             

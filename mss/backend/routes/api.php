@@ -94,6 +94,9 @@ Route::middleware([ActivityLog::class])->group(function () {
         Route::get('admin/update-student-profilestatus/{id}', 'AdminController@updateStudentProfileStatus', function () {
         })->middleware(Cors::class);
 
+        Route::get('admin/update-student-transcript-access/{id}', 'AdminController@updateStudentTranscriptAccess', function () {
+        })->middleware(Cors::class);
+
         Route::get('admin/search-student/{search_data}', 'AdminController@searchStudent', function () {
         })->middleware(Cors::class);
 

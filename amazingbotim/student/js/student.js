@@ -6,7 +6,6 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var ip = "http://127.0.0.1:8000";
 //var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
-
 // LIVE IP
  var ip = "https://smartschoolhub.net/backend/amazingbotim";
  var domain = "https://amazingbotim.smartschoolhub.net";
@@ -137,7 +136,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -175,7 +174,7 @@ function allSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -319,7 +318,7 @@ function signIn() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/student/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -330,6 +329,12 @@ function signIn() {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
+          username = JSON.parse(localStorage["user_data"]).data.first_name;
+          localStorage.setItem("username", username);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.student_id
+          );
           setTimeout(function () {
             window.location.href = "dashboard.html";
           }, 1000);
@@ -337,6 +342,60 @@ function signIn() {
           errortoast("<b>" + data.message + "</b>");
         }
 
+        document.getElementById("signin").innerHTML = `Sign In`;
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
+function reAuth() {
+  var id = localStorage["user_id"];
+  var password = document.getElementById("password").value;
+  if (id != "" && password != "") {
+    // PUSH TO API
+    document.getElementById("signin").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Processing ...`;
+    fetch(ip + "/api/student/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        password: password,
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          openAuthenticationModal();
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
+          //parent.getStoredCredential();
+          username = JSON.parse(localStorage["user_data"]).data.first_name;
+          localStorage.setItem("username", username);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.student_id
+          );
+          setTimeout(function () {
+            parent.$("#authenticationModal").modal("hide");
+            parent.document.getElementById("authenticationModal").remove();
+          }, 1000);
+        } else {
+          errortoast(data.message);
+        }
         document.getElementById("signin").innerHTML = `Sign In`;
       })
       .catch((err) => console.log(err));
@@ -384,7 +443,7 @@ function getCBTForSubject() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -417,10 +476,9 @@ function getCBTForSubject() {
           <td>
               <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary"   ${
                 data[i].cbt_status == "OPEN"
-                  ? `onclick="startCBT(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                      /"/g,
-                      "'"
-                    )})"`
+                  ? `onclick="startCBT(${JSON.stringify(data[i])
+                      .replace(/'/g, "")
+                      .replace(/"/g, "'")})"`
                   : `onclick="alert('CBT Closed!')"`
               }
                  ><i class="fas fa-play"></i> START CBT</button>
@@ -463,7 +521,7 @@ function startCBT(cbt) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -664,7 +722,7 @@ function submitCBT(timeup) {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/student/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -698,7 +756,7 @@ function submitCBT(timeup) {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.parent.location.assign(domain + "/student/");
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -738,7 +796,7 @@ function getPreviousSubjectRegistration() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -780,7 +838,7 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -841,7 +899,7 @@ function getAllSubjectForTable() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.parent.location.assign(domain + "/student/");
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -934,7 +992,7 @@ function registerSubject() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.location.href = "index.html";
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -979,7 +1037,7 @@ function getRegisteredSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1061,7 +1119,7 @@ function getRegisteredSubjectForTableCBT() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1127,13 +1185,11 @@ async function getTranscript() {
     user_data.data.student_id +
     ".png";
 
-    
   // SCHOOL LOGO URL
   school_logo_url =
-  domain +
-  "/backend/storage/app/public/fileupload/school_logo.png";
+    domain + "/backend/storage/app/public/fileupload/school_logo.png";
 
-    // SCHOOL_LOGO
+  // SCHOOL_LOGO
   document.getElementById("school_logo").src = school_logo_url;
 
   // STUDENT_IMAGE
@@ -1166,30 +1222,37 @@ async function getTranscript() {
   });
 
   var sessions = [];
-  var terms = ["FIRST TERM", "SECOND TERM", "THIRD TERM"];
+  var terms = [];
 
-  // CALL API THAT GET ALL SESSION
-  fetch(ip + "/api/general/all-session/ASC", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-  })
-    .then(function (res) {
-      console.log(res.status);
-      if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
-      }
-      return res.json();
+    // CALL API THAT GET ALL SESSION
+    fetch(ip + "/api/general/all-session/STD-" + user_data.data.id, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
     })
-
-    .then((data) => {
-      // STORE IN SESSIONS ARRAY
-      data.forEach((data) => {
-        sessions.push(data.session);
-      });
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          openAuthenticationModal();
+        }
+        return res.json();
+      })
+  
+      .then((data) => {
+        // STORE IN SESSIONS ARRAY
+        data.forEach((data) => {
+          if(!sessions.includes(data.session)){
+            sessions.push(data.session);
+          }
+  
+          if(!terms.includes(data.term)){
+            terms.push(data.term);
+          }
+          
+        });
       // CREATE RESULT TEMPLATE
       if (sessions.length > 0) {
         document.getElementById("result_div").innerHTML = ``;
@@ -1475,7 +1538,7 @@ function getResult(value) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      user_type:"STUDENT",
+      user_type: "STUDENT",
       student_id: JSON.parse(localStorage["user_data"]).data.id,
       class_id: JSON.parse(localStorage["user_data"]).data.class.id,
       session: value.split("_")[1],
@@ -1485,7 +1548,7 @@ function getResult(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1558,12 +1621,20 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
               <td style="color: ${
-                result.grade == "F" ? "red" : "blue"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
               <td style="color: ${
-                result.grade == "F" ? "red" : "blue"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
@@ -1598,7 +1669,7 @@ function getCommentsAndPsycho(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1658,7 +1729,7 @@ function getAttendanceSummary(value) {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/student/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1716,7 +1787,7 @@ function getAttendanceSummary(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1754,7 +1825,7 @@ function getLessonPlan(week) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1863,7 +1934,7 @@ function getFee() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1945,7 +2016,7 @@ function getAllPaymentHistory() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2024,7 +2095,7 @@ function generatePayment() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2275,19 +2346,25 @@ function getDate() {
 }
 
 // LOAD SCHOOL COLOR
-function loadSchoolColor(){
-  if(localStorage["SCHOOL_COLOR"] != "-"){
-    var r = document.querySelector(':root');
+function loadSchoolColor() {
+  if (localStorage["SCHOOL_COLOR"] != "-") {
+    var r = document.querySelector(":root");
     var rs = getComputedStyle(r);
-   // alert("The value of --blue is: " + rs.getPropertyValue('--blue'));
-   // SET SCHOOL COLOR
-    r.style.setProperty('--front-color', localStorage["SCHOOL_COLOR"].split("~")[0]);
-    r.style.setProperty('--back-color', localStorage["SCHOOL_COLOR"].split("~")[1]);
+    // alert("The value of --blue is: " + rs.getPropertyValue('--blue'));
+    // SET SCHOOL COLOR
+    r.style.setProperty(
+      "--front-color",
+      localStorage["SCHOOL_COLOR"].split("~")[0]
+    );
+    r.style.setProperty(
+      "--back-color",
+      localStorage["SCHOOL_COLOR"].split("~")[1]
+    );
   }
 }
 
 // PAGENATION
-function paginateTable(){
+function paginateTable() {
   $("#paginate").DataTable();
   $(".dataTables_length").addClass("bs-select");
 }
@@ -2328,7 +2405,7 @@ function changePassword() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2358,6 +2435,126 @@ function say(text) {
   speech.pitch = 1;
 
   window.speechSynthesis.speak(speech);
+}
+
+function scoreLimit(element) {
+  var max_chars = 2;
+  if (element.innerHTML.length > max_chars) {
+    element.innerHTML = element.innerHTML.substr(0, max_chars);
+    element.blur();
+  }
+}
+
+$(document).click(function (e) {
+  if (!$(e.target).closest("#authenticationModal").length) {
+    modalExist = parent.document.getElementById("authenticationModal");
+    if (modalExist != null) {
+      modalExist.remove();
+    }
+  }
+});
+
+// RE - AUTHENTICATION MODAL
+function openAuthenticationModal() {
+  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="authenticationModalTitle">
+                <b>Session Timeout !</b>
+            </h4>
+
+        </div>
+        <div class="modal-body text-center">
+            <div class="row">
+                <div class="col-lg-12 img-box">
+                    <img src="../asset/images/login-banner.png" alt="">
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <div class="login-box">
+                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                        <div style="display: flex;
+                        justify-content: center;" class="row">
+
+                            <b>
+                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                    <i style="color: #051f3e;"
+                                        class="fas fa-graduation-cap fa-xs"></i>
+                                    SMARTSCHOOLHUB.net
+                                </h3>
+                            </b>
+
+                        </div>
+                        <br>
+
+                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                           ${localStorage["username"]},</script> please
+                            signin
+                            to continue
+                        </h5>
+                       <form autocomplete="off">   
+                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                            <div class="login-row row no-margin">
+                               
+                                <input id="password" type="password" autocomplete="new-password"
+                                    class="form-control form-control-sm">
+                                    <br>
+                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
+                            </div>
+                        </form>    
+                        <br>
+                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+
+
+                        <div class="login-row btnroo row no-margin">
+                            <button id="signin" onclick="reAuth()"
+                                class="btn btn-primary btn-sm ">Sign
+                                In</button>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <footer class="footer">
+                        <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                                href="../#"><b>
+                                    Dextroux Technologies</b></a></div>
+                    </footer>
+                </div>
+
+            </div>
+            <script>
+                const password = document.querySelector('#password');
+                togglePass.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                })
+            </script>
+            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+        </div>
+    </div>
+</div>
+</div>
+`;
+
+  authenticationModal = parent.document.getElementById("authenticationModal");
+  if (authenticationModal != null) {
+    return 0;
+  }
+
+  parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
+  parent.$("#authenticationModal").modal("show");
 }
 
 // TOAST

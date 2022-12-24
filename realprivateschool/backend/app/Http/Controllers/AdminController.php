@@ -141,6 +141,12 @@ class AdminController extends Controller
         return $StudentRepository->updateStudentProfileStatus($id);
     }
 
+    public function updateStudentTranscriptAccess($id)
+    {
+        $StudentRepository = new StudentRepository();
+        return $StudentRepository->updateStudentTranscriptAccess($id);
+    }
+
     // STUDENT IMAGE
     public function uploadImage(Request $request)
     {

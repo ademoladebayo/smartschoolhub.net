@@ -7,8 +7,8 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //var domain = "http://localhost/smartschoolhub.net/amazingbotim";
 
 // LIVE IP
-var ip = "https://smartschoolhub.net/backend/amazingbotim";
-var domain = "https://amazingbotim.smartschoolhub.net";
+ var ip = "https://smartschoolhub.net/backend/amazingbotim";
+ var domain = "https://amazingbotim.smartschoolhub.net";
 
 // // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -24,10 +24,16 @@ window.addEventListener("offline", () =>
 //STARTERS
 getCurrentSession();
 getSchoolDetails();
-if (!window.location.href.includes("portal-subscription") && localStorage["token"] != null) {
+loadSchoolColor();
+if (
+  !window.location.href.includes("portal-subscription") &&
+  localStorage["token"] != null
+) {
   checkPortalSubscription();
 }
-loadSchoolColor();
+
+// VAR
+result_list = {};
 
 // if(!window.location.href.includes("portal-subcription")){
 //   checkPortalSubscription();
@@ -71,7 +77,7 @@ function signIn() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -82,8 +88,10 @@ function signIn() {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
-          getStoredCredential();
+          parent.getStoredCredential();
           username = JSON.parse(localStorage["user_data"]).data.username;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", username);
 
           if (username.includes("SECURITY")) {
             setTimeout(function () {
@@ -98,6 +106,57 @@ function signIn() {
           errortoast("<b>" + data.message + "</b>");
         }
 
+        document.getElementById("signin").innerHTML = `Sign In`;
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
+function reAuth() {
+  var id = localStorage["user_id"];
+  var password = document.getElementById("password").value;
+  if (id != "" && password != "") {
+    // PUSH TO API
+    document.getElementById("signin").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Processing ...`;
+    fetch(ip + "/api/admin/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        password: password,
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          openAuthenticationModal();
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
+          parent.getStoredCredential();
+          username = JSON.parse(localStorage["user_data"]).data.username;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", username);
+          setTimeout(function () {
+            parent.$("#authenticationModal").modal("hide");
+            parent.document.getElementById("authenticationModal").remove();
+          }, 1000);
+        } else {
+          errortoast(data.message);
+        }
         document.getElementById("signin").innerHTML = `Sign In`;
       })
       .catch((err) => console.log(err));
@@ -127,7 +186,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -209,26 +268,25 @@ function loadSideNav(page) {
         <span>Staff Management</span></a>
     </li>
 
-    
     <li class="nav-item">
-        <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
-        <span>Class Management</span></a>
+          <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Class Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
-        <span>Subject Management</span></a>
+          <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Subject Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
-        <span>Session Management</span></a>
+          <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
+          <span>Session Management</span></a>
     </li>
 
-
     <li class="nav-item">
-        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
-        <span>Grade Settings</span></a>
+        <a  id="card-generator" href="card-generator.html" class="nav-link"> <i
+        class="fas fa-id-card"></i>
+        <span>ID Card Generator</span></a>
     </li>
 
     <li class="nav-item">
@@ -240,6 +298,22 @@ function loadSideNav(page) {
         <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Staff Attendance</span></a>
     </li>
+
+  
+    <li class="nav-item">
+        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
+        <span>Grade Settings</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="transcript" href="student-transcript.html" class="nav-link"> <i class="fas fa-poll"></i></i>
+        <span>Student Transcript</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+    </li>
+
 
     <li class="nav-item">
         <a  id="control-panel" href="control-panel.html" class="nav-link"> <i class="flaticon-settings-work-tool"></i></i>
@@ -343,7 +417,7 @@ function getAllTeacherForClass() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -381,7 +455,7 @@ function getAllTeacherForDropDown() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -410,7 +484,7 @@ function getAllTeacherForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -435,10 +509,12 @@ function getAllTeacherForTable() {
             : `<span class="badge bg-danger"><b>DISABLED</b></span>`
         }</td>
         <td>
-        <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-          /"/g,
-          "'"
-        )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+        <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+          .replace(/'/g, "")
+          .replace(
+            /"/g,
+            "'"
+          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                 data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
         <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
           data[i]
@@ -455,10 +531,9 @@ function getAllTeacherForTable() {
                 : "fas fa-unlock-alt"
             }'></i></a>  
             
-        <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-          /"/g,
-          "'"
-        )})" class="btn btn-secondary text-white">
+        <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+          .replace(/'/g, "")
+          .replace(/"/g, "'")})" class="btn btn-secondary text-white">
           <i class="fas fa-id-card"></i>
                </a> 
         
@@ -473,6 +548,29 @@ function getAllTeacherForTable() {
         c = c + 1;
       }
       paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function getAllStaff() {
+  return fetch(ip + "/api/admin/all-teacher", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      return data;
     })
     .catch((err) => console.log(err));
 }
@@ -601,7 +699,7 @@ function createTeacher() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -678,7 +776,7 @@ function updateTeacher() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -718,7 +816,7 @@ function updateTeacherProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -754,7 +852,7 @@ function deleteTeacher(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -785,7 +883,7 @@ function searchTeacher(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -817,16 +915,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
              
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -835,10 +938,9 @@ function searchTeacher(search_data) {
               })" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a> 
               
@@ -867,16 +969,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -884,10 +991,9 @@ function searchTeacher(search_data) {
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
@@ -918,16 +1024,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -936,10 +1047,9 @@ function searchTeacher(search_data) {
               })" href="#" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
               
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>    
               
@@ -968,16 +1078,21 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
@@ -985,10 +1100,9 @@ function searchTeacher(search_data) {
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-secondary text-white"><i
+              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
@@ -1012,6 +1126,38 @@ function searchTeacher(search_data) {
     .catch((err) => console.log(err));
 }
 
+// EXPORT LIST
+function exportStaffList() {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/staff/export-list", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "staff-list.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    })
+    .catch((err) => console.log(err));
+}
+
 // STUDENT
 function getAllStudentForTable() {
   fetch(ip + "/api/admin/all-student", {
@@ -1025,7 +1171,7 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1050,12 +1196,21 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+          <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
+          <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            data[i]
+          )
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-warning" data-bs-toggle="modal"
           data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
       
           
@@ -1068,10 +1223,9 @@ function getAllStudentForTable() {
                   : "fas fa-unlock-alt"
               }'></i></a>  
               
-          <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})" class="btn btn-secondary text-white">
+          <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(/"/g, "'")})" class="btn btn-secondary text-white">
             <i class="fas fa-id-card"></i>
                  </a> 
           
@@ -1095,7 +1249,27 @@ function getAllStudentForTable() {
     })
     .catch((err) => console.log(err));
 }
-
+function getAllStudent() {
+  return fetch(ip + "/api/admin/all-student", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
+}
 {
   /* <a onclick="deleteStudent(${
   data[i].id
@@ -1249,7 +1423,7 @@ function createStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1267,6 +1441,743 @@ function createStudent() {
   } else {
     warningtoast("<b>Please check that no field is empty.</b>");
   }
+}
+
+// STUDENT RESULT
+function viewStudentResult(data) {
+  localStorage.setItem("student_result", JSON.stringify(data));
+  window.parent.location.assign(domain + "/admin/transcript.html");
+}
+
+function getAllStudentForTranscript() {
+  fetch(ip + "/api/admin/all-student", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      document.getElementById("student_table").innerHTML = ``;
+      var c = 1;
+      if (data.length > 0) {
+        for (i in data) {
+          student_class =
+            data[i].class == null ? `GRADUATED` : data[i].class.id;
+          // if (
+          //   student_class !=
+          //   JSON.parse(localStorage["user_data"]).data.assigned_class.id
+          // ) {
+          //   continue;
+          // }
+          document.getElementById("student_table").innerHTML += `
+          <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+      
+          <td>${c}.</td>
+          <td>${data[i].student_id}</td>
+          <td>${data[i].first_name + " " + data[i].last_name}</td>
+          <td>${data[i].gender}</td>
+          <td class="text-white">${
+            data[i].can_access_transcript == "YES"
+              ? `<span class="badge bg-success"><b>YES</b></span>`
+              : `<span class="badge bg-danger"><b>NO</b></span>`
+          }</td>
+          <td>${
+            data[i].class == null ? `GRADUATED` : data[i].class.class_name
+          }</td>
+          <td>
+          <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                                                  data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
+
+          <a  onclick="updateTranscriptAccess(${
+            data[i].id
+          })" class='${
+            data[i].can_access_transcript == "YES"
+              ? "btn btn-danger"
+              : "btn btn-success"
+          }'><i
+              class='${
+                data[i].can_access_transcript == "YES"
+                  ? "fas fa-lock"
+                  : "fas fa-unlock-alt"
+              }'></i></a> 
+
+          <a onclick="viewStudentResult(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn gradient-orange-peel text-black"><i
+                      class="fas fa-poll"></i></a>
+      </tr>`;
+
+          c = c + 1;
+        }
+      } else {
+        document.getElementById(
+          "student_table"
+        ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function getTranscript() {
+  openSpinnerModal();
+  user_data = JSON.parse(localStorage["student_result"]);
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/student/" +
+    user_data.student_id +
+    ".png";
+
+  // SCHOOL LOGO URL
+  school_logo_url =
+    domain + "/backend/storage/app/public/fileupload/school_logo.png";
+
+  // SCHOOL_LOGO
+  document.getElementById("school_logo").src = school_logo_url;
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
+
+  // POPULATE STUDENTS INFORMATION
+  document.getElementById("full_name").innerHTML =
+    "<b>" +
+    user_data.last_name +
+    "</b>" +
+    " " +
+    user_data.first_name +
+    " " +
+    user_data.middle_name;
+
+  document.getElementById("student_id").innerHTML = user_data.student_id;
+  document.getElementById("class_sector").innerHTML = user_data.class != null ?
+    user_data.class.class_sector : `GRADUATED`;
+  document.getElementById("school_details").innerHTML =
+    localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+
+  // QR Generator
+  var qrcode = new QRCode("verificationQR", {
+    text: "STUDENT NUMBER",
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+
+  var sessions = [];
+  var terms = [];
+
+  // CALL API THAT GET ALL SESSION
+  fetch(ip + "/api/general/all-session/STD-" + user_data.id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      // STORE IN SESSIONS ARRAY
+      data.forEach((data) => {
+        if(!sessions.includes(data.session)){
+          sessions.push(data.session);
+        }
+
+        if(!terms.includes(data.term)){
+          terms.push(data.term);
+        }
+        
+      });
+
+      // CREATE RESULT TEMPLATE
+      if (sessions.length > 0) {
+        document.getElementById("result_div").innerHTML = ``;
+        // LOOP THROUGH EACH SESSION AND TERM
+        sessions.forEach((session) => {
+          terms.forEach((term) => {
+            // CREATE RESULT TEMPLATE
+            document.getElementById("result_div").innerHTML += `
+        <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
+        <div style="border:1px solid black; padding-bottom: 15px;" class="row">
+
+            <div class="col-md-4">
+                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                    <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                    <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                    <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
+                </div>
+            </div>
+
+            <!-- ATTTENDANCE -->
+            <div style="margin-top: 15px;" class="container">
+                <p><b>(A) ATTTENDANCE</b></p>
+                <div class="row">
+                    <div class="col-md-12 table-responsive">
+                        <table style="padding: 0%;" class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        No of times school
+                                        opened
+                                    </td>
+                                    <td  id="opened_${session}_${term}"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        No of times present
+                                    </td>
+                                    <td id="present_${session}_${term}"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ACADEMIC PERFORMANCE -->
+            <div style="margin-top: 15px;" class="col-md-12 col-lg-12 col-xl-12">
+                <p><b>(B) ACADEMIC PERFORMANCE</b></p>
+                <div style="margin-top: 0px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- SCORE TABLE -->
+                            <div class="table-responsive">
+                                <table style="padding: 0%;" class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-size: 14px;">S/No</th>
+                                            <th style="font-size: 14px;">Subject</th>
+                                            <th style="font-size: 14px;">1<sup>st</sup> CA</th>
+                                            <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
+                                            <th style="font-size: 14px;">Exam</th>
+                                            <th style="font-size: 14px;">Total</th>
+                                            <th style="font-size: 14px;">Class Average</th>
+                                            <th style="font-size: 14px;">Class Lowest</th>
+                                            <th style="font-size: 14px;">Class Highest</th>
+                                            <th style="font-size: 14px;">Position</th>
+                                            <th style="font-size: 14px;">Grade</th>
+                                            <th style="font-size: 14px;">Remark</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scores_${session}_${term}">
+
+                                    
+                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- POSITION AND PERCENTAGE -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-size: 13px;font-style: italic;">NO IN CLASS :
+                                                <span id="no_student_${session}_${term}"></span>
+                                            </th>
+                                            <th style="font-size: 13px;font-style: italic;">GRADE POSITION :
+                                                <span id="grade_position_${session}_${term}"></span>
+                                            </th>
+                                            <th style="font-size: 13px;font-style: italic;">PERCENTAGE :
+                                                <span id="percentage_${session}_${term}"></span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: 13px;">
+
+                                        <tr style="font-size: 13px;">
+                                            <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
+                                                colspan="6">
+                                                <span style="font-weight: bold;">Class Teacher's
+                                                    Comment :
+                                                </span>
+                                                <font color="black"><b id="teacher_comment_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
+                                            </td>
+                                        </tr>
+
+                                        
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AFFECTIVE & PSYCHO MOTOR REPORT -->
+            <div style="margin-top: 5px;" class="container">
+                <p><b>(C) AFFECTIVE & PSYCHO MOTOR REPORT</b></p>
+                <div class="row">
+                    <div class="col-md-6 table-responsive">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Hand Writing
+                                    </td>
+                                    <td id="handwriting_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                
+                                <tr>
+                                    <td 
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Games
+                                    </td>
+                                    <td id="games_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Handing Tools
+                                    </td>
+                                    <td id="handing_tools_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Drawing and Painting
+                                    </td>
+                                    <td id="drawing_painting_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6 table-responsive">
+                        <table class="table table-sm">
+                            <tbody>
+
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Neatness
+                                    </td>
+                                    <td id="neatness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Politeness
+                                    </td>
+                                    <td id="politeness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                               
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Co-operation with others
+                                    </td>
+                                    <td id="cooperation_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                
+                          
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Health
+                                    </td>
+                                    <td id="health_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+`;
+          });
+        });
+      } else {
+        document.getElementById(
+          "result_div"
+        ).innerHTML = `<hr style="color: black; border: 1px solid black">
+  <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+  <hr style="color: black; border: 1px solid black">`;
+      }
+
+      // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
+      result_containers = document.getElementsByClassName("result_container");
+
+      for (i = 0; i < result_containers.length; i++) {
+        container_name = result_containers[i].attributes[0].nodeValue;
+        // ATTENDANCE
+        getAttendanceSummary(container_name);
+        //ACADEMIC PERFORMANCE
+        getResult(container_name);
+        // COMMENTS AND PSYCHO MOTOR REPORTS
+        getCommentsAndPsycho(container_name);
+      }
+
+      main_content = parent.body.innerHTML;
+      parent.body.innerHTML = "";
+      // parent.body.innerHTML = main_content.trim();
+    })
+    .catch((err) => console.log(err));
+
+    setTimeout(function () {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+    }, 10000);
+}
+
+function getResult(value) {
+  // GET ACADEMIC PERFORMANCE
+  return fetch(ip + "/api/student/result", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      user_type: "TEACHER",
+      student_id: JSON.parse(localStorage["student_result"]).id,
+      class_id:JSON.parse(localStorage["student_result"]).class != null ? JSON.parse(localStorage["student_result"]).class.id : "",
+      session: value.split("_")[1],
+      term: value.split("_")[2],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      if (data.result.length > 0) {
+        data.result.forEach((result) => {
+          // ATTACH CLASS TO THAT RESULT TERM AND SESSION
+          document.getElementById(
+            "class_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = result.class.class_name;
+
+          // ATTACH NO OF STUDENT , GRADE POSITION AND PERCENTAGE
+          document.getElementById(
+            "no_student_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = data.no_student;
+
+          document.getElementById(
+            "grade_position_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = data.grade_position;
+
+          document.getElementById(
+            "percentage_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML = data.percentage;
+
+          // SCORE TABLE
+          document.getElementById(
+            "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
+          ).innerHTML += `
+            <tr>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                ${c}.
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                ${result.subject.subject_name}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.first_ca}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.second_ca}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.examination}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.total}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              
+              ${parseFloat(result.class_average).toFixed(0)}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.class_lowest}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.class_highest}
+              </td>
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <b>${result.position}</b>
+              </td>
+              <td style="color: ${
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
+              ${result.grade}
+              </td>
+              <td style="color: ${
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.remark}
+              </td>
+            </tr>`;
+
+          c = c + 1;
+        });
+      } else {
+        // DELETE RESULT CONTAINER
+        console.log("DELETE THIS VALUE " + value);
+        document.getElementById(value).remove();
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getCommentsAndPsycho(value) {
+  // GET ACADEMIC PERFORMANCE
+  return fetch(ip + "/api/student/comments-psycho", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["student_result"]).id,
+      session: value.split("_")[1],
+      term: value.split("_")[2],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      // POPULATE COMMENT
+      document.getElementById(
+        "teacher_comment_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = "<b><i>" + data.teacher_comment + "</b></i>";
+
+      // POPULATE RATINGS
+      document.getElementById(
+        "handwriting_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.handwriting;
+      document.getElementById(
+        "games_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.games;
+      document.getElementById(
+        "handing_tools_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.handling_tools;
+      document.getElementById(
+        "drawing_painting_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.drawing_painting;
+      document.getElementById(
+        "neatness_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.neatness;
+      document.getElementById(
+        "politeness_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.politeness;
+      document.getElementById(
+        "cooperation_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.cooperation;
+      document.getElementById(
+        "health_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.student_rating.health;
+    })
+    .catch((err) => console.log(err));
+}
+
+function uploadCommentAndRating(type, value, rating_type) {
+  document.getElementById("result_upload_style").innerHTML = `
+    [contenteditable] {
+
+      outline-color: #fc8c03;
+    }`;
+
+  fetch(ip + "/api/teacher/upload-comment-rating", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["student_result"]).id,
+      type: type,
+      value: value,
+      rating_type: rating_type,
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (data.success) {
+        document.getElementById("result_upload_style").innerHTML = `
+          [contenteditable] {
+          
+            outline-color: #105c05;
+          }`;
+        setTimeout(function () {
+          // window.parent.location.reload();
+        }, 1000);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// STUDENT ATTENDANCE
+function getAttendanceSummary(value) {
+  // GET ACADEMIC PERFORMANCE
+  return fetch(ip + "/api/student/attendance-summary", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["student_result"]).id,
+      session: value.split("_")[1],
+      term: value.split("_")[2],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById(
+        "opened_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.opened;
+      document.getElementById(
+        "present_" + value.split("_")[1] + "_" + value.split("_")[2]
+      ).innerHTML = data.present;
+    })
+    .catch((err) => console.log(err));
+}
+
+// EXPORT LIST
+function exportStudentList() {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/student/export-list", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "student-list.xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    })
+    .catch((err) => console.log(err));
 }
 
 //STUDENT UPLOAD IMAGE
@@ -1348,7 +2259,7 @@ function updateStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1388,7 +2299,7 @@ function updateStudentProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1399,6 +2310,42 @@ function updateStudentProfileStatus(id) {
         successtoast("<b>" + data.message + "</b>");
         // setTimeout(function () {
         getAllStudentForTable();
+        // }, 1000);
+      } else {
+        errortoast("<b>" + data.message + "</b>");
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function updateTranscriptAccess(id) {
+  if (!confirm("You are about to change this Student's Transcript Access ?")) {
+    return 0;
+  }
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/update-student-transcript-access/" + id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast("<b>" + data.message + "</b>");
+        // setTimeout(function () {
+        getAllStudentForTranscript();
         // }, 1000);
       } else {
         errortoast("<b>" + data.message + "</b>");
@@ -1423,7 +2370,7 @@ function deleteStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1454,7 +2401,7 @@ function searchStudent(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1481,10 +2428,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1500,10 +2449,9 @@ function searchStudent(search_data) {
             })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1528,10 +2476,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1546,10 +2496,9 @@ function searchStudent(search_data) {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1576,10 +2525,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1595,10 +2546,9 @@ function searchStudent(search_data) {
             })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1623,10 +2573,12 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
@@ -1641,10 +2593,9 @@ function searchStudent(search_data) {
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
@@ -1699,7 +2650,7 @@ function uploadImage1(image, student_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1765,7 +2716,7 @@ function uploadImage(type) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1807,13 +2758,15 @@ async function getStudentIDCard() {
     ".png";
 
   // STUDENT_IMAGE
-  document.getElementById("student_image").src = url;
+  document.getElementById("user_image").src = url;
+  // "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+  document.getElementById("type").innerHTML = "STUDENT";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-  domain +
-  "/backend/storage/app/public/fileupload/school_logo_mini.png";
-   document.getElementById("school_logo_mini").src = school_logo_mini;
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+  document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
@@ -1860,13 +2813,14 @@ async function getStaffIDCard() {
     ".png";
 
   // staff_IMAGE
-  document.getElementById("staff_image").src = url;
+  document.getElementById("user_image").src = url;
+
+  document.getElementById("type").innerHTML = "STAFF";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-  domain +
-  "/backend/storage/app/public/fileupload/school_logo_mini.png";
-   document.getElementById("school_logo_mini").src = school_logo_mini;
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+  document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
   document.getElementById("full_name").innerHTML =
@@ -1911,7 +2865,7 @@ function getAllClassForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2065,7 +3019,7 @@ function createClass() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2112,7 +3066,7 @@ function updateClass() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2136,6 +3090,9 @@ function updateClass() {
 }
 
 function deleteClass(class_id) {
+  if (!confirm("You are about to delete this class ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-class/" + class_id, {
     method: "GET",
@@ -2148,7 +3105,7 @@ function deleteClass(class_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2179,7 +3136,7 @@ function searchClass(class_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2335,7 +3292,7 @@ function createSubject() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2369,7 +3326,7 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2397,6 +3354,7 @@ function getAllSubjectForTable() {
               data[i].teacher.last_name
             }</td>
             <td>${data[i].student_no}</td>
+
             <td>
             <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
@@ -2409,12 +3367,24 @@ function getAllSubjectForTable() {
           }~${data[i].teacher.id}~${data[i].class.class_name}~${
             data[i].class.id
           }')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteSubject(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+            <a onclick="deleteSubject(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a>
+
+            <a onclick="exportSubjectSheet('${data[i].id}','${
+            data[i].subject_name
+          }','${data[i].class.class_name}'
+            )" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
             </td>
   
         </tr>`;
@@ -2437,12 +3407,24 @@ function getAllSubjectForTable() {
             }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
             data[i].class.id
           }')" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
+            data-bs-target="#editModal"><i class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+            <a onclick="deleteSubject(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a>
+
+            <a onclick="downloadResultSheet(${
+              data[i].id
+            })" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
             </td>
   
         </tr>`;
@@ -2502,7 +3484,7 @@ function updateSubject() {
         Authorization: "Bearer " + localStorage["token"],
       },
       body: JSON.stringify({
-        subject_id: localStorage["editSubject"][0],
+        subject_id: localStorage["editSubject"].split("~")[0],
         class_id: class_id,
         subject_name: subject_name,
         teacher: teacher,
@@ -2511,7 +3493,7 @@ function updateSubject() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2535,6 +3517,9 @@ function updateSubject() {
 }
 
 function deleteSubject(subject_id) {
+  if (!confirm("You are about to delete this subject ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-subject/" + subject_id, {
     method: "GET",
@@ -2547,7 +3532,7 @@ function deleteSubject(subject_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2578,7 +3563,7 @@ function searchSubject(subject_name) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2738,6 +3723,54 @@ function searchSubject(subject_name) {
     .catch((err) => console.log(err));
 }
 
+function exportSubjectSheet(subject_id, subject_name, class_name) {
+  // PUSH TO API
+  warningtoast("<b>Processing ... Please wait</b>");
+  fetch(ip + "/api/admin/subject/export-sheet", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: subject_id,
+      session: localStorage["current_session"],
+      subject_name: subject_name,
+      class_name: class_name,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.blob();
+    })
+
+    .then((blob) => {
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download =
+        subject_name +
+        "_" +
+        class_name +
+        "_" +
+        localStorage["current_session"] +
+        "_" +
+        localStorage["current_term"] +
+        ".xlsx";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove(); //afterwards we remove the element again
+    })
+    .catch((err) => console.log(err));
+}
+
+function importSubjectSheet() {}
+
 // SESSION
 function createSession() {
   var session = document.getElementById("session").value;
@@ -2761,7 +3794,7 @@ function createSession() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2795,7 +3828,7 @@ function getAllSessionForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2921,7 +3954,7 @@ function updateSession() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2970,7 +4003,7 @@ function createGrade() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3005,7 +4038,7 @@ function getAllGradeForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3090,7 +4123,7 @@ function updateGrade() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3114,6 +4147,9 @@ function updateGrade() {
 }
 
 function deleteGrade(id) {
+  if (!confirm("You are about to delete this grade ?")) {
+    return 0;
+  }
   warningtoast("<b>Processing ... Please wait</b>");
   fetch(ip + "/api/admin/delete-grade/" + id, {
     method: "GET",
@@ -3126,7 +4162,7 @@ function deleteGrade(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3234,7 +4270,7 @@ function takeAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3309,7 +4345,7 @@ function takeAttendanceByStudentID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3407,7 +4443,7 @@ function getAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3538,7 +4574,7 @@ function takeTeacherAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3613,7 +4649,7 @@ function takeAttendanceByStaffID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3710,7 +4746,7 @@ function getTeacherAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3765,7 +4801,7 @@ function getDashboardInfo() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3810,7 +4846,7 @@ function saveControl() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3839,7 +4875,7 @@ function getControl() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3932,7 +4968,7 @@ function saveInventoryItem() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3966,7 +5002,7 @@ function getInventory() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4078,7 +5114,7 @@ function updateInventoryItem(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4098,6 +5134,9 @@ function updateInventoryItem(id) {
 }
 
 function deleteInventoryItem(id) {
+  if (!confirm("You are about to delete this Inventory ?")) {
+    return 0;
+  }
   fetch(ip + "/api/admin/inventory/" + id, {
     method: "DELETE",
     headers: {
@@ -4109,7 +5148,7 @@ function deleteInventoryItem(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4171,7 +5210,6 @@ function getSchoolDetails() {
     .catch((err) => console.log(err));
 }
 
-
 // LOAD SCHOOL COLOR
 function loadSchoolColor() {
   if (localStorage["SCHOOL_COLOR"] != "-") {
@@ -4210,7 +5248,7 @@ function getPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4281,7 +5319,7 @@ function checkPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4364,7 +5402,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
               .then(function (res) {
                 console.log(res.status);
                 if (res.status == 401) {
-                  window.location.href = "index.html";
+                  openAuthenticationModal();
                 }
                 return res.json();
               })
@@ -4406,7 +5444,7 @@ function getStoredCredential() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4417,7 +5455,6 @@ function getStoredCredential() {
     })
     .catch((err) => console.log(err));
 }
-
 // RESET ACCOUNT
 function resetAccount(user_type, id) {
   warningtoast("<b>Processing ... Please wait</b>");
@@ -4436,7 +5473,7 @@ function resetAccount(user_type, id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -4449,6 +5486,869 @@ function resetAccount(user_type, id) {
       }
     })
     .catch((err) => console.log(err));
+}
+
+// ID CARD GENERATOR
+async function generateIDCard() {
+  document.getElementById("idcard_list").innerHTML = ``;
+  user_type =
+    document.getElementById("user_type_card").value == ""
+      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
+      : document.getElementById("user_type_card").value;
+
+  user_class_sector = document.getElementById("user_class_sector").value =
+    document.getElementById("user_class_sector").value;
+
+  document.getElementById("generate_idcard").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+
+  document.getElementById("generate_idcard").disabled = true;
+
+  await getSchoolDetails();
+  // STUDENT_IMAGE
+  //user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image =
+    "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload";
+  // // "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+
+  if (user_type == "STUDENT") {
+    user_image = user_image + "/student/";
+  } else {
+    user_image = user_image + "/staff/";
+  }
+
+  response = user_type == "STUDENT" ? getAllStudent() : getAllStaff();
+  json_to_generate_qr = [];
+  c = 1;
+  response.then(function (data) {
+    // CREATE TEMPLATE
+    for (i in data) {
+      if (
+        user_type == "STUDENT" &&
+        (data[i].class == null || data[i].class == "GRADUATED")
+      ) {
+        continue;
+      }
+      document.getElementById(
+        "idcard_list"
+      ).innerHTML += `<div style="margin-top: 20px;" class="container">
+      <div class="padding">
+          <div class="font">
+              <div class="top">
+                  <b>
+                      <h4 id="school_name"
+                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                         ${localStorage["SCHOOL_NAME"]}
+                      </h4>
+                  </b>
+                  <div
+                      style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
+                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+                  </div>
+
+
+                  <img id="user_image"
+                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                      src="${
+                        user_type == "STUDENT"
+                          ? user_image + data[i].student_id + ".png"
+                          : user_image + data[i].teacher_id + ".png"
+                      }" width="">
+
+
+              </div>
+              <div class="bottom">
+                  <div style="margin-bottom:5px">
+                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
+                      <p id="id" style="margin-bottom: 1px; color: black; ">${
+                        user_type == "STUDENT"
+                          ? data[i].student_id
+                          : data[i].teacher_id
+                      }</p>
+
+                      <small>
+                          <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                              ${data[i].gender}</p>
+                      </small>
+
+                  </div>
+                  <br>
+
+
+                  <div style="display: flex; justify-content: center; margin-top: 0px">
+                      <img id="school_logo_mini"
+                          style="border-color: white; border-style: solid;padding: 0%;" src=""
+                          width="px">
+                  </div>
+
+                  <div style="margin-top: 20px;margin-bottom: 210px;">
+                      <h5 id ="user_type" style="font-family: Poppins
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+      <div class="back">
+          <h1 style="margin-bottom: 0; font-family: Poppins
+          ;" class="Details">INFORMATION</h1>
+          <hr style="background-color: white !important;">
+          <small>
+              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+              </h6>
+          </small>
+          <div style="margin-top: 0%;" class="qrcode">
+              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+                data[i].id
+              }">
+              </div>
+          </div>
+          <div class="details-info">
+              <h6 style="text-align: center;color: white !important;">if found please return to
+              </h6>
+              <h6 id="school_address"
+                  style="text-align: center;color: white !important; margin-bottom: 10px;">
+                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+
+          </div>
+      </div>
+    </div>
+    <div style="break-after:page"></div>
+          `;
+
+      json_to_generate_qr.push(data[i]);
+
+      c = c + 1;
+    }
+    makeQRCode(json_to_generate_qr, user_type);
+  });
+}
+
+async function generateIDCard2() {
+  document.getElementById("idcard_list").innerHTML = ``;
+  user_type =
+    document.getElementById("user_type_card").value == ""
+      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
+      : document.getElementById("user_type_card").value;
+
+  user_class_sector = document.getElementById("user_class_sector").value =
+    document.getElementById("user_class_sector").value;
+
+  document.getElementById("generate_idcard").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+
+  document.getElementById("generate_idcard").disabled = true;
+
+  await getSchoolDetails();
+  // STUDENT_IMAGE
+  //user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image =
+    "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload";
+  // // "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+
+  // MINI SCHOOL LOGO
+  school_logo_mini =
+    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+
+  if (user_type == "STUDENT") {
+    user_image = user_image + "/student/";
+  } else {
+    user_image = user_image + "/staff/";
+  }
+
+  response = user_type == "STUDENT" ? getAllStudent() : getAllStaff();
+  json_to_generate_qr = [];
+  c = 1;
+  response.then(function (data) {
+    // CREATE TEMPLATE
+    for (i in data) {
+      if (
+        user_type == "STUDENT" &&
+        (data[i].class == null || data[i].class == "GRADUATED")
+      ) {
+        continue;
+      }
+      document.getElementById(
+        "idcard_list"
+      ).innerHTML += `<div style="margin-top: 20px;" class="container">
+      <div class="padding">
+          <div class="font">
+              <div class="top">
+                  <b>
+                      <h4 id="school_name"
+                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                         ${localStorage["SCHOOL_NAME"]}
+                      </h4>
+                  </b>
+                  
+
+                  <img id="user_image"
+                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                      src="${
+                        user_type == "STUDENT"
+                          ? user_image + data[i].student_id + ".png"
+                          : user_image + data[i].teacher_id + ".png"
+                      }" width="">
+
+
+              </div>
+              <div class="bottom">
+                  <div style="margin-bottom:5px">
+                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
+                      <p id="id" style="margin-bottom: 1px; color: black; ">${
+                        user_type == "STUDENT"
+                          ? data[i].student_id
+                          : data[i].teacher_id
+                      }</p>
+
+                      <small>
+                          <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                              ${data[i].gender}</p>
+                      </small>
+
+                  </div>
+                  <br>
+
+                  <div
+                      style="display: flex; justify-content: center; margin-top: 0px">
+                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+                  </div>
+
+
+                  <div style="margin-top: 20px;margin-bottom: 210px;">
+                      <h5 id ="user_type" style="font-family: Poppins
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+      <div class="back">
+          <h1 style="margin-bottom: 0; font-family: Poppins
+          ;" class="Details">INFORMATION</h1>
+          <hr style="background-color: white !important;">
+          <small>
+              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+              </h6>
+          </small>
+          <div style="margin-top: 0%;" class="qrcode">
+              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+                data[i].id
+              }">
+              </div>
+          </div>
+          <div class="details-info">
+              <h6 style="text-align: center;color: white !important;">if found please return to
+              </h6>
+              <h6 id="school_address"
+                  style="text-align: center;color: white !important; margin-bottom: 10px;">
+                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+
+          </div>
+      </div>
+    </div>
+    <div style="break-after:page"></div>
+          `;
+
+      json_to_generate_qr.push(data[i]);
+
+      c = c + 1;
+    }
+    makeQRCode(json_to_generate_qr, user_type);
+  });
+}
+
+async function makeQRCode(data, user_type) {
+  //  QR CODE
+  for (i in data) {
+    var QRDATA =
+      user_type == "STUDENT"
+        ? "StudentATDCard~" +
+          data[i].id +
+          "~" +
+          data[i].class.id +
+          "~" +
+          data[i].first_name
+        : "TeacherATDCard~" + data[i].id + "~" + data[i].first_name;
+
+    var qrdiv = "IDQR" + data[i].id;
+    qrcode = new QRCode(qrdiv, {
+      text: QRDATA,
+      width: 128,
+      height: 128,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H,
+    });
+  }
+}
+
+// RESULT UPLOAD
+function getAllstudentForSubjectResultUpload(refresh) {
+  document.getElementById("proceed").innerHTML = `<i
+  class="fa fa-spinner fa-spin"></i> Processing ...`;
+  fetch(ip + "/api/teacher/student-registered", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: document.getElementById("subject_class").value,
+      session: document.getElementById("session_term").value.split("-")[0],
+      term: document.getElementById("session_term").value.split("-")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      // CLEAR RESUL LIST
+      result_list = {};
+
+      document.getElementById("proceed").innerHTML = "Proceed";
+      console.log(data);
+
+      document.getElementById("class_summary").innerHTML =
+        "<b>CLASS SUMMARY FOR " +
+        document.getElementById("subject_class").options[
+          document.getElementById("subject_class").selectedIndex
+        ].text +
+        "</b>";
+
+      document.getElementById("student_registered").innerHTML = ``;
+      // RESULT SUMMARY
+      document.getElementById("ave").innerHTML = parseFloat(data.avg).toFixed(
+        0
+      );
+      document.getElementById("min").innerHTML = data.min;
+      document.getElementById("max").innerHTML = data.max;
+      var c = 1;
+      if (data.result.length > 0) {
+        for (i in data.result) {
+          document.getElementById("student_registered").innerHTML += `
+            <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
+
+            <td>${c}.</td>
+            <td>${
+              data.result[i].student.first_name +
+              " " +
+              data.result[i].student.middle_name +
+              " " +
+              data.result[i].student.last_name
+            }</td>
+            
+            <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${
+              data.result[i].id
+            }','first_ca',this.innerHTML)" contenteditable="true" >${
+            data.result[i].first_ca
+          }</td>
+            <td oninput="scoreLimit(this); addToResultList('${
+              data.result[i].id
+            }','second_ca',this.innerHTML)" contenteditable="true">${
+            data.result[i].second_ca
+          }</td>
+            <td oninput="scoreLimit(this); addToResultList('${
+              data.result[i].id
+            }','examination',this.innerHTML)" contenteditable="true">${
+            data.result[i].examination
+          }</td>
+            <td style="font-size:20px; font-style:bold;"><b>${
+              data.result[i].total
+            }</b></td>
+            <td> 
+              <div class="select">
+                  <select onChange="addToResultList('${
+                    data.result[i].id
+                  }','grade',this.value)" id="standard-select" id="grade" value="${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }" class="select2">
+                  <option value="<b>${
+                    data.result[i].grade == `-`
+                      ? `-`
+                      : `${data.result[i].grade}`
+                  }</b>">${
+            data.result[i].grade == "-"
+              ? "Select Grade"
+              : `${data.result[i].grade}`
+          }</option>
+            ${
+              // <option value="A">A</option>
+              // <option value="B">B</option>
+              // <option value="C">C</option>
+              // <option value="D">D</option>
+              // <option value="E">E</option>
+              // <option value="F">F</option>
+              ``
+            }
+                  </select>
+            
+                <span class="focus"></span>
+              <div>
+            </td>
+            <td> 
+            <div class="select">
+                <select onChange="addToResultList('${
+                  data.result[i].id
+                }','remark',this.value)" id="standard-select" id="remark" value="<b>${
+            data.result[i].grade == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</b>" class="select2">
+                <option value="${
+                  data.result[i].remark == `-`
+                    ? `-`
+                    : `${data.result[i].remark}`
+                }">${
+            data.result[i].remark == "-"
+              ? "Select Remark"
+              : `${data.result[i].remark}`
+          }</option>
+                ${
+                  //<option value="EXCELLENT">EXCELLENT</option>
+                  // <option value="VERY GOOD">VERY GOOD</option>
+                  // <option value="GOOD">GOOD</option>
+                  // <option value="FAIR">FAIR</option>
+                  // <option value="POOR">POOR</option>
+                  // <option value="VERY POOR">VERY POOR</option>
+                  ``
+                }
+                </select>
+                <span class="focus"></span>
+              <div>
+            </td>
+            
+            
+
+        </tr>`;
+          c = c + 1;
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function uploadResult(id, result_type, score) {
+  if (result_type == "grade" || result_type == "remark") {
+    document.getElementById("result_upload_style_grade_remark").innerHTML = `
+    :root {
+      --select-border: #777;
+      --select-focus: #fc8c03;
+      --select-arrow: var(--select-border);
+  }`;
+  } else {
+    document.getElementById("result_upload_style").innerHTML = `
+    [contenteditable] {
+
+      outline-color: #fc8c03;
+    }`;
+  }
+
+  fetch(ip + "/api/teacher/upload-result", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      result_type: result_type,
+      score: score,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (data.success) {
+        if (result_type == "grade" || result_type == "remark") {
+          document.getElementById(
+            "result_upload_style_grade_remark"
+          ).innerHTML = `
+          :root {
+            --select-border: #777;
+            --select-focus: #105c05;
+            --select-arrow: var(--select-border);
+        }`;
+        } else {
+          document.getElementById("result_upload_style").innerHTML = `
+          [contenteditable] {
+          
+            outline-color: #105c05;
+          }`;
+          getAllstudentForSubjectResultUpload(true);
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+
+  console.log(score);
+}
+
+function addToResultList(id, result_type, score) {
+  let result_obj = {};
+
+  // CHECK IF KEY EXIST
+  if (result_list[id]) {
+    result_list[id][result_type] = score;
+  } else {
+    result_obj[result_type] = score;
+    result_list[id] = result_obj;
+  }
+  console.log(result_list);
+}
+
+function uploadBulkResult() {
+  if (Object.keys(result_list).length === 0) {
+    errortoast("No result found");
+    return 0;
+  }
+  warningtoast("Uploading result please wait ...");
+  fetch(ip + "/api/teacher/upload-result/bulk", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify(result_list),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        getAllstudentForSubjectResultUpload(true);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// CUSTOM SUBJECT CLASS
+function loadCustomSubjectClass() {
+  fetch(ip + "/api/admin/all-subject", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        //  window.parent.location.assign(domain +"/admin/");
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("subject_class").innerHTML = "";
+      for (i in data) {
+        document.getElementById(
+          "subject_class"
+        ).innerHTML += `<option value="${data[i].id}">${data[i].subject_name} (${data[i].class.class_name})</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+// CUSTOM SESSION TERM
+function loadCustomSessionTerm() {
+  term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
+
+  fetch(ip + "/api/general/all-session/DESC", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
+      data.forEach((sessions) => {
+        term.forEach((term) => {
+          document.getElementById(
+            "session_term"
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + "-" + term
+          }</option>`;
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
+function downloadAsPDF(container) {
+  const file = this.document.getElementById(container);
+  var opt = {
+    // margin: 1,
+    // filename: "idcards.pdf",
+    // image: { type: "png", quality: 0.98 },
+    // html2canvas: { scale: 2 },
+    // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    margin: 0,
+    filename: "time_sheet_report.pdf",
+    image: { type: "jpeg", quality: 0.2 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "a4", orientation: "p" },
+  };
+  html2pdf().from(file).set(opt).save();
+}
+
+function print() {
+  var divContents = document.getElementById("idcard_list").innerHTML;
+  var head = document.getElementById("common-library").innerHTML;
+  console.log(divContents);
+  var a = window.open("", "", "height=1000, width=1000");
+  a.document.write("<html>");
+  a.document.write(head);
+  a.document.write(divContents);
+  a.document.write(`</body></html>`);
+  a.print();
+  a.document.close();
+}
+
+// RESULT UPLOAD DEBOUCER
+// DEBOUNCER
+function debounce(func, timeout = 2000) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+}
+
+const uploadResultDebouncer = debounce((id, result_type, score) =>
+  uploadResult(id, result_type, score)
+);
+
+function scoreLimit(element) {
+  var max_chars = 2;
+  if (element.innerHTML.length > max_chars) {
+    element.innerHTML = element.innerHTML.substr(0, max_chars);
+    element.blur();
+  }
+}
+
+$(document).click(function (e) {
+  if (!$(e.target).closest("#authenticationModal").length) {
+    modalExist = parent.document.getElementById("authenticationModal");
+    if (modalExist != null) {
+      modalExist.remove();
+    }
+
+    parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
+      console.log(el);
+      el.remove();
+    });
+  }
+});
+
+// RE - AUTHENTICATION MODAL
+function openAuthenticationModal() {
+  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="authenticationModalTitle">
+                <b>Session Timeout !</b>
+            </h4>
+
+        </div>
+        <div class="modal-body text-center">
+            <div class="row">
+                <div class="col-lg-12 img-box">
+                    <img src="../asset/images/login-banner.png" alt="">
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <div class="login-box">
+                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                        <div style="display: flex;
+                        justify-content: center;" class="row">
+
+                            <b>
+                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                    <i style="color: #051f3e;"
+                                        class="fas fa-graduation-cap fa-xs"></i>
+                                    SMARTSCHOOLHUB.net
+                                </h3>
+                            </b>
+
+                        </div>
+                        <br>
+
+                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                           ${localStorage["username"]},</script> please
+                            signin
+                            to continue
+                        </h5>
+                       <form autocomplete="off">   
+                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                            <div class="login-row row no-margin">
+                               
+                                <input id="password" type="password" autocomplete="new-password"
+                                    class="form-control form-control-sm">
+                                    <br>
+                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
+                            </div>
+                        </form>    
+                        <br>
+                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+
+
+                        <div class="login-row btnroo row no-margin">
+                            <button id="signin" onclick="reAuth()"
+                                class="btn btn-primary btn-sm ">Sign
+                                In</button>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <footer class="footer">
+                        <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                                href="../#"><b>
+                                    Dextroux Technologies</b></a></div>
+                    </footer>
+                </div>
+
+            </div>
+            <script>
+                const password = document.querySelector('#password');
+                togglePass.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                })
+            </script>
+            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+        </div>
+    </div>
+</div>
+</div>
+`;
+
+  authenticationModal = parent.document.getElementById("authenticationModal");
+ if (authenticationModal != null) {
+    return 0;
+  }
+
+  
+  parent.$("body").append(modal);
+  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
+  parent.$("#authenticationModal").modal("show");
+}
+
+function openSpinnerModal() {
+  modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body text-center">
+        <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-warning" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-dark" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+        </div>
+
+        <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <b>Processing ...</b>
+            </h4>
+            <br>
+    </div>
+</div>
+</div>
+`;
+
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    return 0;
+  }
+
+  
+  parent.$("body").append(modal);
+  parent.$("#spinnerModal").modal({backdrop:"static",keyboard:false})
+  parent.$("#spinnerModal").modal("show");
 }
 
 // TOAST
