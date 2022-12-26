@@ -19,7 +19,7 @@
     <link href="assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"   onload="localStorage.clear(); getSchoolDetails()">
+<body style="font-family: Poppins; font-weight: bold;" onload="">
     <div class="container-fluid">
         <div class="container">
             <div class="col-xl-10 col-lg-11 login-container">
@@ -179,11 +179,14 @@
     }
 </style>
 
-<script>
-    // DEVELOPMENT IP
-    // var ip = "http://127.0.0.1:8000";
-    var ip = "https://smartschoolhub.net/backend/mss";
+<script type="module">
+    import Config from './utils/js/config.js';
+    const config = new Config();
+    localStorage.setItem("ip", config.url.ip);
+    localStorage.setItem("domain", config.url.domain);
+
     function getSchoolDetails() {
+        var ip = localStorage["ip"];
         fetch(ip + "/api/general/school-details", {
             method: "GET",
             headers: {
@@ -196,7 +199,6 @@
             })
 
             .then((data) => {
-                console.log(data);
                 localStorage.setItem('SCHOOL_NAME', data[0].school_name)
                 localStorage.setItem('SCHOOL_ADDRESS', data[0].school_address)
                 document.getElementById("school_name").innerHTML = "Welcome , <br>" + localStorage['SCHOOL_NAME'];
@@ -204,6 +206,13 @@
             })
             .catch((err) => console.log(err));
     }
+
+
+    window.addEventListener("load", () => {
+        getSchoolDetails();
+    }
+    );
+
 </script>
 
 <!-- Mirrored from www.smarteyeapps.com/demo/html5-template-login-page/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 15 Oct 2021 08:09:14 GMT -->

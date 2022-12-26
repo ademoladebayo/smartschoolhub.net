@@ -1,10 +1,5 @@
-// DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/amazingbotim";
-
-// LIVE IP
- var ip = "https://smartschoolhub.net/backend/amazingbotim";
- var domain = "https://amazingbotim.smartschoolhub.net";
+var ip = localStorage["ip"];
+var domain = localStorage["domain"]; 
 
 getSchoolDetails();
 // getCurrentSession();
@@ -312,6 +307,8 @@ function loadDashBoardInformation() {
 function goTo(page) {
   if (page == "") {
     localStorage.clear();
+    window.parent.location.assign(domain);
+    return 0;
   }
   window.parent.location.assign(domain + "/bursary/" + page);
 }
@@ -1176,6 +1173,13 @@ function getAllDebitor() {
                         ? data.content[i].graduation_details
                         : data.content[i].class.class_name
                     }</td>
+
+                    <td><span style="color:white" class="badge ${
+                      data.content[i].profile_status == "DISABLED"
+                        ? `bg-danger`
+                        : `bg-success`
+                    }"><b>${data.content[i].profile_status}</b></span></td>
+
                     <td style="color:blue"><b>${formatNumber(parseInt(data.content[i].expected_fee))}</b></td>
                     <td style="color: ${
                       data.content[i].total_paid > 0
@@ -1700,9 +1704,15 @@ function scoreLimit(element) {
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
     modalExist = parent.document.getElementById("authenticationModal");
-    if (modalExist != null) {
+   if (modalExist != null) {
       modalExist.remove();
+
+      parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
+        console.log(el);
+        el.remove();
+      });
     }
+
   }
 });
 

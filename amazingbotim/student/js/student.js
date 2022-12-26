@@ -2,13 +2,8 @@
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
-// DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/amazingbotim";
-
-// LIVE IP
- var ip = "https://smartschoolhub.net/backend/amazingbotim";
- var domain = "https://amazingbotim.smartschoolhub.net";
+var ip = localStorage["ip"];
+var domain = localStorage["domain"]; 
 
 // CBT VARIABLE
 answer = [];
@@ -293,6 +288,8 @@ function getTermAndSession() {
 function goTo(page) {
   if (page == "") {
     localStorage.clear();
+    window.parent.location.assign(domain);
+    return 0;
   }
   window.parent.location.assign(domain + "/student/" + page);
 }
@@ -2448,9 +2445,15 @@ function scoreLimit(element) {
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
     modalExist = parent.document.getElementById("authenticationModal");
-    if (modalExist != null) {
+   if (modalExist != null) {
       modalExist.remove();
+
+      parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
+        console.log(el);
+        el.remove();
+      });
     }
+
   }
 });
 

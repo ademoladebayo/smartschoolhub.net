@@ -247,7 +247,7 @@ class BursaryService
     {
 
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class")->where("status","ENABLED")->whereNotIn('class', ['GRADUATED'])->get();
+        $all_student = StudentModel::select("id", "class")->where("profile_status","ENABLED")->get();
         $c = 0;
         foreach ($all_student as $student) {
             $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);

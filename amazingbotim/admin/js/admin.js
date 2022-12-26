@@ -1,16 +1,16 @@
+
+// import Config from '../../utils/js/config.js';
+
 // SOUND VARIABLES
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
-// DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/amazingbotim";
+//const config = new Config();
 
-// LIVE IP
- var ip = "https://smartschoolhub.net/backend/amazingbotim";
- var domain = "https://amazingbotim.smartschoolhub.net";
+var ip = localStorage["ip"];
+var domain = localStorage["domain"]; 
 
-// // REMOTE ACCESS
+// REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
 // var domain = "http://192.168.42.168/smartschoolhub.net";
 
@@ -33,7 +33,7 @@ if (
 }
 
 // VAR
-result_list = {};
+var result_list = {};
 
 // if(!window.location.href.includes("portal-subcription")){
 //   checkPortalSubscription();
@@ -393,6 +393,8 @@ function loadSideNav(page) {
 function goTo(page) {
   if (page == "") {
     localStorage.clear();
+    window.parent.location.assign(domain);
+    return 0;
   }
   window.parent.location.assign(domain + "/admin/" + page);
 }
@@ -2759,8 +2761,7 @@ async function getStudentIDCard() {
 
   // STUDENT_IMAGE
   document.getElementById("user_image").src = url;
-  // "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
-
+  
   document.getElementById("type").innerHTML = "STUDENT";
 
   // MINI SCHOOL LOGO
@@ -5506,11 +5507,8 @@ async function generateIDCard() {
 
   await getSchoolDetails();
   // STUDENT_IMAGE
-  //user_image = domain + "/backend/storage/app/public/fileupload";
-  user_image =
-    "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload";
-  // // "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
-
+  user_image = domain + "/backend/storage/app/public/fileupload";
+ 
   // MINI SCHOOL LOGO
   school_logo_mini =
     domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
@@ -5650,10 +5648,7 @@ async function generateIDCard2() {
 
   await getSchoolDetails();
   // STUDENT_IMAGE
-  //user_image = domain + "/backend/storage/app/public/fileupload";
-  user_image =
-    "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload";
-  // // "https://amazingbotim.smartschoolhub.net/backend/storage/app/public/fileupload/student/2022-STD-078.png";
+  user_image = domain + "/backend/storage/app/public/fileupload";
 
   // MINI SCHOOL LOGO
   school_logo_mini =
@@ -6182,21 +6177,21 @@ function scoreLimit(element) {
 
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
-    modalExist = parent.document.getElementById("authenticationModal");
-    if (modalExist != null) {
+   var modalExist = parent.document.getElementById("authenticationModal");
+   if (modalExist != null) {
       modalExist.remove();
-    }
 
-    parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
-      console.log(el);
-      el.remove();
-    });
+      parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
+        console.log(el);
+        el.remove();
+      });
+    }
   }
 });
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
-  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+  var modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">

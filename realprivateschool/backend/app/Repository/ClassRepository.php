@@ -75,7 +75,7 @@ class ClassRepository
 
     public function getNumberOfStudent($class_id)
     {
-        return StudentModel::where('class', $class_id)->where("status","ENABLED")->count();
+        return StudentModel::where('class', $class_id)->where("profile_status","ENABLED")->count();
     }
 
     public function deleteClass($class_id)
