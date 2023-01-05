@@ -13,6 +13,9 @@ use App\Model\SubjectRegistrationModel;
 use App\Model\SubjectModel;
 use App\Model\TeacherModel;
 use App\Model\LessonPlanModel;
+use App\Model\NoteModel;
+use App\Model\AssignmentModel;
+use App\Model\UploadModel;
 use App\Repository\GradeSettingsRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SubjectRepository;
@@ -403,5 +406,91 @@ class TeacherService
         $LessonPlanModel->assignment = $request->assignment;
         $LessonPlanModel->save();
         return response()->json(['success' => true, 'message' => 'Lesson plan has been saved.']);
+    }
+
+    // LEARNING HUB
+    public function postSubjectMaterial(Request $request)
+    {
+        if ($request->material_type == "NOTE") {
+            // CREATE NEW NOTE
+            $note = new NoteModel();
+            $note->subject_id = $request->subject_id;
+            $note->content = $request->content;
+            $note->topic = $request->topic;
+            $note->date = date("Y-m-d") . " | " . date("h:i a");
+            $note->save();
+        } else if ($request->material_type == "ASSIGNMENT") {
+            // CREATE NEW ASSIGNMENT
+            $assignment = new AssignmentModel();
+            $assignment->subject_id = $request->subject_id;
+            $assignment->content = $request->content;
+            $assignment->topic = $request->topic;
+            $assignment->date = date("Y-m-d") . " | " . date("h:i a");
+            $assignment->save();
+        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
+            // NEW UPLOAD OR VIDEO
+            $upload = new UploadModel();
+            $upload->subject_id = $request->subject_id;
+            $upload->upload_type = $request->content;
+            $upload->url = $request->url;
+            $upload->date = date("Y-m-d") . " | " . date("h:i a");
+            $upload->save();
+        }
+
+        return response()->json(['success' => true, 'message' => 'Upload was successful.']);
+    }
+
+    public function editSubjectMaterial(Request $request)
+    {
+        if ($request->material_type == "NOTE") {
+            // CREATE NEW NOTE
+            $note = NoteModel::find($request->material_id);
+            $note->subject_id = $request->subject_id;
+            $note->content = $request->content;
+            $note->topic = $request->topic;
+            $note->date = date("Y-m-d") . " | " . date("h:i a");
+            $note->save();
+        } else if ($request->material_type == "ASSIGNMENT") {
+            // CREATE NEW ASSIGNMENT
+            $assignment =  AssignmentModel::find($request->material_id);
+            $assignment->subject_id = $request->subject_id;
+            $assignment->content = $request->content;
+            $assignment->topic = $request->topic;
+            $assignment->date = date("Y-m-d") . " | " . date("h:i a");
+            $assignment->save();
+        }
+
+        return response()->json(['success' => true, 'message' => 'Update was successful.']);
+    }
+
+    public function deleteSubjectMaterial(Request $request)
+    {
+        if ($request->material_type == "NOTE") {
+            $note = NoteModel::find($request->material_id);
+            $note->delete();
+        } else if ($request->material_type == "ASSIGNMENT") {
+            $assignment =  AssignmentModel::find($request->material_id);
+            $assignment->delete();
+        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
+            $upload = UploadModel::find($request->material_id);
+            $upload->delete();
+
+            // DELETE ACTUAL FILE
+        }
+
+        return response()->json(['success' => true, 'message' => 'Deletion was successful.']);
+    }
+
+    public function getSubjectMaterial($subject_id)
+    {
+        $note = NoteModel::Where('subject_id', $subject_id)->orderBy('id', 'DESC')->get();
+
+        $upload = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'FILE')->orderBy('id', 'DESC')->get();
+
+        $video = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'VIDEO')->orderBy('id', 'DESC')->get();
+
+        $assignment = AssignmentModel::Where('subject_id', $subject_id)->orderBy('id', 'DESC')->get();
+
+        return response()->json(['note' => $note, 'upload' => $upload, 'video' => $video, 'assignment' => $assignment]);
     }
 }

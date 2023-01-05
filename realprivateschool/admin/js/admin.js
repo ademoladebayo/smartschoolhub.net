@@ -516,7 +516,7 @@ function getAllTeacherForTable() {
           .replace(
             /"/g,
             "'"
-          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+          )})"    ext-white" data-bs-toggle="modal"
                                                 data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
         <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
           data[i]

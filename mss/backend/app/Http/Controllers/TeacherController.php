@@ -149,4 +149,29 @@ class TeacherController extends Controller
         $TeacherService = new TeacherService();
         return $TeacherService->savelessonPlan($request);
     }
+
+    // LEARNING HUB
+    public function postSubjectMaterial(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->postSubjectMaterial($request);
+    }
+
+    public function editSubjectMaterial(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->editSubjectMaterial($request);
+    }
+
+    public function getSubjectMaterial($subject_id)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->getSubjectMaterial($subject_id);
+    }
+
+    public function deleteSubjectMaterial(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->deleteSubjectMaterial($request);
+    }
 }
