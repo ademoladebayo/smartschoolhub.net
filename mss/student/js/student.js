@@ -3,7 +3,7 @@ var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 var ip = localStorage["ip"];
-var domain = localStorage["domain"]; 
+var domain = localStorage["domain"];
 
 // CBT VARIABLE
 answer = [];
@@ -1218,38 +1218,49 @@ async function getTranscript() {
     correctLevel: QRCode.CorrectLevel.H,
   });
 
+  //CHECK IF RESULT WITHHELD
+  if (
+    JSON.parse(localStorage["user_data"]).data.can_access_transcript == "NO"
+  ) {
+    document.getElementById("result_div").innerHTML = `
+<hr style="color: black; border: 1px solid black">
+<h3 style="text-align: center;">ACCESS TO YOUR RESULT DENIED, PLEASE CONTACT YOUR SCHOOL ADMIN.</h3>
+<hr style="color: black; border: 1px solid black">
+`;
+    return 0;
+  }
+
   var sessions = [];
   var terms = [];
 
-    // CALL API THAT GET ALL SESSION
-    fetch(ip + "/api/general/all-session/STD-" + user_data.data.id, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: "Bearer " + localStorage["token"],
-      },
+  // CALL API THAT GET ALL SESSION
+  fetch(ip + "/api/general/all-session/STD-" + user_data.data.id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
     })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          openAuthenticationModal();
+
+    .then((data) => {
+      // STORE IN SESSIONS ARRAY
+      data.forEach((data) => {
+        if (!sessions.includes(data.session)) {
+          sessions.push(data.session);
         }
-        return res.json();
-      })
-  
-      .then((data) => {
-        // STORE IN SESSIONS ARRAY
-        data.forEach((data) => {
-          if(!sessions.includes(data.session)){
-            sessions.push(data.session);
-          }
-  
-          if(!terms.includes(data.term)){
-            terms.push(data.term);
-          }
-          
-        });
+
+        if (!terms.includes(data.term)) {
+          terms.push(data.term);
+        }
+      });
       // CREATE RESULT TEMPLATE
       if (sessions.length > 0) {
         document.getElementById("result_div").innerHTML = ``;
@@ -2445,7 +2456,7 @@ function scoreLimit(element) {
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
     modalExist = parent.document.getElementById("authenticationModal");
-   if (modalExist != null) {
+    if (modalExist != null) {
       modalExist.remove();
 
       parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
@@ -2453,7 +2464,6 @@ $(document).click(function (e) {
         el.remove();
       });
     }
-
   }
 });
 
@@ -2556,7 +2566,9 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
   }
 
   parent.$("body").append(modal);
-  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
+  parent
+    .$("#authenticationModal")
+    .modal({ backdrop: "static", keyboard: false });
   parent.$("#authenticationModal").modal("show");
 }
 

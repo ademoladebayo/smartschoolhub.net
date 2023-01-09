@@ -3367,6 +3367,7 @@ function takeAttendanceByStudentID() {
 
 // LESSON PLAN AND LEARNING HUB
 function getLessonPlan(week) {
+  openSpinnerModal();
   if (week == "") {
     week = document.getElementById("week").value;
   }
@@ -3393,11 +3394,21 @@ function getLessonPlan(week) {
     })
 
     .then((data) => {
+      removeSpinnerModal();
       document.getElementById("lesson_plan_for").innerHTML =
         "LESSON PLAN FOR " +
         localStorage["LESSON-PLAN"].split("-")[1] +
         " " +
         localStorage["LESSON-PLAN"].split("-")[2];
+
+        document.getElementById("lp_status").innerHTML = `<span class="badge ${
+          data.status == "APPROVED"
+            ? `bg-success`
+            : data.status == "DISAPPROVED"
+            ? `bg-danger`
+            : `bg-warning`
+        }"><b>${data.status}</b></span>`;
+
 
       document.getElementById("week1").innerHTML =
         ` <option value="${data.week}">${data.week}</option>` +
@@ -3479,7 +3490,7 @@ function getAssignedSubjectForLearningHub() {
 }
 
 function saveLessonPlan() {
-  warningtoast("Processing ... please wait");
+  openSpinnerModal();
   fetch(ip + "/api/teacher/save-lesson-plan", {
     method: "POST",
     headers: {
@@ -3512,6 +3523,7 @@ function saveLessonPlan() {
     })
 
     .then((data) => {
+      removeSpinnerModal();
       toastr.remove();
       if (data.success) {
         successtoast(data.message);
@@ -3527,7 +3539,6 @@ function loadLessonPage(value) {
   goTo("lesson-plan.html");
 }
 
-
 function processContent() {
   var CONTENT_ACTION = localStorage["CONTENT_ACTION"];
   var CONTENT_TYPE = localStorage["CONTENT_TYPE"];
@@ -3540,7 +3551,7 @@ function processContent() {
     } else {
       warningtoast("Check that no feild is empty.");
     }
-  } else if(CONTENT_ACTION == "EDIT"){
+  } else if (CONTENT_ACTION == "EDIT") {
     if (CONTENT != "" && TOPIC != "") {
       editMaterial(TOPIC, CONTENT, CONTENT_TYPE);
     } else {
@@ -3551,19 +3562,44 @@ function processContent() {
 
 function postMaterial(TOPIC, CONTENT, material_type) {
   openSpinnerModal();
-  fetch(ip + "/api/teacher/subject-material", {
-    method: "POST",
-    headers: {
+
+  body = "";
+  headers = "";
+
+  if (material_type == "UPLOAD") {
+    var file = document.getElementById("file-upload").files[0];
+
+    // USE FORM DATA
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("material_type", material_type);
+    formData.append("subject_id", localStorage["LH_SUBJECT_ID"]);
+
+    headers = {
+      Accept: "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    };
+
+    body = formData;
+  } else {
+    headers = {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
-    },
-    body: JSON.stringify({
+    };
+
+    body = JSON.stringify({
       material_type: material_type,
       topic: TOPIC,
       content: CONTENT,
       subject_id: localStorage["LH_SUBJECT_ID"],
-    }),
+    });
+  }
+
+  fetch(ip + "/api/teacher/subject-material", {
+    method: "POST",
+    headers: headers,
+    body: body,
   })
     .then(function (res) {
       console.log(res.status);
@@ -3601,7 +3637,7 @@ function editMaterial(TOPIC, CONTENT, material_type) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      material_id: JSON.parse('LH_EDIT_MATERIAL').id,
+      material_id: JSON.parse("LH_EDIT_MATERIAL").id,
       material_type: material_type,
       topic: TOPIC,
       content: CONTENT,
@@ -3634,10 +3670,10 @@ function editMaterial(TOPIC, CONTENT, material_type) {
     .catch((err) => console.log(err));
 }
 
-function deleteMaterial(material_id,material_type) {
- if(!confirm("You are about to delete this material ")){
+function deleteMaterial(material_id, material_type) {
+  if (!confirm("You are about to delete this material ")) {
     return 0;
- }
+  }
 
   openSpinnerModal();
   fetch(ip + "/api/teacher/subject-material", {
@@ -3649,7 +3685,7 @@ function deleteMaterial(material_id,material_type) {
     },
     body: JSON.stringify({
       material_id: material_id,
-      material_type: material_type
+      material_type: material_type,
     }),
   })
     .then(function (res) {
@@ -3678,6 +3714,7 @@ function deleteMaterial(material_id,material_type) {
 }
 
 function getLearningHubMaterials(subject_id) {
+  document.getElementById('subject').innerHTML = "LEARNING HUB FOR " + localStorage['LH_SUBJECT_CLASS'];
   fetch(ip + "/api/teacher/subject-material/" + subject_id, {
     method: "GET",
     headers: {
@@ -3695,31 +3732,38 @@ function getLearningHubMaterials(subject_id) {
     })
 
     .then((data) => {
-      if( data.note.length > 0){
+      // DISPLAY UPLOADED NOTE
+      if (data.note.length > 0) {
         document.getElementById("notes-content-main").innerHTML = ``;
         data.note.forEach((note) => {
           document.getElementById(
             "notes-content-main"
-          ).innerHTML += 
-                      `  <div class="card shadow mb-3">
-              <div onclick="collapseContent('note_${note.id}')" class="card-header">
-                  <small id="date_time" class="m-0 text-primary">${note.date}</small>
-                  <a onclick="deleteMaterial('${note.id}','NOTE')" target="_blank"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('note_${
+                note.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    note.date
+                  }</small>
+                  <a onclick="deleteMaterial('${
+                    note.id
+                  }','NOTE')" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:red;" class="fas fa-trash-alt"></i></i>
                   </a>
-                  <a onclick="content('EDIT','NOTE'); localStorage.setItem('LH_EDIT_MATERIAL',${JSON.stringify(note)
+                  <a onclick="content('EDIT','NOTE'); localStorage.setItem('LH_EDIT_MATERIAL',${JSON.stringify(
+                    note
+                  )
                     .replace(/'/g, "")
-                    .replace(
-                      /"/g,
-                      "'"
-                    )})" target="_blank"
+                    .replace(/"/g, "'")})" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:black;" class="far fa-edit"></i>
                   </a>
                   <br>
                   <span class="m-0 text-primary">
-                      <a id="topic" data-toggle="collapse" href="#demo">${note.topic}</a>
+                      <a id="topic" data-toggle="collapse" href="#demo">${
+                        note.topic
+                      }</a>
                   </span>
               </div>
               <div id="note_${note.id}" class="collapse"
@@ -3732,16 +3776,113 @@ function getLearningHubMaterials(subject_id) {
               </div>
               </div>`;
         });
-    }else{
-      document.getElementById("notes-content-main").innerHTML = ``;
-          document.getElementById(
-            "notes-content-main"
-          ).innerHTML += 
-                      ` <div class="card shadow mb-1">
+      } else {
+        document.getElementById("notes-content-main").innerHTML = ``;
+        document.getElementById(
+          "notes-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
                                                     <div class="card-body" 
                                                     style="justify-content:center; display:flex">No Note Here</div>
                                                 </div>`;
-    }
+      }
+
+      // DISPLAY UPLOADED CONTENT
+      if (data.upload.length > 0) {
+        document.getElementById("uploads-content-main").innerHTML = ``;
+        data.upload.forEach((upload) => {
+          document.getElementById(
+            "uploads-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+        <div onclick="collapseContent('upload_${
+          upload.id
+        }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${
+              upload.date
+            }</small>
+            <a onclick="deleteMaterial('${upload.id}','UPLOAD')" target="_blank"
+                class="btn  btn-circle btn-sm float-right">
+                <i style="color:red;" class="fas fa-trash-alt"></i></i>
+            </a>
+            <br>
+            <span class="m-0 text-primary">
+                <a id="topic" data-toggle="collapse" href="#demo">${
+                  upload.url
+                }</a>
+            </span>
+        </div>
+        <div id="upload_${upload.id}" class="collapse"
+            class="card-body text-dark bg-light">
+           
+ <object data="${
+   domain + "/backend/storage/app/public/fileupload/learninghub/" + upload.url
+ }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
+        <embed
+            src="${
+              domain +
+              "/backend/storage/app/public/fileupload/learninghub/" +
+              upload.url
+            }"
+            type="application/pdf" class="img-fluid">
+    </object>
+        </div>
+        </div>`;
+        });
+      } else {
+        document.getElementById("uploads-content-main").innerHTML = ``;
+        document.getElementById(
+          "uploads-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                              <div class="card-body" 
+                                              style="justify-content:center; display:flex">No upload here</div>
+                                          </div>`;
+      }
+
+      // DISPLAY VIDEO CONTENT
+      if (data.video.length > 0) {
+        document.getElementById("videos-content-main").innerHTML = ``;
+        c = 1;
+        data.video.forEach((video) => {
+
+          document.getElementById(
+            "videos-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+        <div onclick="collapseContent('video_${
+          video.id
+        }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${
+              video.date
+            }</small>
+            <a onclick="deleteMaterial('${video.id}','VIDEO')" target="_blank"
+                class="btn  btn-circle btn-sm float-right">
+                <i style="color:red;" class="fas fa-trash-alt"></i></i>
+            </a>
+            <br>
+            <span class="m-0 text-primary">
+                <a id="topic" data-toggle="collapse" href="#demo">Video ${
+                 c
+                }</a>
+            </span>
+        </div>
+        <div id="video_${video.id}" class="collapse"
+            class="card-body text-dark bg-light">
+            <iframe width="100%" height="300px"
+            src="${video.url}" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        </div>`;
+        c = c +1;
+        });
+      } else {
+        document.getElementById("videos-content-main").innerHTML = ``;
+        document.getElementById(
+          "videos-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                              <div class="card-body" 
+                                              style="justify-content:center; display:flex">No video here</div>
+                                          </div>`;
+      }
+
     })
     .catch((err) => console.log(err));
 }
@@ -4306,6 +4447,11 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
   parent.$("body").append(modal);
   parent.$("#spinnerModal").modal({ backdrop: "static", keyboard: false });
   parent.$("#spinnerModal").modal("show");
+}
+
+function removeSpinnerModal() {
+  parent.$("#spinnerModal").modal("hide");
+  parent.document.getElementById("spinnerModal").remove();
 }
 
 // TOAST

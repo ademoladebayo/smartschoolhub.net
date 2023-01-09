@@ -21,24 +21,41 @@ class TeacherRepository
 
         $TeacherModel->profile_status = 'ENABLED';
         $TeacherModel->password = Hash::make(strtolower($TeacherModel->first_name . "." . $TeacherModel->last_name));
-        $TeacherModel->save();
 
-        // CREATE TEACHER ID
-        if (strlen($TeacherModel->id) == 1) {
-            $TeacherModel->teacher_id = date("Y") . "-STF-00" . $TeacherModel->id;
-        } elseif (strlen($TeacherModel->id) == 2) {
-            $TeacherModel->teacher_id = date("Y") . "-STF-0" . $TeacherModel->id;
+        $last_teacher_id = TeacherModel::orderBy('id', 'DESC')->get();
+
+        if (count($last_teacher_id) > 0) {
+            // THE IS A PREVIOUS STAFF
+            $last_teacher_id = $last_teacher_id[0]->teacher_id;
+            $year = intval(explode("-", $last_teacher_id)[0]);
+            $number = intval(explode("-", $last_teacher_id)[2]);
+            $current_year = intval(date("Y"));
+
+            if ($current_year > $year) {
+                $TeacherModel->teacher_id = date("Y") . "-STF-" . "001";
+            } else {
+                $new_number = $number + 1;
+                if (strlen($new_number) == 1) {
+                    $TeacherModel->teacher_id = date("Y") . "-STF-00" . $new_number;
+                } elseif (strlen($new_number) == 2) {
+                    $TeacherModel->teacher_id = date("Y") . "-STF-0" . $new_number;
+                } else {
+                    $TeacherModel->teacher_id = date("Y") . "-STF-" . $new_number;
+                }
+            }
         } else {
-            $TeacherModel->teacher_id = date("Y") . "-STF-" . $TeacherModel->id;
+            $TeacherModel->teacher_id = date("Y") . "-STF-" . "001";
         }
+
+        $teacher_id =  $TeacherModel->teacher_id;
         $TeacherModel->save();
-        return response()->json(['success' => true, 'message' => 'Staff was created successfully.']);
+        return response()->json(['success' => true, 'message' => 'Staff ' . $teacher_id . ' was created successfully.']);
     }
 
     public function getAllTeacher()
     {
         $TeacherModel =  new TeacherModel();
-        return  $TeacherModel->with('assigned_class')->orderBy('id','DESC')->get();
+        return  $TeacherModel->with('assigned_class')->orderBy('id', 'DESC')->get();
     }
     public function updateTeacherClass($teacher_id, $class_id)
     {

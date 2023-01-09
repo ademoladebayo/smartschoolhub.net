@@ -170,7 +170,7 @@
                 <div class="modal-dialog modal-xl modal-dialog-scrollable">
                     <div class="modal-content">
                         <div style="display:flex; justify-content:center;" class="modal-header">
-                            <h5 id="subject" class="modal-title" id="staticBackdropLabel">LEARNING HUB FOR ENGLISH </h5>
+                            <h5 id="subject" class="modal-title" id="staticBackdropLabel">LEARNING HUB FOR </h5>
                             <button style="border-style:none; margin-left: 20px; margin-top: 5px;" type="button"
                                 class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b>X</b></button>
                         </div>
@@ -317,6 +317,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="tab-pane fade" id="notes-content" role="tabpanel"
                                             aria-labelledby="pills-notes-tab">
                                             <div class="card shadow mb-1">
@@ -334,88 +335,57 @@
                                             </div>
 
                                         </div>
+
                                         <div class="tab-pane fade" id="uploads-content" role="tabpanel"
                                             aria-labelledby="pills-uploads-tab">
                                             <div class="card shadow mb-1">
                                                 <br />
-                                                <input
-                                                    onchange="document.getElementById('upload-btn').innerHTML += this.value.replace(/.*[\/\\]/, '')"
+                                                <input id="file-upload"
+                                                    onchange="checkfile(this); document.getElementById('upload-btn').innerHTML += this.value.replace(/.*[\/\\]/, '')"
                                                     style="text-align: center; margin: auto;" type="file">
                                                 <br />
-                                                <a id="upload-btn" onclick="" href="#" class="btn btn-primary"><i
-                                                        class="fab fa-slideshare"></i> Upload </a>
+                                                <a id="upload-btn" onclick="postMaterial('','','UPLOAD')" href="#"
+                                                    class="btn btn-primary" hidden><i class="fab fa-slideshare"></i>
+                                                    Upload </a>
                                             </div>
                                             <br />
-
-
-                                            <div class="card shadow mb-3">
-                                                <div class="card-header">
-                                                    <small class="m-0 text-primary">2021-01-19 10:48:39</small>
-                                                    <a href="url" target="_blank"
-                                                        class="btn  btn-circle btn-sm float-right">
-                                                        <i style="color:green;" class="fas fa-file-download"></i>
-                                                    </a>
-
-                                                    <a href="" target="_blank"
-                                                        class="btn  btn-circle btn-sm float-right">
-                                                        <i style="color:red;" class="fas fa-trash-alt"></i></i>
-                                                    </a>
-                                                    <br>
-                                                    <span class="m-0 text-primary">What is a noun - document?</span>
-                                                </div>
-                                                <div class="card-body">
-                                                    <object data="https://www.sac.edu/AcademicProgs/HSS/LearningCenter/Handouts/NounsHandout.pdf"
-                                                        type="application/pdf" class="img-fluid"
-                                                        style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey"
-                                                        onmouseover="takeattendance(3683, 2)">
-                                                        <embed src="https://www.sac.edu/AcademicProgs/HSS/LearningCenter/Handouts/NounsHandout.pdf"
-                                                            type="application/pdf" class="img-fluid">
-                                                    </object>
+                                            <div id="uploads-content-main">
+                                                <div class="card shadow mb-1">
+                                                    <div class="card-body" style="justify-content:center; display:flex">
+                                                        Loading . . . </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="tab-pane fade" id="videos-content" role="tabpanel"
                                             aria-labelledby="pills-videos-tab">
+                                            <div onclick="" class="card-header"
+                                                style="display: flex; justify-content: center; color: black;">
+                                                <small>
+                                                    <span style="padding: 10px; width: 1000px;" class="m-0 ">
+                                                        <i><b id="video_link"
+                                                                oninput="checkLinkValidity(this.innerHTML)"
+                                                                onclick="clearPlaceholder()"
+                                                                contenteditable="true">Paste youtube link here</b></i>
+                                                    </span>
+                                                </small>
+                                            </div>
                                             <div class="card shadow mb-1">
-                                                <a onclick="" href="#" class="btn btn-primary"><i
-                                                        class="fas fa-video"></i></i> Upload New Vidoe</a>
+                                                <a id="video_upd"
+                                                    onclick="postMaterial('',document.getElementById('video_link').innerHTML,'VIDEO')"
+                                                    href="#" class="btn btn-primary" hidden><i
+                                                        class="fas fa-video"></i></i> Upload Video</a>
                                             </div>
                                             <br />
-                                            <!-- <div class="card shadow mb-1">
-                                                <div class="card-body">No Video Here</div>
-                                            </div> -->
 
-
-                                            <div class="card shadow mb-3">
-                                                <div class="card-header">
-                                                    <small class="m-0 text-primary">2021-01-28 11:45:06</small>
-                                                    <a href="" target="_blank"
-                                                        class="btn  btn-circle btn-sm float-right">
-                                                        <i style="color:red;" class="fas fa-trash-alt"></i></i>
-                                                    </a>
-                                                    <a href="url" target="_blank"
-                                                        class="btn  btn-circle btn-sm float-right">
-                                                        <i style="color:black;" class="far fa-edit"></i>
-                                                        <!-- <i style="color:green;" class="far fa-edit"></i> -->
-                                                    </a>
-                                                    <br>
-                                                    <span class="m-0 text-primary">What is a noun ? - video</span>
-                                                </div>
-                                                <div class="card-body text-dark bg-light">
-                                                    <div class="card shadow mb-1">
-                                                        <iframe width="auto" height="480"
-                                                            src="https://www.youtube.com/embed/9cu7C07pNbA"
-                                                            title="SMARTSCHOOLHUB.NET ADVERT" frameborder="0"
-                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                            allowfullscreen></iframe>
-                                                    </div>
+                                            <div id="videos-content-main">
+                                                <div class="card shadow mb-1">
+                                                    <div class="card-body" style="justify-content:center; display:flex">
+                                                        Loading . . . </div>
                                                 </div>
                                             </div>
-
-
-
-
                                         </div>
+
                                         <div class="tab-pane fade" id="assignments-content" role="tabpanel"
                                             aria-labelledby="pills-assignments-tab">
                                             <div class="card shadow mb-1">
@@ -525,15 +495,36 @@
 
 
         function checkfile(sender) {
-            var validExts = new Array(".xlsx", ".xls", ".csv");
+            //var validExts = new Array(".xlsx", ".xls", ".csv", ".doc", ".docx", ".pdf", ".txt");
+            var validExts = new Array(".pdf");
             var fileExt = sender.value;
             fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
             if (validExts.indexOf(fileExt) < 0) {
                 alert("Invalid file selected, valid files are of " +
                     validExts.toString() + " types.");
+                sender.value = "";
                 return false;
+            } else {
+                document.getElementById("upload-btn").removeAttribute("hidden");
+                return true;
             }
-            else return true;
+        }
+
+
+        function clearPlaceholder() {
+            element = document.getElementById("video_link").innerHTML.trim();
+            if (element == "Paste youtube link here") {
+                document.getElementById("video_link").innerHTML = "";
+            }
+        }
+
+        function checkLinkValidity(link) {
+            link = link.trim();
+            if (link.includes("https://") && link.includes("youtu")) {
+                document.getElementById("video_upd").hidden = false;
+            }else {
+                document.getElementById("video_upd").hidden = true;
+            }
         }
 
     </script>

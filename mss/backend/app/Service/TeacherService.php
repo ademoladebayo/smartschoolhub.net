@@ -388,22 +388,46 @@ class TeacherService
     // LESSON NOTE
     public function lessonPlan(Request $request)
     {
-        return LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('week', $request->week)->get()[0];
+        if ($request->user_type == "ADMIN") {
+
+            if ($request->status == "ALL") {
+                $lessons =  LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->with('subject')->get();
+                foreach ($lessons as $lesson) {
+                    $teacher = TeacherModel::find($lesson->subject->teacher);
+                    $lesson["teacher"] = $teacher->title . " " . $teacher->first_name . " " . $teacher->last_name;
+                }
+            } else {
+                $lessons =  LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('status', $request->status)->with('subject')->get();
+                foreach ($lessons as $lesson) {
+                    $teacher = TeacherModel::find($lesson->subject->teacher);
+                    $lesson["teacher"] = $teacher->title . " " . $teacher->first_name . " " . $teacher->last_name;
+                }
+            }
+
+            return $lessons;
+        } else {
+            return LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('week', $request->week)->get()[0];
+        }
     }
 
     public function savelessonPlan(Request $request)
     {
         $LessonPlanModel = LessonPlanModel::find($request->id);
-        $LessonPlanModel->week = $request->week;
-        $LessonPlanModel->instructional_material = $request->instructional_material;
-        $LessonPlanModel->previous_knowledge = $request->previous_knowledge;
-        $LessonPlanModel->previous_lesson = $request->previous_lesson;
-        $LessonPlanModel->behavioural_objective = $request->behavioural_objective;
-        $LessonPlanModel->content = $request->content;
-        $LessonPlanModel->presentation = $request->presentation;
-        $LessonPlanModel->evaluation = $request->evaluation;
-        $LessonPlanModel->conclusion = $request->conclusion;
-        $LessonPlanModel->assignment = $request->assignment;
+        if ($request->user_type == "ADMIN") {
+            $LessonPlanModel->status = $request->status."D";
+        } else {
+            $LessonPlanModel->week = $request->week;
+            $LessonPlanModel->instructional_material = $request->instructional_material;
+            $LessonPlanModel->previous_knowledge = $request->previous_knowledge;
+            $LessonPlanModel->previous_lesson = $request->previous_lesson;
+            $LessonPlanModel->behavioural_objective = $request->behavioural_objective;
+            $LessonPlanModel->content = $request->content;
+            $LessonPlanModel->presentation = $request->presentation;
+            $LessonPlanModel->evaluation = $request->evaluation;
+            $LessonPlanModel->conclusion = $request->conclusion;
+            $LessonPlanModel->assignment = $request->assignment;
+            $LessonPlanModel->status = "IN-REVIEW";
+        }
         $LessonPlanModel->save();
         return response()->json(['success' => true, 'message' => 'Lesson plan has been saved.']);
     }
@@ -411,6 +435,7 @@ class TeacherService
     // LEARNING HUB
     public function postSubjectMaterial(Request $request)
     {
+        Log::alert($request);
         if ($request->material_type == "NOTE") {
             // CREATE NEW NOTE
             $note = new NoteModel();
@@ -430,12 +455,29 @@ class TeacherService
         } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
             // NEW UPLOAD OR VIDEO
             $upload = new UploadModel();
+            if ($request->material_type == "UPLOAD") {
+                // GET FILENAME
+                $file_name = $_FILES['file']['name'];
+                $request->file->storeAs('public/fileupload/learninghub', $file_name);
+            } else {
+                $file_name = $request->content;
+                if (str_contains($file_name, "watch?v=")) {
+                    $file_name =  str_replace("watch?v=", "embed/", $file_name);
+                }
+
+                if (str_contains($file_name, "youtu.be")) {
+                    $file_name =  str_replace("youtu.be", "youtube.com/embed", $file_name);
+                }
+            }
+
             $upload->subject_id = $request->subject_id;
-            $upload->upload_type = $request->content;
-            $upload->url = $request->url;
+            $upload->upload_type = $request->material_type;
+            $upload->url = $file_name;
             $upload->date = date("Y-m-d") . " | " . date("h:i a");
             $upload->save();
         }
+
+
 
         return response()->json(['success' => true, 'message' => 'Upload was successful.']);
     }
@@ -485,7 +527,7 @@ class TeacherService
     {
         $note = NoteModel::Where('subject_id', $subject_id)->orderBy('id', 'DESC')->get();
 
-        $upload = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'FILE')->orderBy('id', 'DESC')->get();
+        $upload = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'UPLOAD')->orderBy('id', 'DESC')->get();
 
         $video = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'VIDEO')->orderBy('id', 'DESC')->get();
 
