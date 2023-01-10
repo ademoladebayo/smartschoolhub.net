@@ -4942,6 +4942,9 @@ function saveControl() {
       register_subject: document.getElementById("register_subject").checked
         ? "YES"
         : "NO",
+        update_debitor_list:document.getElementById("update_debitor_list").checked
+        ? "YES"
+        : "NO",
       check_debitors: document.getElementById("check_debitor").checked
         ? document.getElementById("check_debitor_percentage").value + "-YES"
         : document.getElementById("check_debitor_percentage").value + "-NO",
@@ -5009,6 +5012,10 @@ function getControl() {
 
       document.getElementById("resumption_time").value =
         data.max_resumption_time.split("-")[0];
+
+        data.debitor_list_last_update.split("-")[1] == "YES"
+        ? (document.getElementById("update_debitor_list").checked = true)
+        : "";
     })
     .catch((err) => console.log(err));
 }

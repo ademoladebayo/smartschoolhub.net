@@ -1042,20 +1042,19 @@ function getRegisteredSubjectForTable() {
     .then((data) => {
       document.getElementById("subject_table").innerHTML = ``;
       for (i in data) {
-        if (data[i].subject_type == "COMPULSORY") {
           document.getElementById("subject_table").innerHTML += `
             <tr>
     
                   <td>${c}.</td>
-                  <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
+                  <td> <small><i class="${data[i].subject_type == "COMPULSORY" ? `fa fa-star` : `fa fa-shapes`}" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   <td>
-                    <button type="button" class="btn btn-primary btn-block"
-                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
-                        Materials
-                    </button>
-                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}')">
+                  <a onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].subject_id}'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name}'); getLearningHubMaterials('${data[i].subject_id}');" type="button" class="btn btn-primary btn-block"
+                  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                  Materials
+              </a     >
+                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].subject_id}-${data[i].subject_name}')">
                       Lesson Plan
                     </button>
                  </td>
@@ -1064,30 +1063,6 @@ function getRegisteredSubjectForTable() {
                   
         
               <tr>`;
-        } else {
-          document.getElementById("subject_table").innerHTML += `
-            <tr>
-    
-                  <td>${c}.</td>
-                  <td> <small><i class="fa fa-shapes" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
-                  <td>${data[i].subject_type}</td>
-                  <td>${data[i].teacher}</td>
-                  <td>
-                    <button type="button" class="btn btn-primary btn-block"
-                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
-                        Materials
-                    </button>
-                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}')">
-                      Lesson Plan
-                    </button>
-                 </td>
-                  
-               
-                  
-        
-              <tr>`;
-        }
-
         c = c + 1;
       }
       document.getElementById("number_registered").innerHTML =
@@ -1811,12 +1786,12 @@ function getAttendanceSummary(value) {
     .catch((err) => console.log(err));
 }
 
-// LESSON PLAN
+// LESSON PLAN AND LEARNING HUB
 function getLessonPlan(week) {
   if (week == "") {
     week = document.getElementById("week").value;
   }
-
+openSpinnerModal();
   fetch(ip + "/api/teacher/lesson-plan", {
     method: "POST",
     headers: {
@@ -1839,11 +1814,18 @@ function getLessonPlan(week) {
     })
 
     .then((data) => {
+      removeSpinnerModal();
       document.getElementById("lesson_plan_for").innerHTML =
         "LESSON PLAN FOR " +
-        localStorage["LESSON-PLAN"].split("-")[1] +
-        " " +
-        localStorage["LESSON-PLAN"].split("-")[2];
+        localStorage["LESSON-PLAN"].split("-")[1];
+
+        document.getElementById("lp_status").innerHTML = `<span class="badge ${
+          data.status == "APPROVED"
+            ? `bg-success`
+            : data.status == "DISAPPROVED"
+            ? `bg-danger`
+            : `bg-warning`
+        }"><b>${data.status}</b></span>`;
 
       document.getElementById("week1").innerHTML =
         ` <option value="${data.week}">${data.week}</option>` +
@@ -1869,6 +1851,158 @@ function getLessonPlan(week) {
 function loadLessonPage(value) {
   localStorage.setItem("LESSON-PLAN", value);
   goTo("lesson-plan.html");
+}
+
+function getLearningHubMaterials(subject_id) {
+  document.getElementById('subject').innerHTML = "LEARNING HUB FOR " + localStorage['LH_SUBJECT_CLASS'];
+  fetch(ip + "/api/teacher/subject-material/" + subject_id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      // DISPLAY UPLOADED NOTE
+      if (data.note.length > 0) {
+        document.getElementById("notes-content-main").innerHTML = ``;
+        data.note.forEach((note) => {
+          document.getElementById(
+            "notes-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('note_${
+                note.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    note.date
+                  }</small>
+                  <br>
+                  <span class="m-0 text-primary">
+                      <a id="topic" data-toggle="collapse" href="#demo">${
+                        note.topic
+                      }</a>
+                  </span>
+              </div>
+              <div id="note_${note.id}" class="collapse"
+                  class="card-body text-dark bg-light">
+                  <div class="p-2"
+                      style="overflow: auto; height: auto; border:1px solid black; color: black;">
+                    ${note.content}
+
+                  </div>
+              </div>
+              </div>`;
+        });
+      } else {
+        document.getElementById("notes-content-main").innerHTML = ``;
+        document.getElementById(
+          "notes-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                                    <div class="card-body" 
+                                                    style="justify-content:center; display:flex">No Note Here</div>
+                                                </div>`;
+      }
+
+      // DISPLAY UPLOADED CONTENT
+      if (data.upload.length > 0) {
+        document.getElementById("uploads-content-main").innerHTML = ``;
+        data.upload.forEach((upload) => {
+          document.getElementById(
+            "uploads-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+        <div onclick="collapseContent('upload_${
+          upload.id
+        }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${
+              upload.date
+            }</small>
+            <br>
+            <span class="m-0 text-primary">
+                <a id="topic" data-toggle="collapse" href="#demo">${
+                  upload.url
+                }</a>
+            </span>
+        </div>
+        <div id="upload_${upload.id}" class="collapse"
+            class="card-body text-dark bg-light">
+           
+ <object data="${
+   domain + "/backend/storage/app/public/fileupload/learninghub/" + upload.url
+ }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
+        <embed
+            src="${
+              domain +
+              "/backend/storage/app/public/fileupload/learninghub/" +
+              upload.url
+            }"
+            type="application/pdf" class="img-fluid">
+    </object>
+        </div>
+        </div>`;
+        });
+      } else {
+        document.getElementById("uploads-content-main").innerHTML = ``;
+        document.getElementById(
+          "uploads-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                              <div class="card-body" 
+                                              style="justify-content:center; display:flex">No upload here</div>
+                                          </div>`;
+      }
+
+      // DISPLAY VIDEO CONTENT
+      if (data.video.length > 0) {
+        document.getElementById("videos-content-main").innerHTML = ``;
+        c = data.video.length;
+        data.video.forEach((video) => {
+
+          document.getElementById(
+            "videos-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+        <div onclick="collapseContent('video_${
+          video.id
+        }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${
+              video.date
+            }</small>
+            <br>
+            <span class="m-0 text-primary">
+                <a id="topic" data-toggle="collapse" href="#demo">Video ${
+                 c
+                }</a>
+            </span>
+        </div>
+        <div id="video_${video.id}" class="collapse"
+            class="card-body text-dark bg-light">
+            <iframe width="100%" height="300px"
+            src="${video.url}" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        </div>`;
+        c = c - 1;
+        });
+      } else {
+        document.getElementById("videos-content-main").innerHTML = ``;
+        document.getElementById(
+          "videos-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                              <div class="card-body" 
+                                              style="justify-content:center; display:flex">No video here</div>
+                                          </div>`;
+      }
+
+    })
+    .catch((err) => console.log(err));
 }
 
 // ID CARD
@@ -2570,6 +2704,63 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     .$("#authenticationModal")
     .modal({ backdrop: "static", keyboard: false });
   parent.$("#authenticationModal").modal("show");
+}
+
+function openSpinnerModal() {
+  modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body text-center">
+        <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-warning" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-dark" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+        </div>
+
+        <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <b>Processing ...</b>
+            </h4>
+            <br>
+    </div>
+</div>
+</div>
+`;
+
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    return 0;
+  }
+
+  parent.$("body").append(modal);
+  parent.$("#spinnerModal").modal({ backdrop: "static", keyboard: false });
+  parent.$("#spinnerModal").modal("show");
+}
+
+function removeSpinnerModal() {
+  parent.$("#spinnerModal").modal("hide");
+  parent.document.getElementById("spinnerModal").remove();
 }
 
 // TOAST

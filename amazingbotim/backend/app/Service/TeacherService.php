@@ -13,6 +13,9 @@ use App\Model\SubjectRegistrationModel;
 use App\Model\SubjectModel;
 use App\Model\TeacherModel;
 use App\Model\LessonPlanModel;
+use App\Model\NoteModel;
+use App\Model\AssignmentModel;
+use App\Model\UploadModel;
 use App\Repository\GradeSettingsRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SubjectRepository;
@@ -385,23 +388,151 @@ class TeacherService
     // LESSON NOTE
     public function lessonPlan(Request $request)
     {
-        return LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('week', $request->week)->get()[0];
+        if ($request->user_type == "ADMIN") {
+
+            if ($request->status == "ALL") {
+                $lessons =  LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->with('subject')->get();
+                foreach ($lessons as $lesson) {
+                    $teacher = TeacherModel::find($lesson->subject->teacher);
+                    $lesson["teacher"] = $teacher->title . " " . $teacher->first_name . " " . $teacher->last_name;
+                }
+            } else {
+                $lessons =  LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('status', $request->status)->with('subject')->get();
+                foreach ($lessons as $lesson) {
+                    $teacher = TeacherModel::find($lesson->subject->teacher);
+                    $lesson["teacher"] = $teacher->title . " " . $teacher->first_name . " " . $teacher->last_name;
+                }
+            }
+
+            return $lessons;
+        } else {
+            return LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('week', $request->week)->get()[0];
+        }
     }
 
     public function savelessonPlan(Request $request)
     {
         $LessonPlanModel = LessonPlanModel::find($request->id);
-        $LessonPlanModel->week = $request->week;
-        $LessonPlanModel->instructional_material = $request->instructional_material;
-        $LessonPlanModel->previous_knowledge = $request->previous_knowledge;
-        $LessonPlanModel->previous_lesson = $request->previous_lesson;
-        $LessonPlanModel->behavioural_objective = $request->behavioural_objective;
-        $LessonPlanModel->content = $request->content;
-        $LessonPlanModel->presentation = $request->presentation;
-        $LessonPlanModel->evaluation = $request->evaluation;
-        $LessonPlanModel->conclusion = $request->conclusion;
-        $LessonPlanModel->assignment = $request->assignment;
+        if ($request->user_type == "ADMIN") {
+            $LessonPlanModel->status = $request->status."D";
+        } else {
+            $LessonPlanModel->week = $request->week;
+            $LessonPlanModel->instructional_material = $request->instructional_material;
+            $LessonPlanModel->previous_knowledge = $request->previous_knowledge;
+            $LessonPlanModel->previous_lesson = $request->previous_lesson;
+            $LessonPlanModel->behavioural_objective = $request->behavioural_objective;
+            $LessonPlanModel->content = $request->content;
+            $LessonPlanModel->presentation = $request->presentation;
+            $LessonPlanModel->evaluation = $request->evaluation;
+            $LessonPlanModel->conclusion = $request->conclusion;
+            $LessonPlanModel->assignment = $request->assignment;
+            $LessonPlanModel->status = "IN-REVIEW";
+        }
         $LessonPlanModel->save();
         return response()->json(['success' => true, 'message' => 'Lesson plan has been saved.']);
+    }
+
+    // LEARNING HUB
+    public function postSubjectMaterial(Request $request)
+    {
+        Log::alert($request);
+        if ($request->material_type == "NOTE") {
+            // CREATE NEW NOTE
+            $note = new NoteModel();
+            $note->subject_id = $request->subject_id;
+            $note->content = $request->content;
+            $note->topic = $request->topic;
+            $note->date = date("Y-m-d") . " | " . date("h:i a");
+            $note->save();
+        } else if ($request->material_type == "ASSIGNMENT") {
+            // CREATE NEW ASSIGNMENT
+            $assignment = new AssignmentModel();
+            $assignment->subject_id = $request->subject_id;
+            $assignment->content = $request->content;
+            $assignment->topic = $request->topic;
+            $assignment->date = date("Y-m-d") . " | " . date("h:i a");
+            $assignment->save();
+        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
+            // NEW UPLOAD OR VIDEO
+            $upload = new UploadModel();
+            if ($request->material_type == "UPLOAD") {
+                // GET FILENAME
+                $file_name = $_FILES['file']['name'];
+                $request->file->storeAs('public/fileupload/learninghub', $file_name);
+            } else {
+                $file_name = $request->content;
+                if (str_contains($file_name, "watch?v=")) {
+                    $file_name =  str_replace("watch?v=", "embed/", $file_name);
+                }
+
+                if (str_contains($file_name, "youtu.be")) {
+                    $file_name =  str_replace("youtu.be", "youtube.com/embed", $file_name);
+                }
+            }
+
+            $upload->subject_id = $request->subject_id;
+            $upload->upload_type = $request->material_type;
+            $upload->url = $file_name;
+            $upload->date = date("Y-m-d") . " | " . date("h:i a");
+            $upload->save();
+        }
+
+
+
+        return response()->json(['success' => true, 'message' => 'Upload was successful.']);
+    }
+
+    public function editSubjectMaterial(Request $request)
+    {
+        if ($request->material_type == "NOTE") {
+            // CREATE NEW NOTE
+            $note = NoteModel::find($request->material_id);
+            $note->subject_id = $request->subject_id;
+            $note->content = $request->content;
+            $note->topic = $request->topic;
+            $note->date = date("Y-m-d") . " | " . date("h:i a");
+            $note->save();
+        } else if ($request->material_type == "ASSIGNMENT") {
+            // CREATE NEW ASSIGNMENT
+            $assignment =  AssignmentModel::find($request->material_id);
+            $assignment->subject_id = $request->subject_id;
+            $assignment->content = $request->content;
+            $assignment->topic = $request->topic;
+            $assignment->date = date("Y-m-d") . " | " . date("h:i a");
+            $assignment->save();
+        }
+
+        return response()->json(['success' => true, 'message' => 'Update was successful.']);
+    }
+
+    public function deleteSubjectMaterial(Request $request)
+    {
+        if ($request->material_type == "NOTE") {
+            $note = NoteModel::find($request->material_id);
+            $note->delete();
+        } else if ($request->material_type == "ASSIGNMENT") {
+            $assignment =  AssignmentModel::find($request->material_id);
+            $assignment->delete();
+        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
+            $upload = UploadModel::find($request->material_id);
+            $upload->delete();
+
+            // DELETE ACTUAL FILE
+        }
+
+        return response()->json(['success' => true, 'message' => 'Deletion was successful.']);
+    }
+
+    public function getSubjectMaterial($subject_id)
+    {
+        $note = NoteModel::Where('subject_id', $subject_id)->orderBy('id', 'DESC')->get();
+
+        $upload = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'UPLOAD')->orderBy('id', 'DESC')->get();
+
+        $video = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'VIDEO')->orderBy('id', 'DESC')->get();
+
+        $assignment = AssignmentModel::Where('subject_id', $subject_id)->orderBy('id', 'DESC')->get();
+
+        return response()->json(['note' => $note, 'upload' => $upload, 'video' => $video, 'assignment' => $assignment]);
     }
 }

@@ -3840,7 +3840,7 @@ function getLearningHubMaterials(subject_id) {
       // DISPLAY VIDEO CONTENT
       if (data.video.length > 0) {
         document.getElementById("videos-content-main").innerHTML = ``;
-        c = 1;
+        c = data.video.length;
         data.video.forEach((video) => {
 
           document.getElementById(
@@ -3871,7 +3871,7 @@ function getLearningHubMaterials(subject_id) {
             allowfullscreen></iframe>
         </div>
         </div>`;
-        c = c +1;
+        c = c - 1;
         });
       } else {
         document.getElementById("videos-content-main").innerHTML = ``;

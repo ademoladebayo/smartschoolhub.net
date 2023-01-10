@@ -254,9 +254,9 @@ class StudentService
                 }
 
                 $StudentModel =  StudentModel::find($request->student_id);
-                if ($StudentModel->can_access_transcript == "NO") {
-                    return  response(['success' => false, 'message' => "ACCESS TO " . $request->session . " " . $request->term . " RESULT DENIED, PLEASE CONTACT YOUR SCHOOL ADMIN."]);
-                }
+                // if ($StudentModel->can_access_transcript == "NO") {
+                //     return  response(['success' => false, 'message' => "ACCESS TO " . $request->session . " " . $request->term . " RESULT DENIED, PLEASE CONTACT YOUR SCHOOL ADMIN."]);
+                // }
             }
         }
 

@@ -21,6 +21,7 @@ use App\Repository\GradeSettingsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AdminService
 {
@@ -155,6 +156,7 @@ class AdminService
     // STUDENT IMAGE
     public function uploadImage(Request $request)
     {
+        Log::alert($request);
         if ($request->hasFile('file')) {
 
             if ($request->type == "STUDENT") {
@@ -376,6 +378,7 @@ class AdminService
         $ControlPanelModel->register_subject = $request->register_subject;
         $ControlPanelModel->check_debitors = $request->check_debitors;
         $ControlPanelModel->max_resumption_time = $request->max_resumption;
+        $ControlPanelModel->debitor_list_last_update = explode("-", $ControlPanelModel->debitor_list_last_update)[0]."-".$request->update_debitor_list;
         $ControlPanelModel->save();
 
         return response()->json(['success' => true, 'message' => "Control Saved."]);

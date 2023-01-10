@@ -282,6 +282,21 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         Route::post('teacher/lesson-plan', 'TeacherController@lessonPlan', function () {
         })->middleware(Cors::class);
+
+
+        // TEACHER {LEARNIMG HUB}
+        Route::post('teacher/subject-material', 'TeacherController@postSubjectMaterial', function () {
+        })->middleware(Cors::class);
+
+        Route::put('teacher/subject-material', 'TeacherController@editSubjectMaterial', function () {
+        })->middleware(Cors::class);
+
+        Route::get('teacher/subject-material/{subject_id}', 'TeacherController@getSubjectMaterial', function () {
+        })->middleware(Cors::class);
+
+        Route::delete('teacher/subject-material', 'TeacherController@deleteSubjectMaterial', function () {
+        })->middleware(Cors::class);
+
     });
 
     // =============================================================================

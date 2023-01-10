@@ -13,6 +13,7 @@ use App\Model\OptionalFeeRequestModel;
 use App\Model\PortalSubscription;
 use App\Model\SessionModel;
 use App\Model\StudentModel;
+use App\Model\ControlPanelModel;
 use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
@@ -245,9 +246,14 @@ class BursaryService
     // DEBITOR MANAGEMENT  
     public function syncLastestDebitor(Request $request)
     {
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        // CHECK IF ACTION IS PERMITTED 
+        if (explode("-", $ControlPanelModel->debitor_list_last_update)[1] == "NO") {
+            return response(['success' => false, 'message' => "This action is locked, Contact your admin."]);
+        }
 
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class")->where("profile_status","ENABLED")->get();
+        $all_student = StudentModel::select("id", "class")->where("profile_status", "ENABLED")->get();
         $c = 0;
         foreach ($all_student as $student) {
             $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
@@ -280,6 +286,11 @@ class BursaryService
 
             $c = $c + 1;
         }
+
+        // UPDATE DEBITOR LIST LAST UPDATE
+        $ControlPanelModel->debitor_list_last_update = $request->session . " " . $request->term . "_" . date("l jS \of F Y h:i:s A") . "-NO";
+        $ControlPanelModel->save();
+
         return response(['success' => true, 'message' => "{" . $c . "} Sync was successful."]);
     }
 
@@ -346,9 +357,11 @@ class BursaryService
     // DEBITORS LIST
     public function allDebitor(Request $request)
     {
-        $last_checked = "";
+        $ControlPanelModel =  ControlPanelModel::find(1);
+        $last_checked = explode("-", $ControlPanelModel->debitor_list_last_update)[0];
+
         //LOOP THROUGH ALL STUDENT 
-        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id","graduation","profile_status")->orderBy('id','DESC')->with("class")->get();
+        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id", "graduation", "profile_status")->orderBy('id', 'DESC')->with("class")->get();
         //$all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->whereNotIn('class', ['GRADUATED'])->with("class")->get();
         $c = 0;
         foreach ($all_student as $student) {
@@ -358,16 +371,16 @@ class BursaryService
             $arrears = 0;
             $total_balance = 0;
 
-            if ($student->class == "GRADUATED" || $student->profile_status == "DISABLED" ) {
+            if ($student->class == "GRADUATED" || $student->profile_status == "DISABLED") {
                 Log::alert("IF : " . $student->first_name);
-                if( $student->class == "GRADUATED"){
+                if ($student->class == "GRADUATED") {
                     Log::alert("GRADUATION : " . $student->graduation);
                     $class_before_graduation =  explode("_", $student->graduation)[0];
                     $session_before_graduation = explode("_", $student->graduation)[1];
                     $term_before_graduation = explode("_", $student->graduation)[2];
-                    $student->graduation_details = "GRADUATED (".$session_before_graduation."-".$term_before_graduation.")";
-               }
-               
+                    $student->graduation_details = "GRADUATED (" . $session_before_graduation . "-" . $term_before_graduation . ")";
+                }
+
                 // SO FOR EACH GRADUATED STUDENT GET THEIR LAST CLASS_SESSION_TERM
                 // $expected_fee = $this->getPayableForClass($class_before_graduation, $session_before_graduation, $term_before_graduation);
                 // $optional_fee = $this->getOptionalFeeRequest($student->id, $session_before_graduation, $term_before_graduation);
@@ -386,7 +399,6 @@ class BursaryService
             Log::alert("ARREARS : " . $arrears);
 
             if (count($arrears) > 0) {
-                $last_checked = $arrears[0]->last_checked;
                 $arrears = $arrears[0]->amount;
             } else {
                 $arrears = 0;

@@ -1,4 +1,3 @@
-
 // import Config from '../../utils/js/config.js';
 
 // SOUND VARIABLES
@@ -8,7 +7,7 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 //const config = new Config();
 
 var ip = localStorage["ip"];
-var domain = localStorage["domain"]; 
+var domain = localStorage["domain"];
 
 // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -251,6 +250,112 @@ function loadSideNav(page) {
     
     
     `;
+  } else if (username.includes("PRINCIPAL")) {
+    document.getElementById("side_nav").innerHTML = `
+    <ul class="nav nav-sidebar-menu sidebar-toggle-view">
+    <li class="nav-item">
+        <a id="dashboard" href="dashboard.html" class="nav-link"><i
+                class="flaticon-dashboard"></i><span>Dashboard</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a   id="students" href="students.html" class="nav-link"><i class="flaticon-classmates"></i><span>Student Management</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="teachers" href="teachers.html" class="nav-link"> <i class="flaticon-multiple-users-silhouette"></i>
+        <span>Staff Management</span></a>
+    </li>
+
+    <li class="nav-item">
+          <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Class Management</span></a>
+    </li>
+
+    <li class="nav-item">
+          <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Subject Management</span></a>
+    </li>
+
+    <li class="nav-item">
+          <a  id="lesson-plan" href="lesson-plan-management.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Lesson Management</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <span>Student Attendance</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <span>Staff Attendance</span></a>
+    </li>
+
+  
+    <li class="nav-item">
+        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
+        <span>Grade Settings</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="transcript" href="student-transcript.html" class="nav-link"> <i class="fas fa-poll"></i></i>
+        <span>Student Transcript</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+    </li>
+
+
+    
+    <li class="nav-item">
+        <a  id="change-password" href="#?change-password.html" class="nav-link"><i
+                class="flaticon-settings"></i><span>Change Password</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+                Out</span></a>
+    </li>
+
+    <!-- <li class="nav-item">
+      <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+        domain + "/bursary/dashboard.html"
+      }')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
+    </li> !-->
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <!-- <li class="nav-item">
+        <a href="" class="nav-link"><i class=""></i><span></span></a>
+    </li>
+    <li class="nav-item">
+        <a href="" class="nav-link"><i class=""></i><span></span></a>
+    </li> -->
+
+
+</ul>
+    
+    
+    
+    `;
+ 
   } else {
     document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
@@ -276,6 +381,11 @@ function loadSideNav(page) {
     <li class="nav-item">
           <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Subject Management</span></a>
+    </li>
+
+    <li class="nav-item">
+          <a  id="lesson-plan" href="lesson-plan-management.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <span>Lesson Management</span></a>
     </li>
 
     <li class="nav-item">
@@ -513,10 +623,7 @@ function getAllTeacherForTable() {
         <td>
         <a onmouseover="viewTeacher(${JSON.stringify(data[i])
           .replace(/'/g, "")
-          .replace(
-            /"/g,
-            "'"
-          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+          .replace(/"/g, "'")})" class="btn btn-primary text-white" data-bs-toggle="modal"
                                                 data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
         <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
           data[i]
@@ -1504,9 +1611,7 @@ function getAllStudentForTranscript() {
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
 
-          <a  onclick="updateTranscriptAccess(${
-            data[i].id
-          })" class='${
+          <a  onclick="updateTranscriptAccess(${data[i].id})" class='${
             data[i].can_access_transcript == "YES"
               ? "btn btn-danger"
               : "btn btn-success"
@@ -1570,8 +1675,8 @@ function getTranscript() {
     user_data.middle_name;
 
   document.getElementById("student_id").innerHTML = user_data.student_id;
-  document.getElementById("class_sector").innerHTML = user_data.class != null ?
-    user_data.class.class_sector : `GRADUATED`;
+  document.getElementById("class_sector").innerHTML =
+    user_data.class != null ? user_data.class.class_sector : `GRADUATED`;
   document.getElementById("school_details").innerHTML =
     localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
 
@@ -1608,14 +1713,13 @@ function getTranscript() {
     .then((data) => {
       // STORE IN SESSIONS ARRAY
       data.forEach((data) => {
-        if(!sessions.includes(data.session)){
+        if (!sessions.includes(data.session)) {
           sessions.push(data.session);
         }
 
-        if(!terms.includes(data.term)){
+        if (!terms.includes(data.term)) {
           terms.push(data.term);
         }
-        
       });
 
       // CREATE RESULT TEMPLATE
@@ -1892,10 +1996,9 @@ function getTranscript() {
     })
     .catch((err) => console.log(err));
 
-    setTimeout(function () {
-      parent.$("#spinnerModal").modal("hide");
-      parent.document.getElementById("spinnerModal").remove();
-    }, 10000);
+  setTimeout(function () {
+    removeSpinnerModal();
+  }, 10000);
 }
 
 function getResult(value) {
@@ -1910,7 +2013,10 @@ function getResult(value) {
     body: JSON.stringify({
       user_type: "TEACHER",
       student_id: JSON.parse(localStorage["student_result"]).id,
-      class_id:JSON.parse(localStorage["student_result"]).class != null ? JSON.parse(localStorage["student_result"]).class.id : "",
+      class_id:
+        JSON.parse(localStorage["student_result"]).class != null
+          ? JSON.parse(localStorage["student_result"]).class.id
+          : "",
       session: value.split("_")[1],
       term: value.split("_")[2],
     }),
@@ -2761,7 +2867,7 @@ async function getStudentIDCard() {
 
   // STUDENT_IMAGE
   document.getElementById("user_image").src = url;
-  
+
   document.getElementById("type").innerHTML = "STUDENT";
 
   // MINI SCHOOL LOGO
@@ -4836,6 +4942,9 @@ function saveControl() {
       register_subject: document.getElementById("register_subject").checked
         ? "YES"
         : "NO",
+        update_debitor_list:document.getElementById("update_debitor_list").checked
+        ? "YES"
+        : "NO",
       check_debitors: document.getElementById("check_debitor").checked
         ? document.getElementById("check_debitor_percentage").value + "-YES"
         : document.getElementById("check_debitor_percentage").value + "-NO",
@@ -4903,11 +5012,117 @@ function getControl() {
 
       document.getElementById("resumption_time").value =
         data.max_resumption_time.split("-")[0];
+
+        data.debitor_list_last_update.split("-")[1] == "YES"
+        ? (document.getElementById("update_debitor_list").checked = true)
+        : "";
     })
     .catch((err) => console.log(err));
 }
 
 // LESSON PLAN
+function getLessonPlan(lesson_status) {
+  openSpinnerModal();
+  fetch(ip + "/api/teacher/lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      user_type: "ADMIN",
+      status: lesson_status,
+      subject_id: document.getElementById("subject_class").value,
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      document.getElementById("lesson_plan_table").innerHTML = "";
+      c = 1;
+      data.forEach((lesson) => {
+        document.getElementById("lesson_plan_table").innerHTML += `
+      <tr>
+        <td>${c}.</td>
+        <td>${lesson.week}</td>
+        <td>${lesson.teacher}</td>
+        <td>${lesson.term}</td>
+        <td><span class="badge ${
+          lesson.status == "APPROVED"
+            ? `bg-success`
+            : lesson.status == "DISAPPROVED"
+            ? `bg-danger`
+            : `bg-warning`
+        }"><b>${lesson.status}</b></span></td>
+        <td>
+
+            <a onmouseover="populateLessonDetails(${JSON.stringify(
+              lesson
+            ).replace(
+              /"/g,
+              "'"
+            )})" href="#" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"><i class="fas fa-eye"></i> View</a>
+            <a onclick="saveLessonPlan(${
+              lesson.id
+            },'APPROVE')" href="#" class="btn btn-success" data-bs-toggle="modal"
+                data-bs-target="#"><i class="fas fa-edit"></i> Approve</a>
+            <a onclick="saveLessonPlan(${
+              lesson.id
+            },'DISAPPROVE')" href="#" class="btn btn-danger"><i class="fas fa-ban"></i>
+                Disapprove</a>
+        </td>
+      </tr>
+        `;
+
+        c = c + 1;
+      });
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function populateLessonDetails(lesson) {
+  document.getElementById("lp_subject_class").innerHTML =
+    localStorage["lp_subject_class"];
+  document.getElementById("lp_status").innerHTML = `<span class="badge ${
+    lesson.status == "APPROVED"
+      ? `bg-success`
+      : lesson.status == "DISAPPROVED"
+      ? `bg-danger`
+      : `bg-warning`
+  }"><b>${lesson.status}</b></span>`;
+
+  document.getElementById("lp_teacher").innerHTML = lesson.teacher;
+
+  document.getElementById("week1").innerHTML =
+    ` <option value="${lesson.week}">${lesson.week}</option>` +
+    document.getElementById("week1").innerHTML;
+
+  document.getElementById("instructional_material").value =
+    lesson.instructional_material;
+  document.getElementById("previous_knowledge").value =
+    lesson.previous_knowledge;
+  document.getElementById("previous_lesson").value = lesson.previous_lesson;
+  document.getElementById("behavioural_objective").value =
+    lesson.behavioural_objective;
+  document.getElementById("content").value = lesson.content;
+  document.getElementById("presentation").value = lesson.presentation;
+  document.getElementById("evaluation").value = lesson.evaluation;
+  document.getElementById("conclusion").value = lesson.conclusion;
+  document.getElementById("assignment").value = lesson.assignment;
+  document.getElementById("lesson_id").value = lesson.id;
+}
+
 function editLessonPlan() {
   document.getElementById("save_lesson_bt").hidden = false;
 
@@ -4916,6 +5131,45 @@ function editLessonPlan() {
   lesson_content.forEach((element) => {
     element.disabled = false;
   });
+}
+
+function saveLessonPlan(id, status) {
+  if (!confirm("You are about to " + status + " the lesson plan")) {
+    return 0;
+  }
+  openSpinnerModal();
+  fetch(ip + "/api/teacher/save-lesson-plan", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      user_type: "ADMIN",
+      status: status,
+      id: id,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        getLessonPlan("ALL");
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // INVENTORY
@@ -5508,7 +5762,7 @@ async function generateIDCard() {
   await getSchoolDetails();
   // STUDENT_IMAGE
   user_image = domain + "/backend/storage/app/public/fileupload";
- 
+
   // MINI SCHOOL LOGO
   school_logo_mini =
     domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
@@ -6066,7 +6320,7 @@ function loadCustomSubjectClass() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        //  window.parent.location.assign(domain +"/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -6177,8 +6431,8 @@ function scoreLimit(element) {
 
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
-   var modalExist = parent.document.getElementById("authenticationModal");
-   if (modalExist != null) {
+    var modalExist = parent.document.getElementById("authenticationModal");
+    if (modalExist != null) {
       modalExist.remove();
 
       parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
@@ -6283,13 +6537,14 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 `;
 
   authenticationModal = parent.document.getElementById("authenticationModal");
- if (authenticationModal != null) {
+  if (authenticationModal != null) {
     return 0;
   }
 
-  
   parent.$("body").append(modal);
-  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
+  parent
+    .$("#authenticationModal")
+    .modal({ backdrop: "static", keyboard: false });
   parent.$("#authenticationModal").modal("show");
 }
 
@@ -6340,10 +6595,14 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     return 0;
   }
 
-  
   parent.$("body").append(modal);
-  parent.$("#spinnerModal").modal({backdrop:"static",keyboard:false})
+  parent.$("#spinnerModal").modal({ backdrop: "static", keyboard: false });
   parent.$("#spinnerModal").modal("show");
+}
+
+function removeSpinnerModal() {
+  parent.$("#spinnerModal").modal("hide");
+  parent.document.getElementById("spinnerModal").remove();
 }
 
 // TOAST

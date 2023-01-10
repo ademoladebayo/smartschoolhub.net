@@ -378,6 +378,7 @@ class AdminService
         $ControlPanelModel->register_subject = $request->register_subject;
         $ControlPanelModel->check_debitors = $request->check_debitors;
         $ControlPanelModel->max_resumption_time = $request->max_resumption;
+        $ControlPanelModel->debitor_list_last_update = explode("-", $ControlPanelModel->debitor_list_last_update)[0]."-".$request->update_debitor_list;
         $ControlPanelModel->save();
 
         return response()->json(['success' => true, 'message' => "Control Saved."]);

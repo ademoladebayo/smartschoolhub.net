@@ -1156,10 +1156,10 @@ function getAllDebitor() {
       c = 1;
       document.getElementById("debitors_table").innerHTML = ``;
       if (data.content.length > 0) {
-        document.getElementById("last_checked").innerHTML +=
+        document.getElementById("last_checked").innerHTML =
           typeof data.last_checked == "undefined"
-            ? " FOR ARREARS HAS NOT BEEN SYNCED"
-            : " WAS LAST UPDATED AT " + data.last_checked;
+            ? "DEBITORS LIST HAS NOT BEEN UPDATED"
+            : "DEBITORS LIST WAS LAST UPDATED AT " + data.last_checked;
 
         for (i in data.content) {
           document.getElementById("debitors_table").innerHTML += `
@@ -1251,6 +1251,7 @@ function syncLatestDebitor() {
           getAllDebitor();
         } else {
           errortoast(data.message);
+          getAllDebitor();
         }
       })
       .catch((err) => console.log(err));

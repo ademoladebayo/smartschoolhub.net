@@ -15,5 +15,10 @@ class LessonPlanModel extends Authenticatable
     public $timestamps = false;
 
 
+    public function subject()
+    {
+        return $this->hasOne(SubjectModel::class, 'id', 'subject_id');
+    }
+
 
 }
