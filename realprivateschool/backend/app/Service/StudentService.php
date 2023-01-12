@@ -37,6 +37,13 @@ class StudentService
         if ($student == null) {
             return  response(['success' => false, 'message' => "Invalid Student!"]);
         } else {
+            // CHECK IF IT PARENT
+            $id = explode("-", $request->id)[2];
+            if ($request->password == "PARENT" . $id) {
+                $token = $student->createToken('token')->plainTextToken;
+                return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, Parent(' . $student->first_name . " " . $student->last_name . ")", 'isParent' => true, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student)]);
+            }
+
 
             if ($StudentRepository->getPassword($request->id) == $request->password) {
                 // Check if account is disabled

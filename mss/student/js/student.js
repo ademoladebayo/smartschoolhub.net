@@ -20,6 +20,98 @@ getCurrentSession();
 loadSchoolColor();
 
 function loadSideNav(page) {
+  if ("isParent" in localStorage) {
+    document.getElementById("side_nav").innerHTML = `
+    <ul class="nav nav-sidebar-menu sidebar-toggle-view">
+    <li class="nav-item">
+        <a id="dashboard" href="dashboard.html" class="nav-link"><i
+                class="flaticon-dashboard"></i><span>Dashboard</span></a>
+    </li>
+
+    <li class="nav-item">
+         <a  id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+                class="flaticon-open-book"></i><span>Learning Hub</span></a>
+    </li>
+    <li class="nav-item">
+        <a  id="timetable" href="?#timetable.html" class="nav-link"><i
+                class="flaticon-calendar"></i><span>Timetable<sup><small>Coming Soon ...</small></sup></span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
+        <span>My Attendance</span></a>
+    </li>
+
+    <!--  <li class="nav-item">
+    <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
+    <span>Attendance Card</span></a>
+    </li>  --!>
+
+    <li class="nav-item">
+        <a   id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
+    </li>
+    <li class="nav-item">
+        <a   id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
+                Results</span></a>
+    </li>
+   
+    <li class="nav-item">
+        <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
+                and History</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a  id="communication-channel" href="communication-channel.html" class="nav-link"><i class="fa fa-comments"></i><span>Communication Channel</span></a>
+    </li>
+    
+    <li class="nav-item">
+      <a id="change-password" href="change-password.html" class="nav-link">
+        <i class="flaticon-settings"></i>
+        <span>Change Password</span>
+      </a>
+    </li>
+      
+    
+    <li class="nav-item">
+        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+                Out</span></a>
+    </li>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <!-- <li class="nav-item">
+        <a href="" class="nav-link"><i class=""></i><span></span></a>
+    </li>
+    <li class="nav-item">
+        <a href="" class="nav-link"><i class=""></i><span></span></a>
+    </li> -->
+
+
+</ul>
+    
+    
+    
+    `;
+}else{
   document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
@@ -107,7 +199,7 @@ function loadSideNav(page) {
     
     
     `;
-
+}
   document.getElementById(page).className += " menu-active";
 }
 
@@ -332,6 +424,11 @@ function signIn() {
             "user_id",
             JSON.parse(localStorage["user_data"]).data.student_id
           );
+
+          if('isParent' in data){
+            localStorage.setItem("isParent",data.isParent);
+          }
+
           setTimeout(function () {
             window.location.href = "dashboard.html";
           }, 1000);
@@ -1042,19 +1139,33 @@ function getRegisteredSubjectForTable() {
     .then((data) => {
       document.getElementById("subject_table").innerHTML = ``;
       for (i in data) {
-          document.getElementById("subject_table").innerHTML += `
+        document.getElementById("subject_table").innerHTML += `
             <tr>
     
                   <td>${c}.</td>
-                  <td> <small><i class="${data[i].subject_type == "COMPULSORY" ? `fa fa-star` : `fa fa-shapes`}" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
+                  <td> <small><i class="${
+                    data[i].subject_type == "COMPULSORY"
+                      ? `fa fa-star`
+                      : `fa fa-shapes`
+                  }" aria-hidden="true"></i></small> ${
+          data[i].subject_name
+        }</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   <td>
-                  <a onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].subject_id}'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name}'); getLearningHubMaterials('${data[i].subject_id}');" type="button" class="btn btn-primary btn-block"
+                  <a onclick="localStorage.setItem('LH_SUBJECT_ID','${
+                    data[i].subject_id
+                  }'); localStorage.setItem('LH_SUBJECT_CLASS','${
+          data[i].subject_name
+        }'); getLearningHubMaterials('${
+          data[i].subject_id
+        }');" type="button" class="btn btn-primary btn-block"
                   data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   Materials
               </a     >
-                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].subject_id}-${data[i].subject_name}')">
+                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${
+                      data[i].subject_id
+                    }-${data[i].subject_name}')">
                       Lesson Plan
                     </button>
                  </td>
@@ -1791,7 +1902,7 @@ function getLessonPlan(week) {
   if (week == "") {
     week = document.getElementById("week").value;
   }
-openSpinnerModal();
+  openSpinnerModal();
   fetch(ip + "/api/teacher/lesson-plan", {
     method: "POST",
     headers: {
@@ -1816,16 +1927,15 @@ openSpinnerModal();
     .then((data) => {
       removeSpinnerModal();
       document.getElementById("lesson_plan_for").innerHTML =
-        "LESSON PLAN FOR " +
-        localStorage["LESSON-PLAN"].split("-")[1];
+        "LESSON PLAN FOR " + localStorage["LESSON-PLAN"].split("-")[1];
 
-        document.getElementById("lp_status").innerHTML = `<span class="badge ${
-          data.status == "APPROVED"
-            ? `bg-success`
-            : data.status == "DISAPPROVED"
-            ? `bg-danger`
-            : `bg-warning`
-        }"><b>${data.status}</b></span>`;
+      document.getElementById("lp_status").innerHTML = `<span class="badge ${
+        data.status == "APPROVED"
+          ? `bg-success`
+          : data.status == "DISAPPROVED"
+          ? `bg-danger`
+          : `bg-warning`
+      }"><b>${data.status}</b></span>`;
 
       document.getElementById("week1").innerHTML =
         ` <option value="${data.week}">${data.week}</option>` +
@@ -1854,7 +1964,8 @@ function loadLessonPage(value) {
 }
 
 function getLearningHubMaterials(subject_id) {
-  document.getElementById('subject').innerHTML = "LEARNING HUB FOR " + localStorage['LH_SUBJECT_CLASS'];
+  document.getElementById("subject").innerHTML =
+    "LEARNING HUB FOR " + localStorage["LH_SUBJECT_CLASS"];
   fetch(ip + "/api/teacher/subject-material/" + subject_id, {
     method: "GET",
     headers: {
@@ -1879,17 +1990,11 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "notes-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-              <div onclick="collapseContent('note_${
-                note.id
-              }')" class="card-header">
-                  <small id="date_time" class="m-0 text-primary">${
-                    note.date
-                  }</small>
+              <div onclick="collapseContent('note_${note.id}')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${note.date}</small>
                   <br>
                   <span class="m-0 text-primary">
-                      <a id="topic" data-toggle="collapse" href="#demo">${
-                        note.topic
-                      }</a>
+                      <a id="topic" data-toggle="collapse" href="#demo">${note.topic}</a>
                   </span>
               </div>
               <div id="note_${note.id}" class="collapse"
@@ -1964,21 +2069,14 @@ function getLearningHubMaterials(subject_id) {
         document.getElementById("videos-content-main").innerHTML = ``;
         c = data.video.length;
         data.video.forEach((video) => {
-
           document.getElementById(
             "videos-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-        <div onclick="collapseContent('video_${
-          video.id
-        }')" class="card-header">
-            <small id="date_time" class="m-0 text-primary">${
-              video.date
-            }</small>
+        <div onclick="collapseContent('video_${video.id}')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${video.date}</small>
             <br>
             <span class="m-0 text-primary">
-                <a id="topic" data-toggle="collapse" href="#demo">Video ${
-                 c
-                }</a>
+                <a id="topic" data-toggle="collapse" href="#demo">Video ${c}</a>
             </span>
         </div>
         <div id="video_${video.id}" class="collapse"
@@ -1989,7 +2087,7 @@ function getLearningHubMaterials(subject_id) {
             allowfullscreen></iframe>
         </div>
         </div>`;
-        c = c - 1;
+          c = c - 1;
         });
       } else {
         document.getElementById("videos-content-main").innerHTML = ``;
@@ -2000,7 +2098,6 @@ function getLearningHubMaterials(subject_id) {
                                               style="justify-content:center; display:flex">No video here</div>
                                           </div>`;
       }
-
     })
     .catch((err) => console.log(err));
 }
@@ -2451,6 +2548,82 @@ async function makePayment(amount) {
       logo: domain + "/assets/img/sample_logo.png",
     },
   });
+}
+
+//COMMUNICATION
+function sendMessage() {
+  openSpinnerModal();
+  fetch(ip + "/api/admin/communication", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      message: document.getElementById("message").value,
+      sender: JSON.parse(localStorage["user_data"]).data.id,
+      receiver: document.getElementById("receiver").value,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        getMessage( JSON.parse(localStorage["user_data"]).data.id);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getMessage(id) {
+  fetch(ip + "/api/admin/communication/"+ id +"/ALL", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      c = 1;
+      document.getElementById("communication_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("communication_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td><b>${data[i].sender}</b></td>
+                    <td><b>${data[i].receiver}</b></td>
+                    <td><b>${data[i].fee_type}</b></td>
+                    <td>${data[i].date}</td>
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
 }
 
 // GET SCHOOL DETAILS

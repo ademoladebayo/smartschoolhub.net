@@ -11,6 +11,7 @@ use App\Model\InventoryModel;
 use App\Model\LessonPlanModel;
 use App\Model\TeacherModel;
 use App\Model\TeacherAttendanceModel;
+use App\Model\CommunicationModel;
 use App\Repository\ClassRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\AdminRepository;
@@ -91,7 +92,7 @@ class AdminService
 
         if ($SubjectModel->class == "ALL" || $SubjectModel->class == "NURSERY SCHOOL" || $SubjectModel->class == "PRIMARY SCHOOL" || $SubjectModel->class == "JUNIOR SECONDARY SCHOOL" || $SubjectModel->class == "SENIOR SECONDARY SCHOOL") {
             // CREATE FOR ALL CLASS OR DO MULTIPLE CREATION
-           return $SubjectRepository->multiCreateSubject($request);
+            return $SubjectRepository->multiCreateSubject($request);
         } else {
             if ($SubjectModel->subject_name !=  '' && $SubjectModel->class != '') {
                 return  $SubjectRepository->createSubject($SubjectModel);
@@ -378,7 +379,7 @@ class AdminService
         $ControlPanelModel->register_subject = $request->register_subject;
         $ControlPanelModel->check_debitors = $request->check_debitors;
         $ControlPanelModel->max_resumption_time = $request->max_resumption;
-        $ControlPanelModel->debitor_list_last_update = explode("-", $ControlPanelModel->debitor_list_last_update)[0]."-".$request->update_debitor_list;
+        $ControlPanelModel->debitor_list_last_update = explode("-", $ControlPanelModel->debitor_list_last_update)[0] . "-" . $request->update_debitor_list;
         $ControlPanelModel->save();
 
         return response()->json(['success' => true, 'message' => "Control Saved."]);
@@ -539,5 +540,29 @@ class AdminService
             $TeacherRepository->updatePassword($request->id, Hash::make(env("DEFAULT_PASSWORD")));
         }
         return response()->json(['success' => true, 'message' => 'Account reset was successful.']);
+    }
+
+
+    // COMMUNICATION
+    public function createMessage(Request $request)
+    {
+        $communication = new CommunicationModel();
+        $communication->sender = $request->sender;
+        $communication->receiver = $request->receiver;
+        $communication->message = $request->message;
+        $communication->date = $request->date;
+        $communication->save();
+        return response()->json(['success' => true, 'message' => 'Message was successful.']);
+    }
+
+    public function editMessage(Request $request)
+    {
+        $communication = new CommunicationModel();
+        if ($request->type == "REPLY") {
+            $communication->reply = $request->reply;
+        } else {
+            $communication->receiver_seen = $request->receiver_seen;
+        }
+        return response()->json(['success' => true, 'message' => 'Update was successful.']);
     }
 }

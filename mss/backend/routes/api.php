@@ -200,6 +200,17 @@ Route::middleware([ActivityLog::class])->group(function () {
         Route::post('admin/reset-account', 'AdminController@resetAccount', function () {
         })->middleware(Cors::class);
 
+        // COMMUNICATION
+        Route::post('admin/communication', 'AdminController@createMessage', function () {
+        })->middleware(Cors::class);
+
+        Route::put('admin/communication', 'AdminController@editMessage', function () {
+        })->middleware(Cors::class);
+
+        Route::get('admin/communication/{id}/{type}', 'AdminController@getMessage', function () {
+        })->middleware(Cors::class);
+
+
         // =============================================================================
         //               END OF ADMIN ROUTE
         // =============================================================================
@@ -296,7 +307,6 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         Route::delete('teacher/subject-material', 'TeacherController@deleteSubjectMaterial', function () {
         })->middleware(Cors::class);
-
     });
 
     // =============================================================================
