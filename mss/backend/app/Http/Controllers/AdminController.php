@@ -343,14 +343,9 @@ class AdminController extends Controller
         return $AdminService->editMessage($request);
     }
 
-    public function getMessage($id, $type)
+    public function getMessage($id, $type, $user_type)
     {
-        if ($type == "SENT") {
-            return CommunicationModel::where('sender', $id)->orderBy('id', 'DESC')->get();
-        } else if ($type == "RECEIVED") {
-            return CommunicationModel::where('receiver', $id)->orderBy('id', 'DESC')->get();
-        } else {
-            return CommunicationModel::where('receiver', $id)->orWhere('sender', $id)->orderBy('id', 'DESC')->get();
-        }
+        $AdminService = new AdminService();
+        return $AdminService->getMessage($id, $type, $user_type);
     }
 }

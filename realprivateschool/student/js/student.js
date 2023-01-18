@@ -111,8 +111,8 @@ function loadSideNav(page) {
     
     
     `;
-}else{
-  document.getElementById("side_nav").innerHTML = `
+  } else {
+    document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
         <a id="dashboard" href="dashboard.html" class="nav-link"><i
@@ -199,7 +199,7 @@ function loadSideNav(page) {
     
     
     `;
-}
+  }
   document.getElementById(page).className += " menu-active";
 }
 
@@ -223,7 +223,9 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -261,7 +263,9 @@ function allSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -425,8 +429,8 @@ function signIn() {
             JSON.parse(localStorage["user_data"]).data.student_id
           );
 
-          if('isParent' in data){
-            localStorage.setItem("isParent",data.isParent);
+          if ("isParent" in data) {
+            localStorage.setItem("isParent", data.isParent);
           }
 
           setTimeout(function () {
@@ -483,9 +487,16 @@ function reAuth() {
             "user_id",
             JSON.parse(localStorage["user_data"]).data.student_id
           );
+          if ("isParent" in data) {
+            localStorage.setItem("isParent", data.isParent);
+          }
           setTimeout(function () {
             parent.$("#authenticationModal").modal("hide");
             parent.document.getElementById("authenticationModal").remove();
+
+            if (window.location.href.includes("communication-channel")) {
+              goTo("dashboard.html");
+            }
           }, 1000);
         } else {
           errortoast(data.message);
@@ -537,7 +548,9 @@ function getCBTForSubject() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -615,7 +628,9 @@ function startCBT(cbt) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -890,7 +905,9 @@ function getPreviousSubjectRegistration() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -932,7 +949,9 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1131,7 +1150,9 @@ function getRegisteredSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1163,11 +1184,7 @@ function getRegisteredSubjectForTable() {
                   data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   Materials
               </a     >
-                    <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${
-                      data[i].subject_id
-                    }-${data[i].subject_name}')">
-                      Lesson Plan
-                    </button>
+                    
                  </td>
                   
                
@@ -1175,6 +1192,11 @@ function getRegisteredSubjectForTable() {
         
               <tr>`;
         c = c + 1;
+        // <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${
+        //   data[i].subject_id
+        // }-${data[i].subject_name}')">
+        //   Lesson Plan
+        // </button>
       }
       document.getElementById("number_registered").innerHTML =
         document.getElementById("number_registered").innerHTML + (c - 1);
@@ -1202,7 +1224,9 @@ function getRegisteredSubjectForTableCBT() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1331,7 +1355,9 @@ async function getTranscript() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1642,7 +1668,9 @@ function getResult(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1763,7 +1791,9 @@ function getCommentsAndPsycho(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1881,7 +1911,9 @@ function getAttendanceSummary(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1919,7 +1951,9 @@ function getLessonPlan(week) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -1977,7 +2011,9 @@ function getLearningHubMaterials(subject_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -2173,7 +2209,9 @@ function getFee() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -2238,7 +2276,16 @@ function loadFeeBreakdown() {
 }
 
 // PAYMENT HISTORY
-function getAllPaymentHistory() {
+function getAllPaymentHistory(session_value) {
+  if (session_value == "") {
+    session = localStorage["current_session"];
+    term = localStorage["current_term"];
+  } else {
+    session = session_value.split("-")[0];
+    term = session_value.split("-")[1];
+  }
+
+  openSpinnerModal();
   fetch(ip + "/api/student/payment-history", {
     method: "POST",
     headers: {
@@ -2248,19 +2295,21 @@ function getAllPaymentHistory() {
     },
     body: JSON.stringify({
       student_id: JSON.parse(localStorage["user_data"]).data.id,
-      session: localStorage["current_session"],
-      term: localStorage["current_term"],
+      session: session,
+      term: term,
     }),
   })
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal();
         openAuthenticationModal();
       }
       return res.json();
     })
 
     .then((data) => {
+      removeSpinnerModal();
       c = 1;
       document.getElementById("payment_history_table").innerHTML = ``;
       if (data.length > 0) {
@@ -2281,6 +2330,12 @@ function getAllPaymentHistory() {
                     `;
           c = c + 1;
         }
+      } else {
+        document.getElementById("payment_history_table").innerHTML = `
+        <hr style="color: black; border: 1px solid black">
+        <h3 style="text-align: center;">${data.message}</h3>
+        <hr style="color: black; border: 1px solid black">
+        `;
       }
       paginateTable();
     })
@@ -2334,7 +2389,9 @@ function generatePayment() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -2369,6 +2426,13 @@ async function getPaymentSlip(loadPage) {
       "/backend/storage/app/public/fileupload/student/" +
       user_data.data.student_id +
       ".png";
+
+    // SCHOOL LOGO URL
+    school_logo_url =
+      domain + "/backend/storage/app/public/fileupload/school_logo.png";
+
+    // SCHOOL_LOGO
+    document.getElementById("school_logo").src = school_logo_url;
 
     // STUDENT_IMAGE
     document.getElementById("student_image").src = url;
@@ -2444,18 +2508,122 @@ async function getPaymentSlip(loadPage) {
   }
 }
 
-function download() {
+function download(filename) {
+  filename = filename == null ? "file" : filename;
   const payment_slip = this.document.getElementById("payment-slip");
   console.log(payment_slip);
   console.log(window);
   var opt = {
     // margin: 1,
-    // filename: "myfile.pdf",
+    filename: filename+".pdf",
     // image: { type: "jpeg", quality: 0.98 },
     // html2canvas: { scale: 2 },
     // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
   };
   html2pdf().from(payment_slip).set(opt).save();
+}
+
+async function getReceipt() {
+  sessions = localStorage["receipt_session"];
+  openSpinnerModal();
+  fetch(ip + "/api/student/receipt", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: JSON.parse(localStorage["user_data"]).data.id,
+      session: sessions.split("-")[0],
+      term: sessions.split("-")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      // SLIP HEADER
+      user_data = JSON.parse(localStorage["user_data"]);
+
+      // IMAGE URL
+      url =
+        domain +
+        "/backend/storage/app/public/fileupload/student/" +
+        user_data.data.student_id +
+        ".png";
+
+      // SCHOOL LOGO URL
+      school_logo_url =
+        domain + "/backend/storage/app/public/fileupload/school_logo.png";
+
+      // SCHOOL_LOGO
+      document.getElementById("school_logo").src = school_logo_url;
+
+      // STUDENT_IMAGE
+      document.getElementById("student_image").src = url;
+
+      // POPULATE STUDENTS INFORMATION
+      document.getElementById("full_name").innerHTML =
+        "<b>" +
+        user_data.data.last_name +
+        "</b>" +
+        " " +
+        user_data.data.first_name +
+        " " +
+        user_data.data.middle_name;
+
+      document.getElementById("student_id").innerHTML =
+        user_data.data.student_id;
+      document.getElementById("class_sector").innerHTML =
+        user_data.data.class.class_sector;
+      document.getElementById("school_details").innerHTML =
+        localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+
+      document.getElementById("student_class").innerHTML = data.class;
+
+      document.getElementById("session").innerHTML = sessions.split("-")[0];
+
+      document.getElementById("term").innerHTML = sessions.split("-")[1];
+
+      // SLIP FOOTER
+      document.getElementById("total_expected").innerHTML =
+        "₦" + formatNumber(data.expected_amount);
+
+      document.getElementById("total_paid").innerHTML =
+        "₦" + formatNumber(data.total_paid);
+
+      document.getElementById("percentage_paid").innerHTML =
+        data.percentage_paid;
+
+      document.getElementById("total_due_balance").innerHTML =
+        "₦" + formatNumber(data.due_balance);
+
+      document.getElementById("payment_receipt_table").innerHTML = ``;
+
+      c = 1;
+      data.payments.forEach((payment) => {
+        document.getElementById("payment_receipt_table").innerHTML += `
+ <tr>
+      <td>${c}.</td>
+      <td>${payment.payment_description}</td>
+      <td>${payment.fee_type}</td>
+      <td>${payment.payment_type}</td>
+      <td>${payment.date}</td>
+     <td><b>₦${formatNumber(payment.amount)}</b></td>
+ </tr>
+ `;
+        c = c + 1;
+      });
+    })
+    .catch((err) => console.log(err));
 }
 
 // PRINT
@@ -2562,14 +2730,19 @@ function sendMessage() {
     },
     body: JSON.stringify({
       message: document.getElementById("message").value,
+      message_type: "DIRECT",
       sender: JSON.parse(localStorage["user_data"]).data.id,
-      receiver: document.getElementById("receiver").value,
+      sender_user_type: "STUDENT",
+      receiver: JSON.parse(localStorage["user_data"]).data.class.class_teacher,
+      receiver_user_type: document.getElementById("receiver").value,
     }),
   })
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -2578,7 +2751,9 @@ function sendMessage() {
       removeSpinnerModal();
       if (data.success) {
         successtoast(data.message);
-        getMessage( JSON.parse(localStorage["user_data"]).data.id);
+        getMessage("ALL", "STUDENT");
+        document.getElementById("message").value = "";
+        closeModal("messageModal");
       } else {
         errortoast(data.message);
       }
@@ -2586,42 +2761,125 @@ function sendMessage() {
     .catch((err) => console.log(err));
 }
 
-function getMessage(id) {
-  fetch(ip + "/api/admin/communication/"+ id +"/ALL", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
+function getMessage(message_type, user_type) {
+  openSpinnerModal();
+  id = JSON.parse(localStorage["user_data"]).data.id;
+
+  fetch(
+    ip +
+      "/api/admin/communication/" +
+      id +
+      "/" +
+      message_type +
+      "/" +
+      user_type,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
     }
-  })
+  )
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal();
         openAuthenticationModal();
       }
       return res.json();
     })
 
     .then((data) => {
-      c = 1;
-      document.getElementById("communication_table").innerHTML = ``;
-      if (data.length > 0) {
-        for (i in data) {
-          document.getElementById("communication_table").innerHTML += `
-                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
-            
-                    <td>${c}.</td>
-                    <td><b>${data[i].sender}</b></td>
-                    <td><b>${data[i].receiver}</b></td>
-                    <td><b>${data[i].fee_type}</b></td>
-                    <td>${data[i].date}</td>
-                   </tr>
-                    `;
-          c = c + 1;
+      removeSpinnerModal();
+      if (data.success) {
+        c = 1;
+
+        document.getElementById("communication_table").innerHTML = ``;
+        data = data.messages;
+        if (data.length > 0) {
+          for (i in data) {
+            read = data[i].receiver_seen.split(",").includes(data[i].receiver)
+              ? true
+              : false;
+            replied = data[i].reply === null ? false : true;
+            document.getElementById("communication_table").innerHTML += `
+                      <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+              
+                      <td>${c}.</td>
+                      <td><b>${data[i].sender}</b></td>
+                      <td><b>${data[i].receiver}</b></td>
+                      <td><b>${data[i].date}</b></td>
+                      <td>
+  
+                          ${`<span class="badge ${
+                            read ? `bg-success` : `bg-danger`
+                          }"><b>${read ? `READ` : `UNREAD`}</b></span>`}
+  
+                          <br>
+  
+                          ${`<span class="badge ${
+                            replied ? `bg-success` : `bg-danger`
+                          }"><b>${
+                            replied ? `REPLIED` : `NOT REPLIED`
+                          }</b></span>`}
+  
+                       </td>
+  
+                        <td>
+                          <button onclick="editMessage('${
+                            data[i].id
+                          }','VIEW')" type="button" class="btn btn-primary btn-block  btn-sm">
+                              <i class="fa fa-eye"></i> View Message
+                          </button>
+                        </td>
+  
+                       </tr>
+                      `;
+            c = c + 1;
+          }
         }
+        paginateTable();
       }
-      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function editMessage(id, edit_type) {
+  openSpinnerModal();
+  fetch(ip + "/api/admin/communication", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      edit_type: edit_type,
+      reply: document.getElementById("message").value,
+      receiver_seen: JSON.parse(localStorage["user_data"]).data.id,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal(); 
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        getMessage("ALL", "STUDENT");
+      } else {
+        errortoast(data.message);
+      }
     })
     .catch((err) => console.log(err));
 }
@@ -2678,6 +2936,44 @@ function loadSchoolColor() {
   }
 }
 
+// CUSTOM SESSION TERM
+function loadCustomSessionTerm() {
+  user_data = JSON.parse(localStorage["user_data"]);
+  fetch(ip + "/api/general/all-session/STD-" + user_data.data.id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        // removeSpinnerModal(); 
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term0").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
+      if(data.length > 0){
+      data.forEach((sessions) => {
+        document.getElementById("session_term0").innerHTML += `<option value="${
+          sessions.session + "-" + sessions.term
+        }">${sessions.session + "-" + sessions.term}</option>`;
+      });
+    }
+    })
+    .catch((err) => console.log(err));
+}
+
 // PAGENATION
 function paginateTable() {
   $("#paginate").DataTable();
@@ -2720,7 +3016,9 @@ function changePassword() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal(); 
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
@@ -2776,6 +3074,7 @@ $(document).click(function (e) {
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
+  localStorage.removeItem("isParent");
   modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2872,6 +3171,9 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     return 0;
   }
 
+  // CLOSE ANY OPEN MODAL
+  // $(".modal:visible").modal("hide");
+
   parent.$("body").append(modal);
   parent
     .$("#authenticationModal")
@@ -2932,9 +3234,12 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 }
 
 function removeSpinnerModal() {
-  parent.$("#spinnerModal").modal("hide");
-  parent.document.getElementById("spinnerModal").remove();
-}
+  spinnerModal = parent.document.getElementById("spinnerModal");
+    if(spinnerModal != null){
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+    }
+  }
 
 // TOAST
 function successtoast(message, time) {

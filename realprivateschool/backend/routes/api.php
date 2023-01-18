@@ -207,7 +207,7 @@ Route::middleware([ActivityLog::class])->group(function () {
         Route::put('admin/communication', 'AdminController@editMessage', function () {
         })->middleware(Cors::class);
 
-        Route::get('admin/communication/{id}/{type}', 'AdminController@getMessage', function () {
+        Route::get('admin/communication/{id}/{type}/{user_type}', 'AdminController@getMessage', function () {
         })->middleware(Cors::class);
 
 
@@ -348,6 +348,9 @@ Route::middleware([ActivityLog::class])->group(function () {
         })->middleware(Cors::class);
 
         Route::post('student/add-optional-fee', 'StudentController@addOptionalFee', function () {
+        })->middleware(Cors::class);
+
+        Route::post('student/receipt', 'StudentController@getReceipt', function () {
         })->middleware(Cors::class);
 
         // STUDENT {RESULT}

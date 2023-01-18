@@ -1,5 +1,5 @@
 export default class Config {
-  APP_MODE = "LIVE";
+  APP_MODE = "DEV";
   SCHOOL_NAME = "realprivateschool";
   url = {
     ip: "",

@@ -44,7 +44,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="loadSideNav('communication-channel'); loadDashBoardInformation()">
+    onload="loadSideNav('communication-channel'); getMessage('ALL','STUDENT'); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -166,18 +166,18 @@
                             </div>
                             <div class="row gutters-8 ">
                                 <div class="col-lg-5 col-12 form-group">
-                                    <select onchange=" getLessonPlan(this.options[
+                                    <select onchange=" getMessage(this.options[
                                     this.selectedIndex
-                                  ].text)" id="" class="select2">
-                                        <option value="WEEK 1">RECEIVED</option>
-                                        <option value="WEEK 2">SENT</option>
+                                  ].text,'STUDENT')" id="" class="select2">
+                                        <option value="RECEIVED">RECEIVED</option>
+                                        <option value="SENT">SENT</option>
                                     </select>
                                 </div>
 
                                 <div style="margin-right: 10px; margin-top: 5px;"
                                     class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
                                     <button type="button" style="box-shadow: 10px;" class="btn-lg btn-primary"
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+                                        data-bs-toggle="modal" data-bs-target="#messageModal"><i
                                             class="fa fa-comments"></i>
                                         <b> New Message</b></button>
                                 </div>
@@ -220,13 +220,13 @@
                 </div>
 
 
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                <div class="modal fade" id="messageModal" tabindex="-1" role="dialog"
                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                                <button onclick="closeModal('exampleModal')" type="button" class="close"
+                                <button onclick="closeModal('messageModal')" type="button" class="close"
                                     data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -238,8 +238,8 @@
                                         <div class="row gutters-8 ">
                                             <div class="col-lg-5 col-12 form-group">
                                                 <select id="receiver" onchange="" id="" class="select2">
-                                                    <option value="teacher">Class Teacher</option>
-                                                    <option value="admin">School Admin</option>
+                                                    <option value="TEACHER">CLASS TEACHER</option>
+                                                    <option value="ADMIN">SCHOOL ADMIN</option>
                                                 </select>
                                             </div>
                                         </div>

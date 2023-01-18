@@ -1,10 +1,10 @@
 <html lang="en">
 
-<head> 
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Student's Payment Slip</title>
+    <title>Student's Receipt</title>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Barcode+128&amp;display=swap">
@@ -26,7 +26,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"   style="background: #ffffff;" onload="getPaymentSlip()">
+<body style="font-family: Poppins; font-weight: bold;" style="background: #ffffff;" onload="getReceipt()">
 
 
     <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
@@ -64,7 +64,7 @@
                     <div class="col-md-12 col-xs-12">
                         <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 0px;">
                             <h5 style="font-weight: bold;font-family: Poppins, serif; font-size:xx-large;"><br>PAYMENT
-                                SLIP</h5>
+                                RECEIPT</h5>
                         </div>
                     </div>
                 </div>
@@ -105,29 +105,29 @@
                 <div id="" name="" class="container result_container" style="margin-bottom: 30px;">
                     <div style="border:1px solid black; padding-bottom: 15px;" class="row">
 
-                        <div class="col-md-3 col-xs-6">
+                        <div class="col-md-4 col-xs-6">
                             <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
                                 <h6 style="font-size: 15px;">CLASS: <strong id="student_class">_
                                     </strong></h6>
                             </div>
                         </div>
-                        <div class="col-md-3 col-xs-6">
+                        <div class="col-md-4 col-xs-6">
                             <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
                                 <h6 style="font-size: 15px;">SESSION: <strong id="session">_</strong></h6>
                             </div>
                         </div>
-                        <div class="col-md-3 col-xs-6">
+                        <div class="col-md-4 col-xs-6">
                             <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
                                 <h6 style="font-size: 15px;">TERM: <strong id="term">_</strong></h6>
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-xs-6">
+                        <!-- <div class="col-md-3 col-xs-6">
                             <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
                                 <h6 style="font-size: 15px;">DATE: <strong id="date_generated">_
                                     </strong></h6>
                             </div>
-                        </div>
+                        </div> -->
 
 
                         <!-- EXPECTED FEE -->
@@ -140,21 +140,18 @@
                                                 style="margin-bottom: 50px;">
                                                 <thead>
                                                     <tr>
-                                                        <th>_</th>
                                                         <th>S/N</th>
                                                         <th>Description</th>
                                                         <th>Fee Type</th>
-                                                        <th>Class Sector</th>
+                                                        <th>Payment Type</th>
+                                                        <th>Date</th>
                                                         <th>Amount</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="payment_slip_table">
+                                                <tbody id="payment_receipt_table">
                                                     <tr>
-                                                        <td><input type="checkbox" class="form-check-input ml-0"
-                                                                name="fee_compulsory" value="10" checked=""
-                                                                onclick="this.checked = !this.checked">
-                                                        </td>
                                                         <td>1.</td>
+                                                        <td>Loading ...</td>
                                                         <td>Loading ...</td>
                                                         <td>Loading ...</td>
                                                         <td>Loading ...</td>
@@ -170,22 +167,10 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th style="font-size: 13px;font-family: Open Sans, sans-serif;">
-                                                            ARREARS :
-                                                            <font style="size: 20px;" color="red"><b id="arrears">0</b>
-                                                            </font>
-                                                        </th>
                                                         <th
                                                             style="font-size: 13px; font-family: Open Sans, sans-serif;">
                                                             TOTAL EXPECTED :
                                                             <span id="total_expected">0</span>
-                                                        </th>
-                                                        <th
-                                                            style="font-size: 13px; font-family: Open Sans, sans-serif;">
-                                                            TOTAL PAID :
-                                                            <font style="size: 20px;" color="green"><b
-                                                                    id="total_paid">0</b>
-                                                            </font>
                                                         </th>
 
                                                         <th
@@ -195,12 +180,15 @@
                                                                     id="percentage_paid">0%</b>
                                                             </font>
                                                         </th>
+
                                                         <th
                                                             style="font-size: 13px; font-family: Open Sans, sans-serif;">
-                                                            TERM BALANCE :
-                                                            <font style="size: 20px;" color="red"><b id="balance">0</b>
+                                                            TOTAL PAID :
+                                                            <font style="size: 20px;" color="green"><b
+                                                                    id="total_paid">0</b>
                                                             </font>
                                                         </th>
+
                                                     </tr>
                                                 </thead>
                                                 <tbody style="font-size: 13px;">
@@ -208,8 +196,7 @@
                                                     <tr style="font-size: 13px;">
                                                         <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
                                                             colspan="6">
-                                                            <span style="font-weight: bold;">Total Balance (ARREARS +
-                                                                TERM BALANCE) :
+                                                            <span style="font-weight: bold;">TOTAL BALANCE :
                                                             </span>
                                                             <font style="size: 50px;" color="red"><b
                                                                     id="total_due_balance"><b>0</b>
@@ -270,6 +257,11 @@
                 <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
             </div>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+    <!-- jquery-->
+    <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/iframeSizer.contentWindow.min.js"></script>
     <script src="./js/qrcode.min.js"></script>
