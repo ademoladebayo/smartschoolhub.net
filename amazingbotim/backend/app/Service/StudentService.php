@@ -37,6 +37,13 @@ class StudentService
         if ($student == null) {
             return  response(['success' => false, 'message' => "Invalid Student!"]);
         } else {
+            // CHECK IF IT PARENT
+            $id = explode("-", $request->id)[2];
+            if ($request->password == "PARENT" . $id) {
+                $token = $student->createToken('token')->plainTextToken;
+                return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, Parent(' . $student->first_name . " " . $student->last_name . ")", 'isParent' => true, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student)]);
+            }
+
 
             if ($StudentRepository->getPassword($request->id) == $request->password) {
                 // Check if account is disabled
@@ -232,6 +239,32 @@ class StudentService
             $OptionalFeeRequestModel->save();
         }
         return ['success' => true];
+    }
+
+
+    public function getReceipt(Request $request)
+    {
+        $bursaryService = new BursaryService();
+        $payments =   PaymentHistoryModel::where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->orderBy('id', 'ASC')->get();
+
+        $expected_fee = 0;
+        $optional_fee = 0;
+        $total_paid = 0;
+
+
+        // SO GET STUDENT'S, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+        $expected_fee = $bursaryService->getPayableForClass($payments[0]->class_id, $request->session, $request->term);
+        $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
+        $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
+
+
+        $percentage_paid = 0;
+        if ($expected_fee != 0  || $optional_fee != 0) {
+            $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
+        }
+
+        $class = ClassModel::find($payments[0]->class_id)->class_name;
+        return ['payments' => $payments, 'class' => $class, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid];
     }
 
 

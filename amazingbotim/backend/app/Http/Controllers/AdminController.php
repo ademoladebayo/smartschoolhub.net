@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ExportStaffList;
 use App\Exports\ExportStudentList;
 use App\Exports\ExportSubjectSheet;
-use App\Model\AdminModel;
+use App\Model\CommunicationModel;
 use App\Model\ControlPanelModel;
 use App\Repository\ClassRepository;
 use App\Service\AdminService;
@@ -22,7 +22,7 @@ use App\Imports\ImportUser;
 use App\Exports\ExportUser;
 
 class AdminController extends Controller
-{   
+{
     // SIGNIN
     public function signIn(Request $request)
     {
@@ -328,5 +328,24 @@ class AdminController extends Controller
     {
         $AdminService = new AdminService();
         return $AdminService->resetAccount($request);
+    }
+
+    // COMMUNICATION 
+    public function createMessage(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->createMessage($request);
+    }
+
+    public function editMessage(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->editMessage($request);
+    }
+
+    public function getMessage($id, $type, $user_type)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->getMessage($id, $type, $user_type);
     }
 }

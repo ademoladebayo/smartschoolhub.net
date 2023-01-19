@@ -223,7 +223,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -263,7 +263,7 @@ function allSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -548,7 +548,7 @@ function getCBTForSubject() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -628,7 +628,7 @@ function startCBT(cbt) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -905,7 +905,7 @@ function getPreviousSubjectRegistration() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -949,7 +949,7 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1150,7 +1150,7 @@ function getRegisteredSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1224,7 +1224,7 @@ function getRegisteredSubjectForTableCBT() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1355,7 +1355,7 @@ async function getTranscript() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1668,7 +1668,7 @@ function getResult(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1791,7 +1791,7 @@ function getCommentsAndPsycho(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1911,7 +1911,7 @@ function getAttendanceSummary(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1951,7 +1951,7 @@ function getLessonPlan(week) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -2011,7 +2011,7 @@ function getLearningHubMaterials(subject_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -2209,7 +2209,7 @@ function getFee() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -2389,7 +2389,7 @@ function generatePayment() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -2515,7 +2515,7 @@ function download(filename) {
   console.log(window);
   var opt = {
     // margin: 1,
-    filename: filename+".pdf",
+    filename: filename + ".pdf",
     // image: { type: "jpeg", quality: 0.98 },
     // html2canvas: { scale: 2 },
     // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -2740,7 +2740,7 @@ function sendMessage() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -2830,7 +2830,13 @@ function getMessage(message_type, user_type) {
                         <td>
                           <button onclick="editMessage('${
                             data[i].id
-                          }','VIEW')" type="button" class="btn btn-primary btn-block  btn-sm">
+                          }','VIEW'); populateViewMessageModal('${
+                            data[i].sender
+            }','${
+              data[i].receiver
+}','${data[i].message}','${data[i].reply}','${
+              data[i].id
+            }'); openModal('viewMessageModal');" type="button" class="btn btn-primary btn-block  btn-sm">
                               <i class="fa fa-eye"></i> View Message
                           </button>
                         </td>
@@ -2846,6 +2852,48 @@ function getMessage(message_type, user_type) {
     .catch((err) => console.log(err));
 }
 
+function populateViewMessageModal(sender,receiver, message,reply, id) {
+document.getElementById("viewModalContent").innerHTML = 
+`
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">View Message</h5>
+<button onclick="closeModal('viewMessageModal')" type="button" class="close"
+    data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
+<form>
+    <input id="communication_id" value="${id}" type="text" hidden>
+    <div class="form-group">
+        <label for="message-text" class="col-form-label">Sender:</label>
+        <textarea id="sender" class="form-control" id="message-text"
+            disabled>${sender}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="message-text" class="col-form-label">Message:</label>
+        <textarea id="view_message" class="form-control" id="message-text"
+            disabled>${message}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="message-text" class="col-form-label">Reply:</label>
+        <textarea id="reply" class="form-control" id="message-text">${reply}</textarea>
+    </div>
+</form>
+</div>
+<div class="modal-footer">
+<button onclick="editMessage(document.getElementById('communication_id').value,'REPLY')" class="btn btn-primary btn-block  btn-sm">
+
+    <i class="fa fa-comments"></i> Reply Message
+</button>
+</div>
+`
+
+
+
+}
+
 function editMessage(id, edit_type) {
   openSpinnerModal();
   fetch(ip + "/api/admin/communication", {
@@ -2858,14 +2906,14 @@ function editMessage(id, edit_type) {
     body: JSON.stringify({
       id: id,
       edit_type: edit_type,
-      reply: document.getElementById("message").value,
+      reply: document.getElementById("reply") != null ? document.getElementById("reply").value : "",
       receiver_seen: JSON.parse(localStorage["user_data"]).data.id,
     }),
   })
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -2875,8 +2923,11 @@ function editMessage(id, edit_type) {
     .then((data) => {
       removeSpinnerModal();
       if (data.success) {
-        successtoast(data.message);
         getMessage("ALL", "STUDENT");
+        if(edit_type == "REPLY"){
+          successtoast("Reply sent .");
+          closeModal("viewMessageModal");
+        }
       } else {
         errortoast(data.message);
       }
@@ -2950,7 +3001,7 @@ function loadCustomSessionTerm() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        // removeSpinnerModal(); 
+        // removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -2963,13 +3014,15 @@ function loadCustomSessionTerm() {
       }">${
         localStorage["current_session"] + "-" + localStorage["current_term"]
       }</option>`;
-      if(data.length > 0){
-      data.forEach((sessions) => {
-        document.getElementById("session_term0").innerHTML += `<option value="${
-          sessions.session + "-" + sessions.term
-        }">${sessions.session + "-" + sessions.term}</option>`;
-      });
-    }
+      if (data.length > 0) {
+        data.forEach((sessions) => {
+          document.getElementById(
+            "session_term0"
+          ).innerHTML += `<option value="${
+            sessions.session + "-" + sessions.term
+          }">${sessions.session + "-" + sessions.term}</option>`;
+        });
+      }
     })
     .catch((err) => console.log(err));
 }
@@ -3016,7 +3069,7 @@ function changePassword() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        removeSpinnerModal(); 
+        removeSpinnerModal();
         openAuthenticationModal();
         return 0;
       }
@@ -3235,11 +3288,11 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
 function removeSpinnerModal() {
   spinnerModal = parent.document.getElementById("spinnerModal");
-    if(spinnerModal != null){
-      parent.$("#spinnerModal").modal("hide");
-      parent.document.getElementById("spinnerModal").remove();
-    }
+  if (spinnerModal != null) {
+    parent.$("#spinnerModal").modal("hide");
+    parent.document.getElementById("spinnerModal").remove();
   }
+}
 
 // TOAST
 function successtoast(message, time) {

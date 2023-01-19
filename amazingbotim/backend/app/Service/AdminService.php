@@ -11,6 +11,7 @@ use App\Model\InventoryModel;
 use App\Model\LessonPlanModel;
 use App\Model\TeacherModel;
 use App\Model\TeacherAttendanceModel;
+use App\Model\CommunicationModel;
 use App\Repository\ClassRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\AdminRepository;
@@ -18,6 +19,7 @@ use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SessionRepository;
 use App\Repository\GradeSettingsRepository;
+use Faker\Guesser\Name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -91,7 +93,7 @@ class AdminService
 
         if ($SubjectModel->class == "ALL" || $SubjectModel->class == "NURSERY SCHOOL" || $SubjectModel->class == "PRIMARY SCHOOL" || $SubjectModel->class == "JUNIOR SECONDARY SCHOOL" || $SubjectModel->class == "SENIOR SECONDARY SCHOOL") {
             // CREATE FOR ALL CLASS OR DO MULTIPLE CREATION
-           return $SubjectRepository->multiCreateSubject($request);
+            return $SubjectRepository->multiCreateSubject($request);
         } else {
             if ($SubjectModel->subject_name !=  '' && $SubjectModel->class != '') {
                 return  $SubjectRepository->createSubject($SubjectModel);
@@ -378,7 +380,7 @@ class AdminService
         $ControlPanelModel->register_subject = $request->register_subject;
         $ControlPanelModel->check_debitors = $request->check_debitors;
         $ControlPanelModel->max_resumption_time = $request->max_resumption;
-        $ControlPanelModel->debitor_list_last_update = explode("-", $ControlPanelModel->debitor_list_last_update)[0]."-".$request->update_debitor_list;
+        $ControlPanelModel->debitor_list_last_update = explode("-", $ControlPanelModel->debitor_list_last_update)[0] . "-" . $request->update_debitor_list;
         $ControlPanelModel->save();
 
         return response()->json(['success' => true, 'message' => "Control Saved."]);
@@ -539,5 +541,95 @@ class AdminService
             $TeacherRepository->updatePassword($request->id, Hash::make(env("DEFAULT_PASSWORD")));
         }
         return response()->json(['success' => true, 'message' => 'Account reset was successful.']);
+    }
+
+
+    // COMMUNICATION
+    public function createMessage(Request $request)
+    {
+        $communication = new CommunicationModel();
+        $communication->sender = $request->sender;
+        $communication->sender_user_type = $request->sender_user_type;
+        $communication->receiver = $request->receiver;
+        $communication->receiver_user_type = $request->receiver_user_type;
+        $communication->message = $request->message;
+        $communication->message_type = $request->message_type;
+        $communication->receiver_seen = ",";
+        $communication->date =  date("Y-m-d") . " | " . date("h:i a");
+        $communication->save();
+        return response()->json(['success' => true, 'message' => 'Message was successful.']);
+    }
+
+    public function editMessage(Request $request)
+    {
+        $communication =  CommunicationModel::find($request->id);
+
+        if ($request->edit_type == "REPLY") {
+            $communication->reply = $request->reply;
+        } else {
+            // CHECK IF RECEIVER SEEN AS PREVIOUSLY BEEN SAVED
+            if (!in_array($request->receiver_seen, explode(",", $communication->receiver_seen))) {
+                $communication->receiver_seen =   $communication->receiver_seen == "," ? $request->receiver_seen . "," : $communication->receiver_seen . $request->receiver_seen;
+            }
+        }
+        $communication->save();
+        return response()->json(['success' => true, 'message' => 'Update was successful.']);
+    }
+
+    public function getMessage($id, $type, $user_type)
+    {
+        if ($id == "ADMIN") {
+            return $this->processMessage(CommunicationModel::orderBy('id', 'DESC')->get());
+        } else {
+
+            if ($type == "SENT") {
+                return $this->processMessage(CommunicationModel::where('sender', $id)->orderBy('id', 'DESC')->get());
+            } else if ($type == "RECEIVED") {
+                return $this->processMessage(CommunicationModel::where('receiver', $id)->orderBy('id', 'DESC')->get());
+            } else {
+                return $this->processMessage(CommunicationModel::where('receiver', $id)->orWhere('sender', $id)->orderBy('id', 'DESC')->get());
+            }
+        }
+    }
+
+
+    public function processMessage($messages)
+    {
+        foreach ($messages as $message) {
+            // SENDER 
+            if ($message->sender_user_type == "STUDENT") {
+                $student = StudentModel::find($message->sender);
+                $message->sender = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
+            } else if ($message->sender_user_type == "TEACHER") {
+                $teacher = TeacherModel::find($message->sender);
+                $message->sender = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+            } else {
+                $message->sender = "SCHOOL ADMIN";
+            }
+
+            // if ($message->sender_user_type == "STUDENT" && $message->receiver_user_type == "TEACHER") {
+            //     $teacher = TeacherModel::find($message->receiver);
+            //     $message->receiver = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+            // }
+
+
+            // RECEIVER 
+            if ($message->receiver_user_type == "STUDENT") {
+                $student = StudentModel::find($message->receiver);
+                $message->receiver = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
+            } else if ($message->receiver_user_type == "TEACHER") {
+                $teacher = TeacherModel::find($message->receiver);
+                $message->receiver = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+            } else {
+                $message->receiver = "SCHOOL ADMIN";
+            }
+
+            // if ($message->sender_user_type == "TEACHER" && $message->receiver_user_type == "STUDENT") {
+            //     $teacher = TeacherModel::find($message->sender);
+            //     $message->sender = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+            // }
+        }
+
+        return response()->json(['success' => true, 'messages' => $messages]);
     }
 }
