@@ -599,12 +599,12 @@ class AdminService
             // SENDER 
             if ($message->sender_user_type == "STUDENT") {
                 $student = StudentModel::find($message->sender);
-                $message->sender = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
+                $message->sender_name = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
             } else if ($message->sender_user_type == "TEACHER") {
                 $teacher = TeacherModel::find($message->sender);
-                $message->sender = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+                $message->sender_name = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
             } else {
-                $message->sender = "SCHOOL ADMIN";
+                $message->sender_name = "SCHOOL ADMIN";
             }
 
             // if ($message->sender_user_type == "STUDENT" && $message->receiver_user_type == "TEACHER") {
@@ -616,12 +616,12 @@ class AdminService
             // RECEIVER 
             if ($message->receiver_user_type == "STUDENT") {
                 $student = StudentModel::find($message->receiver);
-                $message->receiver = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
+                $message->receiver_name = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
             } else if ($message->receiver_user_type == "TEACHER") {
                 $teacher = TeacherModel::find($message->receiver);
-                $message->receiver = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+                $message->receiver_name = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
             } else {
-                $message->receiver = "SCHOOL ADMIN";
+                $message->receiver_name = "SCHOOL ADMIN";
             }
 
             // if ($message->sender_user_type == "TEACHER" && $message->receiver_user_type == "STUDENT") {

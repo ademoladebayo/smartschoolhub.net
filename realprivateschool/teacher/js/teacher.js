@@ -2090,7 +2090,12 @@ function getSavedQuestions() {
       /⌑/g,
       ","
     )}</span></p>
-   <div class="pl-2">
+
+
+
+    
+  
+    <div class="pl-2">
              <div id="optionA${
                questions_number[n]
              }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${

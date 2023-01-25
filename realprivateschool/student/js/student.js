@@ -2808,8 +2808,8 @@ function getMessage(message_type, user_type) {
                       <tr class='${c % 2 == 0 ? "even" : "odd"}'>
               
                       <td>${c}.</td>
-                      <td><b>${data[i].sender}</b></td>
-                      <td><b>${data[i].receiver}</b></td>
+                      <td><b>${data[i].sender_name}</b></td>
+                      <td><b>${data[i].receiver_name}</b></td>
                       <td><b>${data[i].date}</b></td>
                       <td>
   
@@ -2828,13 +2828,12 @@ function getMessage(message_type, user_type) {
                        </td>
   
                         <td>
-                          <button onclick="editMessage('${
-                            data[i].id
-                          }','VIEW'); populateViewMessageModal('${
-                            data[i].sender
-            }','${
-              data[i].receiver
-}','${data[i].message}','${data[i].reply}','${
+                          <button onclick="saveDataInLocalStorage('communication','${data[i]}'); 
+                          editMessage('${data[i].id}','${
+              data[i].sender
+            }','VIEW'); populateViewMessageModal('${data[i].sender_name}','${
+              data[i].sender
+            }','${data[i].receiver_name}','${data[i].message_type}','${
               data[i].id
             }'); openModal('viewMessageModal');" type="button" class="btn btn-primary btn-block  btn-sm">
                               <i class="fa fa-eye"></i> View Message
@@ -2852,9 +2851,20 @@ function getMessage(message_type, user_type) {
     .catch((err) => console.log(err));
 }
 
-function populateViewMessageModal(sender,receiver, message,reply, id) {
-document.getElementById("viewModalContent").innerHTML = 
-`
+function saveDataInLocalStorage(key,data){
+localStorage.setItem(key,data);
+}
+
+function populateViewMessageModal(
+  sender_name,
+  sender,
+  receiver,
+  message,
+  message_type,
+  reply,
+  id
+) {
+  document.getElementById("viewModalContent").innerHTML = `
 <div class="modal-header">
 <h5 class="modal-title" id="exampleModalLabel">View Message</h5>
 <button onclick="closeModal('viewMessageModal')" type="button" class="close"
@@ -2866,35 +2876,49 @@ document.getElementById("viewModalContent").innerHTML =
 <form>
     <input id="communication_id" value="${id}" type="text" hidden>
     <div class="form-group">
-        <label for="message-text" class="col-form-label">Sender:</label>
+    
+        <span class="badge bg-info text-white">${message_type} MESSAGE</span> <br>
+        <label for="message-text" class="col-form-label">Sender ⇆ Receiver :</label>
         <textarea id="sender" class="form-control" id="message-text"
-            disabled>${sender}</textarea>
+            disabled>
+          FROM : ${sender_name}
+          TO :  ${receiver}
+        </textarea>
     </div>
     <div class="form-group">
         <label for="message-text" class="col-form-label">Message:</label>
-        <textarea id="view_message" class="form-control" id="message-text"
-            disabled>${message}</textarea>
+        <textarea style="height:180px" id="view_message" class="form-control" id="message-text"
+            disabled>${JSON.stringify(localStorage['communication']).message}</textarea>
     </div>
 
     <div class="form-group">
         <label for="message-text" class="col-form-label">Reply:</label>
-        <textarea id="reply" class="form-control" id="message-text">${reply}</textarea>
+        <textarea style="height:180px" id="reply" class="form-control" id="message-text" ${
+          receiver != JSON.parse(localStorage["user_data"]).data.id
+            ? `disabled`
+            : ``
+        }>${reply == 'null' ? `No response yet ... `: JSON.stringify(localStorage['communication']).reply}</textarea>
     </div>
 </form>
 </div>
-<div class="modal-footer">
+<div class="modal-footer" ${
+    receiver != JSON.parse(localStorage["user_data"]).data.id ? `hidden` : ``
+  }>
 <button onclick="editMessage(document.getElementById('communication_id').value,'REPLY')" class="btn btn-primary btn-block  btn-sm">
 
     <i class="fa fa-comments"></i> Reply Message
 </button>
 </div>
-`
-
-
-
+`;
 }
 
-function editMessage(id, edit_type) {
+function editMessage(id, sender, edit_type) {
+  if (
+    sender == JSON.parse(localStorage["user_data"]).data.id &&
+    edit_type == "VIEW"
+  ) {
+    return 0;
+  }
   openSpinnerModal();
   fetch(ip + "/api/admin/communication", {
     method: "PUT",
@@ -2906,7 +2930,10 @@ function editMessage(id, edit_type) {
     body: JSON.stringify({
       id: id,
       edit_type: edit_type,
-      reply: document.getElementById("reply") != null ? document.getElementById("reply").value : "",
+      reply:
+        document.getElementById("reply") != null
+          ? document.getElementById("reply").value
+          : "",
       receiver_seen: JSON.parse(localStorage["user_data"]).data.id,
     }),
   })
@@ -2924,7 +2951,7 @@ function editMessage(id, edit_type) {
       removeSpinnerModal();
       if (data.success) {
         getMessage("ALL", "STUDENT");
-        if(edit_type == "REPLY"){
+        if (edit_type == "REPLY") {
           successtoast("Reply sent .");
           closeModal("viewMessageModal");
         }
