@@ -38,6 +38,8 @@
 
     <script src="//cdn.ckeditor.com/4.20.1/full/ckeditor.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+
 
 </head>
 
@@ -72,7 +74,7 @@
                                 </span>
                             </div>
                             <div id="demo" class="" class="card-body text-dark bg-light">
-                                <div id="editor1" name="editor1" class="p-2"
+                                <div onchange="alert('data change')" oninput="alert('Input')" id="editor1" name="editor1" class="p-2"
                                     style="overflow: auto; height: 65vh; border:1px solid black" contenteditable="true">
 
                                 </div>
@@ -153,9 +155,11 @@
             document.getElementById("lh_subject_class").innerHTML = "EDIT " + CONTENT_TYPE + " FOR " + localStorage["LH_SUBJECT_CLASS"];
             document.getElementById("content_btn").innerHTML = `<i
                                         class="far fa-sticky-note"></i>  UPDATE NOTE`;
-            alert(JSON.parse(localStorage['LH_EDIT_MATERIAL']));
-            document.getElementById("topic").innerHTML = JSON.parse(JSON.stringify(localStorage['LH_EDIT_MATERIAL'])).topic;
-            CKEDITOR.instances.editor1.setData(JSON.parse(JSON.stringify(localStorage['LH_EDIT_MATERIAL'])).content);
+
+            edit_content = JSON.parse(CryptoJS.AES.decrypt(localStorage['LH_EDIT_MATERIAL'], "AESENCRYPT").toString(CryptoJS.enc.Utf8)); 
+
+            document.getElementById("topic").innerHTML = edit_content.topic;
+            CKEDITOR.instances.editor1.setData(edit_content.content);
         }
     </script>
 

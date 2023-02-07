@@ -35,6 +35,9 @@
 
     <script src="//cdn.ckeditor.com/4.20.1/full/ckeditor.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"
+        integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+
 
 </head>
 
@@ -321,7 +324,7 @@
                                         <div class="tab-pane fade" id="notes-content" role="tabpanel"
                                             aria-labelledby="pills-notes-tab">
                                             <div class="card shadow mb-1">
-                                                <a onclick="content('CREATE','NOTE')" href="#"
+                                                <a onclick="content('CREATE','NOTE','')" href="#"
                                                     class="btn btn-primary"><i class="far fa-sticky-note"></i> Create
                                                     New Note</a>
                                             </div>
@@ -487,9 +490,12 @@
         }
 
 
-        function content(CONTENT_ACTION, CONTENT_TYPE) {
+        function content(CONTENT_ACTION, CONTENT_TYPE, DATA) {
             localStorage.setItem("CONTENT_ACTION", CONTENT_ACTION);
             localStorage.setItem("CONTENT_TYPE", CONTENT_TYPE);
+            if (CONTENT_ACTION == "EDIT") {
+                localStorage.setItem('LH_EDIT_MATERIAL', DATA);
+            }
             parent.window.location.assign(localStorage["domain"] + "/teacher/content.html");
         }
 
@@ -522,7 +528,7 @@
             link = link.trim();
             if (link.includes("https://") && link.includes("youtu")) {
                 document.getElementById("video_upd").hidden = false;
-            }else {
+            } else {
                 document.getElementById("video_upd").hidden = true;
             }
         }

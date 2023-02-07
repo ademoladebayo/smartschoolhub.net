@@ -1,6 +1,6 @@
   // Helper function to display messages below CKEditor 4.
   function ShowMessage(msg) {
-    alert(msg);
+    //alert(msg);
     // document.getElementById('eMessage').innerHTML = msg;
   }
 
@@ -101,10 +101,10 @@
 
   // Replace the <textarea id="editor1"> with a CKEditor 4 instance.
   // A reference to the editor object is returned by CKEDITOR.replace() allowing you to work with editor instances.
-  // var editor = CKEDITOR.replace('editor', {
-  //   height: 150,
-  //   removeButtons: 'PasteFromWord'
-  // });
+  var editor = CKEDITOR.replace('editor1', {
+    height: 150,
+    removeButtons: 'PasteFromWord'
+  });
 
   // Attaching event listeners to CKEditor 4 instances.
   // Refer to https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html for a list of all available events.
@@ -116,6 +116,6 @@
   // });
   // // Helper variable to count the number of detected changes in CKEditor 4.
   // var changesNum = 0;
-  // editor.on('change', function(evt) {
-  //   ShowMessage('The number of changes in <em>' + this.name + '</em>: <b>' + ++changesNum + '</b>.');
-  // });
+  editor.on('input', function(evt) {
+    // ShowMessage('The number of changes in <em>' + this.name + '</em>: <b>' + ++changesNum + '</b>.');
+  });

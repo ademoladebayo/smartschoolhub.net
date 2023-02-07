@@ -12,6 +12,7 @@ var questions_number = [];
 var answer = [];
 
 getSchoolDetails();
+collapseSidebar();
 //getCurrentSession();
 
 // VAR
@@ -119,6 +120,22 @@ function loadDashBoardInformation() {
       .no_of_assigned_subject
   )}</span>
     </div>`;
+
+
+    document.getElementById(
+      "cbt_no"
+    ).innerHTML = `<span class="counter" data-num="${parseInt(
+      formatNumber(
+        JSON.parse(localStorage["user_data"]).dashboard_information
+          .cbt_no
+      )
+    )}">${formatNumber(
+      JSON.parse(localStorage["user_data"]).dashboard_information
+        .cbt_no
+    )}</span>
+      </div>`;
+
+
 }
 
 function getProfileData() {
@@ -159,84 +176,84 @@ function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a onclick="goTo('dashboard.html')" id="dashboard" href="#" class="nav-link"><i
+        <a  onclick="goTo('dashboard.html')" id="dashboard" href="#" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('my-profile.html')"    id="my-profile" href="#" class="nav-link"><i class="far fa-address-card"></i><span>My profile</span></a>
+        <a  onclick="goTo('my-profile.html')"    id="my-profile" href="#" class="nav-link"><i class="far fa-address-card"></i><span>My profile</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('my-student.html')"  id="my-student" href="#" class="nav-link"> <i class="fas fa-users"></i>
+        <a  onclick="goTo('my-student.html')"  id="my-student" href="#" class="nav-link"> <i class="fas fa-users"></i>
         <span>My Students</span></a>
     </li>
 
     <li class="nav-item">
-        <a data-bs-placement="top" data-bs-toggle="tooltip" title="Coming Soon ..."  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+        <a   id="learning-hub" href="learning-hub.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
 
     
     <li class="nav-item">
-    <a  onclick="goTo('subject-registration.html')"  id="subject-registration" href="#" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
+    <a   onclick="goTo('subject-registration.html')"  id="subject-registration" href="#" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
     </li>
 
     <!-- <li class="nav-item">
-    <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
+    <a   id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
     <span>Attendance Card</span></a>
     </li> --!>
 
 
     <li class="nav-item">
-        <a id="timetable" href="#" class="nav-link"><i
+        <a  id="timetable" href="#" class="nav-link"><i
                 class="flaticon-calendar"></i><span>My Timetable <sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('attendance.html')"  id="attendance" href="#" class="nav-link"><i class="fas fa-chart-line"></i>
+        <a  onclick="goTo('attendance.html')"  id="attendance" href="#" class="nav-link"><i class="fas fa-chart-line"></i>
         <span>Mark Attendance</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('cbt.html')"  id="cbt" href="#" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
+        <a  onclick="goTo('cbt.html')"  id="cbt" href="#" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+        <a  onclick="goTo('result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('change-password.html')"  id="change-password" href="#" class="nav-link"><i
+        <a  onclick="goTo('change-password.html')"  id="change-password" href="#" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
     <li class="nav-item">
-        <a onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -437,14 +454,14 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a onmouseover="viewStudent(${JSON.stringify(data[i])
+          <a  onmouseover="viewStudent(${JSON.stringify(data[i])
             .replace(/'/g, "")
             .replace(
               /"/g,
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a onclick="viewStudentResult(${JSON.stringify(data[i])
+          <a  onclick="viewStudentResult(${JSON.stringify(data[i])
             .replace(/'/g, "")
             .replace(
               /"/g,
@@ -806,14 +823,14 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -824,13 +841,13 @@ function searchStudent(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-lock"></i> Disable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
@@ -839,7 +856,7 @@ function searchStudent(search_data) {
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -858,14 +875,14 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -876,13 +893,13 @@ function searchStudent(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
@@ -891,7 +908,7 @@ function searchStudent(search_data) {
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -912,14 +929,14 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -930,13 +947,13 @@ function searchStudent(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-lock"></i> Disable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
@@ -945,7 +962,7 @@ function searchStudent(search_data) {
                           class="fas fa-poll"></i>
                       Result</a> 
 
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -964,14 +981,14 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i])
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -982,13 +999,13 @@ function searchStudent(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i])
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
@@ -997,7 +1014,7 @@ function searchStudent(search_data) {
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -1934,26 +1951,23 @@ function getCBTForSubject() {
               )
                 .replace(/'/g, "")
                 .replace(/"/g, "'")})"
-                 ><i class="fas fa-eye"></i> View</button>
+                 ><i class="fas fa-eye"></i></button>
               <button style="text-decoration: none; cursor: pointer;" onclick=" reloadEditFrame(); editCBT(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
                 .replace(/"/g, "'")})"
                   class="btn-sm btn-warning" data-bs-toggle="modal"
-                  data-bs-target="#editModal"><i class="fas fa-edit"></i>
-                  Edit</button>
+                  data-bs-target="#editModal"><i class="fas fa-edit"></i></button>
               <button style="text-decoration: none; cursor: pointer;" onclick="viewResultForCBT(${
                 data[i].id
               })"
-                  class="btn-sm btn-success"><i class="fas fa-poll"></i>
-                  Check Result</button>
+                  class="btn-sm btn-success"><i class="fas fa-poll"></i></button>
 
               ${
                 data[i].cbt_status == "OPEN"
                   ? ` <button style="text-decoration: none; cursor: pointer;" onclick="changeCBTStatus(${data[i].id},'CLOSE')"
-                      class="btn-sm btn-secondary"><i class="fas fa-lock"></i></i>
-                      Close CBT</button>`
+                      class="btn-sm btn-secondary"><i class="fas fa-lock"></i></i></button>`
                   : `
                   <button
                     style="text-decoration: none; cursor: pointer;"
@@ -1961,15 +1975,13 @@ function getCBTForSubject() {
                     class="btn-sm btn-secondary"
                   >
                   <i class="fas fa-lock-open"></i>
-                    Open CBT
                   </button>`
               }
 
               <button style="text-decoration: none; cursor: pointer;" onclick="deleteCBT(${
                 data[i].id
               })"
-                  class="btn-sm btn-danger"><i class="fas fa-trash"></i>
-                  Delete</button>
+                  class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
 
               </td>
           </td>
@@ -2024,7 +2036,7 @@ function proceedToSetQuestion() {
       localStorage.setItem("cbt_instruction", cbt_instruction);
       localStorage.setItem("question_no", question_no);
       window.parent.parent.location.assign(
-        domain + "/teacher/cbt/cbt-questions-create.html"
+        domain + "/teacher/cbt/frame-cbt-question-create.html"
       );
     }
   } else {
@@ -2084,16 +2096,15 @@ function getSavedQuestions() {
 `;
   for (n = 0; n < questions_number.length; n++) {
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
-     <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
-      questions_number[n]
-    }" contenteditable="true">${question[questions_number[n]].replace(
-      /⌑/g,
-      ","
-    )}</span></p>
-
-
-
-    
+    <div id="demo" class="" class="card-body text-dark bg-light">
+    <b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
+        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
+          questions_number[n]
+        }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
+            ${question[questions_number[n]].replace(/⌑/g, ",")}
+        </div>
+    </div>
+    <br>
   
     <div class="pl-2">
              <div id="optionA${
@@ -2105,7 +2116,7 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "A" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="A${
+    }" class="form-check-label" forr="A${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[0]
@@ -2122,7 +2133,7 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "B" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="B${
+    }" class="form-check-label" forr="B${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[1]
@@ -2139,7 +2150,7 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "C" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="C${
+    }" class="form-check-label" forr="C${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[2]
@@ -2156,7 +2167,7 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "D" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="D${
+    }" class="form-check-label" forr="D${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[3]
@@ -2369,10 +2380,12 @@ function getCBTdetailsView() {
 <hr>
 `;
   for (n = 0; n < questions_number.length; n++) {
-    document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
-   <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
-      questions_number[n]
-    }" >${question[questions_number[n]].replace(/⌑/g, ",")}</span></p>
+    document.getElementById("cbt_view").innerHTML += ` 
+  <div class="mb-3">
+   <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
+   <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
+     questions_number[n]
+   }" >${question[questions_number[n]].replace(/⌑/g, ",")}</span></p>
  <div class="pl-2">
            <div id="optionA${
              questions_number[n]
@@ -2509,7 +2522,7 @@ function proceedToEditQuestion() {
       localStorage.setItem("cbt_instruction", cbt_instruction);
 
       window.parent.parent.location.assign(
-        domain + "/teacher/cbt/cbt-questions-edit.html"
+        domain + "/teacher/cbt/frame-cbt-question-edit.html"
       );
     }
   } else {
@@ -2559,12 +2572,18 @@ function getCBTdetailsEdit() {
 `;
   for (n = 0; n < questions_number.length; n++) {
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
-     <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
-      questions_number[n]
-    }" contenteditable="true">${question[questions_number[n]].replace(
-      /⌑/g,
-      ","
-    )}</span></p>
+
+    <div id="demo" class="" class="card-body text-dark bg-light">
+    <b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
+        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
+          questions_number[n]
+        }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
+            ${question[questions_number[n]].replace(/⌑/g, ",")}
+        </div>
+    </div>
+    <br>
+
+
    <div class="pl-2">
              <div id="optionA${
                questions_number[n]
@@ -2575,7 +2594,7 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "A" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="A${
+    }" class="form-check-label" forr="A${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[0]
@@ -2592,7 +2611,7 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "B" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="B${
+    }" class="form-check-label" forr="B${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[1]
@@ -2609,7 +2628,7 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "C" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="C${
+    }" class="form-check-label" forr="C${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[2]
@@ -2626,7 +2645,7 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "D" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="D${
+    }" class="form-check-label" forr="D${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[3]
@@ -3406,14 +3425,13 @@ function getLessonPlan(week) {
         " " +
         localStorage["LESSON-PLAN"].split("-")[2];
 
-        document.getElementById("lp_status").innerHTML = `<span class="badge ${
-          data.status == "APPROVED"
-            ? `bg-success`
-            : data.status == "DISAPPROVED"
-            ? `bg-danger`
-            : `bg-warning`
-        }"><b>${data.status}</b></span>`;
-
+      document.getElementById("lp_status").innerHTML = `<span class="badge ${
+        data.status == "APPROVED"
+          ? `bg-success`
+          : data.status == "DISAPPROVED"
+          ? `bg-danger`
+          : `bg-warning`
+      }"><b>${data.status}</b></span>`;
 
       document.getElementById("week1").innerHTML =
         ` <option value="${data.week}">${data.week}</option>` +
@@ -3426,7 +3444,7 @@ function getLessonPlan(week) {
       document.getElementById("previous_lesson").value = data.previous_lesson;
       document.getElementById("behavioural_objective").value =
         data.behavioural_objective;
-      document.getElementById("content").value = data.content;
+      CKEDITOR.instances.editor1.setData(data.content);
       document.getElementById("presentation").value = data.presentation;
       document.getElementById("evaluation").value = data.evaluation;
       document.getElementById("conclusion").value = data.conclusion;
@@ -3472,7 +3490,7 @@ function getAssignedSubjectForLearningHub() {
                         <td> <small>${data[i].subject_name}</td>
                         <td>${data[i].class.class_name}</td>
                         <td>
-                          <a onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].id}'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name} ${data[i].class.class_name}'); getLearningHubMaterials('${data[i].id}');" type="button" class="btn btn-primary btn-block"
+                          <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].id}'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name} ${data[i].class.class_name}'); getLearningHubMaterials('${data[i].id}');" type="button" class="btn btn-primary btn-block"
                               data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                               Materials
                           </a     >
@@ -3511,7 +3529,7 @@ function saveLessonPlan() {
       previous_lesson: document.getElementById("previous_lesson").value,
       behavioural_objective: document.getElementById("behavioural_objective")
         .value,
-      content: document.getElementById("content").value,
+      content: CKEDITOR.instances.editor1.getData(),
       presentation: document.getElementById("presentation").value,
       evaluation: document.getElementById("evaluation").value,
       conclusion: document.getElementById("conclusion").value,
@@ -3642,7 +3660,12 @@ function editMaterial(TOPIC, CONTENT, material_type) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      material_id: JSON.parse("LH_EDIT_MATERIAL").id,
+      material_id: JSON.parse(
+        CryptoJS.AES.decrypt(
+          localStorage["LH_EDIT_MATERIAL"],
+          "AESENCRYPT"
+        ).toString(CryptoJS.enc.Utf8)
+      ).id,
       material_type: material_type,
       topic: TOPIC,
       content: CONTENT,
@@ -3719,7 +3742,8 @@ function deleteMaterial(material_id, material_type) {
 }
 
 function getLearningHubMaterials(subject_id) {
-  document.getElementById('subject').innerHTML = "LEARNING HUB FOR " + localStorage['LH_SUBJECT_CLASS'];
+  document.getElementById("subject").innerHTML =
+    "LEARNING HUB FOR " + localStorage["LH_SUBJECT_CLASS"];
   fetch(ip + "/api/teacher/subject-material/" + subject_id, {
     method: "GET",
     headers: {
@@ -3741,6 +3765,7 @@ function getLearningHubMaterials(subject_id) {
       if (data.note.length > 0) {
         document.getElementById("notes-content-main").innerHTML = ``;
         data.note.forEach((note) => {
+          console.log(note);
           document.getElementById(
             "notes-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
@@ -3750,23 +3775,22 @@ function getLearningHubMaterials(subject_id) {
                   <small id="date_time" class="m-0 text-primary">${
                     note.date
                   }</small>
-                  <a onclick="deleteMaterial('${
+                  <a  onclick="deleteMaterial('${
                     note.id
                   }','NOTE')" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:red;" class="fas fa-trash-alt"></i></i>
                   </a>
-                  <a onclick="content('EDIT','NOTE'); localStorage.setItem('LH_EDIT_MATERIAL',${JSON.stringify(
-                    note
-                  )
-                    .replace(/'/g, "")
-                    .replace(/"/g, "'")})" target="_blank"
+                  <a  onclick="content('EDIT','NOTE','${CryptoJS.AES.encrypt(
+                    JSON.stringify(note),
+                    "AESENCRYPT"
+                  )}')" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:black;" class="far fa-edit"></i>
                   </a>
                   <br>
                   <span class="m-0 text-primary">
-                      <a id="topic" data-toggle="collapse" href="#demo">${
+                      <a  id="topic" data-toggle="collapse" href="#demo">${
                         note.topic
                       }</a>
                   </span>
@@ -3804,13 +3828,13 @@ function getLearningHubMaterials(subject_id) {
             <small id="date_time" class="m-0 text-primary">${
               upload.date
             }</small>
-            <a onclick="deleteMaterial('${upload.id}','UPLOAD')" target="_blank"
+            <a  onclick="deleteMaterial('${upload.id}','UPLOAD')" target="_blank"
                 class="btn  btn-circle btn-sm float-right">
                 <i style="color:red;" class="fas fa-trash-alt"></i></i>
             </a>
             <br>
             <span class="m-0 text-primary">
-                <a id="topic" data-toggle="collapse" href="#demo">${
+                <a  id="topic" data-toggle="collapse" href="#demo">${
                   upload.url
                 }</a>
             </span>
@@ -3847,25 +3871,18 @@ function getLearningHubMaterials(subject_id) {
         document.getElementById("videos-content-main").innerHTML = ``;
         c = data.video.length;
         data.video.forEach((video) => {
-
           document.getElementById(
             "videos-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-        <div onclick="collapseContent('video_${
-          video.id
-        }')" class="card-header">
-            <small id="date_time" class="m-0 text-primary">${
-              video.date
-            }</small>
-            <a onclick="deleteMaterial('${video.id}','VIDEO')" target="_blank"
+        <div onclick="collapseContent('video_${video.id}')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${video.date}</small>
+            <a  onclick="deleteMaterial('${video.id}','VIDEO')" target="_blank"
                 class="btn  btn-circle btn-sm float-right">
                 <i style="color:red;" class="fas fa-trash-alt"></i></i>
             </a>
             <br>
             <span class="m-0 text-primary">
-                <a id="topic" data-toggle="collapse" href="#demo">Video ${
-                 c
-                }</a>
+                <a  id="topic" data-toggle="collapse" href="#demo">Video ${c}</a>
             </span>
         </div>
         <div id="video_${video.id}" class="collapse"
@@ -3876,7 +3893,7 @@ function getLearningHubMaterials(subject_id) {
             allowfullscreen></iframe>
         </div>
         </div>`;
-        c = c - 1;
+          c = c - 1;
         });
       } else {
         document.getElementById("videos-content-main").innerHTML = ``;
@@ -3887,7 +3904,6 @@ function getLearningHubMaterials(subject_id) {
                                               style="justify-content:center; display:flex">No video here</div>
                                           </div>`;
       }
-
     })
     .catch((err) => console.log(err));
 }
@@ -4347,7 +4363,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                             </div>
                         </form>    
                         <br>
-                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+                        <a  style="float: right; color: red;" href="./index.html">Log out</a>
 
 
                         <div class="login-row btnroo row no-margin">
@@ -4361,7 +4377,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                     </div>
                     <footer class="footer">
                         <div style="display: flex;
-                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                        justify-content: center;" class="copyright">© <a  style="color: #051f3e;"
                                 href="../#"><b>
                                     Dextroux Technologies</b></a></div>
                     </footer>
@@ -4457,6 +4473,36 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 function removeSpinnerModal() {
   parent.$("#spinnerModal").modal("hide");
   parent.document.getElementById("spinnerModal").remove();
+}
+
+function scrollToElement(target) {
+  window.location.href = "#" + target;
+}
+
+function collapseSidebar() {
+  if (
+    navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    // navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i) ||
+    navigator.userAgent.match(/Windows Phone/i)
+  ) {
+    // MOBILE
+    a = true;
+  } else {
+    // DESKTOP
+    wrapper = document.getElementById("wrapper");
+    if (wrapper != null) {
+      if ((wrapper.className = "wrapper bg-ash")) {
+        wrapper.className = "wrapper bg-ash sidebar-collapsed";
+        if (document.getElementById("logo").innerHTML != "") {
+          changeLogo();
+        }
+      }
+    }
+  }
 }
 
 // TOAST

@@ -39,7 +39,9 @@
     </script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
     </script>
-    <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
+    <!-- <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script> -->
+    <script src="//cdn.ckeditor.com/4.20.1/full/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
     <style>
         .cke {
             visibility: hidden;
@@ -954,7 +956,7 @@
     </style>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"  onload="getCBTdetailsEdit()">
+<body style="font-family: Poppins; font-weight: bold;" onload="getCBTdetailsEdit()">
 
     <script>var seconds = 420</script>
 
@@ -1056,96 +1058,43 @@
             <br />
         </div>
 
-        <!-- Preview Modal -->
         <div class="modal fade" id="questionModalCenter" tabindex="-1" role="dialog"
             aria-labelledby="questionModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title mb-0" id="questionModalTitle"></h5>
+                    <div style="display: flex; justify-content: center;" class="modal-header">
+                        <h5 id="question" class="modal-title mb-0" id="questionModalTitle">
+
+
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div id="questionModalContent"></div>
+
+                        <div class="card shadow mb-3">
+                            <div id="demoe" class="card-body bg-light">
+                                <div onclick="clearEditor()" onmouseover="copyQuestionContent()"
+                                    id="editor1" name="editor1" class="p-2"
+                                    style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
+
+                                </div>
+                            </div>
+
+
+                            <div class="card shadow mb-1">
+                                <a id="content_btn" style="color: white;" onclick="save('questionModalCenter')"
+                                    class="btn btn-primary"><i class="far fa-sticky-note"></i>
+                                    Save Question</a>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Preview Modal All -->
-        <div class="modal fade" id="allQuestionModalCenter" tabindex="-1" role="dialog"
-            aria-labelledby="allQuestionModalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title mb-0" id="allQuestionModalTitle">All Questions and Answers</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="allQuestionModalContent"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Exam Ended Modal -->
-        <div class="modal fade" id="endExamModalCenter" tabindex="-1" role="dialog" aria-labelledby="endModalTitle"
-            aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title col-12 text-center" id="endExamModalTitle">Exam Ended</h5>
-                    </div>
-                    <div class="modal-body text-center">
-                        <button onclick="$('#exam').submit()" class="btn btn-lg btn-primary">
-                            <span id="submitSpinnerExamEnded" role="status" aria-hidden="true"></span>
-                            Submit Exam</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Answer sheet selection preview modal-->
-        <div class="modal" id="myModal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Preview</h4>
-                        <button type="button" class="close" data-dismiss="modal">×</button>
-                    </div>
-
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <img id="blah" src="#" alt="No Image" width="250px">
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- Help Modal -->
-        <div class="modal fade" id="helpModalCenter" tabindex="-1" role="dialog" aria-labelledby="helpModalTitle"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title col-12 text-center" id="helpModalTitle">Help</h5>
-                    </div>
-                    <div class="modal-body">
-                        <p>This is a help content</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </div>
 
@@ -1162,8 +1111,47 @@
     <script src="../js/teacher.js"></script>
     <script src="../../common-library.js"></script>
     <script src="../../js/iframeSizer.contentWindow.min.js"></script>
+    <script src="../js/ckeditor.js"></script>
+
+    <script>
+        function openQuestionModal(id, question) {
+            localStorage.setItem("CBT_ID", id);
+            localStorage.setItem("CBT_QUESTION", question);
+            document.getElementById("question").innerHTML = "QUESTION " + (parseInt(id) + 1);
+            CKEDITOR.instances.editor1.setData(question);
+            $("#questionModalCenter").modal("show");
+        }
+
+        function save(id) {
+            ques = CKEDITOR.instances.editor1.getData();
+            document.getElementById(localStorage["CBT_ID"]).innerHTML = ques;
+            saveQuestion(parseInt(localStorage["CBT_ID"]), ques);
+            $("#" + id).modal("hide");
+            scrollToElement("Q" + localStorage["CBT_ID"]);
+        }
+
+        function copyQuestionContent() {
+            document.getElementById(localStorage["CBT_ID"]).innerHTML =  CKEDITOR.instances.editor1.getData();
+        }
+
+        function clearEditor() {
+            editor = document.getElementById("editor1").innerHTML.trim();
+            if (editor.includes('Type question')) {
+                document.getElementById("editor1").innerHTML = "";
+            }
+        }
+    </script>
 
 
+    <style>
+        [contenteditable] {
+            outline: 0px solid transparent;
+            border-bottom: 2px solid black;
+            padding: 2px;
+
+
+        }
+    </style>
 
 
 

@@ -1,6 +1,7 @@
 <html lang="en">
 
 <head id="common-library">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
     <style>
         body {
             transition: opacity ease-in 0.2s;
@@ -39,9 +40,7 @@
     </script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js">
     </script>
-    <!-- <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script> -->
-    <script src="//cdn.ckeditor.com/4.20.1/full/ckeditor.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.13.0/standard/ckeditor.js"></script>
     <style>
         .cke {
             visibility: hidden;
@@ -956,38 +955,26 @@
     </style>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;" onload="getCBTdetailsEdit()">
+<body style="font-family: Poppins; font-weight: bold;" onLoad="getNote()">
 
     <script>var seconds = 420</script>
 
     <div style="padding-top: 10px;" class="container">
 
-        <div class="questionContainer">
+        <div id="noteContainer">
 
             <div class="instructions pb-2">
 
                 <h3 id="session_term" class="h6 text-right">Session | Term</h3>
-                <h3 id="cbt_date_time" class="h6 text-right">Date</h3>
                 <h2 id="school_name" style="text-align: center; font-weight: bold; font-family: Poppins;" class="h3">
                     School Name</h2>
+                <br>
                 <h4 id="subject_class" style="text-align: center;" class="h3">Subject and Class</h4>
-                <h4 id="cbt_title" style="text-align: center;" class="h3">Title</h5>
-                    <br />
-                    <h6 style="text-align: center;" class="h5 text"><b>Please adhere strictly to the examination
-                            instructions
-                        </b></h6>
-                    <h6 id="cbt_instruction" style="text-align: center;" class="h6 text">Instruction</h6>
-                    <h6 style="text-align: center; font-family: Poppins;" class="h6 text-success"><b>PLEASE NOTE THAT
-                            THE SYSTEM ONLY AUTO
-                            SUBMIT
-                            WHEN THE ALLOCATED TIME IS UP</b></h6>
+                <h4 id="note_title" style="text-align: center;" class="h3">STUDY NOTE</h5>
 
             </div>
             <div class="timer pb-3 pt-2"
                 style="position: sticky !important;top: 58px; background-color: white; z-index:3">
-                <div style="font-family: Poppins;" class="text-right h4">Time Allocated: <span id="cbt_duration"
-                        style="color: red; opacity: 0.835343;">00:00:00</span></div>
-
 
             </div>
 
@@ -1009,92 +996,106 @@
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-mcq" role="tabpanel" aria-labelledby="nav-mcq-tab">
-                        <div id="cbt_view" class="p-3" style="border: 1px dashed black">
-                            <div class="h5">
+                        <div id="note_view" class="p-3" style="border: 1px dashed black">
 
-                                <div style="text-align: center;" class="mb-2">Number of questions to answer: 30</div>
-                            </div>
-                            <hr>
-                            <div class="mb-3">
-                                <p class="mb-1"><b>1:</b> What is the name of the new Apple Chip? </p>
-                                <div class="pl-2">
-                                    <div class="form-check" hidden=""> <input class="form-check-input" type="radio"
-                                            name="39290" id="Blank39290" value="" checked=""> <label
-                                            class="form-check-label" for="Blank39290"> </label> </div>
-                                    <div class="form-check"> <input class="form-check-input" type="radio" name="39290"
-                                            id="A39290" value="A"> <label class="form-check-label" for="A39290">Intel
-                                            Core I10</label> </div>
-                                    <div class="form-check"> <input class="form-check-input" type="radio" name="39290"
-                                            id="B39290" value="B"> <label class="form-check-label"
-                                            for="B39290">M1</label> </div>
-                                    <div class="form-check"> <input class="form-check-input" type="radio" name="39290"
-                                            id="C39290" value="C"> <label class="form-check-label"
-                                            for="C39290">AMD</label> </div>
-                                    <div class="form-check"> <input class="form-check-input" type="radio" name="39290"
-                                            id="D39290" value="D"> <label class="form-check-label"
-                                            for="D39290">Nvidia</label> </div>
-                                </div>
-                            </div>
-                            <hr class="mt-0 mb-0 pt-0 pb-0">
 
-                            <small class="ml-1 btn btn-sm text-right mb-2 text-success pr-2"
-                                onclick="addQuestion()"><span id="" class="" role="status">
-                                    <i class="fas fa-plus"></i> Add
-                                    Question</small>
                         </div>
                     </div>
-                </div>
-
-                <div style="justify-content: center;" class="row mt-4">
-                    <div class="col-6">
-                        <button type="button" id="update_cbt" class="btn btn-block btn-success" onclick="updateCBT()">
-
-                            Update CBT
-                        </button>
-                    </div>
-
                 </div>
             </form>
             <br />
         </div>
 
+        <!-- Preview Modal -->
         <div class="modal fade" id="questionModalCenter" tabindex="-1" role="dialog"
             aria-labelledby="questionModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div style="display: flex; justify-content: center;" class="modal-header">
-                        <h5 id="question" class="modal-title mb-0" id="questionModalTitle">
-
-
-                        </h5>
+                    <div class="modal-header">
+                        <h5 class="modal-title mb-0" id="questionModalTitle"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
-
-                        <div class="card shadow mb-3">
-                            <div id="demoe" class="card-body bg-light">
-                                <div onclick="clearEditor()" onmouseover="copyQuestionContent()"
-                                    id="editor1" name="editor1" class="p-2"
-                                    style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
-
-                                </div>
-                            </div>
-
-
-                            <div class="card shadow mb-1">
-                                <a id="content_btn" style="color: white;" onclick="save('questionModalCenter')"
-                                    class="btn btn-primary"><i class="far fa-sticky-note"></i>
-                                    Save Question</a>
-                            </div>
-
-                        </div>
+                        <div id="questionModalContent"></div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Preview Modal All -->
+        <div class="modal fade" id="allQuestionModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="allQuestionModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title mb-0" id="allQuestionModalTitle">All Questions and Answers</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="allQuestionModalContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Ended Modal -->
+        <div class="modal fade" id="endExamModalCenter" tabindex="-1" role="dialog" aria-labelledby="endModalTitle"
+            aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title col-12 text-center" id="endExamModalTitle">Exam Ended</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                        <button onclick="$('#exam').submit()" class="btn btn-lg btn-primary">
+                            <span id="submitSpinnerExamEnded" role="status" aria-hidden="true"></span>
+                            Submit Exam</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Answer sheet selection preview modal-->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Preview</h4>
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <img id="blah" src="#" alt="No Image" width="250px">
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Help Modal -->
+        <div class="modal fade" id="helpModalCenter" tabindex="-1" role="dialog" aria-labelledby="helpModalTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title col-12 text-center" id="helpModalTitle">Help</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>This is a help content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -1108,50 +1109,11 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/styles/default.min.css"
         media="all">
     <script src=""></script>
-    <script src="../js/teacher.js"></script>
-    <script src="../../common-library.js"></script>
+    <script src="./js/student.js"></script>
+    <script src="../common-library.js"></script>
     <script src="../../js/iframeSizer.contentWindow.min.js"></script>
-    <script src="../js/ckeditor.js"></script>
-
-    <script>
-        function openQuestionModal(id, question) {
-            localStorage.setItem("CBT_ID", id);
-            localStorage.setItem("CBT_QUESTION", question);
-            document.getElementById("question").innerHTML = "QUESTION " + (parseInt(id) + 1);
-            CKEDITOR.instances.editor1.setData(question);
-            $("#questionModalCenter").modal("show");
-        }
-
-        function save(id) {
-            ques = CKEDITOR.instances.editor1.getData();
-            document.getElementById(localStorage["CBT_ID"]).innerHTML = ques;
-            saveQuestion(parseInt(localStorage["CBT_ID"]), ques);
-            $("#" + id).modal("hide");
-            scrollToElement("Q" + localStorage["CBT_ID"]);
-        }
-
-        function copyQuestionContent() {
-            document.getElementById(localStorage["CBT_ID"]).innerHTML =  CKEDITOR.instances.editor1.getData();
-        }
-
-        function clearEditor() {
-            editor = document.getElementById("editor1").innerHTML.trim();
-            if (editor.includes('Type question')) {
-                document.getElementById("editor1").innerHTML = "";
-            }
-        }
-    </script>
 
 
-    <style>
-        [contenteditable] {
-            outline: 0px solid transparent;
-            border-bottom: 2px solid black;
-            padding: 2px;
-
-
-        }
-    </style>
 
 
 

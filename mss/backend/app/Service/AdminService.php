@@ -553,7 +553,7 @@ class AdminService
         $communication->receiver = $request->receiver;
         $communication->receiver_user_type = $request->receiver_user_type;
         $communication->message = $request->message;
-        $communication->message_type = $request->messager_type;
+        $communication->message_type = $request->message_type;
         $communication->receiver_seen = ",";
         $communication->date =  date("Y-m-d") . " | " . date("h:i a");
         $communication->save();
@@ -567,7 +567,10 @@ class AdminService
         if ($request->edit_type == "REPLY") {
             $communication->reply = $request->reply;
         } else {
-            $communication->receiver_seen =   $communication->receiver_seen == NULL ? $request->receiver_seen . "," :   $communication->receiver_seen . "," . $request->receiver_seen;
+            // CHECK IF RECEIVER SEEN AS PREVIOUSLY BEEN SAVED
+            if (!in_array($request->receiver_seen, explode(",", $communication->receiver_seen))) {
+                $communication->receiver_seen =   $communication->receiver_seen == "," ? $request->receiver_seen . "," : $communication->receiver_seen . $request->receiver_seen;
+            }
         }
         $communication->save();
         return response()->json(['success' => true, 'message' => 'Update was successful.']);
@@ -596,31 +599,35 @@ class AdminService
             // SENDER 
             if ($message->sender_user_type == "STUDENT") {
                 $student = StudentModel::find($message->sender);
-                $message->sender = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
+                $message->sender_name = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
             } else if ($message->sender_user_type == "TEACHER") {
                 $teacher = TeacherModel::find($message->sender);
-                $message->sender = "TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
-            } else if ($message->sender_user_type == "STUDENT" && $message->receiver_user_type == "TEACHER") {
-                $teacher = TeacherModel::find($message->sender);
-                $message->sender = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+                $message->sender_name = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
             } else {
-                $message->sender = "SCHOOL ADMIN";
+                $message->sender_name = "SCHOOL ADMIN";
             }
+
+            // if ($message->sender_user_type == "STUDENT" && $message->receiver_user_type == "TEACHER") {
+            //     $teacher = TeacherModel::find($message->receiver);
+            //     $message->receiver = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+            // }
 
 
             // RECEIVER 
             if ($message->receiver_user_type == "STUDENT") {
                 $student = StudentModel::find($message->receiver);
-                $message->receiver = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
+                $message->receiver_name = "PARENT (" . $student->first_name . " " . $student->last_name . ")";
             } else if ($message->receiver_user_type == "TEACHER") {
                 $teacher = TeacherModel::find($message->receiver);
-                $message->receiver = "TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
-            } else if ($message->sender_user_type == "TEACHER" && $message->receiver_user_type == "STUDENT") {
-                $teacher = TeacherModel::find($message->receiver);
-                $message->receiver = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+                $message->receiver_name = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
             } else {
-                $message->receiver = "SCHOOL ADMIN";
+                $message->receiver_name = "SCHOOL ADMIN";
             }
+
+            // if ($message->sender_user_type == "TEACHER" && $message->receiver_user_type == "STUDENT") {
+            //     $teacher = TeacherModel::find($message->sender);
+            //     $message->sender = "CLASS TEACHER (" . $teacher->first_name . " " . $teacher->last_name . ")";
+            // }
         }
 
         return response()->json(['success' => true, 'messages' => $messages]);

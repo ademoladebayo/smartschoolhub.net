@@ -34,6 +34,9 @@
     <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
+
+    <script src="//cdn.ckeditor.com/4.20.1/full/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
@@ -197,8 +200,9 @@
                                     <div class="">
                                         <h3 id="lesson_plan_for"
                                             style="font-weight: bold; font-family: Poppins; text-align: center;">
-                                            ____ </h3> <div style="color: white;" id="lp_status">
-                                                ---</div>
+                                            ____ </h3>
+                                        <div style="color: white;" id="lp_status">
+                                            ---</div>
                                     </div>
                                     <div class="dropdown">
                                         <i onclick="editLessonPlan()" class="fas fa-edit"></i>
@@ -257,7 +261,7 @@
 
                                     </div>
 
-                                    <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                    <div class="col-12 form-group">
                                         <h5 style="font-family: Poppins; color: black; font-weight: bold;">
                                             BEHAVIOURAL
                                             OBJECTIVES</h5>
@@ -265,11 +269,24 @@
                                             name="lesson_plan_content" cols="30" rows="10" disabled></textarea>
                                     </div>
 
-                                    <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                    <div class="col-12 form-group">
                                         <h5 style="font-family: Poppins; color: black; font-weight: bold;">CONTENT
                                         </h5>
-                                        <textarea id="content" class="textarea form-control" name="lesson_plan_content"
-                                            cols="100" rows="50" disabled></textarea>
+                                        <div class="content">
+                                            <div class="card-body">
+                                                <div class="tab-pane fade show activeNEW NOTE " id="notes-content"
+                                                    role="tabpanel" aria-labelledby="pills-notes-tab">
+                                                    <div id="demo" class="" class="card-body text-dark bg-light">
+                                                        <div onchange="alert('data change')" oninput="alert('Input')"
+                                                            id="editor1" name="editor1" class="p-2"
+                                                            style="overflow: auto; height: 65vh; border:1px solid black"
+                                                            contenteditable="true">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="col-12-xxxl col-lg-6 col-12 form-group">
@@ -367,6 +384,7 @@
     <script src="../assets/js/lib/toastr/toastr.init.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+    <script src="./js/ckeditor.js"></script>
 
 
 

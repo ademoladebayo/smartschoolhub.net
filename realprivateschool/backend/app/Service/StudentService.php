@@ -141,7 +141,10 @@ class StudentService
 
     public function getDashBoardInformation($student)
     {
-        return ['cbt' => null, 'attendance' => null, 'due_balance' => null, 'events' => null, "notification" => null];
+        $util = new Utils();
+        $CBTModel = CBTModel::where('class_id', $student->class)->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
+
+        return ['cbt_no' => count($CBTModel), 'attendance' => $this->attendanceSummary($student->id)->getData()->attendance, 'due_balance' => null, 'events' => null, "notification" => null];
     }
 
     // CBT
@@ -381,11 +384,22 @@ class StudentService
     }
 
     // ATTENDANCE
-    public function attendanceSummary(Request $request)
+    public function attendanceSummary($request)
     {
+        $util = new Utils();
+        if (gettype($request) == 'integer') {
+            $session = $util->getCurrentSession()[0];
+            $term = $util->getCurrentSession()[1];
+            $student = $request;
+        } else {
+            $session = $request->session;
+            $term = $request->term;
+            $student = $request->student_id;
+        }
+
         $Days = [];
-        $DaysOpened = StudentAttendanceModel::select("date")->where("session", $request->session)->where("term", $request->term)->get();
-        $AttendanceSummary = StudentAttendanceModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->orderBy('id', 'DESC')->get();
+        $DaysOpened = StudentAttendanceModel::select("date")->where("session", $session)->where("term", $term)->get();
+        $AttendanceSummary = StudentAttendanceModel::where('student_id', $student)->where("session", $session)->where("term", $term)->orderBy('id', 'DESC')->get();
 
         foreach ($DaysOpened as $day) {
             array_push($Days, $day->date);
@@ -394,7 +408,8 @@ class StudentService
         $opened = count(array_unique($Days));
         $present = count($AttendanceSummary);
         $absent = intval($opened) - intval($present);
-        return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary]);
+        $atd_perc = $present > 0 ? ($present / $opened) * 100 : 0;
+        return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary, 'attendance' => number_format($atd_perc, 2) . "%"]);
     }
 
 

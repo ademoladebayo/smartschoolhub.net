@@ -18,58 +18,59 @@ window.addEventListener("offline", () =>
 getSchoolDetails();
 getCurrentSession();
 loadSchoolColor();
+collapseSidebar();
 
 function loadSideNav(page) {
   if ("isParent" in localStorage) {
     document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a id="dashboard" href="dashboard.html" class="nav-link"><i
+        <a  id="dashboard" href="dashboard.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-         <a  id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
+         <a   id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+        <a   id="learning-hub" href="learning-hub.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
     <li class="nav-item">
-        <a  id="timetable" href="?#timetable.html" class="nav-link"><i
+        <a   id="timetable" href="?#timetable.html" class="nav-link"><i
                 class="flaticon-calendar"></i><span>Timetable<sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
+        <a   id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
         <span>My Attendance</span></a>
     </li>
 
     <!--  <li class="nav-item">
-    <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
+    <a   id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
     <span>Attendance Card</span></a>
     </li>  --!>
 
     <li class="nav-item">
-        <a   id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
+        <a    id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
     </li>
     <li class="nav-item">
-        <a   id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
+        <a    id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
                 Results</span></a>
     </li>
    
     <li class="nav-item">
-        <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
+        <a   id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
                 and History</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="communication-channel" href="communication-channel.html" class="nav-link"><i class="fa fa-comments"></i><span>Communication Channel</span></a>
+        <a   id="communication-channel" href="communication-channel.html" class="nav-link"><i class="fa fa-comments"></i><span>Communication Channel</span></a>
     </li>
     
     <li class="nav-item">
-      <a id="change-password" href="change-password.html" class="nav-link">
+      <a  id="change-password" href="change-password.html" class="nav-link">
         <i class="flaticon-settings"></i>
         <span>Change Password</span>
       </a>
@@ -77,32 +78,32 @@ function loadSideNav(page) {
       
     
     <li class="nav-item">
-        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -115,49 +116,49 @@ function loadSideNav(page) {
     document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a id="dashboard" href="dashboard.html" class="nav-link"><i
+        <a  id="dashboard" href="dashboard.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-         <a  id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
+         <a   id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+        <a   id="learning-hub" href="learning-hub.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
     <li class="nav-item">
-        <a  id="timetable" href="?#timetable.html" class="nav-link"><i
+        <a   id="timetable" href="?#timetable.html" class="nav-link"><i
                 class="flaticon-calendar"></i><span>Timetable<sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
+        <a   id="attendance" href="attendance.html" class="nav-link"><i class="fas fa-chart-line"></i>
         <span>My Attendance</span></a>
     </li>
 
     <!--  <li class="nav-item">
-    <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
+    <a   id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
     <span>Attendance Card</span></a>
     </li>  --!>
 
     <li class="nav-item">
-        <a   id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
+        <a    id="cbt" href="cbt.html" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
     </li>
     <li class="nav-item">
-        <a   id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
+        <a    id="result" href="results.html" class="nav-link"><i class="fas fa-poll"></i><span>My
                 Results</span></a>
     </li>
    
     <li class="nav-item">
-        <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
+        <a   id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment
                 and History</span></a>
     </li>
 
     
     <li class="nav-item">
-      <a id="change-password" href="change-password.html" class="nav-link">
+      <a  id="change-password" href="change-password.html" class="nav-link">
         <i class="flaticon-settings"></i>
         <span>Change Password</span>
       </a>
@@ -165,32 +166,32 @@ function loadSideNav(page) {
       
     
     <li class="nav-item">
-        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -308,6 +309,9 @@ function loadDashBoardInformation() {
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
   }</b>`;
+
+  document.getElementById('cbt_no').innerHTML = JSON.parse(localStorage["user_data"]).dashboard_information.cbt_no;
+  document.getElementById('attendance_perc').innerHTML = JSON.parse(localStorage["user_data"]).dashboard_information.attendance;
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
@@ -532,7 +536,7 @@ function getCBTForSubject() {
   // localStorage["cbt_subject_class"];
 
   // GET CBT
-  fetch(ip + "/api/student/all-cbt", {
+  fetch(ip + "/api/teacher/all-cbt", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -1174,7 +1178,7 @@ function getRegisteredSubjectForTable() {
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   <td>
-                  <a onclick="localStorage.setItem('LH_SUBJECT_ID','${
+                  <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${
                     data[i].subject_id
                   }'); localStorage.setItem('LH_SUBJECT_CLASS','${
           data[i].subject_name
@@ -2021,6 +2025,9 @@ function getLearningHubMaterials(subject_id) {
     .then((data) => {
       // DISPLAY UPLOADED NOTE
       if (data.note.length > 0) {
+         // SAVE NOTE TO LOCAL STORAGE
+         localStorage.setItem("NOTES",JSON.stringify(data.note));
+
         document.getElementById("notes-content-main").innerHTML = ``;
         data.note.forEach((note) => {
           document.getElementById(
@@ -2030,7 +2037,7 @@ function getLearningHubMaterials(subject_id) {
                   <small id="date_time" class="m-0 text-primary">${note.date}</small>
                   <br>
                   <span class="m-0 text-primary">
-                      <a id="topic" data-toggle="collapse" href="#demo">${note.topic}</a>
+                      <a  id="topic" data-toggle="collapse" href="#demo">${note.topic}</a>
                   </span>
               </div>
               <div id="note_${note.id}" class="collapse"
@@ -2044,6 +2051,8 @@ function getLearningHubMaterials(subject_id) {
               </div>`;
         });
       } else {
+         // SAVE NOTE TO LOCAL STORAGE
+         localStorage.setItem("NOTES","NO NOTE");
         document.getElementById("notes-content-main").innerHTML = ``;
         document.getElementById(
           "notes-content-main"
@@ -2068,7 +2077,7 @@ function getLearningHubMaterials(subject_id) {
             }</small>
             <br>
             <span class="m-0 text-primary">
-                <a id="topic" data-toggle="collapse" href="#demo">${
+                <a  id="topic" data-toggle="collapse" href="#demo">${
                   upload.url
                 }</a>
             </span>
@@ -2112,7 +2121,7 @@ function getLearningHubMaterials(subject_id) {
             <small id="date_time" class="m-0 text-primary">${video.date}</small>
             <br>
             <span class="m-0 text-primary">
-                <a id="topic" data-toggle="collapse" href="#demo">Video ${c}</a>
+                <a  id="topic" data-toggle="collapse" href="#demo">Video ${c}</a>
             </span>
         </div>
         <div id="video_${video.id}" class="collapse"
@@ -2136,6 +2145,51 @@ function getLearningHubMaterials(subject_id) {
       }
     })
     .catch((err) => console.log(err));
+}
+
+
+function getNote(){
+  document.getElementById("session_term").innerHTML =
+  localStorage["current_session"] +
+  " Session | " +
+  localStorage["current_term"];
+
+document.getElementById("school_name").innerHTML =
+  localStorage["SCHOOL_NAME"] + "<br/>" + localStorage["SCHOOL_ADDRESS"];
+
+document.getElementById("subject_class").innerHTML =
+  localStorage["LH_SUBJECT_CLASS"] + " " + JSON.parse(localStorage["user_data"]).data.class.class_name;
+
+  // LOAD NOTE
+  notes = JSON.parse(localStorage["NOTES"]);
+  document.getElementById("note_view").innerHTML =``;
+
+  for(i = (notes.length - 1); i >= 0; i-- ){
+    document.getElementById("note_view").innerHTML += 
+    ` <div>
+        <div class="h5">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 id="note_date_time" class="h6 text-left"><b style="border-bottom: 2px solid black;">${notes[i].date}</b></h3>
+                </div>
+  
+                <div class="col-md-8">
+                <b style="border-bottom: 2px solid black;">${notes[i].topic}</b>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="mb-3">
+        ${notes[i].content}
+        </div>
+        <hr class="mt-0 mb-0 pt-0 pb-0">
+        <br>
+        <div style="break-after:page"></div>
+    </div>
+    `;
+  }
+
+  downloadAsPDF(localStorage["LH_SUBJECT_CLASS"] + " " + JSON.parse(localStorage["user_data"]).data.class.class_name+"_"+getDate().split("-")[0],"noteContainer");
 }
 
 // ID CARD
@@ -2808,8 +2862,8 @@ function getMessage(message_type, user_type) {
                       <tr class='${c % 2 == 0 ? "even" : "odd"}'>
               
                       <td>${c}.</td>
-                      <td><b>${data[i].sender}</b></td>
-                      <td><b>${data[i].receiver}</b></td>
+                      <td><b>${data[i].sender_name}</b></td>
+                      <td><b>${data[i].receiver_name}</b></td>
                       <td><b>${data[i].date}</b></td>
                       <td>
   
@@ -2828,13 +2882,12 @@ function getMessage(message_type, user_type) {
                        </td>
   
                         <td>
-                          <button onclick="editMessage('${
-                            data[i].id
-                          }','VIEW'); populateViewMessageModal('${
-                            data[i].sender
-            }','${
-              data[i].receiver
-}','${data[i].message}','${data[i].reply}','${
+                          <button onclick="saveDataInLocalStorage('communication','${data[i]}'); 
+                          editMessage('${data[i].id}','${
+              data[i].sender
+            }','VIEW'); populateViewMessageModal('${data[i].sender_name}','${
+              data[i].sender
+            }','${data[i].receiver_name}','${data[i].message_type}','${
               data[i].id
             }'); openModal('viewMessageModal');" type="button" class="btn btn-primary btn-block  btn-sm">
                               <i class="fa fa-eye"></i> View Message
@@ -2852,9 +2905,20 @@ function getMessage(message_type, user_type) {
     .catch((err) => console.log(err));
 }
 
-function populateViewMessageModal(sender,receiver, message,reply, id) {
-document.getElementById("viewModalContent").innerHTML = 
-`
+function saveDataInLocalStorage(key,data){
+localStorage.setItem(key,data);
+}
+
+function populateViewMessageModal(
+  sender_name,
+  sender,
+  receiver,
+  message,
+  message_type,
+  reply,
+  id
+) {
+  document.getElementById("viewModalContent").innerHTML = `
 <div class="modal-header">
 <h5 class="modal-title" id="exampleModalLabel">View Message</h5>
 <button onclick="closeModal('viewMessageModal')" type="button" class="close"
@@ -2866,35 +2930,49 @@ document.getElementById("viewModalContent").innerHTML =
 <form>
     <input id="communication_id" value="${id}" type="text" hidden>
     <div class="form-group">
-        <label for="message-text" class="col-form-label">Sender:</label>
+    
+        <span class="badge bg-info text-white">${message_type} MESSAGE</span> <br>
+        <label for="message-text" class="col-form-label">Sender ⇆ Receiver :</label>
         <textarea id="sender" class="form-control" id="message-text"
-            disabled>${sender}</textarea>
+            disabled>
+          FROM : ${sender_name}
+          TO :  ${receiver}
+        </textarea>
     </div>
     <div class="form-group">
         <label for="message-text" class="col-form-label">Message:</label>
-        <textarea id="view_message" class="form-control" id="message-text"
-            disabled>${message}</textarea>
+        <textarea style="height:180px" id="view_message" class="form-control" id="message-text"
+            disabled>${JSON.stringify(localStorage['communication']).message}</textarea>
     </div>
 
     <div class="form-group">
         <label for="message-text" class="col-form-label">Reply:</label>
-        <textarea id="reply" class="form-control" id="message-text">${reply}</textarea>
+        <textarea style="height:180px" id="reply" class="form-control" id="message-text" ${
+          receiver != JSON.parse(localStorage["user_data"]).data.id
+            ? `disabled`
+            : ``
+        }>${reply == 'null' ? `No response yet ... `: JSON.stringify(localStorage['communication']).reply}</textarea>
     </div>
 </form>
 </div>
-<div class="modal-footer">
+<div class="modal-footer" ${
+    receiver != JSON.parse(localStorage["user_data"]).data.id ? `hidden` : ``
+  }>
 <button onclick="editMessage(document.getElementById('communication_id').value,'REPLY')" class="btn btn-primary btn-block  btn-sm">
 
     <i class="fa fa-comments"></i> Reply Message
 </button>
 </div>
-`
-
-
-
+`;
 }
 
-function editMessage(id, edit_type) {
+function editMessage(id, sender, edit_type) {
+  if (
+    sender == JSON.parse(localStorage["user_data"]).data.id &&
+    edit_type == "VIEW"
+  ) {
+    return 0;
+  }
   openSpinnerModal();
   fetch(ip + "/api/admin/communication", {
     method: "PUT",
@@ -2906,7 +2984,10 @@ function editMessage(id, edit_type) {
     body: JSON.stringify({
       id: id,
       edit_type: edit_type,
-      reply: document.getElementById("reply") != null ? document.getElementById("reply").value : "",
+      reply:
+        document.getElementById("reply") != null
+          ? document.getElementById("reply").value
+          : "",
       receiver_seen: JSON.parse(localStorage["user_data"]).data.id,
     }),
   })
@@ -2924,7 +3005,7 @@ function editMessage(id, edit_type) {
       removeSpinnerModal();
       if (data.success) {
         getMessage("ALL", "STUDENT");
-        if(edit_type == "REPLY"){
+        if (edit_type == "REPLY") {
           successtoast("Reply sent .");
           closeModal("viewMessageModal");
         }
@@ -3179,7 +3260,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                             </div>
                         </form>    
                         <br>
-                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+                        <a  style="float: right; color: red;" href="./index.html">Log out</a>
 
 
                         <div class="login-row btnroo row no-margin">
@@ -3193,7 +3274,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                     </div>
                     <footer class="footer">
                         <div style="display: flex;
-                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                        justify-content: center;" class="copyright">© <a  style="color: #051f3e;"
                                 href="../#"><b>
                                     Dextroux Technologies</b></a></div>
                     </footer>
@@ -3292,6 +3373,41 @@ function removeSpinnerModal() {
     parent.$("#spinnerModal").modal("hide");
     parent.document.getElementById("spinnerModal").remove();
   }
+}
+
+function collapseSidebar() {
+  if (
+    navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    // navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i) ||
+    navigator.userAgent.match(/Windows Phone/i)
+  ) {
+    // MOBILE
+    a = true;
+  } else {
+    // DESKTOP
+    wrapper = document.getElementById("wrapper");
+    if (wrapper != null) {
+      if ((wrapper.className = "wrapper bg-ash")) {
+        wrapper.className = "wrapper bg-ash sidebar-collapsed";
+        if (document.getElementById("logo").innerHTML != "") {
+          changeLogo();
+        }
+      }
+    }
+  }
+}
+
+function downloadAsPDF(filename,container) {
+  filename = filename == null ? "file" : filename;
+  const data = this.document.getElementById(container);
+  var opt = {
+    filename: filename + ".pdf",
+  };
+  html2pdf().from(data).set(opt).save();
 }
 
 // TOAST

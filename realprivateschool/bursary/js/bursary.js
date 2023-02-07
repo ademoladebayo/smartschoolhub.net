@@ -2,6 +2,8 @@ var ip = localStorage["ip"];
 var domain = localStorage["domain"]; 
 
 getSchoolDetails();
+collapseSidebar();
+
 // getCurrentSession();
 if (
   !window.location.href.includes("portal-subscription") &&
@@ -14,79 +16,79 @@ function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a id="index" href="dashboard.html" class="nav-link"><i
+        <a  id="index" href="dashboard.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-        <a   id="manual-payment" href="manual-payment.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span>Manual Payment</span></a>
+        <a    id="manual-payment" href="manual-payment.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span>Manual Payment</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="online-payment" href="online-payment.html" class="nav-link"> <i class="fas fa-globe"></i>
+        <a   id="online-payment" href="online-payment.html" class="nav-link"> <i class="fas fa-globe"></i>
         <span>Online Payments</span></a>
     </li>
 
 
     <li class="nav-item">
-        <a  id="debitors" href="debitors.html" class="nav-link"><i class="fas fa-times-circle"></i>
+        <a   id="debitors" href="debitors.html" class="nav-link"><i class="fas fa-times-circle"></i>
         <span>Debitors</span></a>
     </li>
 
     <li class="nav-item">
-        <a   id="new-fee" href="new-fee.html" class="nav-link"><i class="fas fa-plus"></i><span>Fee Management</span></a>
+        <a    id="new-fee" href="new-fee.html" class="nav-link"><i class="fas fa-plus"></i><span>Fee Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="expense" href="expense.html" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Expenses</span></a>
+        <a   id="expense" href="expense.html" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Expenses</span></a>
     </li>
 
     
     <li class="nav-item">
-        <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment History</span></a>
+        <a   id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment History</span></a>
     </li>
 
     <!-- <li class="nav-item">
-        <a id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
+        <a  id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
     </li> --!>
 
     <li class="nav-item">
-        <a  id="change-password" href="#?change-password.html" class="nav-link"><i
+        <a   id="change-password" href="#?change-password.html" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
     <li class="nav-item">
-        <a onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
 
    <!-- <li class="nav-item">
-       <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+       <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
          domain + "/admin/dashboard.html"
        }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
     </li> --!>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -411,13 +413,13 @@ function getAllFee() {
             }</td>
             <td>${formatNumber(data[i].amount)}</td>
             <td>
-                <a onmouseover="reloadEditFrame();localStorage.setItem('editFee','${
+                <a  onmouseover="reloadEditFrame();localStorage.setItem('editFee','${
                   data[i].id
                 }~${data[i].description}~${data[i].type}~${data[i].class}~${
             data[i].amount
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteFee(${
+                <a  onclick="deleteFee(${
                   data[i].id
                 })" href="#" class="btn btn-danger"><i
                         class="fas fa-trash"></i>
@@ -619,13 +621,13 @@ function getAllExpense() {
               <td>${data[i].date_incurred}</td>
               <td>${data[i].last_modified}</td>
               <td>
-                  <a onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${
+                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${
                     data[i].id
                   }~${data[i].description}~${data[i].date_incurred}~${
             data[i].amount
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteExpense(${
+                  <a  onclick="deleteExpense(${
                     data[i].id
                   })" href="#" class="btn btn-danger"><i
                           class="fas fa-trash"></i>
@@ -863,7 +865,7 @@ function getAllManualPayment() {
                 <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
-                    <a onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
+                    <a  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
                       data[i].id
                     }~${data[i].student.id}~${
             data[i].student.first_name + " " + data[i].student.last_name
@@ -873,7 +875,7 @@ function getAllManualPayment() {
             data[i].fee_type
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                    <a onclick="deleteManualPayment(${
+                    <a  onclick="deleteManualPayment(${
                       data[i].id
                     })" href="#" class="btn btn-danger"><i
                             class="fas fa-trash"></i>
@@ -1298,7 +1300,7 @@ function getPortalSubscription() {
                     <td>   
                       ${
                         data[i].status == "NOT PAID"
-                          ? `<a id="" onclick="payWithPaystack('${data[i].id}',
+                          ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',
                           '${data[i].description}'
@@ -1770,7 +1772,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                             </div>
                         </form>    
                         <br>
-                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+                        <a  style="float: right; color: red;" href="./index.html">Log out</a>
 
 
                         <div class="login-row btnroo row no-margin">
@@ -1784,7 +1786,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                     </div>
                     <footer class="footer">
                         <div style="display: flex;
-                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                        justify-content: center;" class="copyright">© <a  style="color: #051f3e;"
                                 href="../#"><b>
                                     Dextroux Technologies</b></a></div>
                     </footer>
@@ -1820,6 +1822,33 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
   parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
   parent.$("#authenticationModal").modal("show");
 }
+
+function collapseSidebar() {
+  if (
+    navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    // navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i) ||
+    navigator.userAgent.match(/Windows Phone/i)
+  ) {
+    // MOBILE
+    a = true;
+  } else {
+    // DESKTOP
+    wrapper = document.getElementById("wrapper");
+    if (wrapper != null) {
+      if ((wrapper.className = "wrapper bg-ash")) {
+        wrapper.className = "wrapper bg-ash sidebar-collapsed";
+        if (document.getElementById("logo").innerHTML != "") {
+          changeLogo();
+        }
+      }
+    }
+  }
+}
+
 
 // TOAST
 function successtoast(message, time) {
@@ -1933,14 +1962,14 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            <a  onmouseover="viewStudent(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
             ).replace(
               /"/g,
@@ -1950,21 +1979,21 @@ function getAllStudentForTable() {
 
             ${
               data[i].profile_status == "ENABLED"
-                ? ` <a onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
+                ? ` <a  onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  `
-                : `  <a onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
+                : `  <a  onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
             
             `
             }
           
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+            <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a onclick="deleteStudent(${
+            <a  onclick="deleteStudent(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>

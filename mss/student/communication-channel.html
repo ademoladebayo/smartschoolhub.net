@@ -225,7 +225,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">New Message</h5>
                                 <button onclick="closeModal('messageModal')" type="button" class="close"
                                     data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -259,6 +259,19 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="modal fade" id="viewMessageModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div id="viewModalContent" class="modal-content">
+                           
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <footer class="footer-wrap-layout1">
                     <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
                         reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
@@ -322,6 +335,10 @@
         function closeModal(id) {
             parent.$("#" + id).modal("hide");
             parent.document.getElementById("#" + id).remove();
+        }
+
+        function openModal(id) {
+            parent.$("#" + id).modal("show");
         }
     </script>
 

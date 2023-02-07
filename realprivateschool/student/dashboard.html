@@ -34,7 +34,8 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"   onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -101,8 +102,7 @@
                                     </li>
                                     <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
                                             Settings</a></li>
-                                    <li><a onclick="goTo('')" href="#"><i
-                                                class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -116,7 +116,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -158,13 +159,14 @@
                                                 <i class="fas fa-desktop text-magenta"></i>
                                             </div>
                                         </div>
-                                        <div class="col-6">
+                                        <div onclick="goTo('cbt.html')" class="col-6">
                                             <div class="item-content">
                                                 <div style="color: black; font-family: Poppins;" class="item-title">
                                                     <b>No of CBT</b>
                                                 </div>
-                                                <div class="item-number"><span class="counter"
-                                                        data-num="0"><b>0</b></span>
+                                                <div class="item-number">
+                                                    <span id="cbt_no" style="font-style: bold; color: black;">Loading
+                                                        ...</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -175,7 +177,7 @@
                             <div class="col-lg-4">
                                 <div class="dashboard-summery-one">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div onclick="goTo('attendance.html')" class="col-6">
                                             <div style="padding: 5px;" class="item-icon bg-light-yellow">
                                                 <i class="fas fa-chart-line text-orange"></i>
                                             </div>
@@ -185,8 +187,11 @@
                                                 <div style="color: black; font-family: Poppins;" class="item-title">
                                                     <b>Attendance</b>
                                                 </div>
-                                                <div class="item-number"><span class="counter"
-                                                        data-num="0"><b>0</b></span><span>%</span></div>
+                                                <div class="item-number">
+                                                    <span id="attendance_perc"
+                                                        style="font-style: bold; color: black;">Loading
+                                                        ...</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

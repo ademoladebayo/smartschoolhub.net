@@ -8,6 +8,7 @@ use App\Model\BursaryModel;
 use App\Model\StudentModel;
 use App\Model\TeacherModel;
 use Illuminate\Support\Facades\DB;
+use App\Model\SessionModel;
 use Illuminate\Support\Facades\Log;
 
 class Utils
@@ -53,5 +54,13 @@ class Utils
         $activityLog->date = date("d/m/Y");
         $activityLog->save();
         //Log::debug(ActivityLogModel::get());
+    }
+
+    function getCurrentSession()
+    {
+        // GET CURRENT SESSION AND TERM
+        $session =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
+        $term =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
+        return [$session, $term];
     }
 }

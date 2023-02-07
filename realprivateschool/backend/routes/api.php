@@ -225,6 +225,15 @@ Route::middleware([ActivityLog::class])->group(function () {
     })->middleware(Cors::class)->withoutMiddleware([ActivityLog::class]);
 
 
+     // TEACHER {CBT}
+     Route::post('teacher/create-cbt', 'TeacherController@createCBT', function () {
+    })->middleware(Cors::class);
+
+    Route::post('teacher/edit-cbt', 'TeacherController@editCBT', function () {
+    })->middleware(Cors::class);
+
+
+
     Route::middleware('auth:sanctum')->group(function () {
         // TEACHER {SUBJECT}
         Route::post('teacher/register-subject', 'TeacherController@registerSubject', function () {
@@ -237,12 +246,6 @@ Route::middleware([ActivityLog::class])->group(function () {
         })->middleware(Cors::class);
 
         // TEACHER {CBT}
-        Route::post('teacher/create-cbt', 'TeacherController@createCBT', function () {
-        })->middleware(Cors::class);
-
-        Route::post('teacher/edit-cbt', 'TeacherController@editCBT', function () {
-        })->middleware(Cors::class);
-
         Route::post('teacher/all-cbt', 'TeacherController@allCBT', function () {
         })->middleware(Cors::class);
 

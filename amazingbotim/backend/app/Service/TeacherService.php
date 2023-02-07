@@ -20,6 +20,7 @@ use App\Repository\GradeSettingsRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SubjectRepository;
 use App\Repository\StudentRepository;
+use App\Util\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
@@ -61,13 +62,16 @@ class TeacherService
     {
         $SubjectRepository = new SubjectRepository();
         $StudentRepository = new StudentRepository();
+        $util = new Utils();
+        $CBTModel = CBTModel::whereIn('subject_id',SubjectModel::select('id')->where('teacher',$teacher->id)->get())->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
+
         // NUMBER OF STUDENT IN MY CLASS
         // NUMBER OF SUBJECT I TAKE
         if ($teacher->assigned_class == '-') {
-            return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => 0, 'male' => 0, 'female' => 0, 'events' => null, "notification" => null];
+            return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => "No class assigned", 'male' => 0, 'female' => 0, 'events' => null, "notification" => null, "cbt_no" => count($CBTModel)];
         }
 
-        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null];
+        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null ,"cbt_no" => count($CBTModel)];
     }
 
     // SUBJECT REGISTRATION
@@ -490,7 +494,7 @@ class TeacherService
             $note->subject_id = $request->subject_id;
             $note->content = $request->content;
             $note->topic = $request->topic;
-            $note->date = date("Y-m-d") . " | " . date("h:i a");
+            // $note->date = date("Y-m-d") . " | " . date("h:i a");
             $note->save();
         } else if ($request->material_type == "ASSIGNMENT") {
             // CREATE NEW ASSIGNMENT

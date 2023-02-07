@@ -1,5 +1,6 @@
   // Helper function to display messages below CKEditor 4.
   function ShowMessage(msg) {
+    //alert(msg);
     // document.getElementById('eMessage').innerHTML = msg;
   }
 
@@ -115,6 +116,6 @@
   // });
   // // Helper variable to count the number of detected changes in CKEditor 4.
   // var changesNum = 0;
-  // editor.on('change', function(evt) {
-  //   ShowMessage('The number of changes in <em>' + this.name + '</em>: <b>' + ++changesNum + '</b>.');
-  // });
+  editor.on('input', function(evt) {
+    // ShowMessage('The number of changes in <em>' + this.name + '</em>: <b>' + ++changesNum + '</b>.');
+  });

@@ -21,6 +21,7 @@ window.addEventListener("offline", () =>
 );
 
 //STARTERS
+collapseSidebar();
 getCurrentSession();
 getSchoolDetails();
 loadSchoolColor();
@@ -218,30 +219,30 @@ function loadSideNav(page) {
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
   
     <li class="nav-item">
-        <a  id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <a   id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Student Attendance</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <a   id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Staff Attendance</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
 
     
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -254,99 +255,99 @@ function loadSideNav(page) {
     document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a id="dashboard" href="dashboard.html" class="nav-link"><i
+        <a  id="dashboard" href="dashboard.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-        <a   id="students" href="students.html" class="nav-link"><i class="flaticon-classmates"></i><span>Student Management</span></a>
+        <a    id="students" href="students.html" class="nav-link"><i class="flaticon-classmates"></i><span>Student Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="teachers" href="teachers.html" class="nav-link"> <i class="flaticon-multiple-users-silhouette"></i>
+        <a   id="teachers" href="teachers.html" class="nav-link"> <i class="flaticon-multiple-users-silhouette"></i>
         <span>Staff Management</span></a>
     </li>
 
     <li class="nav-item">
-          <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <a   id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Class Management</span></a>
     </li>
 
     <li class="nav-item">
-          <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <a   id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Subject Management</span></a>
     </li>
 
     <li class="nav-item">
-          <a  id="lesson-plan" href="lesson-plan-management.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <a   id="lesson-plan" href="lesson-plan-management.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Lesson Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <a   id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Student Attendance</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <a   id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Staff Attendance</span></a>
     </li>
 
   
     <li class="nav-item">
-        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
+        <a   id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
         <span>Grade Settings</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="transcript" href="student-transcript.html" class="nav-link"> <i class="fas fa-poll"></i></i>
+        <a   id="transcript" href="student-transcript.html" class="nav-link"> <i class="fas fa-poll"></i></i>
         <span>Student Transcript</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
     </li>
 
 
     
     <li class="nav-item">
-        <a  id="change-password" href="#?change-password.html" class="nav-link"><i
+        <a   id="change-password" href="#?change-password.html" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
 
     <!-- <li class="nav-item">
-      <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+      <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
         domain + "/bursary/dashboard.html"
       }')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
     </li> !-->
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -360,133 +361,133 @@ function loadSideNav(page) {
     document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a id="dashboard" href="dashboard.html" class="nav-link"><i
+        <a  id="dashboard" href="dashboard.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-        <a   id="students" href="students.html" class="nav-link"><i class="flaticon-classmates"></i><span>Student Management</span></a>
+        <a    id="students" href="students.html" class="nav-link"><i class="flaticon-classmates"></i><span>Student Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="teachers" href="teachers.html" class="nav-link"> <i class="flaticon-multiple-users-silhouette"></i>
+        <a   id="teachers" href="teachers.html" class="nav-link"> <i class="flaticon-multiple-users-silhouette"></i>
         <span>Staff Management</span></a>
     </li>
 
     <li class="nav-item">
-          <a  id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <a   id="class" href="class.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Class Management</span></a>
     </li>
 
     <li class="nav-item">
-          <a  id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <a   id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Subject Management</span></a>
     </li>
 
     <li class="nav-item">
-          <a  id="lesson-plan" href="lesson-plan-management.html" class="nav-link"> <i class="fas fa-plus"></i>
+          <a   id="lesson-plan" href="lesson-plan-management.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Lesson Management</span></a>
     </li>
 
     <li class="nav-item">
-          <a  id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
+          <a   id="session-management" href="session-management.html" class="nav-link"> <i class="fas fa-tasks"></i>
           <span>Session Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="card-generator" href="card-generator.html" class="nav-link"> <i
+        <a   id="card-generator" href="card-generator.html" class="nav-link"> <i
         class="fas fa-id-card"></i>
         <span>ID Card Generator</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <a   id="student-attendance" href="student-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Student Attendance</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
+        <a   id="teacher-attendance" href="teacher-attendance.html" class="nav-link"> <i class="fas fa-chart-line"></i></i>
         <span>Staff Attendance</span></a>
     </li>
 
   
     <li class="nav-item">
-        <a  id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
+        <a   id="grade-settings" href="grade-settings.html" class="nav-link"> <i class="fas fa-tools"></i></i>
         <span>Grade Settings</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="transcript" href="student-transcript.html" class="nav-link"> <i class="fas fa-poll"></i></i>
+        <a   id="transcript" href="student-transcript.html" class="nav-link"> <i class="fas fa-poll"></i></i>
         <span>Student Transcript</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
     </li>
 
 
     <li class="nav-item">
-        <a  id="control-panel" href="control-panel.html" class="nav-link"> <i class="flaticon-settings-work-tool"></i></i>
+        <a   id="control-panel" href="control-panel.html" class="nav-link"> <i class="flaticon-settings-work-tool"></i></i>
         <span>Control Panel</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="inventory" href="inventory.html" class="nav-link"><i class="fas fa-box-open"></i>
+        <a   id="inventory" href="inventory.html" class="nav-link"><i class="fas fa-box-open"></i>
         <span>Inventory <small><sup><span style="color:white" class="badge bg-success"><b>NEW</b></span></sup></small></span></a>
     </li>
 
     <li class="nav-item">
-        <a id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
+        <a  id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="events-timetable" href="#?events.html" class="nav-link"><i
+        <a   id="events-timetable" href="#?events.html" class="nav-link"><i
                 class="flaticon-calendar"></i><span>Events <sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="create-notification" href="#?create-notification.html" class="nav-link"><i class="far fa-bell"></i>
+        <a   id="create-notification" href="#?create-notification.html" class="nav-link"><i class="far fa-bell"></i>
         <span>Notification <sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="change-password" href="#?change-password.html" class="nav-link"><i
+        <a   id="change-password" href="#?change-password.html" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('')" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
 
     <!-- <li class="nav-item">
-      <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+      <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
         domain + "/bursary/dashboard.html"
       }')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
     </li> !-->
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -621,17 +622,17 @@ function getAllTeacherForTable() {
             : `<span class="badge bg-danger"><b>DISABLED</b></span>`
         }</td>
         <td>
-        <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+        <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
           .replace(/'/g, "")
           .replace(/"/g, "'")})" class="btn btn-primary text-white" data-bs-toggle="modal"
                                                 data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-        <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
+        <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
           data[i]
         ).replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
         data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
     
         
-        <a onclick="updateTeacherProfileStatus(${
+        <a  onclick="updateTeacherProfileStatus(${
           data[i].id
         })" class="btn gradient-orange-peel"><i
             class='${
@@ -640,13 +641,13 @@ function getAllTeacherForTable() {
                 : "fas fa-unlock-alt"
             }'></i></a>  
             
-        <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+        <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
           .replace(/'/g, "")
           .replace(/"/g, "'")})" class="btn btn-secondary text-white">
           <i class="fas fa-id-card"></i>
                </a> 
         
-        <a onclick="resetAccount('STAFF','${
+        <a  onclick="resetAccount('STAFF','${
           data[i].teacher_id
         }')" class="btn btn-success text-white">
         <i class="fas fa-sync-alt"></i>
@@ -1024,14 +1025,14 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
              
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+              <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -1042,18 +1043,18 @@ function searchTeacher(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateTeacherProfileStatus(${
+              <a  onclick="updateTeacherProfileStatus(${
                 data[i].id
               })" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+              <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a> 
               
-              <a onclick="deleteTeacher(${
+              <a  onclick="deleteTeacher(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -1078,14 +1079,14 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+              <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -1096,17 +1097,17 @@ function searchTeacher(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateTeacherProfileStatus(${
+              <a  onclick="updateTeacherProfileStatus(${
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+              <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
-              <a onclick="deleteTeacher(${
+              <a  onclick="deleteTeacher(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -1133,14 +1134,14 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+              <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -1151,18 +1152,18 @@ function searchTeacher(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateTeacherProfileStatus(${
+              <a  onclick="updateTeacherProfileStatus(${
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
               
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+              <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>    
               
-              <a onclick="deleteTeacher(${
+              <a  onclick="deleteTeacher(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -1187,14 +1188,14 @@ function searchTeacher(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
-              <a onmouseover="viewTeacher(${JSON.stringify(data[i])
+              <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(
                   /"/g,
                   "'"
                 )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
+              <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
@@ -1205,17 +1206,17 @@ function searchTeacher(search_data) {
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateTeacherProfileStatus(${
+              <a  onclick="updateTeacherProfileStatus(${
                 data[i].id
               })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
-              <a onclick="viewStaffIDCard(${JSON.stringify(data[i])
+              <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
                 .replace(/'/g, "")
                 .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
-              <a onclick="deleteTeacher(${
+              <a  onclick="deleteTeacher(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -1305,14 +1306,14 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a onmouseover="viewStudent(${JSON.stringify(data[i])
+          <a  onmouseover="viewStudent(${JSON.stringify(data[i])
             .replace(/'/g, "")
             .replace(
               /"/g,
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+          <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
             data[i]
           )
             .replace(/'/g, "")
@@ -1323,7 +1324,7 @@ function getAllStudentForTable() {
           data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
       
           
-          <a  onclick="updateStudentProfileStatus(${
+          <a   onclick="updateStudentProfileStatus(${
             data[i].id
           })" class="btn gradient-orange-peel"><i
               class='${
@@ -1332,13 +1333,13 @@ function getAllStudentForTable() {
                   : "fas fa-unlock-alt"
               }'></i></a>  
               
-          <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+          <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
             .replace(/'/g, "")
             .replace(/"/g, "'")})" class="btn btn-secondary text-white">
             <i class="fas fa-id-card"></i>
                  </a> 
           
-          <a onclick="resetAccount('STUDENT','${
+          <a  onclick="resetAccount('STUDENT','${
             data[i].student_id
           }')" class="btn btn-success text-white">
           <i class="fas fa-sync-alt"></i>
@@ -1380,7 +1381,7 @@ function getAllStudent() {
     .catch((err) => console.log(err));
 }
 {
-  /* <a onclick="deleteStudent(${
+  /* <a  onclick="deleteStudent(${
   data[i].id
 })" class="btn btn-danger text-white"><i
             class="fas fa-trash"></i>
@@ -1603,7 +1604,7 @@ function getAllStudentForTranscript() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a onmouseover="viewStudent(${JSON.stringify(data[i])
+          <a  onmouseover="viewStudent(${JSON.stringify(data[i])
             .replace(/'/g, "")
             .replace(
               /"/g,
@@ -1611,7 +1612,7 @@ function getAllStudentForTranscript() {
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
 
-          <a  onclick="updateTranscriptAccess(${data[i].id})" class='${
+          <a   onclick="updateTranscriptAccess(${data[i].id})" class='${
             data[i].can_access_transcript == "YES"
               ? "btn btn-danger"
               : "btn btn-success"
@@ -1622,7 +1623,7 @@ function getAllStudentForTranscript() {
                   : "fas fa-unlock-alt"
               }'></i></a> 
 
-          <a onclick="viewStudentResult(${JSON.stringify(data[i])
+          <a  onclick="viewStudentResult(${JSON.stringify(data[i])
             .replace(/'/g, "")
             .replace(
               /"/g,
@@ -2536,14 +2537,14 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            <a  onmouseover="viewStudent(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
             ).replace(
               /"/g,
@@ -2552,18 +2553,18 @@ function searchStudent(search_data) {
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
             
-            <a onclick="updateStudentProfileStatus(${
+            <a  onclick="updateStudentProfileStatus(${
               data[i].id
             })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+            <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a onclick="deleteStudent(${
+            <a  onclick="deleteStudent(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
@@ -2584,14 +2585,14 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            <a  onmouseover="viewStudent(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
             ).replace(
               /"/g,
@@ -2600,17 +2601,17 @@ function searchStudent(search_data) {
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
             
-            <a onclick="updateStudentProfileStatus(${
+            <a  onclick="updateStudentProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+            <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a onclick="deleteStudent(${
+            <a  onclick="deleteStudent(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
@@ -2633,14 +2634,14 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            <a  onmouseover="viewStudent(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
             ).replace(
               /"/g,
@@ -2649,18 +2650,18 @@ function searchStudent(search_data) {
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
             
-            <a onclick="updateStudentProfileStatus(${
+            <a  onclick="updateStudentProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+            <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a onclick="deleteStudent(${
+            <a  onclick="deleteStudent(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
@@ -2681,14 +2682,14 @@ function searchStudent(search_data) {
                data[i].class == null ? `GRADUATED` : data[i].class.class_name
              }</td>
             <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i])
+            <a  onmouseover="viewStudent(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(
                 /"/g,
                 "'"
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
             ).replace(
               /"/g,
@@ -2697,17 +2698,17 @@ function searchStudent(search_data) {
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
             
-            <a onclick="updateStudentProfileStatus(${
+            <a  onclick="updateStudentProfileStatus(${
               data[i].id
             })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i])
+            <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
               .replace(/'/g, "")
               .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a onclick="deleteStudent(${
+            <a  onclick="deleteStudent(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
@@ -2997,7 +2998,7 @@ function getAllClassForTable() {
             }</td>
             <td>${data[i].student_no}</td>
             <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
               data[i].id
             }~${data[i].class_name}~${
             data[i].class_teacher.title +
@@ -3009,7 +3010,7 @@ function getAllClassForTable() {
             data[i].class_sector
           }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${
+                <a  onclick="deleteClass(${
                   data[i].id
                 })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
@@ -3026,13 +3027,13 @@ function getAllClassForTable() {
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>${data[i].student_no}</td>
             <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
               data[i].id
             }~${data[i].class_name}~~~${
             data[i].class_sector
           }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteClass(${
+                <a  onclick="deleteClass(${
                   data[i].id
                 })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
@@ -3272,7 +3273,7 @@ function searchClass(class_name) {
               }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
                 data[i].id
               }~${data[i].class_name}~${
                 data[i].class_teacher.title +
@@ -3284,7 +3285,7 @@ function searchClass(class_name) {
                 data[i].class_teacher.id
               }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteClass(${
+                  <a  onclick="deleteClass(${
                     data[i].id
                   })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -3301,9 +3302,9 @@ function searchClass(class_name) {
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
               <td>${data[i].student_no}</td>
               <td>
-              <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
+                  <a  onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -3326,7 +3327,7 @@ function searchClass(class_name) {
               }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
                 data[i].id
               }~${data[i].class_name}~${
                 data[i].class_teacher.title +
@@ -3338,7 +3339,7 @@ function searchClass(class_name) {
                 data[i].class_teacher.id
               }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteClass(${
+                  <a  onclick="deleteClass(${
                     data[i].id
                   })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -3355,9 +3356,9 @@ function searchClass(class_name) {
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
               <td>${data[i].student_no}</td>
               <td>
-                  <a onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
+                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id}~${data[i].class_name}~')" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
+                  <a  onclick="deleteClass(${data[i].id})" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -3463,7 +3464,7 @@ function getAllSubjectForTable() {
             <td>${data[i].student_no}</td>
 
             <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
             }~${data[i].subject_name}~${
             data[i].teacher.title +
@@ -3476,18 +3477,18 @@ function getAllSubjectForTable() {
           }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
-            <a onclick="deleteSubject(${
+            <a  onclick="deleteSubject(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                     class="fa fa-trash"></i></a>
 
-            <a onclick="exportSubjectSheet('${data[i].id}','${
+            <a  onclick="exportSubjectSheet('${data[i].id}','${
             data[i].subject_name
           }','${data[i].class.class_name}'
             )" class="btn btn-primary text-white">
                 <i class="fas fa-file-download"></i></a>       
 
-            <a onclick="uploadResultSheet(${
+            <a  onclick="uploadResultSheet(${
               data[i].id
             })" class="btn btn-success text-white">
                 <i class="fas fa-file-upload"></i></a>   
@@ -3509,7 +3510,7 @@ function getAllSubjectForTable() {
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>${data[i].student_no}</td>
             <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
             }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
             data[i].class.id
@@ -3517,17 +3518,17 @@ function getAllSubjectForTable() {
             data-bs-target="#editModal"><i class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
-            <a onclick="deleteSubject(${
+            <a  onclick="deleteSubject(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                     class="fa fa-trash"></i></a>
 
-            <a onclick="downloadResultSheet(${
+            <a  onclick="downloadResultSheet(${
               data[i].id
             })" class="btn btn-primary text-white">
                 <i class="fas fa-file-download"></i></a>       
 
-            <a onclick="uploadResultSheet(${
+            <a  onclick="uploadResultSheet(${
               data[i].id
             })" class="btn btn-success text-white">
                 <i class="fas fa-file-upload"></i></a>   
@@ -3704,7 +3705,7 @@ function searchSubject(subject_name) {
               }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
                 data[i].id
               }~${data[i].subject_name}~${
                 data[i].teacher.title +
@@ -3716,7 +3717,7 @@ function searchSubject(subject_name) {
                 data[i].class.id
               }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteSubject(${
+                  <a  onclick="deleteSubject(${
                     data[i].id
                   })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -3738,13 +3739,13 @@ function searchSubject(subject_name) {
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
               <td>${data[i].student_no}</td>
               <td>
-              <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
                 data[i].id
               }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${
                 data[i].class.id
               }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteClass(${
+                  <a  onclick="deleteClass(${
                     data[i].id
                   })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -3772,7 +3773,7 @@ function searchSubject(subject_name) {
               }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
                 data[i].id
               }~${data[i].subject_name}~${
                 data[i].teacher.title +
@@ -3784,7 +3785,7 @@ function searchSubject(subject_name) {
                 data[i].class.id
               }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteSubject(${
+                  <a  onclick="deleteSubject(${
                     data[i].id
                   })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -3804,13 +3805,13 @@ function searchSubject(subject_name) {
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
               <td>${data[i].student_no}</td>
               <td>
-                  <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
                     data[i].id
                   }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${
                 data[i].class.id
               }')" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteSubject(${
+                  <a  onclick="deleteSubject(${
                     data[i].id
                   })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -3973,7 +3974,7 @@ function getAllSessionForTable() {
             <td>${data[i].term}</td>
             <td class="text-white"><span class="badge bg-success"><b>CURRENT</b></span></td>
             <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editSession','${data[i].id}~${data[i].session}~${data[i].term}')" class="btn btn-warning" data-bs-toggle="modal"
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSession','${data[i].id}~${data[i].session}~${data[i].term}')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                 
             </td>
@@ -4004,7 +4005,7 @@ function getAllSessionForTable() {
             <td>${data[i].term}</td>
             <td class="text-white"><span class="badge bg-success"><b>CURRENT</b></span></td>
             <td>
-            <a onmouseover="reloadEditFrame();localStorage.setItem('editSession','${data[i].id}~${data[i].session}~${data[i].term}')" class="btn btn-warning" data-bs-toggle="modal"
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSession','${data[i].id}~${data[i].session}~${data[i].term}')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                 
             </td>
@@ -4163,14 +4164,14 @@ function getAllGradeForTable() {
                 <td>${data[i].grade}</td>
                 <td>${data[i].remark}</td>
                 <td>
-                    <a onmouseover="reloadEditFrame();localStorage.setItem('editGrade','${
+                    <a  onmouseover="reloadEditFrame();localStorage.setItem('editGrade','${
                       data[i].id
                     }~${data[i].min}~${data[i].max}~${data[i].grade}~${
             data[i].remark
           }')" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
-                    <a onclick="deleteGrade(${
+                    <a  onclick="deleteGrade(${
                       data[i].id
                     })" href="#" class="btn btn-danger"><i
                     class="fas fa-trash"></i>
@@ -5065,18 +5066,18 @@ function getLessonPlan(lesson_status) {
         }"><b>${lesson.status}</b></span></td>
         <td>
 
-            <a onmouseover="populateLessonDetails(${JSON.stringify(
+            <a  onmouseover="populateLessonDetails(${JSON.stringify(
               lesson
             ).replace(
               /"/g,
               "'"
             )})" href="#" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"><i class="fas fa-eye"></i> View</a>
-            <a onclick="saveLessonPlan(${
+            <a  onclick="saveLessonPlan(${
               lesson.id
             },'APPROVE')" href="#" class="btn btn-success" data-bs-toggle="modal"
                 data-bs-target="#"><i class="fas fa-edit"></i> Approve</a>
-            <a onclick="saveLessonPlan(${
+            <a  onclick="saveLessonPlan(${
               lesson.id
             },'DISAPPROVE')" href="#" class="btn btn-danger"><i class="fas fa-ban"></i>
                 Disapprove</a>
@@ -5186,10 +5187,10 @@ function createInventoryItem() {
   <td>
 
 
-      <a onclick="saveInventoryItem()" href="#" class="btn btn-primary">
+      <a  onclick="saveInventoryItem()" href="#" class="btn btn-primary">
             Save
       </a>
-      <a onclick="document.getElementById('new_item_roll').remove()" href="#" class="btn btn-danger">
+      <a  onclick="document.getElementById('new_item_roll').remove()" href="#" class="btn btn-danger">
             Cancel
       </a>
 
@@ -5277,23 +5278,23 @@ function getInventory() {
           <td id="last_modified${data.id}">${data.last_modified}</td>
           <td>
         
-              <a id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
+              <a  id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
             data.id
           })" href="#" class="btn btn-primary" hidden>
                     Save Update
               </a>
-              <a id="editButton${data.id}" onclick="allowEdit(${
+              <a  id="editButton${data.id}" onclick="allowEdit(${
             data.id
           },true)" href="#" class="btn btn-warning">
                     Edit
               </a>
-              <a id="deleteButton${data.id}" onclick="deleteInventoryItem(${
+              <a  id="deleteButton${data.id}" onclick="deleteInventoryItem(${
             data.id
           })" href="#" class="btn btn-danger">
                     Delete
               </a>
   
-              <a id="discardButton${data.id}"onclick="allowEdit(${
+              <a  id="discardButton${data.id}"onclick="allowEdit(${
             data.id
           },false)" href="#" class="btn btn-danger" hidden>
                     Discard Change
@@ -5530,7 +5531,7 @@ function getPortalSubscription() {
                     <td>   
                       ${
                         data[i].status == "NOT PAID"
-                          ? `<a id="" onclick="payWithPaystack('${data[i].id}',
+                          ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',
                           '${data[i].description}'
@@ -6496,7 +6497,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                             </div>
                         </form>    
                         <br>
-                        <a style="float: right; color: red;" href="./index.html">Log out</a>
+                        <a  style="float: right; color: red;" href="./index.html">Log out</a>
 
 
                         <div class="login-row btnroo row no-margin">
@@ -6510,7 +6511,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
                     </div>
                     <footer class="footer">
                         <div style="display: flex;
-                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                        justify-content: center;" class="copyright">© <a  style="color: #051f3e;"
                                 href="../#"><b>
                                     Dextroux Technologies</b></a></div>
                     </footer>
@@ -6604,6 +6605,33 @@ function removeSpinnerModal() {
   parent.$("#spinnerModal").modal("hide");
   parent.document.getElementById("spinnerModal").remove();
 }
+
+function collapseSidebar() {
+  if (
+    navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    // navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i) ||
+    navigator.userAgent.match(/Windows Phone/i)
+  ) {
+    // MOBILE
+    a = true;
+  } else {
+    // DESKTOP
+    wrapper = document.getElementById("wrapper");
+    if (wrapper != null) {
+      if ((wrapper.className = "wrapper bg-ash")) {
+        wrapper.className = "wrapper bg-ash sidebar-collapsed";
+        if (document.getElementById("logo").innerHTML != "") {
+          changeLogo();
+        }
+      }
+    }
+  }
+}
+
 
 // TOAST
 function successtoast(message, time) {
