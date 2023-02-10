@@ -23,5 +23,5 @@ class StudentModel extends Authenticatable
         return $this->hasOne(ClassModel::class, 'id', 'class');
     }
 
-    protected $hidden = ['password'];
+    protected $hidden = ['password','guardian_pass'];
 }

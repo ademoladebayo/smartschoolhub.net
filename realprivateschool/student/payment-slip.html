@@ -1,9 +1,10 @@
 <html lang="en">
 
-<head> 
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"> -->
+    <meta name="viewport" content="width=1024">
     <title>Student's Payment Slip</title>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans&amp;display=swap">
@@ -26,12 +27,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"   style="background: #ffffff;" onload="getPaymentSlip()">
+<body style="font-family: Poppins; font-weight: bold;" style="background: #ffffff;" onload="getPaymentSlip()">
 
 
     <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
     <div class="col-md-12 text-right mb-3">
-        <button onclick="download('RECEIPT_'+ localStorage['receipt_session'])" class="btn btn-primary btn-sm" id="download">DOWNLOAD</button>
+        <button onclick="download('PAYMENT_SLIP_'+ localStorage['current_session'] +''+localStorage['current_term'])"
+            class="btn btn-primary btn-sm" id="download">DOWNLOAD</button>
     </div>
     <section id="payment-slip">
         <div style="float: right;" class="header-inline item-header">

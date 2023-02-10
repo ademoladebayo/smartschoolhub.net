@@ -2,6 +2,7 @@
 
 // SOUND VARIABLES
 var successSound = new Audio("../asset/sound/verified.mp3");
+var warningSound = new Audio("../asset/sound/warning.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
 //const config = new Config();
@@ -356,7 +357,6 @@ function loadSideNav(page) {
     
     
     `;
- 
   } else {
     document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
@@ -624,7 +624,10 @@ function getAllTeacherForTable() {
         <td>
         <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
           .replace(/'/g, "")
-          .replace(/"/g, "'")})" class="btn btn-primary text-white" data-bs-toggle="modal"
+          .replace(
+            /"/g,
+            "'"
+          )})" class="btn btn-primary text-white" data-bs-toggle="modal"
                                                 data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
         <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
           data[i]
@@ -3477,10 +3480,10 @@ function getAllSubjectForTable() {
           }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
-            <a  onclick="deleteSubject(${
+           <!-- <a  onclick="deleteSubject(${
               data[i].id
             })" class="btn btn-danger text-white"><i
-                    class="fa fa-trash"></i></a>
+                    class="fa fa-trash"></i></a> -->
 
             <a  onclick="exportSubjectSheet('${data[i].id}','${
             data[i].subject_name
@@ -4323,8 +4326,8 @@ function takeAttendance() {
     // document.getElementById("student_id").value = qr_data; //StudentATDCard~id~class_id~first_name
 
     // NOTIFIER WHEN CARD HAS BEEN SCANNED
-    say("Card Scanned , Click OK.");
-    alert("CARD SCANNED 👍. CLICK OK AND WAIT FOR A RESPONSE.");
+    //say("Card Scanned , Please wait ...");
+    //alert("CARD SCANNED 👍. CLICK OK AND WAIT FOR A RESPONSE.");
 
     // CHECK IF CARD IS VALID
     if (qr_data.split("~")[0] != "StudentATDCard") {
@@ -4344,18 +4347,26 @@ function takeAttendance() {
       // CHECK IF STUDENT ALREADY CHECKED OUT
       checkedOut = hasStudentCheckedOut(qr_data.split("~")[1], "");
       if (checkedOut) {
-        errorSound.play();
-        alert("This student has been checked out.");
-        return 0;
+          errorSound.play();
+          alert("This student has been checked out.");
+          return 0;
       }
 
+      warningSound.play()
       if (window.parent.confirm("You are about to CHECK OUT this student !")) {
         // PROCEED TO CHECK OUT STUDENT
         check_out = true;
+        warningSound.pause()
       } else {
+        warningSound.pause()
         return 0;
+        
       }
+      
     }
+
+    scanner.stop();
+    openSpinnerModal("Card scanned");
 
     // PASS ATTENDANCE DETAILS TO API
     fetch(ip + "/api/teacher/take-attendance", {
@@ -4390,6 +4401,8 @@ function takeAttendance() {
             say(data.message);
           }, 1000);
           getAttendance();
+          removeSpinnerModal();
+          takeAttendance();
         } else {
           errorSound.play();
           setTimeout(function () {
@@ -4627,8 +4640,8 @@ function takeTeacherAttendance() {
     // document.getElementById("student_id").value = qr_data; //TeacherATDCard~id~class_id~first_name
 
     // NOTIFIER WHEN CARD HAS BEEN SCANNED
-    say("Card Scanned , Click OK.");
-    alert("CARD SCANNED 👍. CLICK OK AND WAIT FOR A RESPONSE.");
+    // say("Card Scanned , Click OK.");
+    // alert("CARD SCANNED 👍. CLICK OK AND WAIT FOR A RESPONSE.");
 
     // CHECK IF CARD IS VALID
     if (qr_data.split("~")[0] != "TeacherATDCard") {
@@ -4653,13 +4666,19 @@ function takeTeacherAttendance() {
         return 0;
       }
 
+      warningSound.play()
       if (window.parent.confirm("You are about to CHECK OUT this staff !")) {
         // PROCEED TO CHECK OUT STAFF
         check_out = true;
+        warningSound.pause()
       } else {
+        warningSound.pause()
         return 0;
       }
     }
+
+    scanner.stop();
+    openSpinnerModal("Card scanned");
 
     // PASS ATTENDANCE DETAILS TO API
     fetch(ip + "/api/admin/take-teacher-attendance", {
@@ -4694,6 +4713,8 @@ function takeTeacherAttendance() {
             say(data.message);
           }, 1000);
           getTeacherAttendance();
+          removeSpinnerModal();
+          takeTeacherAttendance();
         } else {
           errorSound.play();
           setTimeout(function () {
@@ -4943,7 +4964,8 @@ function saveControl() {
       register_subject: document.getElementById("register_subject").checked
         ? "YES"
         : "NO",
-        update_debitor_list:document.getElementById("update_debitor_list").checked
+      update_debitor_list: document.getElementById("update_debitor_list")
+        .checked
         ? "YES"
         : "NO",
       check_debitors: document.getElementById("check_debitor").checked
@@ -5014,7 +5036,7 @@ function getControl() {
       document.getElementById("resumption_time").value =
         data.max_resumption_time.split("-")[0];
 
-        data.debitor_list_last_update.split("-")[1] == "YES"
+      data.debitor_list_last_update.split("-")[1] == "YES"
         ? (document.getElementById("update_debitor_list").checked = true)
         : "";
     })
@@ -5278,7 +5300,9 @@ function getInventory() {
           <td id="last_modified${data.id}">${data.last_modified}</td>
           <td>
         
-              <a  id="saveUpdateButton${data.id}" onclick="updateInventoryItem(${
+              <a  id="saveUpdateButton${
+                data.id
+              }" onclick="updateInventoryItem(${
             data.id
           })" href="#" class="btn btn-primary" hidden>
                     Save Update
@@ -6549,7 +6573,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
   parent.$("#authenticationModal").modal("show");
 }
 
-function openSpinnerModal() {
+function openSpinnerModal(message) {
   modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -6583,6 +6607,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
         <h4 style="font-family: Poppins; font-weight: bold;"
                 class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <b>${message != null || message != "" ? message : ``}. </b>
                 <b>Processing ...</b>
             </h4>
             <br>
@@ -6631,7 +6656,6 @@ function collapseSidebar() {
     }
   }
 }
-
 
 // TOAST
 function successtoast(message, time) {

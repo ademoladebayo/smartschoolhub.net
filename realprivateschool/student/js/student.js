@@ -1377,6 +1377,11 @@ async function getTranscript() {
           terms.push(data.term);
         }
       });
+
+
+      //SORT TERM BEFORE USE
+      terms  = sortTerm(terms);
+
       // CREATE RESULT TEMPLATE
       if (sessions.length > 0) {
         document.getElementById("result_div").innerHTML = ``;
@@ -1650,6 +1655,15 @@ async function getTranscript() {
       // parent.body.innerHTML = main_content.trim();
     })
     .catch((err) => console.log(err));
+}
+
+function sortTerm(terms){
+    order_terms = ["FIRST TERM","SECOND TERM","THIRD TERM"];
+    sorted_term = [];
+    sorted_term[order_terms.indexOf(terms[0])] = terms[0];
+    sorted_term[order_terms.indexOf(terms[1])] = terms[1];
+    sorted_term[order_terms.indexOf(terms[2])] = terms[2];
+    return sorted_term;
 }
 
 function getResult(value) {
@@ -2170,7 +2184,7 @@ document.getElementById("subject_class").innerHTML =
         <div class="h5">
             <div class="row">
                 <div class="col-md-4">
-                    <h3 id="note_date_time" class="h6 text-left"><b style="border-bottom: 2px solid black;">${notes[i].date}</b></h3>
+                    <h3 id="note_date_time" class="h6 text-left"><small><b style="border-bottom: 2px solid black;">${notes[i].date}</b></small></h3>
                 </div>
   
                 <div class="col-md-8">
@@ -2568,11 +2582,11 @@ function download(filename) {
   console.log(payment_slip);
   console.log(window);
   var opt = {
-    // margin: 1,
+    margin: 1,
     filename: filename + ".pdf",
-    // image: { type: "jpeg", quality: 0.98 },
-    // html2canvas: { scale: 2 },
-    // jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
   };
   html2pdf().from(payment_slip).set(opt).save();
 }
@@ -3405,7 +3419,11 @@ function downloadAsPDF(filename,container) {
   filename = filename == null ? "file" : filename;
   const data = this.document.getElementById(container);
   var opt = {
+    margin: 0.1,
     filename: filename + ".pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
   };
   html2pdf().from(data).set(opt).save();
 }
