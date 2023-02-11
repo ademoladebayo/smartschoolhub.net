@@ -728,7 +728,8 @@ async function getCBTdetails() {
   for (n = 0; n < questions_number.length; n++) {
     // carousel-item
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3 ">
-   <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
+   <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
+    <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
       questions_number[n]
     }" >${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}</span></p>
  <div class="pl-2">

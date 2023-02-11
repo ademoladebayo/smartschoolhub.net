@@ -1,6 +1,6 @@
 export default class Config {
   APP_MODE = "LIVE";
-  SCHOOL_NAME = "MSS";
+  SCHOOL_NAME = "mss";
   url = {
     ip: "",
     domain: "",

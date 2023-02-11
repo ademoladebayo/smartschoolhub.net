@@ -2410,7 +2410,7 @@ function getCBTdetailsView() {
       .split("~")[0]
       .replace(/⌑/g, ",")
       .replace(/®/g, "~")
-      .replace(/™/g, "'")}}
+      .replace(/™/g, "'")}
              </label> </input></div>
 
              <div id="optionB${
