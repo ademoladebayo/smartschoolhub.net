@@ -589,7 +589,8 @@ function getCBTForSubject() {
                 data[i].cbt_status == "OPEN"
                   ? `onclick="startCBT(${JSON.stringify(data[i])
                       .replace(/'/g, "")
-                      .replace(/"/g, "'")})"`
+                      .replace(/"/g, "'")
+                      .replace(/&#39;/g, "™")})"`
                   : `onclick="alert('CBT Closed!')"`
               }
                  ><i class="fas fa-play"></i> START CBT</button>
@@ -729,7 +730,7 @@ async function getCBTdetails() {
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3 ">
    <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
       questions_number[n]
-    }" >${question[questions_number[n]].replace(/⌑/g, ",")}</span></p>
+    }" >${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}</span></p>
  <div class="pl-2">
            <div id="optionA${
              questions_number[n]
@@ -745,7 +746,8 @@ async function getCBTdetails() {
     ]
       .split("~")[0]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
              </label> </input></div>
 
              <div id="optionB${
@@ -762,7 +764,8 @@ async function getCBTdetails() {
     ]
       .split("~")[1]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label></input> </div>
 
                <div id="optionC${
@@ -779,7 +782,8 @@ async function getCBTdetails() {
     ]
       .split("~")[2]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label> </input> </div>
 
                  <div id="optionD${
@@ -796,7 +800,8 @@ async function getCBTdetails() {
     ]
       .split("~")[3]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label></input> </div>
             </div>
   </div>
@@ -2302,7 +2307,7 @@ function loadFeeBreakdown() {
     "₦" + formatNumber(data.expected_amount);
   document.getElementById("total_paid").innerHTML =
     "₦" + formatNumber(data.total_paid);
-  document.getElementById("due_balance").innerHTML =
+  document.getElementById("term_bal").innerHTML =
     "₦" + formatNumber(data.due_balance);
 
   document.getElementById("arrears").innerHTML =

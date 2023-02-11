@@ -1950,13 +1950,15 @@ function getCBTForSubject() {
                 data[i]
               )
                 .replace(/'/g, "")
-                .replace(/"/g, "'")})"
+                .replace(/"/g, "'")
+                .replace(/&#39;/g, "™")})"
                  ><i class="fas fa-eye"></i></button>
               <button style="text-decoration: none; cursor: pointer;" onclick=" reloadEditFrame(); editCBT(${JSON.stringify(
                 data[i]
               )
                 .replace(/'/g, "")
-                .replace(/"/g, "'")})"
+                .replace(/"/g, "'")
+                .replace(/&#39;/g, "™")})"
                   class="btn-sm btn-warning" data-bs-toggle="modal"
                   data-bs-target="#editModal"><i class="fas fa-edit"></i></button>
               <button style="text-decoration: none; cursor: pointer;" onclick="viewResultForCBT(${
@@ -2101,7 +2103,7 @@ function getSavedQuestions() {
         <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
           questions_number[n]
         }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
-            ${question[questions_number[n]].replace(/⌑/g, ",")}
+            ${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}
         </div>
     </div>
     <br>
@@ -2121,7 +2123,8 @@ function getSavedQuestions() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[0]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label> </input></div>
  
                <div id="optionB${
@@ -2138,7 +2141,8 @@ function getSavedQuestions() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[1]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label></input> </div>
  
                  <div id="optionC${
@@ -2155,7 +2159,8 @@ function getSavedQuestions() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[2]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label> </input> </div>
  
                    <div id="optionD${
@@ -2172,7 +2177,8 @@ function getSavedQuestions() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[3]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                      </label></input> </div>
               </div>
     </div>
@@ -2198,8 +2204,8 @@ function getSavedQuestions() {
 }
 
 function saveQuestion(number, question_text) {
-  // REPLACE EVERY "," with "⌑"
-  question[number] = question_text.replace(/,/g, "⌑");
+  // REPLACE EVERY "," with "⌑" AND EVERY "'" WITH ""
+  question[number] = question_text.replace(/,/g, "⌑").replace(/'/g, "™").replace(/&#39;/g, "™");
 }
 
 function saveAnswer(text) {
@@ -2226,7 +2232,9 @@ function saveOptions(number) {
         .getElementById("option" + option[i].id)
         .children[1].innerHTML.trim()
         .replace(/~/g, "®")
-        .replace(/,/g, "⌑") + "~";
+        .replace(/,/g, "⌑")
+        .replace(/'/g, "™")
+        .replace(/&#39;/g, "™") + "~";
   }
   options[number] = new_options;
 }
@@ -2385,7 +2393,7 @@ function getCBTdetailsView() {
    <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
    <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
      questions_number[n]
-   }" >${question[questions_number[n]].replace(/⌑/g, ",")}</span></p>
+   }" >${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}</span></p>
  <div class="pl-2">
            <div id="optionA${
              questions_number[n]
@@ -2401,7 +2409,8 @@ function getCBTdetailsView() {
     ]
       .split("~")[0]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}}
              </label> </input></div>
 
              <div id="optionB${
@@ -2418,7 +2427,8 @@ function getCBTdetailsView() {
     ]
       .split("~")[1]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label></input> </div>
 
                <div id="optionC${
@@ -2435,7 +2445,8 @@ function getCBTdetailsView() {
     ]
       .split("~")[2]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label> </input> </div>
 
                  <div id="optionD${
@@ -2452,7 +2463,8 @@ function getCBTdetailsView() {
     ]
       .split("~")[3]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label></input> </div>
             </div>
   </div>
@@ -2578,7 +2590,7 @@ function getCBTdetailsEdit() {
         <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
           questions_number[n]
         }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
-            ${question[questions_number[n]].replace(/⌑/g, ",")}
+            ${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}
         </div>
     </div>
     <br>
@@ -2599,7 +2611,8 @@ function getCBTdetailsEdit() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[0]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label> </input></div>
  
                <div id="optionB${
@@ -2616,7 +2629,8 @@ function getCBTdetailsEdit() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[1]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label></input> </div>
  
                  <div id="optionC${
@@ -2633,7 +2647,8 @@ function getCBTdetailsEdit() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[2]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label> </input> </div>
  
                    <div id="optionD${
@@ -2650,7 +2665,8 @@ function getCBTdetailsEdit() {
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[3]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                      </label></input> </div>
               </div>
     </div>
