@@ -142,9 +142,31 @@ class StudentService
     public function getDashBoardInformation($student)
     {
         $util = new Utils();
+        $subjectRegistrationRepository = new SubjectRegistrationRepository();
+
+        //CBT AVAILABLE
         $CBTModel = CBTModel::where('class_id', $student->class)->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
 
-        return ['cbt_no' => count($CBTModel), 'attendance' => $this->attendanceSummary($student->id)->getData()->attendance, 'due_balance' => null, 'events' => null, "notification" => null];
+        $cbt_id = [];
+        $cbt_subject_count = [];
+
+        foreach ($CBTModel as $cbt) {
+            array_push($cbt_id, $cbt->id);
+        }
+
+        // CBT DONE
+        $CBTResultModel = CBTResultModel::whereIn("cbt_id", $cbt_id)->where("student_id", $student->id)->get();
+
+        $subject_ids =  $subjectRegistrationRepository->getRegisteredSubjectForCBT($student);
+
+        foreach ($subject_ids as $id) {
+            $cbt = CBTModel::where('subject_id', $id)->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
+            array_push($cbt_subject_count, count($cbt));
+        }
+
+        $cbt = ['cbt_no' => count($CBTResultModel) . " of " . count($CBTModel), 'cbt_subject_id' =>  $subject_ids, 'cbt_subject_count' => $cbt_subject_count];
+
+        return ['cbt' => $cbt, 'attendance' => $this->attendanceSummary($student->id)->getData()->attendance, 'due_balance' => null, 'events' => null, "notification" => null];
     }
 
     // CBT

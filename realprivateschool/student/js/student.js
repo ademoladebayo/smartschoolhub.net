@@ -34,7 +34,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a   id="learning-hub" href="learning-hub.html" class="nav-link"><i
+        <a   id="learning-hub" href="learning-hub-frame.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
     <li class="nav-item">
@@ -125,7 +125,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a   id="learning-hub" href="learning-hub.html" class="nav-link"><i
+        <a   id="learning-hub" href="learning-hub-frame.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
     <li class="nav-item">
@@ -310,8 +310,12 @@ function loadDashBoardInformation() {
     JSON.parse(localStorage["user_data"]).data.last_name
   }</b>`;
 
-  document.getElementById('cbt_no').innerHTML = JSON.parse(localStorage["user_data"]).dashboard_information.cbt_no;
-  document.getElementById('attendance_perc').innerHTML = JSON.parse(localStorage["user_data"]).dashboard_information.attendance;
+  document.getElementById("cbt_no").innerHTML = JSON.parse(
+    localStorage["user_data"]
+  ).dashboard_information.cbt.cbt_no;
+  document.getElementById("attendance_perc").innerHTML = JSON.parse(
+    localStorage["user_data"]
+  ).dashboard_information.attendance;
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
@@ -731,7 +735,9 @@ async function getCBTdetails() {
    <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
     <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
       questions_number[n]
-    }" >${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}</span></p>
+    }" >${question[questions_number[n]]
+      .replace(/⌑/g, ",")
+      .replace(/™/g, "'")}</span></p>
  <div class="pl-2">
            <div id="optionA${
              questions_number[n]
@@ -982,7 +988,7 @@ function getAllSubjectForTable() {
                   <td>${c}.</td>
                   <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
                   <td>${data[i].subject_type}</td>
-                  <td>${data[i].student}</td>
+                  <td>${data[i].teacher}</td>
                   
                
                   
@@ -1244,43 +1250,29 @@ function getRegisteredSubjectForTableCBT() {
     .then((data) => {
       document.getElementById("subject_table").innerHTML = ``;
       for (i in data) {
-        if (data[i].subject_type == "COMPULSORY") {
-          document.getElementById("subject_table").innerHTML += `
-              <tr>
-      
-                    <td>${c}.</td>
-                    <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
-                    <td>${data[i].subject_type}</td>
-                    <td>${data[i].teacher}</td>
-                    <td>
-                        <button onclick="showCBTList('${data[i].subject_name}',${data[i].subject_id})" type="button" class="btn btn-primary">
-                            SEE AVAILABLE CBT
-                        </button>
-                   </td>
-                    
-                 
-                    
+        // GET CBT COUNT
+       var cbt_details =  JSON.parse(localStorage["user_data"]).dashboard_information.cbt;
+       var index = cbt_details.cbt_subject_id.indexOf(data[i].id.toString());
+       var count = index == -1 ? 0 : cbt_details.cbt_subject_count[index];
           
-                <tr>`;
-        } else {
-          document.getElementById("subject_table").innerHTML += `
-              <tr>
-      
-                    <td>${c}.</td>
-                    <td> <small><i class="fa fa-shapes" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
-                    <td>${data[i].subject_type}</td>
-                    <td>${data[i].teacher}</td>
-                    <td>
-                    <button onclick="showCBTList('${data[i].subject_name}',${data[i].subject_id})" type="button" class="btn btn-primary">
-                        SEE AVAILABLE CBT
-                    </button>
-                   </td>
-                    
-                 
-                    
-          
-                <tr>`;
-        }
+        document.getElementById("subject_table").innerHTML += `
+            <tr>
+    
+                  <td>${c}.</td>
+                  <td> <small><i class="${data[i].subject_type == "COMPULSORY" ? `fa fa-star` : `fa fa-shapes`}" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
+                  <td>${data[i].subject_type}</td>
+                  <td>${data[i].teacher}</td>
+                  <td>
+                      <button onclick="showCBTList('${data[i].subject_name}',${data[i].subject_id})" type="button" class="btn btn-primary">
+                      <span id="" class="badge bg-white"
+                      style="color:blue">${count}</span> CBT AVAILABLE
+                      </button>
+                  </td>
+                  
+                
+                  
+        
+              <tr>`;
 
         c = c + 1;
       }
@@ -1384,9 +1376,8 @@ async function getTranscript() {
         }
       });
 
-
       //SORT TERM BEFORE USE
-      terms  = sortTerm(terms);
+      terms = sortTerm(terms);
 
       // CREATE RESULT TEMPLATE
       if (sessions.length > 0) {
@@ -1663,13 +1654,13 @@ async function getTranscript() {
     .catch((err) => console.log(err));
 }
 
-function sortTerm(terms){
-    order_terms = ["FIRST TERM","SECOND TERM","THIRD TERM"];
-    sorted_term = [];
-    sorted_term[order_terms.indexOf(terms[0])] = terms[0];
-    sorted_term[order_terms.indexOf(terms[1])] = terms[1];
-    sorted_term[order_terms.indexOf(terms[2])] = terms[2];
-    return sorted_term;
+function sortTerm(terms) {
+  order_terms = ["FIRST TERM", "SECOND TERM", "THIRD TERM"];
+  sorted_term = [];
+  sorted_term[order_terms.indexOf(terms[0])] = terms[0];
+  sorted_term[order_terms.indexOf(terms[1])] = terms[1];
+  sorted_term[order_terms.indexOf(terms[2])] = terms[2];
+  return sorted_term;
 }
 
 function getResult(value) {
@@ -2043,10 +2034,19 @@ function getLearningHubMaterials(subject_id) {
     })
 
     .then((data) => {
+      //POPULATE COUNTS
+      document.getElementById("note-count").innerHTML = data.note.length;
+      document.getElementById("upload-count").innerHTML = data.upload.length;
+      document.getElementById("video-count").innerHTML = data.video.length;
+      document.getElementById("assignment-count").innerHTML =
+        data.assignment.length;
+
       // DISPLAY UPLOADED NOTE
       if (data.note.length > 0) {
-         // SAVE NOTE TO LOCAL STORAGE
-         localStorage.setItem("NOTES",JSON.stringify(data.note));
+        document.getElementById("download_note").hidden = false;
+
+        // SAVE NOTE TO LOCAL STORAGE
+        localStorage.setItem("NOTES", JSON.stringify(data.note));
 
         document.getElementById("notes-content-main").innerHTML = ``;
         data.note.forEach((note) => {
@@ -2071,8 +2071,10 @@ function getLearningHubMaterials(subject_id) {
               </div>`;
         });
       } else {
-         // SAVE NOTE TO LOCAL STORAGE
-         localStorage.setItem("NOTES","NO NOTE");
+        document.getElementById("download_note").hidden = true;
+
+        // SAVE NOTE TO LOCAL STORAGE
+        localStorage.setItem("NOTES", "NO NOTE");
         document.getElementById("notes-content-main").innerHTML = ``;
         document.getElementById(
           "notes-content-main"
@@ -2167,26 +2169,26 @@ function getLearningHubMaterials(subject_id) {
     .catch((err) => console.log(err));
 }
 
-
-function getNote(){
+function getNote() {
   document.getElementById("session_term").innerHTML =
-  localStorage["current_session"] +
-  " Session | " +
-  localStorage["current_term"];
+    localStorage["current_session"] +
+    " Session | " +
+    localStorage["current_term"];
 
-document.getElementById("school_name").innerHTML =
-  localStorage["SCHOOL_NAME"] + "<br/>" + localStorage["SCHOOL_ADDRESS"];
+  document.getElementById("school_name").innerHTML =
+    localStorage["SCHOOL_NAME"] + "<br/>" + localStorage["SCHOOL_ADDRESS"];
 
-document.getElementById("subject_class").innerHTML =
-  localStorage["LH_SUBJECT_CLASS"] + " " + JSON.parse(localStorage["user_data"]).data.class.class_name;
+  document.getElementById("subject_class").innerHTML =
+    localStorage["LH_SUBJECT_CLASS"] +
+    " " +
+    JSON.parse(localStorage["user_data"]).data.class.class_name;
 
   // LOAD NOTE
   notes = JSON.parse(localStorage["NOTES"]);
-  document.getElementById("note_view").innerHTML =``;
+  document.getElementById("note_view").innerHTML = ``;
 
-  for(i = (notes.length - 1); i >= 0; i-- ){
-    document.getElementById("note_view").innerHTML += 
-    ` <div>
+  for (i = notes.length - 1; i >= 0; i--) {
+    document.getElementById("note_view").innerHTML += ` <div>
         <div class="h5">
             <div class="row">
                 <div class="col-md-4">
@@ -2209,7 +2211,14 @@ document.getElementById("subject_class").innerHTML =
     `;
   }
 
-  downloadAsPDF(localStorage["LH_SUBJECT_CLASS"] + " " + JSON.parse(localStorage["user_data"]).data.class.class_name+"_"+getDate().split("-")[0],"noteContainer");
+  downloadAsPDF(
+    localStorage["LH_SUBJECT_CLASS"] +
+      " " +
+      JSON.parse(localStorage["user_data"]).data.class.class_name +
+      "_" +
+      getDate().split("-")[0],
+    "noteContainer"
+  );
 }
 
 // ID CARD
@@ -2294,6 +2303,7 @@ function getFee() {
       localStorage.setItem("fee", JSON.stringify(data));
       document.getElementById("due_balance").innerHTML =
         "₦" + formatNumber(data.total_due_balance);
+        loadFeeBreakdown();
     })
     .catch((err) => console.log(err));
 }
@@ -2588,7 +2598,7 @@ function download(filename) {
   console.log(payment_slip);
   console.log(window);
   var opt = {
-    margin: 1,
+    margin: 0.1,
     filename: filename + ".pdf",
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 2, useCORS: true },
@@ -2902,7 +2912,9 @@ function getMessage(message_type, user_type) {
                        </td>
   
                         <td>
-                          <button onclick="saveDataInLocalStorage('communication','${data[i]}'); 
+                          <button onclick="saveDataInLocalStorage('communication','${
+                            data[i]
+                          }'); 
                           editMessage('${data[i].id}','${
               data[i].sender
             }','VIEW'); populateViewMessageModal('${data[i].sender_name}','${
@@ -2925,8 +2937,8 @@ function getMessage(message_type, user_type) {
     .catch((err) => console.log(err));
 }
 
-function saveDataInLocalStorage(key,data){
-localStorage.setItem(key,data);
+function saveDataInLocalStorage(key, data) {
+  localStorage.setItem(key, data);
 }
 
 function populateViewMessageModal(
@@ -2962,7 +2974,9 @@ function populateViewMessageModal(
     <div class="form-group">
         <label for="message-text" class="col-form-label">Message:</label>
         <textarea style="height:180px" id="view_message" class="form-control" id="message-text"
-            disabled>${JSON.stringify(localStorage['communication']).message}</textarea>
+            disabled>${
+              JSON.stringify(localStorage["communication"]).message
+            }</textarea>
     </div>
 
     <div class="form-group">
@@ -2971,7 +2985,11 @@ function populateViewMessageModal(
           receiver != JSON.parse(localStorage["user_data"]).data.id
             ? `disabled`
             : ``
-        }>${reply == 'null' ? `No response yet ... `: JSON.stringify(localStorage['communication']).reply}</textarea>
+        }>${
+    reply == "null"
+      ? `No response yet ... `
+      : JSON.stringify(localStorage["communication"]).reply
+  }</textarea>
     </div>
 </form>
 </div>
@@ -3421,7 +3439,7 @@ function collapseSidebar() {
   }
 }
 
-function downloadAsPDF(filename,container) {
+function downloadAsPDF(filename, container) {
   filename = filename == null ? "file" : filename;
   const data = this.document.getElementById(container);
   var opt = {

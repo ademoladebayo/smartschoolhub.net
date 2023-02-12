@@ -126,12 +126,11 @@ function loadDashBoardInformation() {
       "cbt_no"
     ).innerHTML = `<span class="counter" data-num="${parseInt(
       formatNumber(
-        JSON.parse(localStorage["user_data"]).dashboard_information
-          .cbt_no
+        JSON.parse(localStorage["user_data"]).dashboard_information.cbt.cbt_no
       )
     )}">${formatNumber(
       JSON.parse(localStorage["user_data"]).dashboard_information
-        .cbt_no
+      .cbt.cbt_no
     )}</span>
       </div>`;
 
@@ -190,7 +189,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a   id="learning-hub" href="learning-hub.html" class="nav-link"><i
+        <a   id="learning-hub" href="learning-hub-frame.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
 
@@ -1858,6 +1857,11 @@ function getAssignedSubject() {
     .then((data) => {
       document.getElementById("subject_table").innerHTML = ``;
       for (i in data) {
+        // GET CBT COUNT
+        var cbt_details =  JSON.parse(localStorage["user_data"]).dashboard_information.cbt;
+        var index = cbt_details.cbt_subject_id.indexOf(data[i].id);
+        var count = index == -1 ? 0 : cbt_details.cbt_subject_count[index];
+
         document.getElementById("subject_table").innerHTML += `
                   <tr>
           
@@ -1866,7 +1870,8 @@ function getAssignedSubject() {
                         <td>${data[i].class.class_name}</td>
                         <td>
                             <button onclick="showCBTList('${data[i].subject_name}','${data[i].id}','${data[i].class.class_name}','${data[i].class.id}')" type="button" class="btn btn-primary">
-                                SEE AVAILABLE CBT
+                               <span id="" class="badge bg-white"
+                      style="color:blue">${count}</span> CBT AVAILABLE
                             </button>
                        </td>
                         
@@ -2465,7 +2470,7 @@ function getCBTdetailsView() {
       .replace(/⌑/g, ",")
       .replace(/®/g, "~")
       .replace(/™/g, "'")}
-                   </label></input> </div>
+                   </label></in put> </div>
             </div>
   </div>
 
@@ -3777,6 +3782,13 @@ function getLearningHubMaterials(subject_id) {
     })
 
     .then((data) => {
+       //POPULATE COUNTS
+       document.getElementById("note-count").innerHTML = data.note.length;
+       document.getElementById("upload-count").innerHTML = data.upload.length;
+       document.getElementById("video-count").innerHTML = data.video.length;
+       document.getElementById("assignment-count").innerHTML =
+         data.assignment.length;
+
       // DISPLAY UPLOADED NOTE
       if (data.note.length > 0) {
         document.getElementById("notes-content-main").innerHTML = ``;

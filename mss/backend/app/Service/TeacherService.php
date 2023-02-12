@@ -65,13 +65,27 @@ class TeacherService
         $util = new Utils();
         $CBTModel = CBTModel::whereIn('subject_id',SubjectModel::select('id')->where('teacher',$teacher->id)->get())->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
 
+        $cbt_subject_count = [];
+        $subject_ids = [];
+
+        foreach(SubjectModel::select('id')->where('teacher',$teacher->id)->get() as $subject){
+            array_push($subject_ids,$subject->id);
+        };
+
+        foreach ($subject_ids as $id) {
+            $cbt = CBTModel::where('subject_id', $id)->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
+            array_push($cbt_subject_count, count($cbt));
+        }
+
+        $cbt = ['cbt_no' =>  count($CBTModel), 'cbt_subject_id' =>  $subject_ids, 'cbt_subject_count' => $cbt_subject_count];
+
         // NUMBER OF STUDENT IN MY CLASS
         // NUMBER OF SUBJECT I TAKE
         if ($teacher->assigned_class == '-') {
-            return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => "No class assigned", 'male' => 0, 'female' => 0, 'events' => null, "notification" => null, "cbt_no" => count($CBTModel)];
+            return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => "No class assigned", 'male' => 0, 'female' => 0, 'events' => null, "notification" => null, "cbt" => $cbt];
         }
 
-        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null ,"cbt_no" => count($CBTModel)];
+        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null ,"cbt" => $cbt];
     }
 
     // SUBJECT REGISTRATION

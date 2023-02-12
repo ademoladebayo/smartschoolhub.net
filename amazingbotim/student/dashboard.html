@@ -35,7 +35,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadFeeBreakdown();loadDashBoardInformation();">
+    onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -151,7 +151,7 @@
                     <div class="col-8-xxxl col-12">
                         <div class="row">
                             <!-- Summery Area Start Here -->
-                            <div class="col-lg-4">
+                            <div class="col-lg-4" onclick="goTo('cbt.html')" >
                                 <div class="dashboard-summery-one">
                                     <div class="row">
                                         <div class="col-6">
@@ -159,10 +159,10 @@
                                                 <i class="fas fa-desktop text-magenta"></i>
                                             </div>
                                         </div>
-                                        <div onclick="goTo('cbt.html')" class="col-6">
+                                        <div class="col-6">
                                             <div class="item-content">
                                                 <div style="color: black; font-family: Poppins;" class="item-title">
-                                                    <b>No of CBT</b>
+                                                    <b>CBT Completed</b>
                                                 </div>
                                                 <div class="item-number">
                                                     <span id="cbt_no" style="font-style: bold; color: black;">Loading
@@ -174,10 +174,10 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4">
+                            <div class="col-lg-4" onclick="goTo('attendance.html')">
                                 <div class="dashboard-summery-one">
                                     <div class="row">
-                                        <div onclick="goTo('attendance.html')" class="col-6">
+                                        <div  class="col-6">
                                             <div style="padding: 5px;" class="item-icon bg-light-yellow">
                                                 <i class="fas fa-chart-line text-orange"></i>
                                             </div>
@@ -403,7 +403,7 @@
 
                                                         <p class="m-0 font-weight-bold " style="color: #EE4B2B;">TERM
                                                             BALANCE : <span style="color: black;"
-                                                                id="due_balance"></span>
+                                                                id="term_bal"></span>
                                                         </p>
 
                                                         <p class="m-0 font-weight-bold " style="color: #FF0000;">ARREARS

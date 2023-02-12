@@ -3013,11 +3013,11 @@ function getAllClassForTable() {
             data[i].class_sector
           }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a  onclick="deleteClass(${
+               <!-- <a  onclick="deleteClass(${
                   data[i].id
                 })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
-                    Delete</a>
+                    Delete</a> -->
             </td>
   
         </tr>`;
@@ -3036,11 +3036,11 @@ function getAllClassForTable() {
             data[i].class_sector
           }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a  onclick="deleteClass(${
+                <!-- <a  onclick="deleteClass(${
                   data[i].id
                 })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
-                    Delete</a>
+                    Delete</a> -->
             </td>
   
         </tr>`;

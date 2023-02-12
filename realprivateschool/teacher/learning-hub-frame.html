@@ -194,23 +194,30 @@
                                         <li class="nav-item" role="presentation">
                                             <a style="cursor:pointer" onclick="showMaterial('notes')" class="nav-link"
                                                 id="notes-tab" data-toggle="pill" role="tab" aria-controls="pills-notes"
-                                                aria-selected="false">Notes</a>
+                                                aria-selected="false">Notes <span id="note-count" class="badge bg-white"
+                                                    style="color:blue">0</span></a>
                                         </li>
                                         <li class="nav-item" role="presentation">
                                             <a style="cursor:pointer" onclick="showMaterial('uploads')" class="nav-link"
                                                 id="uploads-tab" data-toggle="pill" role="tab"
-                                                aria-controls="pills-uploads" aria-selected="false">Uploads</a>
+                                                aria-controls="pills-uploads" aria-selected="false">Uploads <span
+                                                    id="upload-count" class="badge bg-white"
+                                                    style="color:blue">0</span></a>
                                         </li>
 
                                         <li class="nav-item" role="presentation">
                                             <a style="cursor:pointer" onclick="showMaterial('videos')" class="nav-link"
                                                 id="videos-tab" data-toggle="pill" role="tab"
-                                                aria-controls="pills-videos" aria-selected="false">Videos</a>
+                                                aria-controls="pills-videos" aria-selected="false">Videos <span
+                                                    id="video-count" class="badge bg-white"
+                                                    style="color:blue">0</span></a>
                                         </li>
                                         <li class="nav-item" role="presentation">
                                             <a style="cursor:pointer" onclick="showMaterial('assignments')"
                                                 class="nav-link" id="assignments-tab" data-toggle="pill" role="tab"
-                                                aria-controls="pills-assignments" aria-selected="false">Assignments</a>
+                                                aria-controls="pills-assignments" aria-selected="false">Assignments
+                                                <span id="assignment-count" class="badge bg-white"
+                                                    style="color:blue">0</span></a>
                                         </li>
 
                                     </ul>
@@ -399,7 +406,8 @@
 
                                             <div id="assignments-content-main">
                                                 <div class="card shadow mb-1">
-                                                    <div class="card-body">No Assignment Here</div>
+                                                    <div class="card-body" style="justify-content:center; display:flex">
+                                                        No Assignment Here</div>
                                                 </div>
                                             </div>
 
