@@ -1,0 +1,312 @@
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Student's Academic Record</title>
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Barcode+128&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nova+Flat&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nova+Square&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rhodium+Libre&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Scope+One&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&amp;display=swap">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <!-- QR LIBRARY -->
+    <script type="text/javascript" src="./js/adapter.min.js"></script>
+
+    <script type="text/javascript" src="./js/vue.min.js"></script>
+
+    <script type="text/javascript" src="./js/instascan.min.js"></script>
+</head>
+
+<body style="font-family: Poppins; font-weight: bold;" style="background: #ffffff;" onload="getTranscript()">
+
+
+    <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
+    <section>
+        <div style="float: right;" class="header-inline item-header">
+
+        </div>
+
+        <div  id="result_page" style="border: 2px solid black;margin: 0%;" class="result-page">
+            <!-- SCHOOL LOGO-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3">
+
+                    </div>
+                    <div class="col-md-4 col-lg-6">
+                        <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img id="school_logo"
+                                src="../assets/img/sample_logo.png" height="auto" width="auto"></div>
+
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- RESULT HEADER -->
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 0px;">
+                            <h5 style="font-weight: bold;font-family: Poppins, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
+                        </div>
+                    </div>
+
+                    <div class="w-100" style="margin-bottom: 0px;"></div>
+
+                    <div class="col-md-4">
+                        <div id="verificationQR" style="margin-left: 100px;margin-top: 30px;" title="STUDENT NUMBER">
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="display: flex;
+                    justify-content: center;">
+                        <div class="text-center" style="margin-top: 30px;">
+                            <p id="full_name" style="font-size: 14px;">_____________________________</p>
+                            <p id="student_id" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+                                _____________________________</p>
+                            <p id="class_sector" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+                                _____________________________</p>
+                            <p id="school_details" style="font-size: 14px;font-family: Poppins;">
+                                <b>_____________________________</b>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="display: flex;
+                            justify-content: center;"><br>
+                        <img style="margin-bottom: 15px; margin-top: 15px;" id="student_image"
+                            src="../assets/img/sample_image.png" width="110px">
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="result_div">
+
+
+                <hr style="color: black; border: 1px solid black">
+                <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+                <hr style="color: black; border: 1px solid black">
+
+
+
+
+
+
+            </div>
+
+
+
+            <!-- RATING & GRADING SYSTEM -->
+            <!-- <div class="container">
+                <p><b>RATING & GRADING SYSTEM</b></p>
+                <div class="row">
+
+                    <div class="col-md-6">
+
+
+                        <table style="justify-self: center;" class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="font-size: 14px;">Mark Scored</th>
+                                    <th style="font-size: 14px;">Letter Grade</th>
+                                    <th style="font-size: 14px;">Grade Point</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        70
+                                        -
+                                        100 %</td>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        A
+                                    </td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        60
+                                        -
+                                        69 %</td>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        B
+                                    </td>
+                                    <td>4</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        50
+                                        -
+                                        59 %</td>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        C
+                                    </td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        40
+                                        -
+                                        49 %</td>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        D
+                                    </td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        0
+                                        - 39
+                                        %</td>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        F
+                                    </td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+
+                    </div>
+
+                    <div class="col-md-6">
+
+
+                        <table style="justify-self: center;" class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th style="font-size: 14px;">Rate</th>
+                                    <th style="font-size: 14px;">Remark</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        5</td>
+
+                                    <td>Excellent degree of observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        4</td>
+
+                                    <td>Good level of observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        3</td>
+
+                                    <td>Fair in observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        2</td>
+
+                                    <td>Poor in observable trait</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                                        1</td>
+
+                                    <td>No observable trait</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+
+                    </div>
+
+
+                </div>
+            </div> -->
+
+
+
+
+            <!-- RESULT FOOTER -->
+            <div class="container">
+                <div class="alert alert-primary" role="alert"
+                    style="padding-top: 5px;padding-bottom: 5px;background: #ade7ff;">
+                    <div class="text-center"><span
+                            style="font-size: 12px;color: #006089;font-family: Poppins, serif;"><strong>ANY OFFICIAL
+                                TRANSCRIPT MUST BE SIGNED BY THE PRINCIPAL</strong></span></div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="text-center" style="height: 5px;background: #ffffff;margin-bottom: 15px;">
+            <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
+        </div>
+    </section>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../js/iframeSizer.contentWindow.min.js"></script>
+    <script src="./js/qrcode.min.js"></script>
+    <script src="./js/student.js"></script>
+    <style>
+        table,
+        th,
+        td,
+        tr {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .table {
+            border: black;
+        }
+    </style>
+
+
+</body>
+
+</html>
