@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Model\AdminModel;
+use App\Model\AssignmentModel;
+use App\Model\AssignmentSubmissionModel;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
 use App\Model\ClassModel;
@@ -11,6 +13,7 @@ use App\Model\FeeModel;
 use App\Model\PaymentHistoryModel;
 use App\Model\StudentAttendanceModel;
 use App\Model\StudentModel;
+use App\Model\SubjectModel;
 use App\Model\StudentResultCommentModel;
 use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
@@ -455,5 +458,41 @@ class StudentService
             $StudentRepository->updatePassword($request->student_id, $request->new_password);
             return response()->json(['success' => true, 'message' => 'Password has been changed successfully.']);
         }
+    }
+
+    // CONTINOUS ASSESSMENT
+    public function getContinousAssessment($student_id)
+    {
+        $cbt_arr = [];
+        $assignment_arr = [];
+
+        $util = new Utils();
+        $current_session = $util->getCurrentSession()[0];
+        $current_term = $util->getCurrentSession()[1];
+
+
+        $cbt_submission = CBTResultModel::where('student_id', $student_id)->orderBy('id', 'DESC')->get();
+        foreach ($cbt_submission as $cs) {
+            $cbt = CBTModel::find($cs->cbt_id);
+            if ($cbt->term == $current_term && $cbt->session == $current_session) {
+                $cbt->score = $cs->score . "/" . count(explode(',', $cbt->cbt_questions_number));
+                $cbt->subject = SubjectModel::find($cbt->subject_id)->subject_name . " (" . $cbt->cbt_title . ")";
+                array_push($cbt_arr, $cbt);
+            }
+        }
+
+
+        $assignment_submission = AssignmentSubmissionModel::where('student_id', $student_id)->orderBy('id', 'DESC')->get();
+        foreach ($assignment_submission as $as) {
+            $assignment = AssignmentModel::find($as->assignment_id);
+            if ($assignment->term == $current_term && $assignment->session == $current_session) {
+                $assignment->score = $as->score . "/" . $assignment->mark_obtainable;
+                $assignment->subject = SubjectModel::find($assignment->subject_id)->subject_name . " (" . $assignment->topic . ")";
+                $assignment->graded = $as->graded;
+                array_push($assignment_arr, $assignment);
+            }
+        }
+
+        return response()->json(['assignment' => $assignment_arr, 'cbt' => $cbt_arr]);
     }
 }

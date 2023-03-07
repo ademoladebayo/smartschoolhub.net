@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head id="common-library">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=1024">
     <meta name="description" content=" Student's Courses ">
     <meta name="author" content="">
     <link rel="icon" href="">
@@ -24,11 +25,13 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
-    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+
 
     <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+
+    <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+    <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <!-- <link rel="stylesheet" href="../css/bootstrap.min.css"> -->
@@ -37,6 +40,8 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/35.4.0/classic/ckeditor.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"
         integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://meet.jit.si/external_api.js"></script>
 
 
 </head>
@@ -220,29 +225,35 @@
                                                     style="color:blue">0</span></a>
                                         </li>
 
+                                        <li class="nav-item" role="presentation">
+                                            <a style="cursor:pointer" onclick="showMaterial('assignments-submission')"
+                                                class="nav-link" id="assignments-submission-tab" data-toggle="pill"
+                                                role="tab" aria-controls="pills-assignments-submission"
+                                                aria-selected="false" hidden> <small><span id="assignment">Assignments Submission</span></small> 
+                                                <span id="assignment-submission-count" class="badge bg-white"
+                                                    style="color:blue">0</span></a>
+                                        </li>
+
                                     </ul>
                                     <div class="tab-content" id="pills-tabContent">
                                         <div class="tab-pane fade show active" id="live-content" role="tabpanel"
                                             aria-labelledby="pills-live-tab">
-                                            <!-- <div class="card shadow mb-1">
-                                                <div class="card-header">
-                                                    <small class="m-0 text-primary">Title</small><br>
-                                                    <span class="m-0 text-primary">Title</span>
-                                                </div>
-                                                <div class="card-body">
-                                                    Content of the section
-                                                </div>
-                                            </div> -->
-
+                                            <div class="card shadow mb-1">
+                                                <a type="button" class="btn btn-primary btn-block  btn-sm"
+                                                    data-bs-toggle="modal" data-bs-target="#scheduleLiveClass"><i
+                                                        class="far fa-calendar-alt"></i> SCHEDULE LIVE CLASS</a>
+                                            </div>
+                                            <br />
 
                                             <div class="card shadow mb-1">
                                                 <div class="card-header">
                                                     <span class="m-0 text-primary">
-                                                        Current Time: Today
+                                                        Current Time: <small><b id="today_date"></b></small>
                                                     </span><br>
-                                                    <small class="m-0 text-primary"><em>Start Button will be
-                                                            activated 10mins to
-                                                            start time, Please refresh when it's
+                                                    <small class="m-0 text-primary"><em>The join button will be visible
+                                                            once the class is <span class="badge bg-success"
+                                                                style="color: white;"><b> LIVE </b></span>, Please
+                                                            refresh when it's
                                                             time</em></small><br>
                                                 </div>
                                                 <div class="card-body">
@@ -256,12 +267,13 @@
                                                                 <tr>
                                                                     <th>S/N</th>
                                                                     <th>Topic</th>
+                                                                    <th>Date</th>
                                                                     <th>Time</th>
                                                                     <th colspan="2" style="text-align: center;">
                                                                         Actions</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="upcoming_class">
                                                                 <!-- <tr>
                                                                     <td>1</td>
                                                                     <td><small>Accounting treatment of pension
@@ -288,9 +300,8 @@
                                                     </div>
 
                                                     <h6 class="mt-3">Previous Classes</h6>
-                                                    <small><em>Recorded Videos will be available few hours after end
-                                                            of
-                                                            class</em></small>
+                                                    <small><em>Recorded live class will be available once uploaded on
+                                                            the <b>VIDEOS</b> tab section</em></small>
                                                     <div class="table-responsive">
                                                         <table class="table table-sm table-bordered" id="table2"
                                                             style="width: 100%;">
@@ -298,11 +309,13 @@
                                                                 <tr>
                                                                     <th>S/N</th>
                                                                     <th>Topic</th>
+                                                                    <th>Date</th>
                                                                     <th>Time</th>
-                                                                    <th>Watch Recording</th>
+                                                                    <th colspan="2" style="text-align: center;">
+                                                                        Actions</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="previous_class">
                                                                 <!-- 
                                                                 <tr>
                                                                     <td>1</td>
@@ -371,18 +384,23 @@
                                             aria-labelledby="pills-videos-tab">
                                             <div onclick="" class="card-header"
                                                 style="display: flex; justify-content: center; color: black;">
-                                                <small>
-                                                    <span style="padding: 10px; width: 1000px;" class="m-0 ">
+                                                <!-- <span style="padding: 10px; width: 1000px;" class="m-0 ">
                                                         <i><b id="video_link"
                                                                 oninput="checkLinkValidity(this.innerHTML)"
                                                                 onclick="clearPlaceholder()"
                                                                 contenteditable="true">Paste youtube link here</b></i>
-                                                    </span>
-                                                </small>
+                                                    </span> -->
+
+                                                <div class="col-12 form-group">
+                                                    <input style="text-align: center; font-size: small;"
+                                                        oninput="checkLinkValidity(this.value)"
+                                                        onclick="clearPlaceholder()" id="video_link" type="text"
+                                                        placeholder="PASTE YOUTUBE LINK HERE" class="form-control">
+                                                </div>
                                             </div>
                                             <div class="card shadow mb-1">
                                                 <a id="video_upd"
-                                                    onclick="postMaterial('',document.getElementById('video_link').innerHTML,'VIDEO')"
+                                                    onclick="postMaterial('',document.getElementById('video_link').value,'VIDEO')"
                                                     href="#" class="btn btn-primary" hidden><i
                                                         class="fas fa-video"></i></i> Upload Video</a>
                                             </div>
@@ -399,8 +417,9 @@
                                         <div class="tab-pane fade" id="assignments-content" role="tabpanel"
                                             aria-labelledby="pills-assignments-tab">
                                             <div class="card shadow mb-1">
-                                                <a onclick="" href="#" class="btn btn-primary"><i
-                                                        class="far fa-clipboard"></i> Create New Assignment</a>
+                                                <a onclick="content('CREATE','ASSIGNMENT','')" href="#"
+                                                    class="btn btn-primary"><i class="far fa-clipboard"></i> Create New
+                                                    Assignment</a>
                                             </div>
                                             <br />
 
@@ -408,6 +427,24 @@
                                                 <div class="card shadow mb-1">
                                                     <div class="card-body" style="justify-content:center; display:flex">
                                                         No Assignment Here</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="tab-pane fade" id="assignments-submission-content" role="tabpanel"
+                                            aria-labelledby="pills-assignment-submissions-tab">
+                                            <!-- <div class="card shadow mb-1">
+                                                <a onclick="content('CREATE','ASSIGNMENT-SUBMISSION','')" href="#"
+                                                    class="btn btn-primary"><i class="far fa-clipboard"></i> Create New
+                                                    Assignment</a>
+                                            </div>
+                                            <br /> -->
+
+                                            <div id="assignments-submission-content-main">
+                                                <div class="card shadow mb-1">
+                                                    <div class="card-body" style="justify-content:center; display:flex">
+                                                        No Submission Here</div>
                                                 </div>
                                             </div>
 
@@ -421,6 +458,126 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Understood</button>
                     </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="scheduleLiveClass" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div style="display:flex; justify-content:center;" class="modal-header">
+                            <h5 style="font-size: medium;" id="subject" class="modal-title" id="staticBackdropLabel"><i
+                                    class="fa-solid far fa-calendar-alt"></i>
+                                SCHEDULE LIVE CLASS</a>
+                            </h5>
+                            <button style="border-style:none; margin-left: 20px; margin-top: 5px;" type="button"
+                                class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card shadow mb-4">
+                                <div class="row new-added-form" style="margin: 5px;">
+                                    <div class="col-12 form-group">
+                                        <label>Topic </label>
+                                        <input style="font-size: small;" oninput="this.value = this.value.toUpperCase()"
+                                            id="topic1" type="text" placeholder="INTRODUCTION TO LEARNING"
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>Date </label>
+                                        <input style="font-size: small;" oninput="this.value = this.value.toUpperCase()"
+                                            id="date" type="date" data-date-format="DD MMM YYYY"
+                                            placeholder="DD/MM/YYYY" class="form-control">
+                                    </div>
+                                    <div style="font-size: small;" class="col-12 form-group">
+                                        <label>Time </label>
+                                        <input oninput="this.value = this.value.toUpperCase()" id="time" type="time"
+                                            placeholder="8:00AM" class="form-control">
+                                    </div>
+
+
+                                    <div class="col-12 form-group mg-t-8">
+                                        <button onclick="scheduleClass()" class="btn btn-primary">Save</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Understood</button>
+                    </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="editLiveClass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div style="display:flex; justify-content:center;" class="modal-header">
+                            <h5 style="font-size: medium;" id="subject" class="modal-title" id="staticBackdropLabel"><i
+                                    class="fa-solid far fa-calendar-alt"></i>
+                                EDIT SCHEDULED LIVE CLASS</a>
+                            </h5>
+                            <button style="border-style:none; margin-left: 20px; margin-top: 5px;" type="button"
+                                class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card shadow mb-4">
+                                <div class="row new-added-form" style="margin: 5px;">
+                                    <div class="col-12 form-group" hidden>
+                                        <input style="font-size: small;" oninput="this.value = this.value.toUpperCase()"
+                                            id="live_id" type="text" placeholder="" class="form-control">
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>Topic </label>
+                                        <input style="font-size: small;" oninput="this.value = this.value.toUpperCase()"
+                                            id="e_topic1" type="text" placeholder="INTRODUCTION TO LEARNING"
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>Date </label>
+                                        <input style="font-size: small;" oninput="this.value = this.value.toUpperCase()"
+                                            id="e_date" type="date" data-date-format="DD MMM YYYY"
+                                            placeholder="DD/MM/YYYY" class="form-control">
+                                    </div>
+                                    <div style="font-size: small;" class="col-12 form-group">
+                                        <label>Time </label>
+                                        <input oninput="this.value = this.value.toUpperCase()" id="e_time" type="time"
+                                            placeholder="8:00AM" class="form-control">
+                                    </div>
+
+
+                                    <div class="col-12 form-group mg-t-8">
+                                        <button onclick="updateScheduledClass()" class="btn btn-primary">Save</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="liveClass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div style="display:flex; justify-content:center;" class="modal-header">
+                            <h5 id="blink" class="modal-title" id="staticBackdropLabel"> 🔴 CLASS IS NOW LIVE</small>
+                            </h5>
+                            <button style="border-style:none; margin-left: 20px; margin-top: 5px;" type="button"
+                                class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b>X</b></button>
+                        </div>
+                        <div id="jitsi-view" class="modal-body" style="display:flex; justify-content:center">
+
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -460,16 +617,18 @@
         crossorigin="anonymous"></script>
 
 
-    <script src="./js/teacher.js"></script>
-    <script src="./js/ckeditor.js"></script>
+    <script src="./js/teacher.js"></script> 
     <script src="../assets/js/lib/toastr/toastr.min.js"></script>
     <script src="../assets/js/lib/toastr/toastr.init.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+    <script src="../common-library.js"></script>
 
     <script>
         var previous_active_tab = "live-tab";
         var previous_active_tab_content = "live-content";
+
+        populateDate();
 
         function showMaterial(material) {
             // PREVIOUS 
@@ -526,9 +685,9 @@
 
 
         function clearPlaceholder() {
-            element = document.getElementById("video_link").innerHTML.trim();
+            element = document.getElementById("video_link").value.trim();
             if (element == "Paste youtube link here") {
-                document.getElementById("video_link").innerHTML = "";
+                document.getElementById("video_link").value = "";
             }
         }
 
@@ -541,7 +700,129 @@
             }
         }
 
+        function populateDate() {
+            var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, "0");
+            var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+            var yyyy = today.getFullYear();
+            time = today.getHours() + ":" + today.getMinutes();
+            date = dd + "/" + mm + "/" + yyyy;
+            document.getElementById("today_date").innerHTML = days[today.getDay()] + ", " + today.getDate() + " of " + months[today.getMonth()] + " " + today.getFullYear() + " | " + time;
+        }
+
+
+
+
+        var blink = document.getElementById('blink');
+        setInterval(function () {
+            blink.style.opacity = (blink.style.opacity == 0 ? 1 : 0);
+        }, 500);
+
+
     </script>
+
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 25px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #042954;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #042954;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 24px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+
+
+    <style>
+        .left {
+            float: left;
+            width: 70%;
+        }
+
+        .right {
+            float: right;
+            width: 30%;
+        }
+
+        .input-field {
+            font-size: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #4e73df;
+            width: 40px;
+        }
+
+        .submit-btn {
+            color: white;
+            background-color: #4e73df;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .no-arrow::-webkit-inner-spin-button,
+        .no-arrow::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+    </style>
+
 
 
 </body>

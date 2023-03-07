@@ -68,10 +68,21 @@
 
                         <div class="card shadow mb-3">
                             <div onclick="" class="card-header">
-                                <span id="topic" style="padding: 10px; width: 500px;" contenteditable="true"
+                                <!-- <span id="topic" style="padding: 10px; width: 500px;" contenteditable="true"
                                     class="m-0 text-primary">
                                     Enter topic here . . .
-                                </span>
+                                </span> -->
+                                <div class="col-12 form-group">
+                                    <input style="text-align: center; font-size: medium; font-weight: bold;"
+                                        oninput="this.value = this.value.toUpperCase()" id="topic" type="text"
+                                        placeholder="ENTER TOPIC HERE" class="form-control text-primary">
+                                </div>
+
+                                <div id="mark_obtainable_div" class="col-12 form-group" hidden>
+                                    <input style="text-align: center; font-size: medium; font-weight: bold;"
+                                        oninput="this.value = this.value.toUpperCase()" id="mark_obtainable" type="number"
+                                        placeholder="MARK OBTAINABLE" class="form-control text-primary">
+                                </div>
                             </div>
                             <div id="demo" class="" class="card-body text-dark bg-light">
                                 <div onchange="alert('data change')" oninput="alert('Input')" id="editor1" name="editor1" class="p-2"
@@ -149,17 +160,23 @@
         if (CONTENT_ACTION == "CREATE") {
             document.getElementById("lh_subject_class").innerHTML = "CREATE NEW " + CONTENT_TYPE + " FOR " + localStorage["LH_SUBJECT_CLASS"];
             document.getElementById("content_btn").innerHTML = `<i
-                                        class="far fa-sticky-note"></i>  CREATE NOTE`;
+                                        class="far fa-sticky-note"></i>  CREATE ${CONTENT_TYPE}`;
 
         } else if (CONTENT_ACTION == "EDIT") {
             document.getElementById("lh_subject_class").innerHTML = "EDIT " + CONTENT_TYPE + " FOR " + localStorage["LH_SUBJECT_CLASS"];
             document.getElementById("content_btn").innerHTML = `<i
-                                        class="far fa-sticky-note"></i>  UPDATE NOTE`;
+                                        class="far fa-sticky-note"></i>  UPDATE ${CONTENT_TYPE}`;
 
             edit_content = JSON.parse(CryptoJS.AES.decrypt(localStorage['LH_EDIT_MATERIAL'], "AESENCRYPT").toString(CryptoJS.enc.Utf8)); 
 
-            document.getElementById("topic").innerHTML = edit_content.topic;
+            document.getElementById("topic").value = edit_content.topic;
+            document.getElementById("mark_obtainable").value = edit_content.mark_obtainable;
             CKEDITOR.instances.editor1.setData(edit_content.content);
+        }
+
+
+        if(CONTENT_TYPE == "ASSIGNMENT"){
+            document.getElementById("mark_obtainable_div").hidden = false;
         }
     </script>
 

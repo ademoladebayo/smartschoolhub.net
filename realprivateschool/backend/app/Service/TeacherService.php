@@ -11,10 +11,12 @@ use App\Model\StudentResultCommentModel;
 use App\Model\StudentResultRatingModel;
 use App\Model\SubjectRegistrationModel;
 use App\Model\SubjectModel;
+use App\Model\LiveClassModel;
 use App\Model\TeacherModel;
 use App\Model\LessonPlanModel;
 use App\Model\NoteModel;
 use App\Model\AssignmentModel;
+use App\Model\AssignmentSubmissionModel;
 use App\Model\UploadModel;
 use App\Repository\GradeSettingsRepository;
 use App\Repository\TeacherRepository;
@@ -63,13 +65,13 @@ class TeacherService
         $SubjectRepository = new SubjectRepository();
         $StudentRepository = new StudentRepository();
         $util = new Utils();
-        $CBTModel = CBTModel::whereIn('subject_id',SubjectModel::select('id')->where('teacher',$teacher->id)->get())->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
+        $CBTModel = CBTModel::whereIn('subject_id', SubjectModel::select('id')->where('teacher', $teacher->id)->get())->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
 
         $cbt_subject_count = [];
         $subject_ids = [];
 
-        foreach(SubjectModel::select('id')->where('teacher',$teacher->id)->get() as $subject){
-            array_push($subject_ids,$subject->id);
+        foreach (SubjectModel::select('id')->where('teacher', $teacher->id)->get() as $subject) {
+            array_push($subject_ids, $subject->id);
         };
 
         foreach ($subject_ids as $id) {
@@ -85,7 +87,7 @@ class TeacherService
             return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => "No class assigned", 'male' => 0, 'female' => 0, 'events' => null, "notification" => null, "cbt" => $cbt];
         }
 
-        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null ,"cbt" => $cbt];
+        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null, "cbt" => $cbt];
     }
 
     // SUBJECT REGISTRATION
@@ -432,7 +434,7 @@ class TeacherService
     {
         $LessonPlanModel = LessonPlanModel::find($request->id);
         if ($request->user_type == "ADMIN") {
-            $LessonPlanModel->status = $request->status."D";
+            $LessonPlanModel->status = $request->status . "D";
         } else {
             $LessonPlanModel->week = $request->week;
             $LessonPlanModel->instructional_material = $request->instructional_material;
@@ -465,10 +467,16 @@ class TeacherService
         } else if ($request->material_type == "ASSIGNMENT") {
             // CREATE NEW ASSIGNMENT
             $assignment = new AssignmentModel();
+            $util = new Utils();
+
             $assignment->subject_id = $request->subject_id;
             $assignment->content = $request->content;
             $assignment->topic = $request->topic;
+            $assignment->status = "OPEN";
             $assignment->date = date("Y-m-d") . " | " . date("h:i a");
+            $assignment->mark_obtainable = $request->mark_obtainable;
+            $assignment->session = $util->getCurrentSession()[0];
+            $assignment->term =  $util->getCurrentSession()[1];
             $assignment->save();
         } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
             // NEW UPLOAD OR VIDEO
@@ -512,12 +520,20 @@ class TeacherService
             $note->save();
         } else if ($request->material_type == "ASSIGNMENT") {
             // CREATE NEW ASSIGNMENT
-            $assignment =  AssignmentModel::find($request->material_id);
-            $assignment->subject_id = $request->subject_id;
-            $assignment->content = $request->content;
-            $assignment->topic = $request->topic;
-            $assignment->date = date("Y-m-d") . " | " . date("h:i a");
-            $assignment->save();
+
+            if (str_contains($request->material_id, 'STATUS')) {
+                $assignment =  AssignmentModel::find(explode('-', $request->material_id)[0]);
+                $assignment->status = $assignment->status == "OPEN" ? "CLOSE" : "OPEN";
+                $assignment->save();
+            } else {
+                $assignment =  AssignmentModel::find($request->material_id);
+                $assignment->subject_id = $request->subject_id;
+                $assignment->content = $request->content;
+                $assignment->mark_obtainable = $request->mark_obtainable;
+                $assignment->topic = $request->topic;
+                $assignment->date = date("Y-m-d") . " | " . date("h:i a");
+                $assignment->save();
+            }
         }
 
         return response()->json(['success' => true, 'message' => 'Update was successful.']);
@@ -549,8 +565,99 @@ class TeacherService
 
         $video = UploadModel::Where('subject_id', $subject_id)->where('upload_type', 'VIDEO')->orderBy('id', 'DESC')->get();
 
-        $assignment = AssignmentModel::Where('subject_id', $subject_id)->orderBy('id', 'DESC')->get();
+        $util = new Utils();
+        $assignment = AssignmentModel::Where('subject_id', $subject_id)->where('session', $util->getCurrentSession()[0])->where('term', $util->getCurrentSession()[1])->orderBy('id', 'DESC')->get();
 
         return response()->json(['note' => $note, 'upload' => $upload, 'video' => $video, 'assignment' => $assignment]);
+    }
+
+
+    // ASSIGNMENT SUBMISSION
+    public function postSubmission(Request $request)
+    {
+        $assignmentSubmission = new AssignmentSubmissionModel();
+
+        if (AssignmentSubmissionModel::where('student_id', $request->student_id)->where('assignment_id', $request->assignment_id)->exists()) {
+            return response()->json(['success' => false, 'message' => 'You have submitted this assignment.']);
+        }
+
+        $assignmentSubmission->assignment_id = $request->assignment_id;
+        $assignmentSubmission->student_id = $request->student_id;
+        $assignmentSubmission->content = $request->content;
+        $assignmentSubmission->date = date("Y-m-d") . " | " . date("h:i a");
+        $assignmentSubmission->save();
+
+        return response()->json(['success' => true, 'message' => 'Submission was successful.']);
+    }
+
+    public function editSubmission(Request $request)
+    {
+        $assignmentSubmission = AssignmentSubmissionModel::find($request->submission_id);
+        $assignmentSubmission->score = $request->score;
+        $assignmentSubmission->graded = "TRUE";
+        $assignmentSubmission->save();
+        return response()->json(['success' => true, 'message' => 'Assignment was graded successfully']);
+    }
+
+    public function getSubmission($assignment_id)
+    {
+        $submission = AssignmentSubmissionModel::where('assignment_id', $assignment_id)->orderBy('id', 'DESC')->get();
+        foreach ($submission as $sub) {
+            $student =  StudentModel::find($sub->student_id);
+            $sub->student_name = $student->first_name . " " . $student->last_name . " (" . $student->student_id . ")";
+        }
+        return response()->json(['submission' => $submission]);
+    }
+
+
+    // LIVE CLASS
+    public function scheduleLiveClass(Request $request)
+    {
+        $liveClassModel = new LiveClassModel();
+        $liveClassModel->topic = $request->topic;
+        $liveClassModel->date = $request->date;
+        $liveClassModel->time = $request->time;
+        $liveClassModel->subject_id = $request->subject_id;
+        // GET CLASS ID WITH SUBJECT ID
+        $subjectModel = SubjectModel::find($request->subject_id);
+        $liveClassModel->class_id = $subjectModel->class;
+
+        $util = new Utils();
+        $liveClassModel->session = $util->getCurrentSession()[0];
+        $liveClassModel->term = $util->getCurrentSession()[1];
+
+        $school_name = Explode(" ", DB::table("school_details")->get()[0]->school_name)[0];
+        $liveClassModel->live_id = "SSHUBNET" . $liveClassModel->subject_id . $liveClassModel->class_id . date("Ymd") . date("hiA") . $school_name;
+        $liveClassModel->save();
+        return response()->json(['success' => true, 'message' => 'Live class was scheduled successfully.']);
+    }
+
+    public function editScheduledLiveClass(Request $request)
+    {
+        $liveClassModel = LiveClassModel::find($request->live_id);
+        if ($request->topic == 'LIVE') {
+            $liveClassModel->status = 'LIVE';
+            $liveClassModel->save();
+            return response()->json(['success' => true, 'message' => 'Class is now live.']);
+        } else {
+            $liveClassModel->topic = $request->topic;
+            $liveClassModel->date = $request->date;
+            $liveClassModel->time = $request->time;
+            $liveClassModel->save();
+            return response()->json(['success' => true, 'message' => 'Live class was updated successfully.']);
+        }
+    }
+
+    public function getLiveClass($subject_id)
+    {
+        $util = new Utils();
+        return LiveClassModel::where('subject_id', $subject_id)->where('session', $util->getCurrentSession()[0])->where('term', $util->getCurrentSession()[1])->orderBy('id', 'DESC')->get();
+    }
+
+    public function deleteLiveClass($id)
+    {
+        $liveClassModel = LiveClassModel::find($id);
+        $liveClassModel->delete();
+        return response()->json(['success' => true, 'message' => 'Live class was deleted successfully.']);
     }
 }

@@ -310,6 +310,32 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         Route::delete('teacher/subject-material', 'TeacherController@deleteSubjectMaterial', function () {
         })->middleware(Cors::class);
+
+
+        // ASSIGNMENT SUBMISSION
+        Route::post('teacher/assignment-submission', 'TeacherController@postSubmission', function () {
+        })->middleware(Cors::class);
+
+        Route::put('teacher/assignment-submission', 'TeacherController@editSubmission', function () {
+        })->middleware(Cors::class);
+
+        Route::get('teacher/assignment-submission/{id}', 'TeacherController@getSubmission', function () {
+        })->middleware(Cors::class);
+
+    
+
+        // TEACHER {LIVE CLASS}
+        Route::post('teacher/live-class', 'TeacherController@scheduleLiveClass', function () {
+        })->middleware(Cors::class);
+
+        Route::put('teacher/live-class', 'TeacherController@editScheduledLiveClass', function () {
+        })->middleware(Cors::class);
+
+        Route::get('teacher/live-class/{subject_id}', 'TeacherController@getLiveClass', function () {
+        })->middleware(Cors::class);
+
+        Route::delete('teacher/live-class/{id}', 'TeacherController@deleteLiveClass', function () {
+        })->middleware(Cors::class);
     });
 
     // =============================================================================
@@ -369,6 +395,10 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         // STUDENT {CHANGE PASSWORD}
         Route::post('student/change-password', 'StudentController@changePassword', function () {
+        })->middleware(Cors::class);
+
+        //STUDENT {CONTINOUS ASSESSMENT}
+        Route::get('student/continous-assessment/{id}', 'StudentController@getContinousAssessment', function () {
         })->middleware(Cors::class);
     });
 

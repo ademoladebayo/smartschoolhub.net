@@ -121,20 +121,16 @@ function loadDashBoardInformation() {
   )}</span>
     </div>`;
 
-
-    document.getElementById(
-      "cbt_no"
-    ).innerHTML = `<span class="counter" data-num="${parseInt(
-      formatNumber(
-        JSON.parse(localStorage["user_data"]).dashboard_information.cbt.cbt_no
-      )
-    )}">${formatNumber(
-      JSON.parse(localStorage["user_data"]).dashboard_information
-      .cbt.cbt_no
-    )}</span>
+  document.getElementById(
+    "cbt_no"
+  ).innerHTML = `<span class="counter" data-num="${parseInt(
+    formatNumber(
+      JSON.parse(localStorage["user_data"]).dashboard_information.cbt.cbt_no
+    )
+  )}">${formatNumber(
+    JSON.parse(localStorage["user_data"]).dashboard_information.cbt.cbt_no
+  )}</span>
       </div>`;
-
-
 }
 
 function getProfileData() {
@@ -1858,7 +1854,8 @@ function getAssignedSubject() {
       document.getElementById("subject_table").innerHTML = ``;
       for (i in data) {
         // GET CBT COUNT
-        var cbt_details =  JSON.parse(localStorage["user_data"]).dashboard_information.cbt;
+        var cbt_details = JSON.parse(localStorage["user_data"])
+          .dashboard_information.cbt;
         var index = cbt_details.cbt_subject_id.indexOf(data[i].id);
         var count = index == -1 ? 0 : cbt_details.cbt_subject_count[index];
 
@@ -2108,7 +2105,9 @@ function getSavedQuestions() {
         <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
           questions_number[n]
         }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
-            ${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}
+            ${question[questions_number[n]]
+              .replace(/⌑/g, ",")
+              .replace(/™/g, "'")}
         </div>
     </div>
     <br>
@@ -2210,7 +2209,10 @@ function getSavedQuestions() {
 
 function saveQuestion(number, question_text) {
   // REPLACE EVERY "," with "⌑" AND EVERY "'" WITH ""
-  question[number] = question_text.replace(/,/g, "⌑").replace(/'/g, "™").replace(/&#39;/g, "™");
+  question[number] = question_text
+    .replace(/,/g, "⌑")
+    .replace(/'/g, "™")
+    .replace(/&#39;/g, "™");
 }
 
 function saveAnswer(text) {
@@ -2398,7 +2400,9 @@ function getCBTdetailsView() {
    <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
    <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
      questions_number[n]
-   }" >${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}</span></p>
+   }" >${question[questions_number[n]]
+      .replace(/⌑/g, ",")
+      .replace(/™/g, "'")}</span></p>
  <div class="pl-2">
            <div id="optionA${
              questions_number[n]
@@ -2595,7 +2599,9 @@ function getCBTdetailsEdit() {
         <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
           questions_number[n]
         }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
-            ${question[questions_number[n]].replace(/⌑/g, ",").replace(/™/g, "'")}
+            ${question[questions_number[n]]
+              .replace(/⌑/g, ",")
+              .replace(/™/g, "'")}
         </div>
     </div>
     <br>
@@ -3511,7 +3517,7 @@ function getAssignedSubjectForLearningHub() {
                         <td> <small>${data[i].subject_name}</td>
                         <td>${data[i].class.class_name}</td>
                         <td>
-                          <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].id}'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name} ${data[i].class.class_name}'); getLearningHubMaterials('${data[i].id}');" type="button" class="btn btn-primary btn-block"
+                          <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].id}'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name} ${data[i].class.class_name}'); getLearningHubMaterials('${data[i].id}'); getScheduledClass();" type="button" class="btn btn-primary btn-block"
                               data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                               Materials
                           </a     >
@@ -3587,7 +3593,7 @@ function processContent() {
   var CONTENT_ACTION = localStorage["CONTENT_ACTION"];
   var CONTENT_TYPE = localStorage["CONTENT_TYPE"];
   var CONTENT = CKEDITOR.instances.editor1.getData();
-  var TOPIC = document.getElementById("topic").innerHTML;
+  var TOPIC = document.getElementById("topic").value;
 
   if (CONTENT_ACTION == "CREATE") {
     if (CONTENT != "" && TOPIC != "") {
@@ -3595,6 +3601,9 @@ function processContent() {
     } else {
       warningtoast("Check that no feild is empty.");
     }
+
+
+
   } else if (CONTENT_ACTION == "EDIT") {
     if (CONTENT != "" && TOPIC != "") {
       editMaterial(TOPIC, CONTENT, CONTENT_TYPE);
@@ -3637,6 +3646,7 @@ function postMaterial(TOPIC, CONTENT, material_type) {
       topic: TOPIC,
       content: CONTENT,
       subject_id: localStorage["LH_SUBJECT_ID"],
+      mark_obtainable: document.getElementById("mark_obtainable").value != "" ? document.getElementById("mark_obtainable").value : 0
     });
   }
 
@@ -3691,6 +3701,7 @@ function editMaterial(TOPIC, CONTENT, material_type) {
       topic: TOPIC,
       content: CONTENT,
       subject_id: localStorage["LH_SUBJECT_ID"],
+      mark_obtainable: document.getElementById("mark_obtainable").value != "" ? document.getElementById("mark_obtainable").value : 0
     }),
   })
     .then(function (res) {
@@ -3763,6 +3774,7 @@ function deleteMaterial(material_id, material_type) {
 }
 
 function getLearningHubMaterials(subject_id) {
+  openSpinnerModal("Loading materials");
   document.getElementById("subject").innerHTML =
     "LEARNING HUB FOR " + localStorage["LH_SUBJECT_CLASS"];
   fetch(ip + "/api/teacher/subject-material/" + subject_id, {
@@ -3782,12 +3794,13 @@ function getLearningHubMaterials(subject_id) {
     })
 
     .then((data) => {
-       //POPULATE COUNTS
-       document.getElementById("note-count").innerHTML = data.note.length;
-       document.getElementById("upload-count").innerHTML = data.upload.length;
-       document.getElementById("video-count").innerHTML = data.video.length;
-       document.getElementById("assignment-count").innerHTML =
-         data.assignment.length;
+      removeSpinnerModal();
+      //POPULATE COUNTS
+      document.getElementById("note-count").innerHTML = data.note.length;
+      document.getElementById("upload-count").innerHTML = data.upload.length;
+      document.getElementById("video-count").innerHTML = data.video.length;
+      document.getElementById("assignment-count").innerHTML =
+        data.assignment.length;
 
       // DISPLAY UPLOADED NOTE
       if (data.note.length > 0) {
@@ -3856,7 +3869,9 @@ function getLearningHubMaterials(subject_id) {
             <small id="date_time" class="m-0 text-primary">${
               upload.date
             }</small>
-            <a  onclick="deleteMaterial('${upload.id}','UPLOAD')" target="_blank"
+            <a  onclick="deleteMaterial('${
+              upload.id
+            }','UPLOAD')" target="_blank"
                 class="btn  btn-circle btn-sm float-right">
                 <i style="color:red;" class="fas fa-trash-alt"></i></i>
             </a>
@@ -3932,9 +3947,263 @@ function getLearningHubMaterials(subject_id) {
                                               style="justify-content:center; display:flex">No video here</div>
                                           </div>`;
       }
+
+      // DISPLAY UPLOADED ASSIGNMENT
+      if (data.assignment.length > 0) {
+        document.getElementById("assignments-content-main").innerHTML = ``;
+        data.assignment.forEach((assignment) => {
+          console.log(assignment);
+          document.getElementById(
+            "assignments-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('assignment_${
+                assignment.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    assignment.date
+                  }</small>
+                  <a  onclick="deleteMaterial('${
+                    assignment.id
+                  }','ASSIGNMENT')" target="_blank"
+                      class="btn  btn-circle btn-sm float-right">
+                      <i style="color:red;" class="fas fa-trash-alt"></i></i>
+                  </a>
+
+
+                  <a onclick="assignmentSubmission('${assignment.id}','${assignment.topic}','${assignment.mark_obtainable}')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:green;" class="fas fa-poll"></i>
+                  </a>
+ 
+
+                  <a onclick="updateAssignmentStatus('${assignment.id}')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:blue;" class="${assignment.status == "OPEN" ? `fas fa-lock`: `fas fa-unlock-alt`}"></i>
+                  </a>
+
+
+                  <a  onclick="content('EDIT','ASSIGNMENT','${CryptoJS.AES.encrypt(
+                    JSON.stringify(assignment),
+                    "AESENCRYPT"
+                  )}')" target="_blank"
+                      class="btn  btn-circle btn-sm float-right">
+                      <i style="color:black;" class="far fa-edit"></i>
+                  </a>
+                  <br>
+                  <span class="m-0 text-primary">
+                      <a  id="topic" data-toggle="collapse" href="#demo">${
+                        assignment.topic
+                      } 
+                      
+                      <sup> 
+                      ${assignment.status == "OPEN" ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`: ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`}
+                  </sup>
+                      </a>
+                      
+                  </span>
+              </div>
+              <div id="assignment_${assignment.id}" class="collapse"
+                  class="card-body text-dark bg-light">
+                  <div class="p-2"
+                      style="overflow: auto; height: auto; border:1px solid black; color: black;">
+                    ${assignment.content} 
+                  </div>
+              </div>
+              </div>`;
+        });
+      } else {
+        document.getElementById("assignments-content-main").innerHTML = ``;
+        document.getElementById(
+          "assignments-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                                    <div class="card-body" 
+                                                    style="justify-content:center; display:flex">No Assignment Here</div>
+                                                </div>`;
+      }
     })
     .catch((err) => console.log(err));
 }
+
+function updateAssignmentStatus(id) {
+  if (!confirm("You are about to change this material status")) {
+    return 0;
+  }
+  openSpinnerModal("Updating status");
+  fetch(ip + "/api/teacher/subject-material", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      material_id: id+"-STATUS",
+      material_type: "ASSIGNMENT",
+      subject_id: localStorage["LH_SUBJECT_ID"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          //history.back();
+          getLearningHubMaterials(localStorage["LH_SUBJECT_ID"]);
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+
+function assignmentSubmission(id,topic,mark){
+  if(topic != "" || mark != ""){
+    document.getElementById("assignments-submission-tab").hidden = false;
+    showMaterial('assignments-submission');
+    document.getElementById("assignment").innerHTML = topic+ " ASSIGNMENT SUBMISSION ("+mark+" MARKS)";
+  }
+ 
+  // GET SUBMISSIONS FOR ASSIGNMENT
+  openSpinnerModal("Loading submissions");
+
+  fetch(ip + "/api/teacher/assignment-submission/" + id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      //POPULATE COUNTS
+      document.getElementById("assignment-submission-count").innerHTML =
+        data.submission.length;
+
+      // DISPLAY UPLOADED NOTE
+      if (data.submission.length > 0) {
+        document.getElementById("assignments-submission-content-main").innerHTML = ``;
+        data.submission.forEach((submission) => {
+          document.getElementById(
+            "assignments-submission-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('submission_${
+                submission.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    submission.date
+                  }</small>
+
+                  <div class="">
+                      <div class="left">
+                          <span class="m-0 text-primary">
+                              <a  id="student_name" data-toggle="collapse" href="#demo">${
+                                submission.student_name
+                              }
+                              
+                                  <sup> 
+                                    ${submission.graded == "TRUE" ? ` <span class="badge bg-success" style="color: white;"><b> Graded </b></span>`: ` <span class="badge bg-danger" style="color: white;"><b> Not Graded</b></span>`}
+                                  </sup>
+                              </a>
+                          </span>
+                  </div>
+
+                  <div class="right">
+                      <input id="score_${submission.id}" value="${submission.score}" type="number" placeholder="score" class="input-field no-arrow" min="0">
+                      <button onclick="gradeAssignment('${submission.id}','${submission.assignment_id}')" class="submit-btn">Grade Assignment</button> 
+                  </div>
+
+                  
+            
+          </div>
+                  
+              </div>
+              <div id="submission_${submission.id}" class="collapse"
+                  class="card-body text-dark bg-light">
+                  <div class="p-2"
+                      style="overflow: auto; height: auto; border:1px solid black; color: black;">
+                    ${submission.content}
+                  </div>
+              </div>
+              </div>`;
+        });
+      } else {
+        document.getElementById("assignments-submission-content-main").innerHTML = ``;
+        document.getElementById(
+          "assignments-submission-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                                    <div class="card-body" 
+                                                    style="justify-content:center; display:flex">No Submission Here</div>
+                                                </div>`;
+      }
+
+
+    })
+    .catch((err) => console.log(err));
+}
+  
+function gradeAssignment(submission_id,assignment_id){
+  if (!confirm("You are about to grade this assignment")) {
+    return 0;
+  }
+  openSpinnerModal("Grading Assignment");
+  fetch(ip + "/api/teacher/assignment-submission", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      submission_id: submission_id,
+      score: document.getElementById("score_"+submission_id).value
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          //history.back();
+          assignmentSubmission(assignment_id, "","");
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+
+
+}
+
 
 // CHANGE PASSWORD
 function changePassword() {
@@ -4338,6 +4607,329 @@ $(document).click(function (e) {
   }
 });
 
+//  SCHEDULE LIVE CLASS
+function scheduleClass() {
+  topic = document.getElementById("topic1").value;
+  date = document.getElementById("date").value;
+  time = document.getElementById("time").value;
+  if (time == "" || date == "" || topic == "") {
+    warningtoast("Check that no feild is empty.");
+    return 0;
+  }
+
+  openSpinnerModal("Scheduling live class");
+  fetch(ip + "/api/teacher/live-class", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: localStorage["LH_SUBJECT_ID"],
+      topic: topic,
+      date: date,
+      time: time
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        closeModal("scheduleLiveClass");
+        getScheduledClass();
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getScheduledClass() {
+  openSpinnerModal("Loading scheduled class");
+  fetch(ip + "/api/teacher/live-class/" + localStorage["LH_SUBJECT_ID"], {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      uc = 1;
+      pc = 1;
+      today = getDate().split("~")[1]
+      today = today.split("/")[2]+"-"+today.split("/")[1]+"-"+today.split("/")[0];
+      today = new Date(today); //.replace(new RegExp('/', 'g'),'-')
+     
+      console.log("DATE : " +today);
+      removeSpinnerModal();
+     
+      if(data.length > 0){
+        document.getElementById("upcoming_class").innerHTML =  ``;
+        document.getElementById("previous_class").innerHTML =  ``;
+        data.forEach(LC => {
+          if(new Date(LC.date) >= today){
+           // UPCOMING CLASS
+           document.getElementById("upcoming_class").innerHTML += 
+           `
+           <tr>
+                  <td>${uc}.</td>
+                  <td><small>${LC.topic} ${LC.status == 'LIVE' ? ` <span class="badge bg-success"
+                  style="color: white;"><b> LIVE </b></span>`: `` }</small></td>
+                  <td><small>${LC.date}</small></td>
+                  <td><small>${LC.time}</small></td>
+                  <td>
+
+                      <a onclick="openLiveClass('${LC.topic}')" ${LC.status != 'LIVE' ? `hidden`: `` } class="btn btn-sm btn-primary btn-block"><i
+                                  class="fas fa-video"></i></a>
+
+                      <a onclick="startLiveClass('${LC.id}','${LC.topic}','${LC.live_id}')" ${LC.status == 'LIVE' ? `hidden`: `` } class="btn btn-primary"><i
+                              class="fas fa-video"></i></a>
+
+
+                       <small> <a ${LC.status == 'LIVE' ? `hidden`: `` } onmouseover="editLiveClass('${encryptData(JSON.stringify(LC))}')" class="btn btn-warning" data-bs-toggle="modal"
+                        data-bs-target="#editLiveClass"><i class="fas fa-edit"></i></a></small>
+            
+                        <small><a ${LC.status == 'LIVE' ? `hidden`: `` } onclick="deleteLiveClass(${
+                         LC.id
+                        })" class="btn btn-danger text-white"><i
+                                class="fa fa-trash"></i></a></small>
+
+
+                  </td>
+                </tr>
+           `
+           uc = uc + 1;
+          }else{
+            // PREVIOUS CLASS
+            document.getElementById("previous_class").innerHTML += 
+            `
+                <tr>
+                  <td>${pc}.</td>
+                  <td><small>${LC.topic}</small></td>
+                  <td><small>${LC.date}</small></td>
+                  <td><small>${LC.time}</small></td>
+                  <td>
+                      <a onclick="showMaterial('videos')"
+                          class="btn btn-sm btn-primary btn-block">Live class record</a>
+                  </td>
+                </tr>
+            `
+            pc = pc + 1;
+
+            if(document.getElementById("upcoming_class").innerHTML == ""){
+              document.getElementById("upcoming_class").innerHTML = 
+              `
+                <tr>
+                    <td colspan="4">
+                        <center>No scheduled class yet.</center>
+                    </td>
+                </tr>
+              `
+      
+            }
+      
+            if(document.getElementById("previous_class").innerHTML == ""){
+              document.getElementById("previous_class").innerHTML = 
+              `
+              <tr>
+                  <td colspan="4">
+                      <center>No previous class yet.</center>
+                  </td>
+              </tr>
+              `
+            }
+
+          }
+        });
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function editLiveClass(data){
+  data = JSON.parse(decryptData(data));
+  document.getElementById("e_topic1").value = data.topic;
+  document.getElementById("e_date").value = data.date;
+  document.getElementById("e_time").value = data.time;
+  document.getElementById("live_id").value = data.id;
+}
+
+function updateScheduledClass() {
+  topic = document.getElementById("e_topic1").value;
+  date = document.getElementById("e_date").value;
+  time = document.getElementById("e_time").value;
+  if (time == "" || date == "" || topic == "") {
+    warningtoast("Check that no feild is empty.");
+    return 0;
+  }
+
+  openSpinnerModal("Updating schedule");
+  fetch(ip + "/api/teacher/live-class", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      live_id: document.getElementById("live_id").value,
+      subject_id: localStorage["LH_SUBJECT_ID"],
+      topic: topic,
+      date: date,
+      time: time
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        closeModal("editLiveClass");
+        getScheduledClass();
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function deleteLiveClass(id){
+  if (!confirm("You are about to delete this scheduled live class")) {
+    return 0;
+  }
+
+  openSpinnerModal("Delete live class");
+  fetch(ip + "/api/teacher/live-class/"+id, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        alert(data.message);
+        setTimeout(function () {
+          getScheduledClass();
+        }, 1000);
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+
+function startLiveClass(id,topic){
+    if (!confirm("YOU ARE ABOUT TO START LIVE CLASS " + topic)) {
+      return 0;
+    }
+  
+    openSpinnerModal("Starting live class");
+    fetch(ip + "/api/teacher/live-class", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+      body: JSON.stringify({
+        live_id: id,
+        topic: "LIVE",
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          removeSpinnerModal();
+          openAuthenticationModal();
+          return 0;
+        }
+        return res.json();
+      })
+  
+      .then((data) => {
+        removeSpinnerModal();
+        if (data.success) {
+          successtoast(data.message);
+          getScheduledClass();
+          openLiveClass(topic);
+        } else {
+          errortoast(data.message);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+
+  function openLiveClass(topic){
+    openModal("liveClass");
+    teacher = JSON.parse(localStorage['user_data']).data;
+    roomName = topic+" ("+localStorage["LH_SUBJECT_CLASS"]+")";
+
+    if(!document.getElementById("jitsi-view").innerHTML.includes(roomName)){
+      var domain = "meet.jit.si";
+      var options = {
+        roomName: roomName,
+        width: 1700,
+        height: 700,
+        parentNode: document.querySelector('#jitsi-view'),
+  
+        userInfo: {
+            //email: 'email@jitsiexamplemail.com',
+            displayName: teacher.title+ " "+ teacher.first_name +" "+ teacher.last_name +" (TEACHER)"
+        }
+      }
+    var api = new JitsiMeetExternalAPI(domain, options);
+    }
+
+  }
+
+
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
   modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
@@ -4446,7 +5038,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
   parent.$("#authenticationModal").modal("show");
 }
 
-function openSpinnerModal() {
+function openSpinnerModal(message) {
   modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -4480,7 +5072,9 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
         <h4 style="font-family: Poppins; font-weight: bold;"
                 class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <small><b>${message != null && message != "" && message != undefined ? message : ``}</b><br>
                 <b>Processing ...</b>
+                </small>
             </h4>
             <br>
     </div>
@@ -4500,7 +5094,8 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
 function removeSpinnerModal() {
   parent.$("#spinnerModal").modal("hide");
-  parent.document.getElementById("spinnerModal").remove();
+  el = parent.document.getElementById("spinnerModal");
+  el != null ? el.remove() : ``;
 }
 
 function scrollToElement(target) {
@@ -4533,6 +5128,23 @@ function collapseSidebar() {
   }
 }
 
+function closeModal(id) {
+  parent.$("#" + id).modal("hide");
+  el = parent.document.getElementById("#" + id);
+  el != null ? el.remove() : ``;
+}
+
+function openModal(id) {
+  parent.$("#" + id).modal("show");
+}
+
+function encryptData(data){
+  return CryptoJS.AES.encrypt(data, "AESENCRYPT");
+}
+
+function decryptData(data){
+  return CryptoJS.AES.decrypt(data,"AESENCRYPT").toString(CryptoJS.enc.Utf8);
+}
 // TOAST
 function successtoast(message, time) {
   toastr.success(message, "", {

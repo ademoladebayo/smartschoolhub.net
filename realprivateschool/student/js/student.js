@@ -33,6 +33,11 @@ function loadSideNav(page) {
          <a   id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
     </li>
 
+
+    <li class="nav-item">
+        <a   id="ca" href="continous-assessment.html" class="nav-link"<i class="fas fa-tasks"></i></i><span>Continous Assessment</span></a>
+    </li>
+    
     <li class="nav-item">
         <a   id="learning-hub" href="learning-hub-frame.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
@@ -122,6 +127,10 @@ function loadSideNav(page) {
 
     <li class="nav-item">
          <a   id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a   id="ca" href="continous-assessment.html" class="nav-link"><i class="fas fa-tasks"></i></i><span>Continous Assessment</span></a>
     </li>
 
     <li class="nav-item">
@@ -1196,7 +1205,7 @@ function getRegisteredSubjectForTable() {
           data[i].subject_name
         }'); getLearningHubMaterials('${
           data[i].subject_id
-        }');" type="button" class="btn btn-primary btn-block"
+        }'); getScheduledClass();" type="button" class="btn btn-primary btn-block"
                   data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   Materials
               </a     >
@@ -2165,6 +2174,70 @@ function getLearningHubMaterials(subject_id) {
                                               style="justify-content:center; display:flex">No video here</div>
                                           </div>`;
       }
+
+      // DISPLAY UPLOADED ASSIGNMENT
+      if (data.assignment.length > 0) {
+        document.getElementById("assignments-content-main").innerHTML = ``;
+        data.assignment.forEach((assignment) => {
+          console.log(assignment);
+          document.getElementById(
+            "assignments-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('assignment_${
+                assignment.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    assignment.date
+                  }</small>
+
+                 <!--<a  onclick="" target="_blank"
+                      class="btn  btn-circle btn-sm float-right">
+                      <button class="submit-btn">Take Assignment</button>
+                  </a> -->
+
+                <div class="">
+                        <div class="left">
+                              <span class="m-0 text-primary">
+                                  <a  id="topic" data-toggle="collapse" href="#demo">${
+                                    assignment.topic
+                                  } 
+                                  
+                                  <sup> 
+                                  ${assignment.status == "OPEN" ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`: ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`}
+                                  </sup>
+                                  </a>
+                              </span>
+                        </div>
+
+                        <div class="right">
+                          <!--<input type="number" placeholder="score" class="input-field no-arrow" min="0">-->
+                          <button ${assignment.status == "CLOSE" ? `hidden`: ``} onclick="takeAssignment('${assignment.topic}','${assignment.mark_obtainable}','${assignment.id}')" class="submit-btn">Take Assignment</button> 
+                        </div>
+
+                        
+                  
+                </div>
+                  
+              </div>
+              <div id="assignment_${assignment.id}" class="collapse"
+                  class="card-body text-dark bg-light">
+                  <div class="p-2"
+                      style="overflow: auto; height: auto; border:1px solid black; color: black;">
+                    ${assignment.content} 
+                  </div>
+              </div>
+              </div>`;
+        });
+      } else {
+        document.getElementById("assignments-content-main").innerHTML = ``;
+        document.getElementById(
+          "assignments-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                                    <div class="card-body" 
+                                                    style="justify-content:center; display:flex">No Assignment Here</div>
+                                                </div>`;
+      }
+
     })
     .catch((err) => console.log(err));
 }
@@ -2219,6 +2292,59 @@ function getNote() {
       getDate().split("-")[0],
     "noteContainer"
   );
+}
+
+function takeAssignment(topic,mark,assignment_id){
+  document.getElementById("assignments-submission-tab").hidden = false;
+  document.getElementById("assignment").innerHTML = topic+ " ASSIGNMENT SUBMISSION ("+mark+" MARKS)";
+  showMaterial('assignments-submission');
+  localStorage.setItem('LH_ASSIGNMENT_ID',assignment_id);
+}
+
+function submitAssignment(){
+  if(CKEDITOR.instances.editor1.getData() == ""){
+      warningtoast('Check that the feild is not empty');
+      return 0;
+  }
+
+  if (!confirm("You are about to submit this assignment")) {
+    return 0;
+  }
+  openSpinnerModal('Submitting Assignment');
+  fetch(ip + "/api/teacher/assignment-submission", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      assignment_id: localStorage['LH_ASSIGNMENT_ID'],
+      student_id: JSON.parse(localStorage['user_data']).data.id,
+      content: CKEDITOR.instances.editor1.getData(),
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          history.back();
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // ID CARD
@@ -3244,6 +3370,226 @@ $(document).click(function (e) {
   }
 });
 
+//LIVE CLASS
+function getScheduledClass() {
+  openSpinnerModal("Loading scheduled class");
+  fetch(ip + "/api/teacher/live-class/" + localStorage["LH_SUBJECT_ID"], {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      uc = 1;
+      pc = 1;
+      today = getDate().split("~")[1]
+      today = today.split("/")[2]+"-"+today.split("/")[1]+"-"+today.split("/")[0];
+      today = new Date(today); //.replace(new RegExp('/', 'g'),'-')
+     
+      console.log("DATE : " +today);
+      removeSpinnerModal();
+     
+      if(data.length > 0){
+        document.getElementById("upcoming_class").innerHTML =  ``;
+        document.getElementById("previous_class").innerHTML =  ``;
+        data.forEach(LC => {
+          if(new Date(LC.date) >= today){
+           // UPCOMING CLASS
+           document.getElementById("upcoming_class").innerHTML += 
+           `
+           <tr>
+                  <td>${uc}.</td>
+                  <td><small>${LC.topic} ${LC.status == 'LIVE' ? ` <span class="badge bg-success"
+                  style="color: white;"><b> LIVE </b></span>`: `` }</small></td>
+                  <td><small>${LC.date}</small></td>
+                  <td><small>${LC.time}</small></td>
+                  <td>
+
+                      <a onclick="openLiveClass('${LC.topic}')" ${LC.status != 'LIVE' ? `hidden`: `` } class="btn btn-sm btn-primary btn-block"><i
+                                  class="fas fa-video"></i></a>
+
+                  </td>
+                </tr>
+           `
+           uc = uc + 1;
+          }else{
+            // PREVIOUS CLASS
+            document.getElementById("previous_class").innerHTML += 
+            `
+                <tr>
+                  <td>${pc}.</td>
+                  <td><small>${LC.topic}</small></td>
+                  <td><small>${LC.date}</small></td>
+                  <td><small>${LC.time}</small></td>
+                  <td>
+                      <a onclick="showMaterial('videos')"
+                          class="btn btn-sm btn-primary btn-block">Live class record</a>
+                  </td>
+                </tr>
+            `
+            pc = pc + 1;
+          }
+
+
+          if(document.getElementById("upcoming_class").innerHTML == ""){
+            document.getElementById("upcoming_class").innerHTML = 
+            `
+              <tr>
+                  <td colspan="4">
+                      <center>No scheduled class yet.</center>
+                  </td>
+              </tr>
+            `
+
+          }
+
+          if(document.getElementById("previous_class").innerHTML == ""){
+            document.getElementById("previous_class").innerHTML = 
+            `
+            <tr>
+                <td colspan="4">
+                    <center>No previous class yet.</center>
+                </td>
+            </tr>
+            `
+          }
+
+        });
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function openLiveClass(topic){
+  if (!confirm("YOU ARE ABOUT TO JOIN LIVE CLASS "+ topic)) {
+    return 0;
+  }
+
+  openModal("liveClass");
+  student = JSON.parse(localStorage['user_data']).data;
+  roomName = topic+" ("+localStorage["LH_SUBJECT_CLASS"] + " "+ student.class.class_name+")";
+
+  if(!document.getElementById("jitsi-view").innerHTML.includes(roomName)){
+    var domain = "meet.jit.si";
+    var options = {
+      roomName: roomName,
+      width: 1700,
+      height: 700,
+      parentNode: document.querySelector('#jitsi-view'),
+
+      userInfo: {
+          //email: 'email@jitsiexamplemail.com',
+          displayName: student.first_name +" "+ student.last_name +" (STUDENT)"
+      }
+    }
+  var api = new JitsiMeetExternalAPI(domain, options);
+  }
+
+}
+
+
+// CONTINOUS ASSESSMENT
+function getContinousAssessment(){
+  openSpinnerModal("Continous Assessment");
+  fetch(ip + "/api/student/continous-assessment/"+ JSON.parse(localStorage['user_data']).data.id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    }
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+
+        document.getElementById("assignment").innerHTML =  ``;
+        document.getElementById("cbt").innerHTML =  ``;
+        uc = 1;
+        pc = 1;
+
+        data.assignment.forEach(assignment => {
+           // ASSIGNMENT
+           document.getElementById("assignment").innerHTML += 
+           `
+           <tr>
+                  <td>${uc}.</td>
+                  <td><small>${assignment.subject}</small></td>
+                  <td><small>${assignment.date}</small></td>
+                  <td><b><small>${assignment.graded == "FALSE" ? ` <span class="badge bg-danger"
+                  style="color: white;"><b> NOT GRADED </b></span>` : assignment.score}</small></b></td>
+            </tr>
+           `
+           uc = uc + 1;
+
+        });
+
+
+
+        data.cbt.forEach(cbt => {
+        // CBT
+        document.getElementById("cbt").innerHTML += 
+        `
+        <tr>
+              <td>${pc}.</td>
+              <td><small>${cbt.subject}</small></td>
+              <td><small>${cbt.cbt_date}</small></td>
+              <td><b><small>${cbt.score}</small></b></td>
+        </tr>
+        `
+        pc = pc + 1;
+      });
+
+
+          if(document.getElementById("assignment").innerHTML == ""){
+            document.getElementById("assignment").innerHTML = 
+            `
+              <tr>
+                  <td colspan="4">
+                      <center>No assignment taken yet.</center>
+                  </td>
+              </tr>
+            `
+
+          }
+
+          if(document.getElementById("cbt").innerHTML == ""){
+            document.getElementById("cbt").innerHTML = 
+            `
+            <tr>
+                <td colspan="4">
+                    <center>No cbt taken yet.</center>
+                </td>
+            </tr>
+            `
+          }
+
+    })
+    .catch((err) => console.log(err));
+}
+
+
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
   localStorage.removeItem("isParent");
@@ -3353,7 +3699,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
   parent.$("#authenticationModal").modal("show");
 }
 
-function openSpinnerModal() {
+function openSpinnerModal(message) {
   modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -3387,6 +3733,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
         <h4 style="font-family: Poppins; font-weight: bold;"
                 class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <b>${message != null || message != "" ? message : ``} </b><br/>
                 <b>Processing ...</b>
             </h4>
             <br>
@@ -3411,6 +3758,16 @@ function removeSpinnerModal() {
     parent.$("#spinnerModal").modal("hide");
     parent.document.getElementById("spinnerModal").remove();
   }
+}
+
+function closeModal(id) {
+  parent.$("#" + id).modal("hide");
+  el = parent.document.getElementById("#" + id);
+  el != null ? el.remove() : ``;
+}
+
+function openModal(id) {
+  parent.$("#" + id).modal("show");
 }
 
 function collapseSidebar() {

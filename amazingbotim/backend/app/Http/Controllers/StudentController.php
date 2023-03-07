@@ -104,4 +104,12 @@ class StudentController extends Controller
         $StudentService = new StudentService();
         return $StudentService->changePassword($request);
     }
+
+    // CONTINOUS ASSESSMENT
+    public function getContinousAssessment($student_id)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getContinousAssessment($student_id);
+    }
+     
 }

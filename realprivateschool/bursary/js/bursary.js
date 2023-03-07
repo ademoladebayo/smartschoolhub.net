@@ -865,7 +865,7 @@ function getAllManualPayment() {
                 <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
-                    <a  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
+                    <a ${data[i].payment_description.includes("WAS USED TO SETTLE THE ARREARS") || data[i].payment_description.includes("WAS USED TO SETTLE PART OF THE ARREARS") ? `hidden` : ``}  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
                       data[i].id
                     }~${data[i].student.id}~${
             data[i].student.first_name + " " + data[i].student.last_name
@@ -875,7 +875,7 @@ function getAllManualPayment() {
             data[i].fee_type
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                    <a  onclick="deleteManualPayment(${
+                    <a hidden onclick="deleteManualPayment(${
                       data[i].id
                     })" href="#" class="btn btn-danger"><i
                             class="fas fa-trash"></i>

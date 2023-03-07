@@ -220,7 +220,7 @@
 
 
                                                 <a href="#"
-                                                    onclick="makePayment(JSON.parse(localStorage['fee']).due_balance)"
+                                                    onclick="alert('Online payment coming soon')"
                                                     class="text-green"><b>Pay
                                                         now</b></a><br>
                                                 <a href="#" onclick="reloadBreakdownFrame();" data-bs-toggle="modal"
@@ -367,9 +367,9 @@
 
                                 <!--Content-->
                                 <div class="modal-content">
-                                    <div class="modal-header justify-content-center">
+                                    <div style="display: flex; justify-content: center; padding:5px;">
                                         <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
-                                            id="exampleModalLabel">DUE BALANCE BREAKDOWN</h5>
+                                            id="exampleModalLabel">FEE BREAKDOWN</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
