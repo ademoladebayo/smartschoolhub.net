@@ -106,10 +106,10 @@ class StudentController extends Controller
     }
 
     // CONTINOUS ASSESSMENT
-    public function getContinousAssessment($student_id)
+    public function getContinuousAssessment($student_id)
     {
         $StudentService = new StudentService();
-        return $StudentService->getContinousAssessment($student_id);
+        return $StudentService->getContinuousAssessment($student_id);
     }
      
 }

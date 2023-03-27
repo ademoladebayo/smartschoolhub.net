@@ -230,6 +230,7 @@ class StudentService
         $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
         $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
         $optional_fee_id =  $bursaryService->getOptionalFeeId($request->student_id, $request->session, $request->term);
+        $approved_optional_fee_id = $bursaryService->getApprovedOptionalFeeId($request->student_id, $request->session, $request->term);
 
         $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $request->student_id)->get();
         Log::alert("ARREARS : " . $arrears);
@@ -247,7 +248,7 @@ class StudentService
         }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id,'approved_optional_fee_id' => $approved_optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
     }
 
 
@@ -461,7 +462,7 @@ class StudentService
     }
 
     // CONTINOUS ASSESSMENT
-    public function getContinousAssessment($student_id)
+    public function getContinuousAssessment($student_id)
     {
         $cbt_arr = [];
         $assignment_arr = [];

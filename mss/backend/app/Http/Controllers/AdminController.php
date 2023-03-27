@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImportUser;
 use App\Exports\ExportUser;
+use App\Model\StudentModel;
 
 class AdminController extends Controller
 {
@@ -121,6 +122,11 @@ class AdminController extends Controller
     {
         $AdminService = new AdminService();
         return $AdminService->getAllStudent();
+    }
+
+    public function getStudent($id)
+    {
+        return response()->json(['success' => true, 'data' =>  StudentModel::where('id',$id)->with("class")->get()[0]]);
     }
 
     public function deleteStudent($student_id)

@@ -42,6 +42,18 @@ class BursaryController extends Controller
         return $BursaryService->deleteFee($fee_id);
     }
 
+    public function getAllOptionalFeeRequest(Request $request)
+    {
+        $BursaryService = new BursaryService();
+        return $BursaryService->getAllOptionalFeeRequest($request);
+    }
+
+    public function updateOptionalFeeRequest(Request $request)
+    {
+        $BursaryService = new BursaryService();
+        return $BursaryService->updateOptionalFeeRequest($request);
+    }
+
     // EXPENSE MANAGEMENT
     public function createExpense(Request $request)
     {
@@ -135,6 +147,8 @@ class BursaryController extends Controller
         $BursaryService = new BursaryService();
         return $BursaryService->editPortalSubscription($request);
     }
+
+
 }
 
 

@@ -1,5 +1,5 @@
 var ip = localStorage["ip"];
-var domain = localStorage["domain"]; 
+var domain = localStorage["domain"];
 
 getSchoolDetails();
 collapseSidebar();
@@ -31,12 +31,18 @@ function loadSideNav(page) {
 
 
     <li class="nav-item">
-        <a   id="debitors" href="debitors.html" class="nav-link"><i class="fas fa-times-circle"></i>
-        <span>Debitors</span></a>
+        <a   id="payment-report" href="payment-report.html" class="nav-link"><i class="fas fa-book"></i>
+        <span>Payment Report</span></a>
     </li>
+
+    <i class=""></i>
 
     <li class="nav-item">
         <a    id="new-fee" href="new-fee.html" class="nav-link"><i class="fas fa-plus"></i><span>Fee Management</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a    id="optional-fee-request" href="optional-fee-request.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Optional Fee Request</span></a>
     </li>
 
     <li class="nav-item">
@@ -536,6 +542,325 @@ function deleteFee(id) {
     .catch((err) => console.log(err));
 }
 
+// FEE
+function getFee(student_id, session, term, student_class) {
+  openSpinnerModal("Payable Fee");
+  return fetch(ip + "/api/student/all-fee", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: student_id,
+      session: session,
+      term: term,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      optional_fee = [];
+      optional_fee = data.optional_fee_id;
+      approved_optional_fee = data.approved_optional_fee_id;
+
+      document.getElementById("expected_amount").innerHTML =
+        "₦" + formatNumber(data.expected_amount);
+      document.getElementById("total_paid").innerHTML =
+        "₦" + formatNumber(data.total_paid);
+      document.getElementById("term_bal").innerHTML =
+        "₦" + formatNumber(data.due_balance);
+
+      document.getElementById("arrears").innerHTML =
+        "₦" + formatNumber(data.arrears);
+
+      document.getElementById("total_due_balance").innerHTML =
+        "₦" + formatNumber(data.total_due_balance);
+
+      // document.getElementById("amount").value = data.due_balance;
+
+      document.getElementById("fee_table").innerHTML = ``;
+      c = 1;
+      if (data.fee_breakdown.length > 0) {
+        data.fee_breakdown.forEach((fee) => {
+          document.getElementById("fee_table").innerHTML += `
+          <tr>
+               ${
+                 fee.type == "COMPULSORY" ||  approved_optional_fee.includes(fee.id.toString())
+                   ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+               value="${fee.id}" checked  onclick="this.checked = !this.checked">`
+                   : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+                   value="${fee.id}"  ${
+                       optional_fee.includes(fee.id.toString())
+                         ? `checked  onclick="this.checked = !this.checked"`
+                         : ``
+                     }>`
+               }
+               <td>${c}.</td>
+               <td>${ fee.description}</td>
+               <td>${ approved_optional_fee.includes(fee.id.toString()) ? `OPTIONAL (Approved)` :fee.type}</td>
+               <td>${
+                 fee.class == localStorage["PD_STUDENT_CLASS"]
+                   ? localStorage["PD_STUDENT_CLASSNAME"]
+                   : fee.class
+               }</td>
+              <td>₦${formatNumber(fee.amount)}</td>
+          </tr>
+          `;
+
+          c = c + 1;
+        });
+      } else {
+        document.getElementById("fee_table").innerHTML = `
+        <td colspan="12">
+        <center>No fee found</center>
+        </td>
+        `;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getAllOptionalFeeRequest() {
+  openSpinnerModal("Optional Fee Request");
+  return fetch(ip + "/api/bursary/optional-fee-request", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      document.getElementById("fee_table").innerHTML = ``;
+      c = 1;
+      if (data.length > 0) {
+        data.forEach((data) => {
+          document.getElementById("fee_table").innerHTML += `
+          <tr>
+               <td>${c}.</td>
+               <td>${
+                 data.student.first_name + " " + data.student.last_name
+               }</td>
+               <td>${data.student.student_id}</td>
+               <td>${data.class_name}</td>
+               <td>${data.fee.description}</td>
+               <td>${data.fee.type}</td>
+               <td>${
+                 data.fee.class == data.student.class
+                   ? data.class_name
+                   : data.fee.class
+               }</td>
+               <td>₦${formatNumber(data.fee.amount)}</td>
+               <td>${
+                 data.approved == 1
+                   ? `<span style="color:white" class="badge bg-success"><b>APPROVED</b></span>`
+                   : `<span style="color:white" class="badge bg-danger"><b>NOT APPROVED</b></span>`
+               }</td>
+              <td>
+                  <select onchange="updateOptionalFeeRequestStatus(event,'${
+                    data.id
+                  }',this.value)" id="approval" class="select2">
+                      <option value="1" ${data.approved == 1 ? `selected="selected"`:``}>APPROVE</option>
+                      <option value="0" ${data.approved == 0 ? `selected="selected"`:``}>DISAPPROVE</option>
+                  </select>
+              </td>
+          </div>
+          </tr>
+          `;
+
+          c = c + 1;
+        });
+      } else {
+        document.getElementById("fee_table").innerHTML = `
+        <td colspan="12">
+        <center>No request found</center>
+        </td>
+        `;
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+function updateOptionalFeeRequestStatus(event,id, status) {
+  if (
+    !confirm(
+      status == 1
+        ? `You are about to approve this request`
+        : `You are about to disapprove this request`
+    )
+  ) {
+    event.target.selectedIndex = status == 1 ? 1 : 0;
+    event.preventDefault();
+    return 0;
+  }
+  openSpinnerModal("Update fee status");
+  return fetch(ip + "/api/bursary/optional-fee-request", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      status: status,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        //successtoast(data.message);
+        getAllOptionalFeeRequest();
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+async function getReceipt() {
+  sessions = localStorage["receipt_session"];
+  openSpinnerModal("Payment Receipt");
+  fetch(ip + "/api/student/receipt", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: localStorage["PD_STUDENT_ID"],
+      session: sessions.split("-")[0],
+      term: sessions.split("-")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      // SLIP HEADER
+      //user_data = JSON.parse(localStorage["user_data"]);
+
+      getStudent(localStorage["PD_STUDENT_ID"]).then(function (user_data) {
+        console.log(user_data);
+        // IMAGE URL
+        url =
+          domain +
+          "/backend/storage/app/public/fileupload/student/" +
+          user_data.data.student_id +
+          ".png";
+
+        // SCHOOL LOGO URL
+        school_logo_url =
+          domain + "/backend/storage/app/public/fileupload/school_logo.png";
+
+        // SCHOOL_LOGO
+        document.getElementById("school_logo").src = school_logo_url;
+
+        // STUDENT_IMAGE
+        document.getElementById("student_image").src = url;
+
+        // POPULATE STUDENTS INFORMATION
+        document.getElementById("full_name").innerHTML =
+          "<b>" +
+          user_data.data.last_name +
+          "</b>" +
+          " " +
+          user_data.data.first_name +
+          " " +
+          user_data.data.middle_name;
+
+        document.getElementById("student_id").innerHTML =
+          user_data.data.student_id;
+        document.getElementById("class_sector").innerHTML =
+          user_data.data.class.class_sector;
+        document.getElementById("school_details").innerHTML =
+          localStorage["SCHOOL_NAME"] +
+          "<br> " +
+          localStorage["SCHOOL_ADDRESS"];
+
+        document.getElementById("student_class").innerHTML = data.class;
+
+        document.getElementById("session").innerHTML = sessions.split("-")[0];
+
+        document.getElementById("term").innerHTML = sessions.split("-")[1];
+
+        // SLIP FOOTER
+        document.getElementById("total_expected").innerHTML =
+          "₦" + formatNumber(data.expected_amount);
+
+        document.getElementById("total_paid").innerHTML =
+          "₦" + formatNumber(data.total_paid);
+
+        document.getElementById("percentage_paid").innerHTML =
+          data.percentage_paid;
+
+        document.getElementById("total_due_balance").innerHTML =
+          "₦" + formatNumber(data.due_balance);
+
+        document.getElementById("payment_receipt_table").innerHTML = ``;
+
+        c = 1;
+        data.payments.forEach((payment) => {
+          document.getElementById("payment_receipt_table").innerHTML += `
+        <tr>
+        <td>${c}.</td>
+        <td>${payment.payment_description}</td>
+        <td>${payment.fee_type}</td>
+        <td>${payment.payment_type}</td>
+        <td>${payment.date}</td>
+        <td><b>₦${formatNumber(payment.amount)}</b></td>
+        </tr>
+        `;
+          c = c + 1;
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
 // EXPENSE MANAGEMENT
 function createExpense() {
   var description = document.getElementById("description").value;
@@ -865,9 +1190,18 @@ function getAllManualPayment() {
                 <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
-                    <a ${data[i].payment_description.includes("WAS USED TO SETTLE THE ARREARS") || data[i].payment_description.includes("WAS USED TO SETTLE PART OF THE ARREARS") ? `hidden` : ``}  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
-                      data[i].id
-                    }~${data[i].student.id}~${
+                    <a ${
+                      data[i].payment_description.includes(
+                        "WAS USED TO SETTLE THE ARREARS"
+                      ) ||
+                      data[i].payment_description.includes(
+                        "WAS USED TO SETTLE PART OF THE ARREARS"
+                      )
+                        ? `hidden`
+                        : ``
+                    }  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
+            data[i].id
+          }~${data[i].student.id}~${
             data[i].student.first_name + " " + data[i].student.last_name
           }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${
             data[i].payment_type
@@ -1081,6 +1415,65 @@ function getAllPaymentHistory() {
     .catch((err) => console.log(err));
 }
 
+// PAYMENT HISTORY
+function getAllPaymentHistory(student_id, session, term) {
+  openSpinnerModal("Payment History");
+  fetch(ip + "/api/student/payment-history", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: student_id,
+      session: session,
+      term: term,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      c = 1;
+      document.getElementById("payment_history_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("payment_history_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td><b>${data[i].payment_type}</b></td>
+                    <td><b>${data[i].payment_description}</b></td>
+                    <td><b>${data[i].fee_type}</b></td>
+                    <td>${data[i].date}</td>
+                    <td>${data[i].session}</td>
+                    <td>${data[i].term}</td>
+                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      } else {
+        document.getElementById("payment_history_table").innerHTML = `
+        <td colspan="12">
+              <center>No history found</center>
+        </td>
+        `;
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
 function searchPayment(search_data) {
   fetch(ip + "/api/bursary/search-payment-history", {
     method: "POST",
@@ -1169,7 +1562,11 @@ function getAllDebitor() {
             
                     <td>${c}.</td>
                     <td>${data.content[i].student_id}</td>
-                    <td>${data.content[i].first_name + " " + data.content[i].last_name}</td>  
+                    <td>${
+                      data.content[i].first_name +
+                      " " +
+                      data.content[i].last_name
+                    }</td>  
                     <td>${
                       data.content[i].class == null
                         ? data.content[i].graduation_details
@@ -1182,27 +1579,44 @@ function getAllDebitor() {
                         : `bg-success`
                     }"><b>${data.content[i].profile_status}</b></span></td>
 
-                    <td style="color:blue"><b>${formatNumber(parseInt(data.content[i].expected_fee))}</b></td>
+                    <td style="color:blue"><b>${formatNumber(
+                      parseInt(data.content[i].expected_fee)
+                    )}</b></td>
                     <td style="color: ${
-                      data.content[i].total_paid > 0
-                        ? "green"
-                        : "black"
-                    } "><b>${formatNumber(parseInt(data.content[i].total_paid))}</b></td>
+                      data.content[i].total_paid > 0 ? "green" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].total_paid)
+          )}</b></td>
                     <td style="color: ${
-                      data.content[i].balance > 0
-                        ? "red"
-                        : "black"
-                    } "><b>${formatNumber(parseInt(data.content[i].balance))}</b></td>
+                      data.content[i].balance > 0 ? "red" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].balance)
+          )}</b></td>
                     <td style="color: ${
-                      data.content[i].arrears > 0
-                        ? "red"
-                        : "black"
-                    } "><b>${formatNumber(parseInt(data.content[i].arrears))}</b></td>
+                      data.content[i].arrears > 0 ? "red" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].arrears)
+          )}</b></td>
                     <td style="color: ${
-                      data.content[i].total_balance > 0
-                        ? "red"
-                        : "black"
-                    } "><b>${formatNumber(parseInt(data.content[i].total_balance))}</b></td>
+                      data.content[i].total_balance > 0 ? "red" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].total_balance)
+          )}</b></td>
+
+                    <td ${data.content[i].graduation != "-" ? `hidden` : ``}>
+                          <a onclick="storePDStudentId(${data.content[i].id},${
+            data.content[i].class != null ? data.content[i].class.id : ``
+          },'${
+            data.content[i].class != null
+              ? data.content[i].class.class_name
+              : ``
+          }','${
+            data.content[i].first_name + " " + data.content[i].last_name
+          }'); getPaymentDetails()" style="color:white" class="btn btn-primary" data-bs-toggle="modal"
+                          data-bs-target="#viewModal"><i class="fas fa-eye"></i> View Details</a>
+                    </td>
+
+                   
                     
                    </tr>
                     `;
@@ -1405,6 +1819,28 @@ function getAllStudent(class_id) {
     .catch((err) => console.log(err));
 }
 
+async function getStudent(id) {
+  return fetch(ip + "/api/admin/student/" + id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        window.parent.location.assign(domain + "/teacher/");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
+}
+
 // GET TODAY'S DATE
 function getDate() {
   var today = new Date();
@@ -1508,42 +1944,48 @@ function paginateTable() {
 }
 
 // CUSTOM SESSION TERM
-function loadCustomSessionTerm() {
-  term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
-
-  fetch(ip + "/api/general/all-session/DESC", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-  })
+async function loadCustomSessionTerm() {
+  // CALL API THAT GET ALL SESSION
+  return fetch(
+    ip + "/api/general/all-session/STD-" + localStorage["PD_STUDENT_ID"],
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+    }
+  )
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
+        removeSpinnerModal();
         openAuthenticationModal();
+        return 0;
       }
       return res.json();
     })
 
     .then((data) => {
-      document.getElementById("session_term").innerHTML = `<option value="${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }">${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }</option>`;
-      data.forEach((sessions) => {
-        term.forEach((term) => {
+      document.getElementById("session_term").innerHTML = ``;
+
+      if (data.length > 0) {
+        data.forEach((session_term) => {
           document.getElementById(
             "session_term"
-          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
-            sessions.session + "-" + term
-          }</option>`;
+          ).innerHTML += `<option value="${
+            session_term.session + "-" + session_term.term
+          }">${session_term.session + " - " + session_term.term}</option>`;
         });
-      });
-    })
-    .catch((err) => console.log(err));
+      } else {
+        document.getElementById("session_term").innerHTML += `<option value="${
+          localStorage["current_session"] + "-" + localStorage["current_term"]
+        }">${
+          localStorage["current_session"] + " - " + localStorage["current_term"]
+        }</option>`;
+      }
+    });
 }
 
 function useCustomSessionTerm(session_term) {
@@ -1704,10 +2146,45 @@ function scoreLimit(element) {
   }
 }
 
+// PAYMENT DETAILS
+function storePDStudentId(
+  student_id,
+  student_class,
+  student_class_name,
+  student_name
+) {
+  localStorage.setItem("PD_STUDENT_ID", student_id);
+  localStorage.setItem("PD_STUDENT_CLASS", student_class);
+  localStorage.setItem("PD_STUDENT_CLASSNAME", student_class_name);
+
+  document.getElementById("pd_label").innerHTML =
+    student_name + " PAYMENT DETAILS";
+  //localStorage.setItem('PD_STUDENT_NAME',student_name);
+}
+
+function getPaymentDetails() {
+  student_id = localStorage["PD_STUDENT_ID"];
+  loadCustomSessionTerm().then(function () {
+    session = localStorage["current_session"];
+    term = localStorage["current_term"];
+    getFee(student_id, session, term);
+    getAllPaymentHistory(student_id, session, term);
+  });
+}
+
+function getPaymentDetails2() {
+  student_id = localStorage["PD_STUDENT_ID"];
+  session_value = document.getElementById("session_term").value;
+  session = session_value.split("-")[0];
+  term = session_value.split("-")[1];
+  getFee(student_id, session, term);
+  getAllPaymentHistory(student_id, session, term);
+}
+
 $(document).click(function (e) {
   if (!$(e.target).closest("#authenticationModal").length) {
     modalExist = parent.document.getElementById("authenticationModal");
-   if (modalExist != null) {
+    if (modalExist != null) {
       modalExist.remove();
 
       parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
@@ -1715,15 +2192,29 @@ $(document).click(function (e) {
         el.remove();
       });
     }
-
   }
 });
+
+function download(filename) {
+  filename = filename == null ? "file" : filename;
+  const payment_slip = this.document.getElementById("payment-slip");
+  console.log(payment_slip);
+  console.log(window);
+  var opt = {
+    margin: 0.1,
+    filename: filename + ".pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+  html2pdf().from(payment_slip).set(opt).save();
+}
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
   modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h4 style="font-family: Poppins; font-weight: bold;"
@@ -1813,14 +2304,76 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 `;
 
   authenticationModal = parent.document.getElementById("authenticationModal");
- if (authenticationModal != null) {
+  if (authenticationModal != null) {
     return 0;
   }
-  
 
   parent.$("body").append(modal);
-  parent.$("#authenticationModal").modal({backdrop:"static",keyboard:false})
+  parent
+    .$("#authenticationModal")
+    .modal({ backdrop: "static", keyboard: false });
   parent.$("#authenticationModal").modal("show");
+}
+
+function openSpinnerModal(message) {
+  modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body text-center">
+        <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-warning" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-dark" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+        </div>
+
+        <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <b>${message != null || message != "" ? message : ``} </b><br/>
+                <b>Processing ...</b>
+            </h4>
+            <br>
+    </div>
+</div>
+</div>
+`;
+
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    return 0;
+  }
+
+  parent.$("body").append(modal);
+  parent.$("#spinnerModal").modal({ backdrop: "static", keyboard: false });
+  parent.$("#spinnerModal").modal("show");
+}
+
+function removeSpinnerModal() {
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    parent.$("#spinnerModal").modal("hide");
+    parent.document.getElementById("spinnerModal").remove();
+  }
 }
 
 function collapseSidebar() {
@@ -1848,7 +2401,6 @@ function collapseSidebar() {
     }
   }
 }
-
 
 // TOAST
 function successtoast(message, time) {

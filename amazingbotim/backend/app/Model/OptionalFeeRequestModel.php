@@ -18,4 +18,9 @@ class OptionalFeeRequestModel extends Authenticatable
     {
         return $this->hasOne(StudentModel::class, 'id', 'student_id');
     }
+
+    public function fee()
+    {
+        return $this->hasOne(FeeModel::class, 'id', 'fee_id');
+    }
 }

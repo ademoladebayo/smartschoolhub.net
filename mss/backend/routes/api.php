@@ -88,6 +88,9 @@ Route::middleware([ActivityLog::class])->group(function () {
         Route::get('admin/all-student', 'AdminController@getAllStudent', function () {
         })->middleware(Cors::class);
 
+        Route::get('admin/student/{id}', 'AdminController@getStudent', function () {
+        })->middleware(Cors::class);
+
         Route::get('admin/delete-student/{student_id}', 'AdminController@deleteStudent', function () {
         })->middleware(Cors::class);
 
@@ -398,7 +401,7 @@ Route::middleware([ActivityLog::class])->group(function () {
         })->middleware(Cors::class);
 
         //STUDENT {CONTINOUS ASSESSMENT}
-        Route::get('student/continous-assessment/{id}', 'StudentController@getContinousAssessment', function () {
+        Route::get('student/continuous-assessment/{id}', 'StudentController@getContinuousAssessment', function () {
         })->middleware(Cors::class);
     });
 
@@ -434,6 +437,13 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         Route::post('bursary/all-fee', 'BursaryController@allFee', function () {
         })->middleware(Cors::class);
+
+        Route::post('bursary/optional-fee-request', 'BursaryController@getAllOptionalFeeRequest', function () {
+        })->middleware(Cors::class);
+
+        Route::put('bursary/optional-fee-request', 'BursaryController@updateOptionalFeeRequest', function () {
+        })->middleware(Cors::class);
+
 
         // BURSARY {EXPENSE MANAGEMENT}
         Route::post('bursary/create-expense', 'BursaryController@createExpense', function () {
@@ -493,6 +503,7 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         Route::delete('bursary/portal-subscription/{id}', 'BursaryController@deletePortalSubscription', function () {
         })->middleware(Cors::class);
+        
     });
 
     // =============================================================================

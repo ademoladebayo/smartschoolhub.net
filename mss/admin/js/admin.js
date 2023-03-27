@@ -6472,7 +6472,7 @@ $(document).click(function (e) {
 function openAuthenticationModal() {
   var modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h4 style="font-family: Poppins; font-weight: bold;"

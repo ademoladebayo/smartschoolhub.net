@@ -35,7 +35,7 @@ function loadSideNav(page) {
 
 
     <li class="nav-item">
-        <a   id="ca" href="continous-assessment.html" class="nav-link"<i class="fas fa-tasks"></i></i><span>Continous Assessment</span></a>
+        <a   id="ca" href="continuous-assessment.html" class="nav-link"<i class="fas fa-tasks"></i></i><span>Continuous Assessment</span></a>
     </li>
     
     <li class="nav-item">
@@ -130,7 +130,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a   id="ca" href="continous-assessment.html" class="nav-link"><i class="fas fa-tasks"></i></i><span>Continous Assessment</span></a>
+        <a   id="ca" href="continuous-assessment.html" class="nav-link"><i class="fas fa-tasks"></i></i><span>Continuous Assessment</span></a>
     </li>
 
     <li class="nav-item">
@@ -1858,7 +1858,7 @@ function getCommentsAndPsycho(value) {
 }
 
 // ATTENDANCE
-function getAttendanceSummary(value) {
+function getAttendanceSummary(value) {sess
   if (value == "ATTENDANCE_HISTORY") {
     // GET ACADEMIC PERFORMANCE
     return fetch(ip + "/api/student/attendance-summary", {
@@ -2439,6 +2439,7 @@ function loadFeeBreakdown() {
 
   optional_fee = [];
   optional_fee = data.optional_fee_id;
+  approved_optional_fee = data.approved_optional_fee_id;
 
   document.getElementById("expected_amount").innerHTML =
     "₦" + formatNumber(data.expected_amount);
@@ -2461,7 +2462,7 @@ function loadFeeBreakdown() {
     document.getElementById("fee_table").innerHTML += `
     <tr>
          ${
-           fee.type == "COMPULSORY"
+           fee.type == "COMPULSORY" ||  approved_optional_fee.includes(fee.id.toString())
              ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
          value="${fee.id}" checked  onclick="this.checked = !this.checked">`
              : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
@@ -2471,7 +2472,7 @@ function loadFeeBreakdown() {
          }
          <td>${c}.</td>
          <td>${fee.description}</td>
-         <td>${fee.type}</td>
+         <td>${ approved_optional_fee.includes(fee.id.toString()) ? `OPTIONAL (Approved)` :fee.type}</td>
          <td>${
            fee.class == JSON.parse(localStorage["user_data"]).data.class.id
              ? JSON.parse(localStorage["user_data"]).data.class.class_name
@@ -2495,7 +2496,7 @@ function getAllPaymentHistory(session_value) {
     term = session_value.split("-")[1];
   }
 
-  openSpinnerModal();
+  openSpinnerModal("Payment History");
   fetch(ip + "/api/student/payment-history", {
     method: "POST",
     headers: {
@@ -2837,7 +2838,7 @@ async function getReceipt() {
 }
 
 // PRINT
-function print() {
+function print2() {
   var divContents = document.getElementById("iframe").innerHTML;
   var head = document.getElementById("head").innerHTML;
   console.log(divContents);
@@ -3501,9 +3502,9 @@ function openLiveClass(topic){
 
 
 // CONTINOUS ASSESSMENT
-function getContinousAssessment(){
-  openSpinnerModal("Continous Assessment");
-  fetch(ip + "/api/student/continous-assessment/"+ JSON.parse(localStorage['user_data']).data.id, {
+function getContinuousAssessment(){
+  openSpinnerModal("Continuous Assessment");
+  fetch(ip + "/api/student/continuous-assessment/"+ JSON.parse(localStorage['user_data']).data.id, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -3590,12 +3591,14 @@ function getContinousAssessment(){
 }
 
 
+//
+
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
   localStorage.removeItem("isParent");
   modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h4 style="font-family: Poppins; font-weight: bold;"
@@ -3799,6 +3802,7 @@ function collapseSidebar() {
 function downloadAsPDF(filename, container) {
   filename = filename == null ? "file" : filename;
   const data = this.document.getElementById(container);
+
   var opt = {
     margin: 0.1,
     filename: filename + ".pdf",
@@ -3806,6 +3810,7 @@ function downloadAsPDF(filename, container) {
     html2canvas: { scale: 2, useCORS: true },
     jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
   };
+
   html2pdf().from(data).set(opt).save();
 }
 

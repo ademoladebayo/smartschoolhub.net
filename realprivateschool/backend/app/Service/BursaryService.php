@@ -114,6 +114,25 @@ class BursaryService
         return response(['success' => true, 'message' => "Fee was deleted successfully."]);
     }
 
+    public function getAllOptionalFeeRequest(Request $request)
+    {
+        $fee_request =  OptionalFeeRequestModel::where("session", $request->session)->where("term", $request->term)->with("student", "fee")->get();
+
+        foreach ($fee_request as $request) {
+            $request->class_name = ClassModel::find(StudentModel::find($request->student_id)->class)->class_name;
+        }
+
+        return  $fee_request;
+    }
+
+    public function updateOptionalFeeRequest(Request $request)
+    {
+        $optionalFeeRequest = OptionalFeeRequestModel::find($request->id);
+        $optionalFeeRequest->approved =  $request->status;
+        $optionalFeeRequest->save();
+        return response(['success' => true, 'message' => "Action was successful."]);
+    }
+
 
     // EXPENSE MANAGEMENT
     public function createExpense(Request $request)
@@ -332,6 +351,22 @@ class BursaryService
     {
         $optional_fee = [];
         $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
+
+
+        if ($OptionalFeeRequest == null) {
+            return $optional_fee;
+        } else {
+            foreach ($OptionalFeeRequest as $optionalfee) {
+                array_push($optional_fee, $optionalfee->fee_id);
+            }
+        }
+        return $optional_fee;
+    }
+
+    public function getApprovedOptionalFeeId(String $student_id, String $session, String  $term)
+    {
+        $optional_fee = [];
+        $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->where('approved',1)->get();
 
 
         if ($OptionalFeeRequest == null) {
