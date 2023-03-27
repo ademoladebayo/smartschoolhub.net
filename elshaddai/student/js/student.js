@@ -1858,7 +1858,7 @@ function getCommentsAndPsycho(value) {
 }
 
 // ATTENDANCE
-function getAttendanceSummary(value) {sess
+function getAttendanceSummary(value) {
   if (value == "ATTENDANCE_HISTORY") {
     // GET ACADEMIC PERFORMANCE
     return fetch(ip + "/api/student/attendance-summary", {
