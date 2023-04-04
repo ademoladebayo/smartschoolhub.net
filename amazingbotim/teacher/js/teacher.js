@@ -4393,7 +4393,7 @@ function getAllClassForDropDown() {
     .then((data) => {
       for (i in data) {
         document.getElementById(
-          "class"
+          "classes"
         ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
       }
     })

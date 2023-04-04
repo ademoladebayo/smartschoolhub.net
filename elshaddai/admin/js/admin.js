@@ -280,6 +280,10 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
+        <a    id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Subject Registration</span></a>
+    </li>
+
+    <li class="nav-item">
           <a   id="lesson-plan" href="lesson-plan-management.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Lesson Management</span></a>
     </li>
@@ -382,6 +386,10 @@ function loadSideNav(page) {
     <li class="nav-item">
           <a   id="subject" href="subject.html" class="nav-link"> <i class="fas fa-plus"></i>
           <span>Subject Management</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a    id="subject-registration" href="subject-registration.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Subject Registration</span></a>
     </li>
 
     <li class="nav-item">
@@ -1362,6 +1370,7 @@ function getAllStudentForTable() {
     })
     .catch((err) => console.log(err));
 }
+
 function getAllStudent() {
   return fetch(ip + "/api/admin/all-student", {
     method: "GET",
@@ -1383,12 +1392,49 @@ function getAllStudent() {
     })
     .catch((err) => console.log(err));
 }
-{
-  /* <a  onclick="deleteStudent(${
-  data[i].id
-})" class="btn btn-danger text-white"><i
-            class="fas fa-trash"></i>
-        Delete</a> */
+
+function getAllStudentForDropDown(class_id) {
+  openSpinnerModal("Fetch student ");
+  fetch(ip + "/api/admin/all-student", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      removeSpinnerModal();
+      console.log(data);
+      document.getElementById("student").innerHTML = ``;
+      if (data.length > 0) {
+        document.getElementById(
+          "student"
+        ).innerHTML = `<option value="">Select student for registration </option>`;
+        for (i in data) {
+          student_class =
+            data[i].class == null ? `GRADUATED` : data[i].class.id;
+          if (student_class != class_id) {
+            continue;
+          }
+          document.getElementById("student").innerHTML += `<option value="${
+            data[i].id
+          }">${data[i].first_name + " " + data[i].last_name}</option>`;
+        }
+      } else {
+        document.getElementById(
+          "student"
+        ).innerHTML = ` <option value="">NO STUDENT FOUND IN THE SELECTED CLASS</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 function viewStudent(json) {
@@ -3014,8 +3060,8 @@ function getAllClassForTable() {
           }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
                <!-- <a  onclick="deleteClass(${
-                  data[i].id
-                })" class="btn btn-danger text-white"><i
+                 data[i].id
+               })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a> -->
             </td>
@@ -3054,6 +3100,7 @@ function getAllClassForTable() {
 }
 
 function getAllClassForDropDown() {
+  openSpinnerModal("Fetch class");
   fetch(ip + "/api/admin/all-class", {
     method: "GET",
     headers: {
@@ -3071,10 +3118,16 @@ function getAllClassForDropDown() {
     })
 
     .then((data) => {
-      for (i in data) {
+      removeSpinnerModal();
+      if (data.length > 0) {
         document.getElementById(
-          "class"
-        ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
+          "classes"
+        ).innerHTML = `<option value="">Select class</option>`;
+        for (i in data) {
+          document.getElementById(
+            "classes"
+          ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
+        }
       }
     })
     .catch((err) => console.log(err));
@@ -3481,8 +3534,8 @@ function getAllSubjectForTable() {
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
            <!-- <a  onclick="deleteSubject(${
-              data[i].id
-            })" class="btn btn-danger text-white"><i
+             data[i].id
+           })" class="btn btn-danger text-white"><i
                     class="fa fa-trash"></i></a> -->
 
             <a  onclick="exportSubjectSheet('${data[i].id}','${
@@ -3881,6 +3934,636 @@ function exportSubjectSheet(subject_id, subject_name, class_name) {
 }
 
 function importSubjectSheet() {}
+
+function getPreviousSubjectRegistration(student_id, class_id, session, term) {
+  registered_subject = [];
+  fetch(ip + "/api/student/registered-subject-id", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: student_id,
+      class: class_id,
+      session: session,
+      term: term,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      data.forEach((i) => {
+        registered_subject.push(i);
+      });
+
+      document.getElementById("number_registered").innerHTML =
+        "Total registered: " + registered_subject.length;
+    })
+    .catch((err) => console.log(err));
+
+  return registered_subject;
+}
+
+function getAllSubjectForRegistration() {
+  openSpinnerModal("Fetch subject to register for student");
+  student_id = document.getElementById("student").value;
+  class_id = document.getElementById("classes").value;
+  session = document.getElementById("session_term").value.split("-")[0];
+  term = document.getElementById("session_term").value.split("-")[1];
+
+  registered_subject = [];
+  registered_subject = getPreviousSubjectRegistration(
+    student_id,
+    class_id,
+    session,
+    term
+  );
+
+  var c = 1;
+  // GET REGISTERED SUBJECT
+  fetch(ip + "/api/student/registered-subject", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: student_id,
+      class: class_id,
+      session: session,
+      term: term,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      document.getElementById("subject_table").innerHTML = ``;
+
+      // FIRST POPULATE COMPULSORY AND ELECTIVE REGISTERED FOR THE STUDENT
+      for (i in data) {
+        if (data[i].subject_type == "COMPULSORY") {
+          document.getElementById("subject_table").innerHTML += `
+            <tr>
+    
+                  <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
+                  value="${data[i].subject_id}" checked  onclick="this.checked = !this.checked">
+                  </td>
+    
+                  <td>${c}.</td>
+                  <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
+                  <td>${data[i].subject_type}</td>
+                  <td>${data[i].teacher}</td>
+                  
+               
+                  
+        
+              </tr>`;
+        } else {
+          document.getElementById("subject_table").innerHTML += `
+            <tr>
+    
+                  <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration_elective"
+                  value="${data[i].subject_id}" checked ">
+                  </td>
+    
+                  <td>${c}.</td>
+                  <td> <small><i class="fa fa-shapes" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
+                  <td>${data[i].subject_type}</td>
+                  <td>${data[i].teacher}</td>
+                  
+               
+                  
+        
+              </tr>`;
+        }
+
+        c = c + 1;
+      }
+
+      // NOW GET ELECTIVE SUBJECT
+      fetch(ip + "/api/admin/all-subject", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+      })
+        .then(function (res) {
+          console.log(res.status);
+          if (res.status == 401) {
+            openAuthenticationModal();
+          }
+          return res.json();
+        })
+
+        .then((data) => {
+          for (i in data) {
+            if (registered_subject.includes(data[i].id.toString())) {
+              continue;
+            }
+            if (data[i].class.id != class_id) {
+              continue;
+            }
+            document.getElementById("subject_table").innerHTML += `
+                <tr>
+        
+                      <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration_elective"
+                      value="${data[i].id}">
+                      </td>
+        
+                      <td>${c}.</td>
+                      <td><i class="fa fa-shapes"></i> ${
+                        data[i].subject_name
+                      }</td>
+                      <td>ELECTIVE</td>
+                      <td>${
+                        data[i].teacher.title +
+                        " " +
+                        data[i].teacher.first_name +
+                        " " +
+                        data[i].teacher.last_name
+                      }</td>
+                      
+                      
+            
+                  </tr>`;
+
+            c = c + 1;
+          }
+
+          table = document.getElementById("subject_table");
+          if (table.rows.length == 0) {
+            document.getElementById("subject_table").innerHTML = `
+              <tr>
+                  <td colspan="12">
+                      <center>No subject registered</center>
+                  </td>
+              </tr>
+            `;
+          }
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+}
+
+function registerSubject() {
+  student_id = document.getElementById("student").value;
+  class_id = document.getElementById("classes").value;
+  session = document.getElementById("session_term").value.split("-")[0];
+  term = document.getElementById("session_term").value.split("-")[1];
+  var subject_to_register = [];
+
+  var selected_subject = document.getElementsByName(
+    "subject_registration_elective"
+  );
+  for (var i = 0; i < selected_subject.length; i++) {
+    if (selected_subject[i].checked == true) {
+      subject_to_register.push(selected_subject[i].value);
+    }
+  }
+
+  console.log(subject_to_register);
+  //   subject_to_register.length >= 1
+  if (true) {
+    if (
+      confirm(
+        "Kindly confirm you would like to register the selected subject for session " +
+          session +
+          " " +
+          term +
+          " for the selected student"
+      )
+    ) {
+      openSpinnerModal("Register subject for student");
+      document.getElementById("register_subject").innerHTML = `<i
+      class="fa fa-spinner fa-spin"></i> Registering ...`;
+
+      // PUSH TO API
+      fetch(ip + "/api/student/register-subject", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+        body: JSON.stringify({
+          student_id: student_id,
+          subject_to_register: subject_to_register,
+          class: class_id,
+          session: session,
+          term: term,
+        }),
+      })
+        .then(function (res) {
+          console.log(res.status);
+          if (res.status == 401) {
+            openAuthenticationModal();
+          }
+          return res.json();
+        })
+
+        .then((data) => {
+          removeSpinnerModal();
+          if (data.success) {
+            alert("" + data.message + "");
+            setTimeout(function () {
+              //window.parent.location.reload();
+              document.getElementById(
+                "register_subject"
+              ).innerHTML = `Register`;
+              getAllSubjectForRegistration();
+            }, 1000);
+          } else {
+            alert("" + data.message + "");
+            setTimeout(function () {
+              window.parent.location.reload();
+            }, 1000);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  } else {
+    alert("No subject selected !");
+  }
+}
+
+function getAllSubjectForTable() {
+  fetch(ip + "/api/admin/all-subject", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log("DEBUG =>   RESULT: " + data);
+      document.getElementById("subject_table").innerHTML = ``;
+      var c = 1;
+      for (i in data) {
+        if (data[i].teacher != null) {
+          console.log("DEBUG not null: " + data[i].teacher);
+          console.log(data[i].teacher);
+          document.getElementById("subject_table").innerHTML += `
+            <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+  
+            <td>${c}.</td>
+            <td>${data[i].subject_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
+            <td>${
+              data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
+            }</td>
+            <td>${data[i].student_no}</td>
+
+            <td>
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~${
+            data[i].teacher.title +
+            " " +
+            data[i].teacher.first_name +
+            " " +
+            data[i].teacher.last_name
+          }~${data[i].teacher.id}~${data[i].class.class_name}~${
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+           <!-- <a  onclick="deleteSubject(${
+             data[i].id
+           })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a> -->
+
+            <a  onclick="exportSubjectSheet('${data[i].id}','${
+            data[i].subject_name
+          }','${data[i].class.class_name}'
+            )" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a  onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
+            </td>
+  
+        </tr>`;
+        } else {
+          console.log("DEBUG null: " + data[i].teacher);
+          console.log(data[i].teacher);
+          document.getElementById("subject_table").innerHTML += `
+            <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+  
+            <td>${c}.</td>
+            <td>${data[i].subject_name}</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
+            <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+            <td>${data[i].student_no}</td>
+            <td>
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="btn btn-warning" data-bs-toggle="modal"
+            data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
+
+            <a  onclick="deleteSubject(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
+                    class="fa fa-trash"></i></a>
+
+            <a  onclick="downloadResultSheet(${
+              data[i].id
+            })" class="btn btn-primary text-white">
+                <i class="fas fa-file-download"></i></a>       
+
+            <a  onclick="uploadResultSheet(${
+              data[i].id
+            })" class="btn btn-success text-white">
+                <i class="fas fa-file-upload"></i></a>   
+                     
+            </td>
+  
+        </tr>`;
+        }
+
+        c = c + 1;
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
+//
+function getPreviousSubjectRegistration2(class_id, session, term) {
+  registered_subject = [];
+  fetch(ip + "/api/teacher/registered-subject", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      both_elective_and_compulsory: false,
+      class: class_id,
+      session: session,
+      term: term,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      data.forEach((i) => {
+        registered_subject.push(i);
+      });
+      document.getElementById("number_registered").innerHTML =
+       
+      "Total registered: " +
+        countDistinct(registered_subject, registered_subject.length);
+    })
+    .catch((err) => console.log(err));
+
+  return registered_subject;
+}
+
+function getAllSubjectForTable2() {
+  openSpinnerModal("Fetch subject to register for class");
+  class_id = document.getElementById("classes").value;
+  session = document.getElementById("session_term").value.split("-")[0];
+  term = document.getElementById("session_term").value.split("-")[1];
+
+  registered_subject = [];
+  registered_subject = getPreviousSubjectRegistration2(class_id, session, term);
+
+  console.log(registered_subject);
+  c = 1;
+  fetch(ip + "/api/admin/all-subject", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      console.log("DEBUG =>   RESULT: " + data);
+      document.getElementById("subject_table").innerHTML = ``;
+      var c = 1;
+      for (i in data) {
+        if (
+          data[i].class.id !=
+          class_id
+        ) {
+          continue;
+        }
+
+        if (data[i].teacher != null) {
+          if (registered_subject.includes(data[i].id.toString())) {
+            document.getElementById("subject_table").innerHTML += `
+                <tr>
+  
+                <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
+                value="${data[i].id}" checked>
+                </td>
+  
+                <td>${c}.</td>
+                <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${
+                  data[i].subject_name
+                }</td>
+                <td>COMPULSORY</td>
+                <td>${
+                  data[i].teacher.title +
+                  " " +
+                  data[i].teacher.first_name +
+                  " " +
+                  data[i].teacher.last_name
+                }</td>
+                
+      
+            </tr>`;
+          } else {
+            document.getElementById("subject_table").innerHTML += `
+              <tr>
+
+              <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
+              value="${data[i].id}">
+              </td>
+              <td>${c}.</td>
+              <td>${data[i].subject_name}</td>
+              <td>COMPULSORY</td>
+              <td>${
+                data[i].teacher.title +
+                " " +
+                data[i].teacher.first_name +
+                " " +
+                data[i].teacher.last_name
+              }</td>
+              
+    
+          </tr>`;
+          }
+        } else {
+          if (registered_subject.includes(data[i].id.toString())) {
+            document.getElementById("subject_table").innerHTML += `
+              <tr>
+
+              <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
+                value="${data[i].id}" checked>
+              </td>
+              <td>${c}.</td>
+              <td><small><i class="fa fa-star" aria-hidden="true"></i> ${data[i].subject_name}</td>
+              <td>COMPULSORY</td>
+              <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+    
+          </tr>`;
+          } else {
+            document.getElementById("subject_table").innerHTML += `
+              <tr>
+    
+              <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
+              value="${data[i].id}">
+              </td>
+              <td>${c}.</td>
+              <td>${data[i].subject_name}</td>
+              <td>COMPULSORY</td>
+              <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+    
+          </tr>`;
+          }
+        }
+
+        c = c + 1;
+      }
+    })
+    .catch((err) => console.log(err));
+  // document.getElementById("number_registered").innerHTML =
+  //   document.getElementById("number_registered").innerHTML + c;
+}
+
+function registerSubject2() {
+  class_id = document.getElementById("classes").value;
+  session = document.getElementById("session_term").value.split("-")[0];
+  term = document.getElementById("session_term").value.split("-")[1];
+  var subject_to_register = [];
+
+  var selected_subject = document.getElementsByName("subject_registration");
+  for (var i = 0; i < selected_subject.length; i++) {
+    if (selected_subject[i].checked == true) {
+      subject_to_register.push(selected_subject[i].value);
+    }
+  }
+
+  console.log(subject_to_register);
+  //   subject_to_register.length >= 1
+  if (true) {
+    if (
+      confirm(
+        "Kindly confirm you would like to register the selected subject for session " +
+          session +
+          " " +
+          term +
+          " for all student in the selected class"
+      )
+    ) {
+      openSpinnerModal("Register subject for class");
+      document.getElementById("register_subject").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Registering ...`;
+
+      // PUSH TO API
+      fetch(ip + "/api/teacher/register-subject", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+        body: JSON.stringify({
+          subject_to_register: subject_to_register,
+          class: class_id,
+          session: session,
+          term: term,
+        }),
+      })
+        .then(function (res) {
+          console.log(res.status);
+          if (res.status == 401) {
+            openAuthenticationModal();
+          }
+          return res.json();
+        })
+
+        .then((data) => {
+          removeSpinnerModal();
+          if (data.success) {
+            alert("" + data.message + "");
+            setTimeout(function () {
+              getAllSubjectForTable2();
+              document.getElementById("register_subject").innerHTML = `Register`;
+            }, 1000);
+          } else {
+            alert("" + data.message + "");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  } else {
+    alert("No subject selected !");
+  }
+}
 
 // SESSION
 function createSession() {
@@ -4347,22 +5030,20 @@ function takeAttendance() {
       // CHECK IF STUDENT ALREADY CHECKED OUT
       checkedOut = hasStudentCheckedOut(qr_data.split("~")[1], "");
       if (checkedOut) {
-          errorSound.play();
-          alert("This student has been checked out.");
-          return 0;
+        errorSound.play();
+        alert("This student has been checked out.");
+        return 0;
       }
 
-      warningSound.play()
+      warningSound.play();
       if (window.parent.confirm("You are about to CHECK OUT this student !")) {
         // PROCEED TO CHECK OUT STUDENT
         check_out = true;
-        warningSound.pause()
+        warningSound.pause();
       } else {
-        warningSound.pause()
+        warningSound.pause();
         return 0;
-        
       }
-      
     }
 
     scanner.stop();
@@ -4666,13 +5347,13 @@ function takeTeacherAttendance() {
         return 0;
       }
 
-      warningSound.play()
+      warningSound.play();
       if (window.parent.confirm("You are about to CHECK OUT this staff !")) {
         // PROCEED TO CHECK OUT STAFF
         check_out = true;
-        warningSound.pause()
+        warningSound.pause();
       } else {
-        warningSound.pause()
+        warningSound.pause();
         return 0;
       }
     }
@@ -6385,14 +7066,14 @@ function loadCustomSessionTerm() {
       document.getElementById("session_term").innerHTML = `<option value="${
         localStorage["current_session"] + "-" + localStorage["current_term"]
       }">${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
+        localStorage["current_session"] + " - " + localStorage["current_term"]
       }</option>`;
       data.forEach((sessions) => {
         term.forEach((term) => {
           document.getElementById(
             "session_term"
           ).innerHTML += `<option value="${sessions.session + "-" + term}">${
-            sessions.session + "-" + term
+            sessions.session + " - " + term
           }</option>`;
         });
       });
@@ -6445,6 +7126,21 @@ function debounce(func, timeout = 2000) {
 const uploadResultDebouncer = debounce((id, result_type, score) =>
   uploadResult(id, result_type, score)
 );
+
+// COUNT ARRAY DISTINT VALUE
+function countDistinct(arr, n) {
+  let res = 1;
+
+  // Pick all elements one by one
+  for (let i = 1; i < n; i++) {
+    let j = 0;
+    for (j = 0; j < i; j++) if (arr[i] === arr[j]) break;
+
+    // If not printed earlier, then print it
+    if (i === j) res++;
+  }
+  return res;
+}
 
 function scoreLimit(element) {
   var max_chars = 2;
@@ -6607,7 +7303,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
         <h4 style="font-family: Poppins; font-weight: bold;"
                 class="modal-title col-12 text-center" id="spinnerModalTitle">
-                <b>${message != null || message != "" ? message : ``}. </b>
+                <b>${message != null || message != "" ? message : ``}</b><br/>
                 <b>Processing ...</b>
             </h4>
             <br>
@@ -6627,8 +7323,11 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 }
 
 function removeSpinnerModal() {
-  parent.$("#spinnerModal").modal("hide");
-  parent.document.getElementById("spinnerModal").remove();
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    parent.$("#spinnerModal").modal("hide");
+    parent.document.getElementById("spinnerModal").remove();
+  }
 }
 
 function collapseSidebar() {

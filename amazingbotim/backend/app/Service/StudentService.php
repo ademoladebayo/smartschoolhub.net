@@ -65,6 +65,9 @@ class StudentService
     // SUBJECT
     public function registerSubject(Request $request)
     {
+        $StudentResultCommentModel = new StudentResultCommentModel();
+        $StudentResultRatingModel = new StudentResultRatingModel();
+
         // CHECK CONTROL BEFORE REGISTERING SUBJECTS
         $AdminService = new AdminService();
         if (!$AdminService->isSubjectRegistrationOpened()) {
@@ -119,6 +122,22 @@ class StudentService
             $SubjectRegistrationModel->save();
         }
 
+
+        // CHECK IF IT HAS BEEN CREATED FOR CURRENT STUDENT
+        if (!StudentResultCommentModel::where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->exists()) {
+
+            // COMMENT
+            $StudentResultCommentModel->student_id = $request->student_id;
+            $StudentResultCommentModel->session =  $request->session;
+            $StudentResultCommentModel->term = $request->term;
+            $StudentResultCommentModel->save();
+
+            // RATINGS 
+            $StudentResultRatingModel->student_id = $request->student_id;
+            $StudentResultRatingModel->session =  $request->session;
+            $StudentResultRatingModel->term = $request->term;
+            $StudentResultRatingModel->save();
+        }
 
         return  response(['success' => true, 'message' => count($subject_to_register) . " Registration was successful."]);
     }
@@ -248,7 +267,7 @@ class StudentService
         }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id,'approved_optional_fee_id' => $approved_optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'approved_optional_fee_id' => $approved_optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
     }
 
 

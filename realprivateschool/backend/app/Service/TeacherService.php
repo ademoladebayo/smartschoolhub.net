@@ -102,6 +102,7 @@ class TeacherService
         Log::debug($students_id);
         Log::debug("                              ");
         Log::debug("                              ");
+
         // LOOP THROUGH EACH STUDENT
         for ($i = 0; $i < count($students_id); $i++) {
             Log::debug("=========================================================");
@@ -112,9 +113,11 @@ class TeacherService
 
             // GET PREVIOUS REGISTRATION FOR EACH STUDENT
             $previous_registration_id = [];
-            foreach (SubjectRegistrationModel::select("subject_id")->where('student_id', $students_id[$i])->where('class_id', $request->class)->Where('subject_type', 'COMPULSORY')->Where('session', $request->session)->Where('term', $request->term)->get() as $data) {
+            foreach (SubjectRegistrationModel::select("subject_id")->where('student_id', $students_id[$i])->where('class_id', $request->class)->Where('session', $request->session)->Where('term', $request->term)->get() as $data) {
                 array_push($previous_registration_id, $data->subject_id);
             }
+
+            
             Log::debug("PREVIOUS REGISTRATION : ");
             Log::debug($previous_registration_id);
 

@@ -657,9 +657,9 @@ function getAllOptionalFeeRequest() {
 
     .then((data) => {
       removeSpinnerModal();
-      document.getElementById("fee_table").innerHTML = ``;
       c = 1;
       if (data.length > 0) {
+        document.getElementById("fee_table").innerHTML = ``;
         data.forEach((data) => {
           document.getElementById("fee_table").innerHTML += `
           <tr>
@@ -696,6 +696,7 @@ function getAllOptionalFeeRequest() {
 
           c = c + 1;
         });
+        paginateTable();
       } else {
         document.getElementById("fee_table").innerHTML = `
         <td colspan="12">
@@ -703,7 +704,7 @@ function getAllOptionalFeeRequest() {
         </td>
         `;
       }
-      paginateTable();
+
     })
     .catch((err) => console.log(err));
 }
@@ -1772,7 +1773,7 @@ function getAllClassForDropDown() {
     .then((data) => {
       for (i in data) {
         document.getElementById(
-          "class"
+          "classes"
         ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
       }
     })
@@ -1792,7 +1793,7 @@ function getAllStudent(class_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+         openAuthenticationModal();
       }
       return res.json();
     })
@@ -1831,7 +1832,7 @@ async function getStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+         openAuthenticationModal();
       }
       return res.json();
     })
@@ -1971,14 +1972,20 @@ async function loadCustomSessionTerm() {
       document.getElementById("session_term").innerHTML = ``;
 
       if (data.length > 0) {
-        data.forEach((session_term) => {
-          document.getElementById(
-            "session_term"
-          ).innerHTML += `<option value="${
-            session_term.session + "-" + session_term.term
-          }">${session_term.session + " - " + session_term.term}</option>`;
-        });
-      } else {
+         session_term = data;
+          for(i = session_term.length - 1; i >=0; i--){
+            document.getElementById(
+              "session_term"
+            ).innerHTML += `<option value="${
+              session_term[i].session + "-" + session_term[i].term
+            }">${session_term[i].session + " - " + session_term[i].term}</option>`;
+
+            
+      }
+
+      console.table(session_term)
+            console.table(data)
+    }  else {
         document.getElementById("session_term").innerHTML += `<option value="${
           localStorage["current_session"] + "-" + localStorage["current_term"]
         }">${
