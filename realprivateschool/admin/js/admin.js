@@ -3120,9 +3120,6 @@ function getAllClassForDropDown() {
     .then((data) => {
       removeSpinnerModal();
       if (data.length > 0) {
-        document.getElementById(
-          "classes"
-        ).innerHTML = `<option value="">Select class</option>`;
         for (i in data) {
           document.getElementById(
             "classes"
