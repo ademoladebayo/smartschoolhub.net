@@ -552,7 +552,7 @@ function createStudent() {
   var joining_session = document.getElementById("joining_session").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
 
   var guardian_name = document.getElementById("guardian_name").value;
   var guardian_phone = document.getElementById("guardian_phone").value;
@@ -636,7 +636,7 @@ function updateStudent() {
   var joining_session = document.getElementById("joining_session").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
 
   var guardian_name = document.getElementById("guardian_name").value;
   var guardian_phone = document.getElementById("guardian_phone").value;
@@ -4402,7 +4402,7 @@ function getAllClassForDropDown() {
 
 // PROMOTE STUDENT
 function promoteStudent() {
-  class_id = document.getElementById("class").value;
+  class_id = document.getElementById("classes").value;
   class_name = document.getElementById("class");
   index = document.getElementById("class").selectedIndex;
 

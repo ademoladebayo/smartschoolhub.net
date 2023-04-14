@@ -331,7 +331,7 @@ function createFee() {
   var description = document.getElementById("description").value;
   var amount = document.getElementById("amount").value;
   var fee_type = document.getElementById("fee_type").value;
-  var class_payment = document.getElementById("class").value;
+  var class_payment = document.getElementById("classes").value;
 
   if (
     description != "" &&
@@ -463,7 +463,7 @@ function updateFee() {
   var description = document.getElementById("description").value;
   var amount = document.getElementById("amount").value;
   var fee_type = document.getElementById("fee_type").value;
-  var class_payment = document.getElementById("class").value;
+  var class_payment = document.getElementById("classes").value;
 
   if (
     description != "" &&
@@ -1061,7 +1061,7 @@ function deleteExpense(id) {
 
 // MANUAL PAYMENT MANAGEMENT
 function createManualPayment() {
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
   var student = document.getElementById("student").value;
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
@@ -1265,7 +1265,7 @@ function editManualPaymentDetails() {
 }
 
 function updateManualPayment() {
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
   var student = document.getElementById("student").value;
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;

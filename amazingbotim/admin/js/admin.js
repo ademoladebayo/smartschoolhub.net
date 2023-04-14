@@ -1533,7 +1533,7 @@ function createStudent() {
   var joining_date = document.getElementById("joining_date").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
 
   var guardian_name = document.getElementById("guardian_name").value;
   var guardian_phone = document.getElementById("guardian_phone").value;
@@ -2367,7 +2367,7 @@ function updateStudent() {
   var joining_date = document.getElementById("joining_date").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
 
   var guardian_name = document.getElementById("guardian_name").value;
   var guardian_phone = document.getElementById("guardian_phone").value;
@@ -3432,7 +3432,7 @@ function searchClass(class_name) {
 // SUBJECT
 function createSubject() {
   var subject_name = document.getElementById("subject_name").value;
-  var class_id = document.getElementById("class").value;
+  var class_id = document.getElementById("classes").value;
   var teacher = document.getElementById("teacher").value;
   if (subject_name != "" && class_id != "") {
     // PUSH TO API
@@ -3632,7 +3632,7 @@ function editSubjectDetails() {
 
 function updateSubject() {
   var subject_name = document.getElementById("subject_name").value;
-  var class_id = document.getElementById("class").value;
+  var class_id = document.getElementById("classes").value;
   var teacher = document.getElementById("teacher").value;
   if (subject_name != "" && class_id != "") {
     // PUSH TO API
