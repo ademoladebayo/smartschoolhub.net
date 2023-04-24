@@ -52,10 +52,12 @@ class BursaryService
         $total_cash = 0;
         $total_expense = 0;
         $total_arrears = 0;
+        $total_debt = 0;
 
         $payment_history = PaymentHistoryModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
         $expenses = ExpenseModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
         $descriptions =  PaymentHistoryModel::select('payment_description')->where('session', $request->session)->where('term', $request->term)->get();
+        $total_debt =  intval(DebitorModel::sum('amount'));
 
 
         foreach ($descriptions as $description) {
@@ -79,7 +81,83 @@ class BursaryService
             $total_expense = $total_expense + intval($expense->amount);
         }
 
-        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'total_manual_payment' => $total_manual_payment, 'total_arrears' => $total_arrears, 'total_bank' => $total_bank, 'total_cash' => $total_cash, 'total_expense' =>  $total_expense]);
+
+
+        // CHART DATA
+        // EXPECTED FEE , TOTAL COLLECTED , SESSION/TERM 
+        $active_students = StudentModel::where('profile_status', 'ENABLED')->get();
+        $session = $request->session;
+        $terms = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
+
+        $expected_fee = [];
+        $collected_fee = [];
+        $expenses_fee = [];
+
+
+        $bursaryService = new BursaryService();
+
+        $tc = 0;
+        foreach ($terms as $term) {
+            $expected = 0;
+            $collected = 0;
+            $exp = 0;
+
+
+            foreach ($active_students as $student) {
+                // GET EXPECTED 
+                $expect_fee = $bursaryService->getPayableForClass($student->class, $session, $term);
+                $optional_fee = $bursaryService->getOptionalFeeRequest($student->id, $session, $term);
+                $expected += ($expect_fee + $optional_fee);
+
+                // GET COLLECTED 
+                // $collected +=  $bursaryService->getTotalPaid($student->id, $session, $term);    ONLY ACTIVE STUDENT
+            }
+
+            $payment_history = PaymentHistoryModel::select('amount')->where('session', $session)->where('term', $term)->get();
+            foreach ($payment_history as $payment) {
+                $collected += intval($payment->amount);
+            }
+
+
+            $expenses = ExpenseModel::select('amount')->where('session', $session)->where('term', $term)->get();
+            foreach ($expenses as $expense) {
+                $exp += intval($expense->amount);
+            }
+
+            $expected_fee[$tc] = $expected;
+            $collected_fee[$tc] = $collected;
+            $expenses_fee[$tc] = $exp;
+            $tc += 1;
+        }
+
+        $expected = ['first_term' => $expected_fee[0], 'second_term' => $expected_fee[1], 'third_term' => $expected_fee[2]];
+        $collected = ['first_term' => $collected_fee[0], 'second_term' => $collected_fee[1], 'third_term' => $collected_fee[2]];
+        $expenses = ['first_term' => $expenses_fee[0], 'second_term' => $expenses_fee[1], 'third_term' => $expenses_fee[2]];
+
+
+
+        sort($expenses_fee);
+        $expense_min =  0;
+        foreach ($expenses_fee as $ef) {
+            if ($ef != 0) {
+                $expense_min = $ef;
+                break;
+            }
+        }
+
+        $fee_min = 0;
+        $fee_arr = array_merge($expected_fee, $collected_fee);
+        sort($fee_arr);
+        foreach ($fee_arr as $fa) {
+            if ($fa != 0) {
+                $fee_min = $fa;
+                break;
+            }
+        }
+
+        $chart_data = ['fee' => ['expected' => $expected, 'collected' => $collected], 'expenses' => $expenses, 'fee_min' => $fee_min, 'expense_min' => $expense_min];
+
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'total_manual_payment' => $total_manual_payment, 'total_arrears' => $total_arrears, 'total_bank' => $total_bank, 'total_cash' => $total_cash, 'total_expense' =>  $total_expense,  'total_debt' => $total_debt, 'chart_data' => $chart_data]);
     }
 
     // FEE MANAGEMENT
@@ -366,7 +444,7 @@ class BursaryService
     public function getApprovedOptionalFeeId(String $student_id, String $session, String  $term)
     {
         $optional_fee = [];
-        $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->where('approved',1)->get();
+        $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->where('approved', 1)->get();
 
 
         if ($OptionalFeeRequest == null) {

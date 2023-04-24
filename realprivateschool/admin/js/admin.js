@@ -1694,7 +1694,7 @@ function getAllStudentForTranscript() {
 }
 
 function getTranscript() {
-  openSpinnerModal();
+  openSpinnerModal("Transcript");
   user_data = JSON.parse(localStorage["student_result"]);
 
   // IMAGE URL

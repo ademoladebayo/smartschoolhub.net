@@ -271,8 +271,32 @@ class StudentService
     }
 
 
+function paymentDetails($student_id, $session, $term)
+{
+    $bursaryService = new BursaryService();
+    $class = StudentModel::select('class')->where('id', $student_id)->get()[0]->class;
+    $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
+    $fees =  FeeModel::where('class', $class)->where('session', $session)->where('term', $term)
+        ->orWhere('class', $class_sector)->where('session', $session)->where('term', $term)
+        ->orWhere('class', 'ALL STUDENT')->where('session', $session)->where('term', $term)->get();
+
+    $expected_fee = 0;
+    $optional_fee = 0;
+    $total_paid = 0;
+
+    // SO GET STUDENT'S, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
+    $expected_fee = $bursaryService->getPayableForClass($class, $session, $term);
+    $optional_fee = $bursaryService->getOptionalFeeRequest($student_id, $session, $term);
+    $total_paid =  $bursaryService->getTotalPaid($student_id, $session, $term);
+    
+    $expected = $expected_fee + $optional_fee;
+    return $expected+"-"+$total_paid;
+
+}
+
     public function addOptionalFee(Request $request)
     {
+        #TODO :: INCASE OF APPROVED OPTIONAL FEE WHAT HAPPENS ?
 
         // FIRST DELETE PREVIOUS OPTIONAL FEE REQUEST FOR THAT TERM
         OptionalFeeRequestModel::where('student_id', $request->student_id)->where('session', $request->session)->Where('term', $request->term)->delete();

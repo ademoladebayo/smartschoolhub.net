@@ -177,6 +177,25 @@
     .card :hover i {
         color: #ff9d01;
     }
+
+    .login-container {
+        max-height: 100vh;
+        overflow-y: auto;
+        scrollbar-width: none;
+        scrollbar-width: none;
+        /* Hide the scrollbar in Firefox */
+        -ms-overflow-style: none;
+        /* Hide the scrollbar in Internet Explorer and Edge */
+    }
+
+    /* Hide the scrollbar in Chrome, Safari, and Opera */
+    .container::-webkit-scrollbar {
+        width: 0.5em;
+    }
+
+    .container::-webkit-scrollbar-thumb {
+        background-color: #999;
+    }
 </style>
 
 <script type="module">
@@ -211,7 +230,7 @@
 
 
     function openSpinnerModal(message) {
-      var  modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
+        var modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -253,7 +272,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 </div>
 `;
 
-      var  spinnerModal = parent.document.getElementById("spinnerModal");
+        var spinnerModal = parent.document.getElementById("spinnerModal");
         if (spinnerModal != null) {
             return 0;
         }
@@ -264,7 +283,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     }
 
     function removeSpinnerModal() {
-       var spinnerModal = parent.document.getElementById("spinnerModal");
+        var spinnerModal = parent.document.getElementById("spinnerModal");
         if (spinnerModal != null) {
             parent.$("#spinnerModal").modal("hide");
             parent.document.getElementById("spinnerModal").remove();

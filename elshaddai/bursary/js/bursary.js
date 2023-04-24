@@ -596,7 +596,8 @@ function getFee(student_id, session, term, student_class) {
           document.getElementById("fee_table").innerHTML += `
           <tr>
                ${
-                 fee.type == "COMPULSORY" ||  approved_optional_fee.includes(fee.id.toString())
+                 fee.type == "COMPULSORY" ||
+                 approved_optional_fee.includes(fee.id.toString())
                    ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
                value="${fee.id}" checked  onclick="this.checked = !this.checked">`
                    : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
@@ -607,8 +608,12 @@ function getFee(student_id, session, term, student_class) {
                      }>`
                }
                <td>${c}.</td>
-               <td>${ fee.description}</td>
-               <td>${ approved_optional_fee.includes(fee.id.toString()) ? `OPTIONAL (Approved)` :fee.type}</td>
+               <td>${fee.description}</td>
+               <td>${
+                 approved_optional_fee.includes(fee.id.toString())
+                   ? `OPTIONAL (Approved)`
+                   : fee.type
+               }</td>
                <td>${
                  fee.class == localStorage["PD_STUDENT_CLASS"]
                    ? localStorage["PD_STUDENT_CLASSNAME"]
@@ -686,8 +691,12 @@ function getAllOptionalFeeRequest() {
                   <select onchange="updateOptionalFeeRequestStatus(event,'${
                     data.id
                   }',this.value)" id="approval" class="select2">
-                      <option value="1" ${data.approved == 1 ? `selected="selected"`:``}>APPROVE</option>
-                      <option value="0" ${data.approved == 0 ? `selected="selected"`:``}>DISAPPROVE</option>
+                      <option value="1" ${
+                        data.approved == 1 ? `selected="selected"` : ``
+                      }>APPROVE</option>
+                      <option value="0" ${
+                        data.approved == 0 ? `selected="selected"` : ``
+                      }>DISAPPROVE</option>
                   </select>
               </td>
           </div>
@@ -704,12 +713,11 @@ function getAllOptionalFeeRequest() {
         </td>
         `;
       }
-
     })
     .catch((err) => console.log(err));
 }
 
-function updateOptionalFeeRequestStatus(event,id, status) {
+function updateOptionalFeeRequestStatus(event, id, status) {
   if (
     !confirm(
       status == 1
@@ -1230,11 +1238,11 @@ function editManualPaymentDetails() {
   // 1~8~CHRISTINA ABEGUNDE~2~SS2~03/01/2022~BANK~Payment description~25000
   //   0  1          2        3  4        5      6     7                 8
 
-  document.getElementById("class").innerHTML =
+  document.getElementById("classes").innerHTML =
     `
   <option value="${localStorage["editManualPayment"].split("~")[3]}">${
       localStorage["editManualPayment"].split("~")[4]
-    }</option>` + document.getElementById("class").innerHTML;
+    }</option>` + document.getElementById("classes").innerHTML;
 
   document.getElementById("student").innerHTML =
     `
@@ -1793,7 +1801,7 @@ function getAllStudent(class_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-         openAuthenticationModal();
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1832,7 +1840,7 @@ async function getStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-         openAuthenticationModal();
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1887,6 +1895,9 @@ function getDashboardInfo() {
     })
 
     .then((data) => {
+      //DASHBOARD CHART DATA
+      dashboardChart(JSON.stringify(data.chart_data));
+
       document.getElementById("student_no").innerHTML = `<span class="counter"
       data-num="${data.student_no}">${data.student_no}</span>`;
 
@@ -1907,12 +1918,288 @@ function getDashboardInfo() {
       document.getElementById("total_expense").innerHTML = formatNumber(
         parseInt(data.total_expense)
       );
+
+      document.getElementById("total_debt").innerHTML = formatNumber(data.total_debt);
     })
     .catch((err) => console.log(err));
 
   // if(document.getElementById("total").innerHTML == "---"){
 
   // }
+}
+
+function dashboardChart(chart_data) {
+  chart_data = JSON.parse(chart_data);
+  current_term = localStorage['current_term'].toLowerCase().replace(' ',"_");
+  current_expected = chart_data.fee.expected[current_term];
+  current_received = chart_data.fee.collected[current_term];
+
+
+  // FEE
+  document.getElementById("income_expected").innerHTML =
+    formatNumber(current_expected);
+
+  document.getElementById("received").innerHTML =
+    formatNumber(current_received);
+
+  document.getElementById("chart_term_balance").innerHTML = formatNumber(
+    current_expected - current_received
+  );
+
+  // EXPENSE
+  document.getElementById("expense_first_term").innerHTML = formatNumber(
+    chart_data.expenses.first_term
+  );
+  document.getElementById("expense_second_term").innerHTML = formatNumber(
+    chart_data.expenses.second_term
+  );
+  document.getElementById("expense_third_term").innerHTML = formatNumber(
+    chart_data.expenses.third_term
+  );
+
+  /*-------------------------------------
+        LINE CHART
+    -------------------------------------*/
+  if ($("#earning-line-chart").length) {
+    var lineChartData = {
+      labels: ["", "FIRST TERM", "SECOND TERM", "THIRD TERM",""],
+      datasets: [
+        // RECEIVED CHART
+        {
+          data: [
+            0,
+            chart_data.fee.collected.first_term,
+            chart_data.fee.collected.second_term,
+            chart_data.fee.collected.third_term,
+          ],
+          backgroundColor: "#1DE9B6",
+          borderColor: "#1DE9B6",
+          borderWidth: 1,
+          pointRadius: 0,
+          pointBackgroundColor: "#1DE9B6",
+          pointBorderColor: "#ffffff",
+          pointHoverRadius: 6,
+          pointHoverBorderWidth: 3,
+          fill: "origin",
+          label: "Received",
+        },
+
+        //INCOME EXPECTED
+        {
+          data: [0,
+            chart_data.fee.expected.first_term,
+            chart_data.fee.expected.second_term,
+            chart_data.fee.expected.third_term,
+          ],
+          backgroundColor: "#ff0000",
+          borderColor: "#ff0000",
+          borderWidth: 1,
+          pointRadius: 0,
+          pointBackgroundColor: "#ff0000",
+          pointBorderColor: "#ffffff",
+          pointHoverRadius: 6,
+          pointHoverBorderWidth: 3,
+          fill: "origin",
+          label: "Income Expected",
+        },
+      ],
+    };
+    var lineChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 2000,
+      },
+      scales: {
+        xAxes: [
+          {
+            display: true,
+            ticks: {
+              display: true,
+              fontColor: "#222222",
+              fontSize: 16,
+              padding: 20,
+            },
+            gridLines: {
+              display: true,
+              drawBorder: true,
+              color: "#cccccc",
+              borderDash: [5, 5],
+            },
+          },
+        ],
+        yAxes: [
+          {
+            display: true,
+            ticks: {
+              display: true,
+              autoSkip: true,
+              maxRotation: 0,
+              fontColor: "#646464",
+              fontSize: 16,
+              stepSize: chart_data.fee_min,
+              padding: 20,
+              callback: function (value) {
+                var ranges = [
+                  {
+                    divider: 1e6,
+                    suffix: "M",
+                  },
+                  {
+                    divider: 1e3,
+                    suffix: "k",
+                  },
+                ];
+
+                function formatNumber(n) {
+                  for (var i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (
+                        (n / ranges[i].divider).toString() + ranges[i].suffix
+                      );
+                    }
+                  }
+                  return n;
+                }
+                return formatNumber(value);
+              },
+            },
+            gridLines: {
+              display: true,
+              drawBorder: false,
+              color: "#cccccc",
+              borderDash: [5, 5],
+              zeroLineBorderDash: [5, 5],
+            },
+          },
+        ],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        mode: "index",
+        intersect: false,
+        enabled: true,
+      },
+      elements: {
+        line: {
+          tension: 0.35,
+        },
+        point: {
+          pointStyle: "circle",
+        },
+      },
+    };
+    var earningCanvas = $("#earning-line-chart").get(0).getContext("2d");
+    var earningChart = new Chart(earningCanvas, {
+      type: "line",
+      data: lineChartData,
+      options: lineChartOptions,
+    });
+  }
+
+  /*-------------------------------------
+       BAR CHART
+    -------------------------------------*/
+  if ($("#expense-bar-chart").length) {
+    var barChartData = {
+      labels: ["FIRST TERM", "SECOND TERM", "THIRD TERM"],
+      datasets: [
+        {
+          backgroundColor: ["#40dfcd", "#417dfc", "#ffaa01"],
+          data: [
+            chart_data.expenses.first_term,
+            chart_data.expenses.second_term,
+            chart_data.expenses.third_term,
+          ],
+          label: "Expenses",
+        },
+      ],
+    };
+    var barChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 2000,
+      },
+      scales: {
+        xAxes: [
+          {
+            display: false,
+            maxBarThickness: 100,
+            ticks: {
+              display: false,
+              padding: 0,
+              fontColor: "#646464",
+              fontSize: 14,
+            },
+            gridLines: {
+              display: true,
+              color: "#e1e1e1",
+            },
+          },
+        ],
+        yAxes: [
+          {
+            display: true,
+            ticks: {
+              display: true,
+              autoSkip: false,
+              fontColor: "#646464",
+              fontSize: 14,
+              stepSize: chart_data.expense_min,
+              padding: 20,
+              beginAtZero: true,
+              callback: function (value) {
+                var ranges = [
+                  {
+                    divider: 1e6,
+                    suffix: "M",
+                  },
+                  {
+                    divider: 1e3,
+                    suffix: "k",
+                  },
+                ];
+
+                function formatNumber(n) {
+                  for (var i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (
+                        (n / ranges[i].divider).toString() + ranges[i].suffix
+                      );
+                    }
+                  }
+                  return n;
+                }
+                return formatNumber(value);
+              },
+            },
+            gridLines: {
+              display: true,
+              drawBorder: true,
+              color: "#e1e1e1",
+              zeroLineColor: "#e1e1e1",
+            },
+          },
+        ],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: true,
+      },
+      elements: {},
+    };
+    var expenseCanvas = $("#expense-bar-chart").get(0).getContext("2d");
+    var expenseChart = new Chart(expenseCanvas, {
+      type: "bar",
+      data: barChartData,
+      options: barChartOptions,
+    });
+  }
 }
 
 // GET SCHOOL DETAILS
@@ -1972,20 +2259,20 @@ async function loadCustomSessionTerm() {
       document.getElementById("session_term").innerHTML = ``;
 
       if (data.length > 0) {
-         session_term = data;
-          for(i = session_term.length - 1; i >=0; i--){
-            document.getElementById(
-              "session_term"
-            ).innerHTML += `<option value="${
-              session_term[i].session + "-" + session_term[i].term
-            }">${session_term[i].session + " - " + session_term[i].term}</option>`;
+        session_term = data;
+        for (i = session_term.length - 1; i >= 0; i--) {
+          document.getElementById(
+            "session_term"
+          ).innerHTML += `<option value="${
+            session_term[i].session + "-" + session_term[i].term
+          }">${
+            session_term[i].session + " - " + session_term[i].term
+          }</option>`;
+        }
 
-            
-      }
-
-      console.table(session_term)
-            console.table(data)
-    }  else {
+        console.table(session_term);
+        console.table(data);
+      } else {
         document.getElementById("session_term").innerHTML += `<option value="${
           localStorage["current_session"] + "-" + localStorage["current_term"]
         }">${
