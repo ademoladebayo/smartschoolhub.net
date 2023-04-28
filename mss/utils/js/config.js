@@ -1,6 +1,6 @@
 export default class Config {
   APP_MODE = "LIVE";
-  SCHOOL_NAME = "realprivateschool"; //realprivateschool
+  SCHOOL_NAME = "mss"; //realprivateschool
   url = {
     ip: "",
     domain: "",
