@@ -1812,7 +1812,7 @@ function getAllStudent(class_id) {
         for (i in data) {
           student_class =
             data[i].class == null ? `GRADUATED` : data[i].class.id;
-          if (student_class != class_id) {
+          if (student_class != class_id || data[i].profile_status == "DISABLED") {
             continue;
           }
           document.getElementById("student").innerHTML += `<option value="${
@@ -2458,7 +2458,7 @@ function storePDStudentId(
 
 function getPaymentDetails() {
   student_id = localStorage["PD_STUDENT_ID"];
-  loadCustomSessionTerm().then(function () {
+  CustomSessionTerm().then(function () {
     session = localStorage["current_session"];
     term = localStorage["current_term"];
     getFee(student_id, session, term);

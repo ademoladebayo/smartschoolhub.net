@@ -44,7 +44,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="loadSideNav('payment-report'); getAllDebitor(); loadCustomSessionTerm(); loadDashBoardInformation()">
+    onload="loadSideNav('payment-report'); getAllDebitor(); CustomSessionTerm(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -144,7 +144,8 @@
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <div class="breadcrumbs-area">
-                    <h3 style="font-weight: bold; font-family: Poppins;"><i class="fas fa-book"></i> PAYMENT REPORT MANAGEMENT</h3>
+                    <h3 style="font-weight: bold; font-family: Poppins;"><i class="fas fa-book"></i> PAYMENT REPORT
+                        MANAGEMENT</h3>
                     <ul>
                         <li>
                             <a style="font-weight: bold; font-family: Poppins;" href="dashboard.html">Home</a>
@@ -503,6 +504,55 @@
     </style>
 
     <script>
+
+
+         function CustomSessionTerm() {
+            // CALL API THAT GET ALL SESSION
+            return fetch(
+                ip + "/api/general/all-session/STD-" + localStorage["PD_STUDENT_ID"],
+                {
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-type": "application/json",
+                        Authorization: "Bearer " + localStorage["token"],
+                    },
+                }
+            )
+                .then(function (res) {
+                    console.log(res.status);
+                    if (res.status == 401) {
+                        removeSpinnerModal();
+                        openAuthenticationModal();
+                        return 0;
+                    }
+                    return res.json();
+                })
+
+                .then((data) => {
+                    document.getElementById("session_term").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
+                            }">${localStorage["current_session"] + " - " + localStorage["current_term"]
+                            }</option>`;
+
+                    if (data.length > 0) {
+                        session_term = data;
+                        for (i = session_term.length - 1; i >= 0; i--) {
+                            document.getElementById(
+                                "session_term"
+                            ).innerHTML += `<option value="${session_term[i].session + "-" + session_term[i].term
+                                }">${session_term[i].session + " - " + session_term[i].term
+                                }</option>`;
+                        }
+
+                        console.table(session_term);
+                        console.table(data);
+                    } else {
+                        document.getElementById("session_term").innerHTML += `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
+                            }">${localStorage["current_session"] + " - " + localStorage["current_term"]
+                            }</option>`;
+                    }
+                });
+        }
 
     </script>
 

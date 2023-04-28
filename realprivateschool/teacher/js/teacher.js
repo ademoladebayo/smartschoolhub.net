@@ -429,7 +429,7 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.id;
           if (
             student_class !=
-            JSON.parse(localStorage["user_data"]).data.assigned_class.id
+            JSON.parse(localStorage["user_data"]).data.assigned_class.id  || data[i].profile_status == "DISABLED"
           ) {
             continue;
           }

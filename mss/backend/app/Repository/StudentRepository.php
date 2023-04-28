@@ -23,7 +23,7 @@ class StudentRepository
 
         $last_student_id = StudentModel::orderBy('id', 'DESC')->get();
 
-        if (count($last_student_id) > 0) {
+        if (count($last_student_id) > 0) {  // IF ATLEAST A STUDENT HAS BEEN CREATED
             // THE IS A PREVIOUS STUDENT
             $last_student_id = $last_student_id[0]->student_id;
             $year = intval(explode("-", $last_student_id)[0]);

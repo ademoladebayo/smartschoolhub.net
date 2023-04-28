@@ -115,7 +115,8 @@ class SubjectRepository
     {
         $SubjectModel = SubjectModel::find($request->subject_id);
         $SubjectModel->subject_name =  $request->subject_name;
-        $SubjectModel->class =  $request->class_id;
+       // $SubjectModel->class =  $request->class_id;
+         $SubjectModel->class =  $request->class_id == "-" ?  $SubjectModel->class : $request->class_id;
         $SubjectModel->teacher =  $request->teacher;
         $SubjectModel->save();
         return response()->json(['success' => true, 'message' => 'Subject updated successfully.']);

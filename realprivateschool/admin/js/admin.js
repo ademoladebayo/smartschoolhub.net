@@ -545,6 +545,9 @@ function getAllTeacherForClass() {
 
     .then((data) => {
       for (i in data) {
+        if (data[i].profile_status == "DISABLED") {
+          continue;
+        }
         if (data[i].assigned_class == null) {
           document.getElementById(
             "class_teacher"
@@ -583,6 +586,9 @@ function getAllTeacherForDropDown() {
 
     .then((data) => {
       for (i in data) {
+        if (data[i].profile_status == "DISABLED") {
+          continue;
+        }
         document.getElementById("teacher").innerHTML += `<option value="${
           data[i].id
         }">${
@@ -4248,7 +4254,7 @@ function getAllSubjectForTable() {
             <td>${data[i].student_no}</td>
 
             <td>
-            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+            <a  onclick="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
             }~${data[i].subject_name}~${
             data[i].teacher.title +
@@ -4294,7 +4300,7 @@ function getAllSubjectForTable() {
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>${data[i].student_no}</td>
             <td>
-            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+            <a  onclick="reloadEditFrame();localStorage.setItem('editSubject','${
               data[i].id
             }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
             data[i].class.id
@@ -4359,8 +4365,7 @@ function getPreviousSubjectRegistration2(class_id, session, term) {
         registered_subject.push(i);
       });
       document.getElementById("number_registered").innerHTML =
-       
-      "Total registered: " +
+        "Total registered: " +
         countDistinct(registered_subject, registered_subject.length);
     })
     .catch((err) => console.log(err));
@@ -4401,10 +4406,7 @@ function getAllSubjectForTable2() {
       document.getElementById("subject_table").innerHTML = ``;
       var c = 1;
       for (i in data) {
-        if (
-          data[i].class.id !=
-          class_id
-        ) {
+        if (data[i].class.id != class_id) {
           continue;
         }
 
@@ -4549,7 +4551,9 @@ function registerSubject2() {
             alert("" + data.message + "");
             setTimeout(function () {
               getAllSubjectForTable2();
-              document.getElementById("register_subject").innerHTML = `Register`;
+              document.getElementById(
+                "register_subject"
+              ).innerHTML = `Register`;
             }, 1000);
           } else {
             alert("" + data.message + "");

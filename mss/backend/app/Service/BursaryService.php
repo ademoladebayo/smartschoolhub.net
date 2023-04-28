@@ -194,7 +194,7 @@ class BursaryService
 
     public function getAllOptionalFeeRequest(Request $request)
     {
-        $fee_request =  OptionalFeeRequestModel::where("session", $request->session)->where("term", $request->term)->with("student", "fee")->get();
+        $fee_request =  OptionalFeeRequestModel::where("session", $request->session)->where("term", $request->term)->with("student", "fee")->orderBy('id','DESC')->get();
 
         foreach ($fee_request as $request) {
             $request->class_name = ClassModel::find(StudentModel::find($request->student_id)->class)->class_name;

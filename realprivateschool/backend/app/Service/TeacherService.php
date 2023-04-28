@@ -95,7 +95,7 @@ class TeacherService
     {
         // GET ID OF ALL STUDENT IN THE CLASS
         $students_id = [];
-        foreach (StudentModel::select('id')->where('class', $request->class)->get() as $data) {
+        foreach (StudentModel::select('id')->where('profile_status','ENABLED')->where('class', $request->class)->get() as $data) {
             array_push($students_id, $data->id);
         }
         Log::debug("STUDENTS ID : ");
