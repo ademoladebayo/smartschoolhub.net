@@ -6229,14 +6229,14 @@ function getPortalSubscription() {
                     <td><span style="color:white" class="badge ${
                       data[i].status == "NOT PAID"
                         ? `bg-danger`
-                        : data[i].status == "USAGE IN-PROGRESS"
+                        : data[i].status == "USAGE IN-PROGRESS" || data[i].status == "EXTENDED"
                         ? `bg-warning`
                         : `bg-success`
                     }"><b>${data[i].status}</b></span></td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     <td>   
                       ${
-                        data[i].status == "NOT PAID"
+                        data[i].status == "NOT PAID" || data[i].status == "EXTENDED"
                           ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',

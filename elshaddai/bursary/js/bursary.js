@@ -158,7 +158,7 @@ function signIn() {
 }
 
 function reAuth() {
-  var id = localStorage["user_id"];
+  var id = localStorage["username"];
   var password = document.getElementById("password").value;
   if (id != "" && password != "") {
     // PUSH TO API
@@ -191,8 +191,9 @@ function reAuth() {
           localStorage.setItem("token", data.token);
           parent.getStoredCredential();
           username = JSON.parse(localStorage["user_data"]).data.username;
+          id = JSON.parse(localStorage["user_data"]).data.id;
           localStorage.setItem("username", username);
-          localStorage.setItem("user_id", username);
+          localStorage.setItem("user_id", id);
           setTimeout(function () {
             parent.$("#authenticationModal").modal("hide");
             parent.document.getElementById("authenticationModal").remove();
@@ -1874,6 +1875,7 @@ function debounce(func, timeout = 2000) {
 }
 
 function getDashboardInfo() {
+  openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
     headers: {
@@ -1895,6 +1897,7 @@ function getDashboardInfo() {
     })
 
     .then((data) => {
+      removeSpinnerModal();
       //DASHBOARD CHART DATA
       dashboardChart(JSON.stringify(data.chart_data));
 
@@ -2281,6 +2284,45 @@ async function loadCustomSessionTerm() {
       }
     });
 }
+
+function loadCustomSessionTermForDashboard() {
+  term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
+
+  fetch(ip + "/api/general/all-session/DESC", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
+      data.forEach((sessions) => {
+        term.forEach((term) => {
+          document.getElementById(
+            "session_term"
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + "-" + term
+          }</option>`;
+        });
+      });
+    })
+    .catch((err) => console.log(err));
+}
+
 
 function useCustomSessionTerm(session_term) {
   console.log(session_term);
