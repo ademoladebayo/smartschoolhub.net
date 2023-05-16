@@ -1330,7 +1330,7 @@ function getAllStudentForTable() {
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+          <a  onclick ="reloadEditFrame(); editStudent(${JSON.stringify(
             data[i]
           )
             .replace(/'/g, "")
@@ -1507,9 +1507,9 @@ function getStudentDetails() {
     `<option value="${json.state}">${json.state}</option>` +
     document.getElementById("state").innerHTML;
 
-  document.getElementById("class").innerHTML =
+  document.getElementById("classes").innerHTML =
     `<option value="${json.class.id}">${json.class.class_name}</option>` +
-    document.getElementById("class").innerHTML;
+    document.getElementById("classes").innerHTML;
 
   document.getElementById("guardian_name").value = json.guardian_name;
   document.getElementById("guardian_phone").value = json.guardian_phone;
