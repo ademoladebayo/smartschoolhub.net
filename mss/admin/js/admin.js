@@ -1330,9 +1330,7 @@ function getAllStudentForTable() {
               "'"
             )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a  onclick ="reloadEditFrame(); editStudent(${JSON.stringify(
-            data[i]
-          )
+          <a  onclick ="reloadEditFrame(); editStudent(${JSON.stringify(data[i])
             .replace(/'/g, "")
             .replace(
               /"/g,
@@ -5727,7 +5725,7 @@ function getControl() {
 
 // LESSON PLAN
 function getLessonPlan(lesson_status) {
-  openSpinnerModal();
+  openSpinnerModal("Lesson Plan");
   fetch(ip + "/api/teacher/lesson-plan", {
     method: "POST",
     headers: {
@@ -5813,28 +5811,28 @@ function populateLessonDetails(lesson) {
     ` <option value="${lesson.week}">${lesson.week}</option>` +
     document.getElementById("week1").innerHTML;
 
-  document.getElementById("instructional_material").value =
+  document.getElementById("instructional_material").innerHTML =
     lesson.instructional_material;
-  document.getElementById("previous_knowledge").value =
+  document.getElementById("previous_knowledge").innerHTML =
     lesson.previous_knowledge;
-  document.getElementById("previous_lesson").value = lesson.previous_lesson;
-  document.getElementById("behavioural_objective").value =
+  document.getElementById("previous_lesson").innerHTML = lesson.previous_lesson;
+  document.getElementById("behavioural_objective").innerHTML =
     lesson.behavioural_objective;
-  document.getElementById("content").value = lesson.content;
-  document.getElementById("presentation").value = lesson.presentation;
-  document.getElementById("evaluation").value = lesson.evaluation;
-  document.getElementById("conclusion").value = lesson.conclusion;
-  document.getElementById("assignment").value = lesson.assignment;
+  document.getElementById("content").innerHTML = lesson.content;
+  document.getElementById("presentation").innerHTML = lesson.presentation;
+  document.getElementById("evaluation").innerHTML = lesson.evaluation;
+  document.getElementById("conclusion").innerHTML = lesson.conclusion;
+  document.getElementById("assignment").innerHTML = lesson.assignment;
   document.getElementById("lesson_id").value = lesson.id;
 }
 
 function editLessonPlan() {
   document.getElementById("save_lesson_bt").hidden = false;
 
-  lesson_content = document.getElementsByName("lesson_plan_content");
+  lesson_content = document.getElementsByClassName("lesson_plan_content");
 
   lesson_content.forEach((element) => {
-    element.disabled = false;
+    element.contentEditable = true;
   });
 }
 
@@ -5842,7 +5840,7 @@ function saveLessonPlan(id, status) {
   if (!confirm("You are about to " + status + " the lesson plan")) {
     return 0;
   }
-  openSpinnerModal();
+  openSpinnerModal(status);
   fetch(ip + "/api/teacher/save-lesson-plan", {
     method: "POST",
     headers: {
@@ -6229,14 +6227,16 @@ function getPortalSubscription() {
                     <td><span style="color:white" class="badge ${
                       data[i].status == "NOT PAID"
                         ? `bg-danger`
-                        : data[i].status == "USAGE IN-PROGRESS" || data[i].status == "EXTENDED"
+                        : data[i].status == "USAGE IN-PROGRESS" ||
+                          data[i].status == "EXTENDED"
                         ? `bg-warning`
                         : `bg-success`
                     }"><b>${data[i].status}</b></span></td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     <td>   
                       ${
-                        data[i].status == "NOT PAID" || data[i].status == "EXTENDED"
+                        data[i].status == "NOT PAID" ||
+                        data[i].status == "EXTENDED"
                           ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',
@@ -7039,6 +7039,13 @@ function loadCustomSubjectClass() {
           "subject_class"
         ).innerHTML += `<option value="${data[i].id}">${data[i].subject_name} (${data[i].class.class_name})</option>`;
       }
+
+      getLessonPlan("ALL");
+      subjects = document.getElementById("subject_class");
+      localStorage.setItem(
+        "lp_subject_class",
+        subjects.options[subjects.selectedIndex].text
+      );
     })
     .catch((err) => console.log(err));
 }

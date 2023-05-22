@@ -44,7 +44,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="loadSideNav('lesson-plan'); loadCustomSubjectClass();  loadDashBoardInformation()">
+    onload="loadSideNav('lesson-plan'); loadCustomSubjectClass(); loadDashBoardInformation() ">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -199,23 +199,9 @@
                                         </tr>
                                     </thead>
                                     <tbody id="lesson_plan_table">
-                                        <tr>
-
-                                            <td>1.</td>
-                                            <td>Loading ...</td>
-                                            <td>Loading ...</td>
-                                            <td>Loading ...</td>
-                                            <td>Loading ...</td>
-                                            <td>
-
-                                                <a onclick="" href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#staticBackdrop"><i class="fas fa-eye"></i> View</a>
-                                                <a onclick="" href="#" class="btn btn-success" data-bs-toggle="modal"
-                                                    data-bs-target="#"><i class="fas fa-edit"></i> Approve</a>
-                                                <a onclick="" href="#" class="btn btn-danger"><i class="fas fa-ban"></i>
-                                                    Disapprove</a>
-                                            </td>
-                                        </tr>
+                                        <td colspan="12">
+                                            <center>No data yet</center>
+                                        </td>
 
                                     </tbody>
                                 </table>
@@ -227,7 +213,7 @@
 
                 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
+                    <div class="modal-dialog modal-fullscreen">
                         <div class="modal-content">
                             <div style="display:flex; justify-content:center;" class="modal-header">
                                 <h5 id="subject" class="modal-title" id="staticBackdropLabel">LESSON PLAN
@@ -239,7 +225,7 @@
                                 <div class="card shadow mb-4">
                                     <div class="row">
                                         <!-- Add Notice Area Start Here -->
-                                        <div class="col-4-xxxl col-12">
+                                        <div class=" col-12">
                                             <div class="card height-auto">
                                                 <div class="card-body">
                                                     <div class="heading-layout1">
@@ -252,7 +238,8 @@
 
                                                                     <h5
                                                                         style="font-weight: bold; font-family: Poppins;">
-                                                                        Teacher : <small id="lp_teacher"> ---</small></h3>
+                                                                        Teacher : <small id="lp_teacher"> ---</small>
+                                                                        </h3>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -261,9 +248,10 @@
                                         <!-- Add Notice Area End Here -->
 
                                         <!-- All Notice Area Start Here -->
-                                        <div class="col-4-xxxl col-12">
+                                        <div class=" col-12">
                                             <div class="card height-auto">
                                                 <div class="card-body">
+
                                                     <div class="row">
 
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
@@ -273,16 +261,35 @@
                                                                 WEEK</h5>
                                                             <select disabled id="week1" class="select2"
                                                                 name="lesson_plan_content">
+                                                                <option value="WEEK 1">WEEK 1</option>
+                                                                <option value="WEEK 2">WEEK 2</option>
+                                                                <option value="WEEK 3">WEEK 3</option>
+                                                                <option value="WEEK 4">WEEK 4</option>
+                                                                <option value="WEEK 5">WEEK 5</option>
+                                                                <option value="WEEK 6">WEEK 6</option>
+                                                                <option value="WEEK 7">WEEK 7</option>
+                                                                <option value="WEEK 8">WEEK 8</option>
+                                                                <option value="WEEK 9">WEEK 9</option>
+                                                                <option value="WEEK 10">WEEK 10</option>
+                                                                <option value="WEEK 11">WEEK 11</option>
+                                                                <option value="WEEK 12">WEEK 12</option>
+                                                                <option value="WEEK 13">WEEK 13</option>
                                                             </select>
                                                         </div>
+                                                        <!-- <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                        <h5 style="font-family: Poppins; color: black; font-weight: bold;">DURATION
+                                        </h5>
+                                        <input id="duration" name="lesson_plan_content" type="text" placeholder=""
+                                            class="form-control" disabled>
+                                    </div> -->
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                                             <h5
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 INSTRUCTIONAL
                                                                 MATERIALS</h5>
-                                                            <textarea id="instructional_material"
-                                                                class="textarea form-control" name="lesson_plan_content"
-                                                                cols="30" rows="10" disabled></textarea>
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="instructional_material"></div>
 
                                                         </div>
 
@@ -291,9 +298,10 @@
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 PREVIOUS
                                                                 KNOWLEDGE</h5>
-                                                            <textarea id="previous_knowledge"
-                                                                class="textarea form-control" name="lesson_plan_content"
-                                                                cols="30" rows="10" disabled></textarea>
+
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="previous_knowledge"></div>
                                                         </div>
 
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
@@ -301,64 +309,73 @@
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 PREVIOUS
                                                                 LESSON</h5>
-                                                            <textarea id="previous_lesson" class="textarea form-control"
-                                                                name="lesson_plan_content" cols="30" rows="10"
-                                                                disabled></textarea>
+
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="previous_lesson"></div>
 
                                                         </div>
 
-                                                        <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                                        <div class="col-12 form-group">
                                                             <h5
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 BEHAVIOURAL
                                                                 OBJECTIVES</h5>
-                                                            <textarea id="behavioural_objective"
-                                                                class="textarea form-control" name="lesson_plan_content"
-                                                                cols="30" rows="10" disabled></textarea>
-                                                        </div>
 
-                                                        <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="behavioural_objective"></div>
+                                                        </div>
+                                                        <br>
+
+                                                        <div class="col-12 form-group">
                                                             <h5
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 CONTENT
                                                             </h5>
-                                                            <textarea id="content" class="textarea form-control"
-                                                                name="lesson_plan_content" cols="100" rows="50"
-                                                                disabled></textarea>
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="content"></div>
+
                                                         </div>
 
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                                             <h5
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 PRESENTATION</h5>
-                                                            <textarea id="presentation" class="textarea form-control"
-                                                                name="lesson_plan_content" cols="50" rows="12"
-                                                                disabled></textarea>
+
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="presentation"></div>
                                                         </div>
 
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                                             <h5
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 EVALUATION</h5>
-                                                            <textarea id="evaluation" class="textarea form-control"
-                                                                name="lesson_plan_content" cols="30" rows="10"
-                                                                disabled></textarea>
+
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="evaluation"></div>
                                                         </div>
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                                             <h5
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 CONCLUSION</h5>
-                                                            <textarea id="conclusion" class="textarea form-control"
-                                                                name="lesson_plan_content" cols="30" rows="10"
-                                                                disabled></textarea>
+
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="conclusion"></div>
                                                         </div>
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
                                                             <h5
                                                                 style="font-family: Poppins; color: black; font-weight: bold;">
                                                                 ASSIGNMENT</h5>
-                                                            <textarea id="assignment" class="textarea form-control"
-                                                                name="lesson_plan_content" cols="30" rows="10"
-                                                                disabled></textarea>
+
+
+                                                            <div class="lesson_plan_content"
+                                                                style="border: 1px solid black; padding: 2px; color: black; font-size: 14px;"
+                                                                id="assignment"></div>
                                                         </div>
 
                                                         <div class="col-12-xxxl col-lg-6 col-12 form-group">
@@ -367,13 +384,7 @@
                                                                 class="form-control" hidden>
                                                         </div>
 
-                                                        <div class="col-12 form-group mg-t-8">
-                                                            <button id="save_lesson_bt" hidden
-                                                                onclick="saveLessonPlan()"
-                                                                class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
-                                                            <!-- <button type="reset"
-                                                                class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button> -->
-                                                        </div>
+
                                                     </div>
 
 

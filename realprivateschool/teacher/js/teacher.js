@@ -429,7 +429,8 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.id;
           if (
             student_class !=
-            JSON.parse(localStorage["user_data"]).data.assigned_class.id  || data[i].profile_status == "DISABLED"
+              JSON.parse(localStorage["user_data"]).data.assigned_class.id ||
+            data[i].profile_status == "DISABLED"
           ) {
             continue;
           }
@@ -3460,22 +3461,22 @@ function getLessonPlan(week) {
           : `bg-warning`
       }"><b>${data.status}</b></span>`;
 
-      document.getElementById("week1").innerHTML =
-        ` <option value="${data.week}">${data.week}</option>` +
-        document.getElementById("week1").innerHTML;
+      // document.getElementById("week1").value =
+      //   ` <option value="${data.week}">${data.week}</option>` +
+      //   document.getElementById("week1").value;
 
-      document.getElementById("instructional_material").value =
+      document.getElementById("instructional_material").innerHTML =
         data.instructional_material;
-      document.getElementById("previous_knowledge").value =
+      document.getElementById("previous_knowledge").innerHTML =
         data.previous_knowledge;
-      document.getElementById("previous_lesson").value = data.previous_lesson;
-      document.getElementById("behavioural_objective").value =
+      document.getElementById("previous_lesson").innerHTML = data.previous_lesson;
+      document.getElementById("behavioural_objective").innerHTML =
         data.behavioural_objective;
       CKEDITOR.instances.editor1.setData(data.content);
-      document.getElementById("presentation").value = data.presentation;
-      document.getElementById("evaluation").value = data.evaluation;
-      document.getElementById("conclusion").value = data.conclusion;
-      document.getElementById("assignment").value = data.assignment;
+      document.getElementById("presentation").innerHTML = data.presentation;
+      document.getElementById("evaluation").innerHTML = data.evaluation;
+      document.getElementById("conclusion").innerHTML = data.conclusion;
+      document.getElementById("assignment").innerHTML = data.assignment;
       document.getElementById("lesson_id").value = data.id;
     })
     .catch((err) => console.log(err));
@@ -3549,18 +3550,18 @@ function saveLessonPlan() {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      week: document.getElementById("week1").value,
+      //week: document.getElementById("week1").value,
       instructional_material: document.getElementById("instructional_material")
-        .value,
-      previous_knowledge: document.getElementById("previous_knowledge").value,
-      previous_lesson: document.getElementById("previous_lesson").value,
+        .innerHTML,
+      previous_knowledge: document.getElementById("previous_knowledge").innerHTML,
+      previous_lesson: document.getElementById("previous_lesson").innerHTML,
       behavioural_objective: document.getElementById("behavioural_objective")
-        .value,
+        .innerHTML,
       content: CKEDITOR.instances.editor1.getData(),
-      presentation: document.getElementById("presentation").value,
-      evaluation: document.getElementById("evaluation").value,
-      conclusion: document.getElementById("conclusion").value,
-      assignment: document.getElementById("assignment").value,
+      presentation: document.getElementById("presentation").innerHTML,
+      evaluation: document.getElementById("evaluation").innerHTML,
+      conclusion: document.getElementById("conclusion").innerHTML,
+      assignment: document.getElementById("assignment").innerHTML,
       id: document.getElementById("lesson_id").value,
     }),
   })
@@ -3601,9 +3602,6 @@ function processContent() {
     } else {
       warningtoast("Check that no feild is empty.");
     }
-
-
-
   } else if (CONTENT_ACTION == "EDIT") {
     if (CONTENT != "" && TOPIC != "") {
       editMaterial(TOPIC, CONTENT, CONTENT_TYPE);
@@ -3646,7 +3644,10 @@ function postMaterial(TOPIC, CONTENT, material_type) {
       topic: TOPIC,
       content: CONTENT,
       subject_id: localStorage["LH_SUBJECT_ID"],
-      mark_obtainable: document.getElementById("mark_obtainable").value != "" ? document.getElementById("mark_obtainable").value : 0
+      mark_obtainable:
+        document.getElementById("mark_obtainable").value != ""
+          ? document.getElementById("mark_obtainable").value
+          : 0,
     });
   }
 
@@ -3701,7 +3702,10 @@ function editMaterial(TOPIC, CONTENT, material_type) {
       topic: TOPIC,
       content: CONTENT,
       subject_id: localStorage["LH_SUBJECT_ID"],
-      mark_obtainable: document.getElementById("mark_obtainable").value != "" ? document.getElementById("mark_obtainable").value : 0
+      mark_obtainable:
+        document.getElementById("mark_obtainable").value != ""
+          ? document.getElementById("mark_obtainable").value
+          : 0,
     }),
   })
     .then(function (res) {
@@ -3970,11 +3974,19 @@ function getLearningHubMaterials(subject_id) {
                   </a>
 
 
-                  <a onclick="assignmentSubmission('${assignment.id}','${assignment.topic}','${assignment.mark_obtainable}')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:green;" class="fas fa-poll"></i>
+                  <a onclick="assignmentSubmission('${assignment.id}','${
+            assignment.topic
+          }','${
+            assignment.mark_obtainable
+          }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:green;" class="fas fa-poll"></i>
                   </a>
  
 
-                  <a onclick="updateAssignmentStatus('${assignment.id}')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:blue;" class="${assignment.status == "OPEN" ? `fas fa-lock`: `fas fa-unlock-alt`}"></i>
+                  <a onclick="updateAssignmentStatus('${
+                    assignment.id
+                  }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:blue;" class="${
+            assignment.status == "OPEN" ? `fas fa-lock` : `fas fa-unlock-alt`
+          }"></i>
                   </a>
 
 
@@ -3992,7 +4004,11 @@ function getLearningHubMaterials(subject_id) {
                       } 
                       
                       <sup> 
-                      ${assignment.status == "OPEN" ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`: ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`}
+                      ${
+                        assignment.status == "OPEN"
+                          ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
+                          : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
+                      }
                   </sup>
                       </a>
                       
@@ -4033,7 +4049,7 @@ function updateAssignmentStatus(id) {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      material_id: id+"-STATUS",
+      material_id: id + "-STATUS",
       material_type: "ASSIGNMENT",
       subject_id: localStorage["LH_SUBJECT_ID"],
     }),
@@ -4064,14 +4080,14 @@ function updateAssignmentStatus(id) {
     .catch((err) => console.log(err));
 }
 
-
-function assignmentSubmission(id,topic,mark){
-  if(topic != "" || mark != ""){
+function assignmentSubmission(id, topic, mark) {
+  if (topic != "" || mark != "") {
     document.getElementById("assignments-submission-tab").hidden = false;
-    showMaterial('assignments-submission');
-    document.getElementById("assignment").innerHTML = topic+ " ASSIGNMENT SUBMISSION ("+mark+" MARKS)";
+    showMaterial("assignments-submission");
+    document.getElementById("assignment").innerHTML =
+      topic + " ASSIGNMENT SUBMISSION (" + mark + " MARKS)";
   }
- 
+
   // GET SUBMISSIONS FOR ASSIGNMENT
   openSpinnerModal("Loading submissions");
 
@@ -4099,7 +4115,9 @@ function assignmentSubmission(id,topic,mark){
 
       // DISPLAY UPLOADED NOTE
       if (data.submission.length > 0) {
-        document.getElementById("assignments-submission-content-main").innerHTML = ``;
+        document.getElementById(
+          "assignments-submission-content-main"
+        ).innerHTML = ``;
         data.submission.forEach((submission) => {
           document.getElementById(
             "assignments-submission-content-main"
@@ -4119,15 +4137,23 @@ function assignmentSubmission(id,topic,mark){
                               }
                               
                                   <sup> 
-                                    ${submission.graded == "TRUE" ? ` <span class="badge bg-success" style="color: white;"><b> Graded </b></span>`: ` <span class="badge bg-danger" style="color: white;"><b> Not Graded</b></span>`}
+                                    ${
+                                      submission.graded == "TRUE"
+                                        ? ` <span class="badge bg-success" style="color: white;"><b> Graded </b></span>`
+                                        : ` <span class="badge bg-danger" style="color: white;"><b> Not Graded</b></span>`
+                                    }
                                   </sup>
                               </a>
                           </span>
                   </div>
 
                   <div class="right">
-                      <input id="score_${submission.id}" value="${submission.score}" type="number" placeholder="score" class="input-field no-arrow" min="0">
-                      <button onclick="gradeAssignment('${submission.id}','${submission.assignment_id}')" class="submit-btn">Grade Assignment</button> 
+                      <input id="score_${submission.id}" value="${
+            submission.score
+          }" type="number" placeholder="score" class="input-field no-arrow" min="0">
+                      <button onclick="gradeAssignment('${submission.id}','${
+            submission.assignment_id
+          }')" class="submit-btn">Grade Assignment</button> 
                   </div>
 
                   
@@ -4145,7 +4171,9 @@ function assignmentSubmission(id,topic,mark){
               </div>`;
         });
       } else {
-        document.getElementById("assignments-submission-content-main").innerHTML = ``;
+        document.getElementById(
+          "assignments-submission-content-main"
+        ).innerHTML = ``;
         document.getElementById(
           "assignments-submission-content-main"
         ).innerHTML += ` <div class="card shadow mb-1">
@@ -4153,13 +4181,11 @@ function assignmentSubmission(id,topic,mark){
                                                     style="justify-content:center; display:flex">No Submission Here</div>
                                                 </div>`;
       }
-
-
     })
     .catch((err) => console.log(err));
 }
-  
-function gradeAssignment(submission_id,assignment_id){
+
+function gradeAssignment(submission_id, assignment_id) {
   if (!confirm("You are about to grade this assignment")) {
     return 0;
   }
@@ -4173,7 +4199,7 @@ function gradeAssignment(submission_id,assignment_id){
     },
     body: JSON.stringify({
       submission_id: submission_id,
-      score: document.getElementById("score_"+submission_id).value
+      score: document.getElementById("score_" + submission_id).value,
     }),
   })
     .then(function (res) {
@@ -4193,17 +4219,14 @@ function gradeAssignment(submission_id,assignment_id){
         successtoast(data.message);
         setTimeout(function () {
           //history.back();
-          assignmentSubmission(assignment_id, "","");
+          assignmentSubmission(assignment_id, "", "");
         }, 1000);
       } else {
         errortoast(data.message);
       }
     })
     .catch((err) => console.log(err));
-
-
 }
-
 
 // CHANGE PASSWORD
 function changePassword() {
@@ -4505,11 +4528,11 @@ function countDistinct(arr, n) {
 function editLessonPlan() {
   document.getElementById("save_lesson_bt").hidden = false;
 
-  lesson_content = document.getElementsByName("lesson_plan_content");
+  lesson_content = document.getElementsByClassName("lesson_plan_content");
 
-  lesson_content.forEach((element) => {
-    element.disabled = false;
-  });
+  for (var i = 0; i < lesson_content.length; i++) {
+    lesson_content[i].contentEditable = true;
+  }
 }
 
 // GET SCHOOL DETAILS
@@ -4629,7 +4652,7 @@ function scheduleClass() {
       subject_id: localStorage["LH_SUBJECT_ID"],
       topic: topic,
       date: date,
-      time: time
+      time: time,
     }),
   })
     .then(function (res) {
@@ -4663,7 +4686,7 @@ function getScheduledClass() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
-    }
+    },
   })
     .then(function (res) {
       console.log(res.status);
@@ -4678,53 +4701,72 @@ function getScheduledClass() {
     .then((data) => {
       uc = 1;
       pc = 1;
-      today = getDate().split("~")[1]
-      today = today.split("/")[2]+"-"+today.split("/")[1]+"-"+today.split("/")[0];
+      today = getDate().split("~")[1];
+      today =
+        today.split("/")[2] +
+        "-" +
+        today.split("/")[1] +
+        "-" +
+        today.split("/")[0];
       today = new Date(today); //.replace(new RegExp('/', 'g'),'-')
-     
-      console.log("DATE : " +today);
+
+      console.log("DATE : " + today);
       removeSpinnerModal();
-     
-      if(data.length > 0){
-        document.getElementById("upcoming_class").innerHTML =  ``;
-        document.getElementById("previous_class").innerHTML =  ``;
-        data.forEach(LC => {
-          if(new Date(LC.date) >= today){
-           // UPCOMING CLASS
-           document.getElementById("upcoming_class").innerHTML += 
-           `
+
+      if (data.length > 0) {
+        document.getElementById("upcoming_class").innerHTML = ``;
+        document.getElementById("previous_class").innerHTML = ``;
+        data.forEach((LC) => {
+          if (new Date(LC.date) >= today) {
+            // UPCOMING CLASS
+            document.getElementById("upcoming_class").innerHTML += `
            <tr>
                   <td>${uc}.</td>
-                  <td><small>${LC.topic} ${LC.status == 'LIVE' ? ` <span class="badge bg-success"
-                  style="color: white;"><b> LIVE </b></span>`: `` }</small></td>
+                  <td><small>${LC.topic} ${
+              LC.status == "LIVE"
+                ? ` <span class="badge bg-success"
+                  style="color: white;"><b> LIVE </b></span>`
+                : ``
+            }</small></td>
                   <td><small>${LC.date}</small></td>
                   <td><small>${LC.time}</small></td>
                   <td>
 
-                      <a onclick="openLiveClass('${LC.topic}')" ${LC.status != 'LIVE' ? `hidden`: `` } class="btn btn-sm btn-primary btn-block"><i
+                      <a onclick="openLiveClass('${LC.topic}')" ${
+              LC.status != "LIVE" ? `hidden` : ``
+            } class="btn btn-sm btn-primary btn-block"><i
                                   class="fas fa-video"></i></a>
 
-                      <a onclick="startLiveClass('${LC.id}','${LC.topic}','${LC.live_id}')" ${LC.status == 'LIVE' ? `hidden`: `` } class="btn btn-primary"><i
+                      <a onclick="startLiveClass('${LC.id}','${LC.topic}','${
+              LC.live_id
+            }')" ${
+              LC.status == "LIVE" ? `hidden` : ``
+            } class="btn btn-primary"><i
                               class="fas fa-video"></i></a>
 
 
-                       <small> <a ${LC.status == 'LIVE' ? `hidden`: `` } onmouseover="editLiveClass('${encryptData(JSON.stringify(LC))}')" class="btn btn-warning" data-bs-toggle="modal"
+                       <small> <a ${
+                         LC.status == "LIVE" ? `hidden` : ``
+                       } onmouseover="editLiveClass('${encryptData(
+              JSON.stringify(LC)
+            )}')" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editLiveClass"><i class="fas fa-edit"></i></a></small>
             
-                        <small><a ${LC.status == 'LIVE' ? `hidden`: `` } onclick="deleteLiveClass(${
-                         LC.id
-                        })" class="btn btn-danger text-white"><i
+                        <small><a ${
+                          LC.status == "LIVE" ? `hidden` : ``
+                        } onclick="deleteLiveClass(${
+              LC.id
+            })" class="btn btn-danger text-white"><i
                                 class="fa fa-trash"></i></a></small>
 
 
                   </td>
                 </tr>
-           `
-           uc = uc + 1;
-          }else{
+           `;
+            uc = uc + 1;
+          } else {
             // PREVIOUS CLASS
-            document.getElementById("previous_class").innerHTML += 
-            `
+            document.getElementById("previous_class").innerHTML += `
                 <tr>
                   <td>${pc}.</td>
                   <td><small>${LC.topic}</small></td>
@@ -4735,32 +4777,28 @@ function getScheduledClass() {
                           class="btn btn-sm btn-primary btn-block">Live class record</a>
                   </td>
                 </tr>
-            `
+            `;
             pc = pc + 1;
 
-            if(document.getElementById("upcoming_class").innerHTML == ""){
-              document.getElementById("upcoming_class").innerHTML = 
-              `
+            if (document.getElementById("upcoming_class").innerHTML == "") {
+              document.getElementById("upcoming_class").innerHTML = `
                 <tr>
                     <td colspan="4">
                         <center>No scheduled class yet.</center>
                     </td>
                 </tr>
-              `
-      
+              `;
             }
-      
-            if(document.getElementById("previous_class").innerHTML == ""){
-              document.getElementById("previous_class").innerHTML = 
-              `
+
+            if (document.getElementById("previous_class").innerHTML == "") {
+              document.getElementById("previous_class").innerHTML = `
               <tr>
                   <td colspan="4">
                       <center>No previous class yet.</center>
                   </td>
               </tr>
-              `
+              `;
             }
-
           }
         });
       }
@@ -4768,7 +4806,7 @@ function getScheduledClass() {
     .catch((err) => console.log(err));
 }
 
-function editLiveClass(data){
+function editLiveClass(data) {
   data = JSON.parse(decryptData(data));
   document.getElementById("e_topic1").value = data.topic;
   document.getElementById("e_date").value = data.date;
@@ -4798,7 +4836,7 @@ function updateScheduledClass() {
       subject_id: localStorage["LH_SUBJECT_ID"],
       topic: topic,
       date: date,
-      time: time
+      time: time,
     }),
   })
     .then(function (res) {
@@ -4824,19 +4862,19 @@ function updateScheduledClass() {
     .catch((err) => console.log(err));
 }
 
-function deleteLiveClass(id){
+function deleteLiveClass(id) {
   if (!confirm("You are about to delete this scheduled live class")) {
     return 0;
   }
 
   openSpinnerModal("Delete live class");
-  fetch(ip + "/api/teacher/live-class/"+id, {
+  fetch(ip + "/api/teacher/live-class/" + id, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
-    }
+    },
   })
     .then(function (res) {
       console.log(res.status);
@@ -4863,72 +4901,74 @@ function deleteLiveClass(id){
     .catch((err) => console.log(err));
 }
 
+function startLiveClass(id, topic) {
+  if (!confirm("YOU ARE ABOUT TO START LIVE CLASS " + topic)) {
+    return 0;
+  }
 
-function startLiveClass(id,topic){
-    if (!confirm("YOU ARE ABOUT TO START LIVE CLASS " + topic)) {
-      return 0;
-    }
-  
-    openSpinnerModal("Starting live class");
-    fetch(ip + "/api/teacher/live-class", {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-        Authorization: "Bearer " + localStorage["token"],
-      },
-      body: JSON.stringify({
-        live_id: id,
-        topic: "LIVE",
-      }),
-    })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          removeSpinnerModal();
-          openAuthenticationModal();
-          return 0;
-        }
-        return res.json();
-      })
-  
-      .then((data) => {
+  openSpinnerModal("Starting live class");
+  fetch(ip + "/api/teacher/live-class", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      live_id: id,
+      topic: "LIVE",
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
         removeSpinnerModal();
-        if (data.success) {
-          successtoast(data.message);
-          getScheduledClass();
-          openLiveClass(topic);
-        } else {
-          errortoast(data.message);
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-
-
-  function openLiveClass(topic){
-    openModal("liveClass");
-    teacher = JSON.parse(localStorage['user_data']).data;
-    roomName = topic+" ("+localStorage["LH_SUBJECT_CLASS"]+")";
-
-    if(!document.getElementById("jitsi-view").innerHTML.includes(roomName)){
-      var domain = "meet.jit.si";
-      var options = {
-        roomName: roomName,
-        width: 1700,
-        height: 700,
-        parentNode: document.querySelector('#jitsi-view'),
-  
-        userInfo: {
-            //email: 'email@jitsiexamplemail.com',
-            displayName: teacher.title+ " "+ teacher.first_name +" "+ teacher.last_name +" (TEACHER)"
-        }
+        openAuthenticationModal();
+        return 0;
       }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        getScheduledClass();
+        openLiveClass(topic);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function openLiveClass(topic) {
+  openModal("liveClass");
+  teacher = JSON.parse(localStorage["user_data"]).data;
+  roomName = topic + " (" + localStorage["LH_SUBJECT_CLASS"] + ")";
+
+  if (!document.getElementById("jitsi-view").innerHTML.includes(roomName)) {
+    var domain = "meet.jit.si";
+    var options = {
+      roomName: roomName,
+      width: 1700,
+      height: 700,
+      parentNode: document.querySelector("#jitsi-view"),
+
+      userInfo: {
+        //email: 'email@jitsiexamplemail.com',
+        displayName:
+          teacher.title +
+          " " +
+          teacher.first_name +
+          " " +
+          teacher.last_name +
+          " (TEACHER)",
+      },
+    };
     var api = new JitsiMeetExternalAPI(domain, options);
-    }
-
   }
-
+}
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
@@ -5072,7 +5112,11 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
         <h4 style="font-family: Poppins; font-weight: bold;"
                 class="modal-title col-12 text-center" id="spinnerModalTitle">
-                <small><b>${message != null && message != "" && message != undefined ? message : ``}</b><br>
+                <small><b>${
+                  message != null && message != "" && message != undefined
+                    ? message
+                    : ``
+                }</b><br>
                 <b>Processing ...</b>
                 </small>
             </h4>
@@ -5138,12 +5182,12 @@ function openModal(id) {
   parent.$("#" + id).modal("show");
 }
 
-function encryptData(data){
+function encryptData(data) {
   return CryptoJS.AES.encrypt(data, "AESENCRYPT");
 }
 
-function decryptData(data){
-  return CryptoJS.AES.decrypt(data,"AESENCRYPT").toString(CryptoJS.enc.Utf8);
+function decryptData(data) {
+  return CryptoJS.AES.decrypt(data, "AESENCRYPT").toString(CryptoJS.enc.Utf8);
 }
 // TOAST
 function successtoast(message, time) {

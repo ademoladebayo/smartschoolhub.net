@@ -439,7 +439,7 @@ class TeacherService
         if ($request->user_type == "ADMIN") {
             $LessonPlanModel->status = $request->status . "D";
         } else {
-            $LessonPlanModel->week = $request->week;
+           // $LessonPlanModel->week = $request->week;
             $LessonPlanModel->instructional_material = $request->instructional_material;
             $LessonPlanModel->previous_knowledge = $request->previous_knowledge;
             $LessonPlanModel->previous_lesson = $request->previous_lesson;
