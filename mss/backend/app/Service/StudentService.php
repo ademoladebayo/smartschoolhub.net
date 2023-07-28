@@ -412,11 +412,21 @@ class StudentService
             $all_score = [];
 
             // TAKE EACH TOTAL SCORE AND GET GRADE , REMARK , AVG , MIN ,MAX AND POSITION
-            $avg =  SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
-            $min =  SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
-            $max =  SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
-            $scores =  SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get();
+            $avg =  SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get()[0]->avg;
 
+            $min =  SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get()[0]->min;
+
+            $max =  SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get()[0]->max;
+
+            $scores =  SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get();
 
 
 
