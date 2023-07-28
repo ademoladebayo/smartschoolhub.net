@@ -36,7 +36,8 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;" onload="loadSideNav('index');getCurrentSession(); loadCustomSessionTerm(); getDashboardInfo(); loadDashBoardInformation()">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('index');getCurrentSession(); loadCustomSessionTermForDashboard(); getDashboardInfo(); getDashboardInfo(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -103,8 +104,7 @@
                                     </li>
                                     <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
                                             Settings</a></li>
-                                    <li><a onclick="localStorage.removeItem('token')" href="index.html"><i
-                                                class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -147,6 +147,9 @@
                     </ul>
                     <br>
                     <!-- <h3 id="session_term" style="font-weight: bold;font-family: Poppins">Loading ... </h3> -->
+                    <!-- <i onclick="window.location.reload();"
+                        style="color: black; float: right; margin-right: 3px; cursor: pointer;" class="fas fa-sync-alt">
+                    </i> -->
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <select onchange="useCustomSessionTerm(this.value)" id="session_term" class="select2">
                             <option>SESSION - TERM</option>
@@ -195,7 +198,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-sm-6 col-12">
+                    <div onclick="document.getElementById('total').innerHTML = '<small><i> Refreshing ...</i></small>'; getDashboardInfo()"
+                        class="col-xl-3 col-sm-6 col-12">
                         <div class="dashboard-summery-one mg-b-20">
                             <div class="row align-items-center">
                                 <div class="col-6">
@@ -208,7 +212,10 @@
                                         <div style="font-family: Poppins; color: black;" class="item-title">Manual
                                             Payment</div>
                                         <div id="manual_payment" style="font-family: Poppins; color: black;">
-                                            <span>₦</span><span id="total_manual_payment">0</span>
+                                            <span id="total">0</span>
+                                            <br>
+                                            <small>This Term : ₦</small><small id="total_manual_payment">0</small>
+                                            <br>
                                             <small>Arrears : ₦</small><small id="total_arrears">0</small>
                                         </div>
                                     </div>
@@ -243,9 +250,9 @@
                             <div class="card-body">
                                 <div class="heading-layout1">
                                     <div class="item-title">
-                                        <h3 style="font-family: Poppins; color: black;">Earnings</h3>
+                                        <h3 style="font-family: Poppins; color: black;">Current Session Statistics</h3>
                                     </div>
-                                    <div class="dropdown">
+                                    <!-- <div class="dropdown">
                                         <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                                             aria-expanded="false">...</a>
 
@@ -257,20 +264,47 @@
                                             <a class="dropdown-item" href="#"><i
                                                     class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="earning-report">
                                     <div class="item-content">
-                                        <div class="single-item pseudo-bg-blue">
-                                            <h4>Total Collections</h4>
-                                            <span>75,000</span>
+                                        <div class="single-item pseudo-bg-red">
+                                            <h4>Income Expected</h4>
+                                             ₦ <b id="income_expected">0</b>
+                                        </div>
+                                        <div class="single-item pseudo-bg-Aquamarine">
+                                            <h4>Recieved</h4>
+                                             ₦ <b id="received">0</b>
+                                        </div>
+                                        <!-- <div class="single-item pseudo-bg-blue">
+                                            <h4>Term Balance</h4>
+                                             ₦ <b id="income_expected">15,000</b>
                                         </div>
                                         <div class="single-item pseudo-bg-red">
-                                            <h4>Fees Collection</h4>
-                                            <span>15,000</span>
+                                            <h4>Total Debt</h4>
+                                             ₦ <b id="income_expected">15,000</b>
+                                        </div> -->
+                                    </div>
+
+                                    <div class="item-content">
+                                        <!-- <div class="single-item pseudo-bg-red">
+                                            <h4>Income Expected</h4>
+                                             ₦ <b id="income_expected">75,000</b>
+                                        </div>
+                                        <div class="single-item pseudo-bg-Aquamarine">
+                                            <h4>Recieved</h4>
+                                             ₦ <b id="income_expected">15,000</b>
+                                        </div> -->
+                                        <div class="single-item pseudo-bg-blue">
+                                            <h4>Term Balance</h4>
+                                             ₦ <b id="chart_term_balance">0</b>
+                                        </div>
+                                        <div class="single-item pseudo-bg-red">
+                                            <h4>Total Debt</h4>
+                                             ₦ <b id="total_debt">0</b>
                                         </div>
                                     </div>
-                                    <div class="dropdown">
+                                    <!-- <div class="dropdown">
                                         <a class="date-dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                                             aria-expanded="false">Jan 20, 2019</a>
                                         <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
@@ -280,7 +314,7 @@
                                             <a class="dropdown-item" href="#">Jan 20, 2021</a>
                                             <a class="dropdown-item" href="#">Jan 20, 2020</a>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="earning-chart-wrap">
                                     <div class="chartjs-size-monitor"
@@ -308,9 +342,9 @@
                             <div class="card-body">
                                 <div class="heading-layout1">
                                     <div class="item-title">
-                                        <h3 style="font-family: Poppins; color: black;">Expenses</h3>
+                                        <h3 style="font-family: Poppins; color: black;">Expenses Incurred</h3>
                                     </div>
-                                    <div class="dropdown">
+                                    <!-- <div class="dropdown">
                                         <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                                             aria-expanded="false">...</a>
 
@@ -323,20 +357,20 @@
                                             <a class="dropdown-item" href="#"><i
                                                     class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="expense-report">
                                     <div class="monthly-expense pseudo-bg-Aquamarine">
-                                        <div class="expense-date">Jan 2019</div>
-                                        <div class="expense-amount"><span>₦</span> 15,000</div>
+                                        <div class="expense-date">First Term</div>
+                                        <div class="expense-amount"><span>₦</span><b id="expense_first_term">0</b> </div>
                                     </div>
                                     <div class="monthly-expense pseudo-bg-blue">
-                                        <div class="expense-date">Feb 2019</div>
-                                        <div class="expense-amount"><span>₦</span> 10,000</div>
+                                        <div class="expense-date">Second Term</div>
+                                        <div class="expense-amount"><span>₦</span> <b id="expense_second_term">0</b> </div>
                                     </div>
                                     <div class="monthly-expense pseudo-bg-yellow">
-                                        <div class="expense-date">Mar 2019</div>
-                                        <div class="expense-amount"><span>₦</span> 8,000</div>
+                                        <div class="expense-date">Third Term</div>
+                                        <div class="expense-amount"><span>₦</span> <b id="expense_third_term">0</b> </div>
                                     </div>
                                 </div>
                                 <div class="expense-chart-wrap">
@@ -362,7 +396,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-6 col-4-xxxl col-xl-6">
+                    <div class="col-lg-6  col-xl-6">
                         <div class="card dashboard-card-six">
                             <div class="card-body">
                                 <div class="heading-layout1 mg-b-17">
@@ -422,7 +456,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4-xxxl col-xl-6 col-12">
+                    <div class=" col-xl-6 col-12">
                         <div class="card dashboard-card-thirteen">
                             <div class="card-body">
                                 <div class="heading-layout1">

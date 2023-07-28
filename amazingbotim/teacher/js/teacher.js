@@ -3469,7 +3469,8 @@ function getLessonPlan(week) {
         data.instructional_material;
       document.getElementById("previous_knowledge").innerHTML =
         data.previous_knowledge;
-      document.getElementById("previous_lesson").innerHTML = data.previous_lesson;
+      document.getElementById("previous_lesson").innerHTML =
+        data.previous_lesson;
       document.getElementById("behavioural_objective").innerHTML =
         data.behavioural_objective;
       CKEDITOR.instances.editor1.setData(data.content);
@@ -3553,7 +3554,8 @@ function saveLessonPlan() {
       //week: document.getElementById("week1").value,
       instructional_material: document.getElementById("instructional_material")
         .innerHTML,
-      previous_knowledge: document.getElementById("previous_knowledge").innerHTML,
+      previous_knowledge:
+        document.getElementById("previous_knowledge").innerHTML,
       previous_lesson: document.getElementById("previous_lesson").innerHTML,
       behavioural_objective: document.getElementById("behavioural_objective")
         .innerHTML,
@@ -4773,34 +4775,40 @@ function getScheduledClass() {
                   <td><small>${LC.date}</small></td>
                   <td><small>${LC.time}</small></td>
                   <td>
-                      <a onclick="showMaterial('videos')"
-                          class="btn btn-sm btn-primary btn-block">Live class record</a>
+                  <small><a onclick="deleteLiveClass(${
+              LC.id
+            })" class="btn btn-danger text-white"><i
+                          class="fa fa-trash"></i></a></small>
+
+                          <small><a onclick="showMaterial('videos')" class="btn btn-primary text-white"><i
+                                        class="fa fa-video"></i></a></small>
+
                   </td>
                 </tr>
             `;
             pc = pc + 1;
-
-            if (document.getElementById("upcoming_class").innerHTML == "") {
-              document.getElementById("upcoming_class").innerHTML = `
-                <tr>
-                    <td colspan="4">
-                        <center>No scheduled class yet.</center>
-                    </td>
-                </tr>
-              `;
-            }
-
-            if (document.getElementById("previous_class").innerHTML == "") {
-              document.getElementById("previous_class").innerHTML = `
-              <tr>
-                  <td colspan="4">
-                      <center>No previous class yet.</center>
-                  </td>
-              </tr>
-              `;
-            }
           }
         });
+
+        if (document.getElementById("upcoming_class").innerHTML == "") {
+          document.getElementById("upcoming_class").innerHTML = `
+            <tr>
+                <td colspan="4">
+                    <center>No scheduled class yet.</center>
+                </td>
+            </tr>
+          `;
+        }
+
+        if (document.getElementById("previous_class").innerHTML == "") {
+          document.getElementById("previous_class").innerHTML = `
+          <tr>
+              <td colspan="4">
+                  <center>No previous class yet.</center>
+              </td>
+          </tr>
+          `;
+        }
       }
     })
     .catch((err) => console.log(err));

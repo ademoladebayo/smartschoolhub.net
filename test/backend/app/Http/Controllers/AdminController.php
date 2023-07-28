@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\AdminModel;
+use App\Exports\ExportStaffList;
+use App\Exports\ExportStudentList;
+use App\Exports\ExportSubjectSheet;
+use App\Model\CommunicationModel;
 use App\Model\ControlPanelModel;
 use App\Repository\ClassRepository;
 use App\Service\AdminService;
@@ -14,8 +17,10 @@ use App\Model\SessionModel;
 use App\Model\GradeSettingsModel;
 use App\Model\InventoryModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportUser;
+use App\Exports\ExportUser;
+use App\Model\StudentModel;
 
 class AdminController extends Controller
 {
@@ -88,6 +93,18 @@ class AdminController extends Controller
         return $subjectRepository->searchSubject($subject_name);
     }
 
+    public function exportSubjectSheet(Request $request)
+    {
+        return Excel::download(new ExportSubjectSheet($request), 'file.xlsx');
+    }
+
+
+    public function importSubjectSheet(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->createSubject($request);
+    }
+
     // STUDENT
     public function createStudent(Request $request)
     {
@@ -105,6 +122,11 @@ class AdminController extends Controller
     {
         $AdminService = new AdminService();
         return $AdminService->getAllStudent();
+    }
+
+    public function getStudent($id)
+    {
+        return response()->json(['success' => true, 'data' =>  StudentModel::where('id',$id)->with("class")->get()[0]]);
     }
 
     public function deleteStudent($student_id)
@@ -125,11 +147,22 @@ class AdminController extends Controller
         return $StudentRepository->updateStudentProfileStatus($id);
     }
 
+    public function updateStudentTranscriptAccess($id)
+    {
+        $StudentRepository = new StudentRepository();
+        return $StudentRepository->updateStudentTranscriptAccess($id);
+    }
+
     // STUDENT IMAGE
     public function uploadImage(Request $request)
     {
         $AdminService = new AdminService();
         return $AdminService->uploadImage($request);
+    }
+
+    public function exportStudentList()
+    {
+        return Excel::download(new ExportStudentList(), 'file.xlsx');
     }
 
 
@@ -170,6 +203,12 @@ class AdminController extends Controller
         $TeacherRepository = new TeacherRepository();
         return $TeacherRepository->updateTeacherProfileStatus($id);
     }
+
+    public function exportStaffList()
+    {
+        return Excel::download(new ExportStaffList(), 'file.xlsx');
+    }
+
     // SESSION
     public function createSession(Request $request)
     {
@@ -186,7 +225,7 @@ class AdminController extends Controller
     public function getAllSession()
     {
         $SessionModel = new SessionModel();
-        return $SessionModel->orderBy('id','DESC')->get();
+        return $SessionModel->orderBy('id', 'DESC')->get();
     }
 
     //GRADE SETTINGS
@@ -205,7 +244,7 @@ class AdminController extends Controller
     public function getAllGrade()
     {
         $GradeSettingsModel = new GradeSettingsModel();
-        return $GradeSettingsModel->orderBy('id','DESC')->get();
+        return $GradeSettingsModel->orderBy('id', 'DESC')->get();
     }
 
     public function deleteGrade($grade_id)
@@ -250,7 +289,7 @@ class AdminController extends Controller
 
     public function getControl()
     {
-     return ControlPanelModel::select("*")->get()[0];
+        return ControlPanelModel::select("*")->get()[0];
     }
 
 
@@ -281,7 +320,7 @@ class AdminController extends Controller
 
     public function getInventory()
     {
-       return InventoryModel::orderBy('id','DESC')->get();
+        return InventoryModel::orderBy('id', 'DESC')->get();
     }
 
     public function deleteInventory($id)
@@ -297,4 +336,22 @@ class AdminController extends Controller
         return $AdminService->resetAccount($request);
     }
 
+    // COMMUNICATION 
+    public function createMessage(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->createMessage($request);
+    }
+
+    public function editMessage(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->editMessage($request);
+    }
+
+    public function getMessage($id, $type, $user_type)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->getMessage($id, $type, $user_type);
+    }
 }

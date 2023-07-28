@@ -1,9 +1,10 @@
 <html lang="en">
 
-<head> 
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"> -->
+    <meta name="viewport" content="width=1024">
     <title>Student's Payment Slip</title>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans&amp;display=swap">
@@ -26,12 +27,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"   style="background: #ffffff;" onload="getPaymentSlip()">
+<body style="font-family: Poppins; font-weight: bold;" style="background: #ffffff;" onload="getPaymentSlip()">
 
 
     <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
     <div class="col-md-12 text-right mb-3">
-        <button onclick="download()" class="btn btn-primary btn-sm" id="download">DOWNLOAD</button>
+        <button onclick="download('PAYMENT_SLIP_'+ localStorage['current_session'] +''+localStorage['current_term'])"
+            class="btn btn-primary btn-sm" id="download">DOWNLOAD</button>
     </div>
     <section id="payment-slip">
         <div style="float: right;" class="header-inline item-header">
@@ -46,8 +48,8 @@
 
                     </div>
                     <div class="col-md-4 col-lg-6">
-                        <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img
-                                src="../assets/img/sample_logo.png" height="auto" width="auto"></div>
+                        <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img id="school_logo"
+                                src="../assets/img/sample_logo.png"  height="150px" width="130px"></div>
 
                     </div>
                     <div class="col-md-4 col-lg-3">
@@ -73,7 +75,7 @@
                 justify-content: center;">
 
                     <div class="col-md-4 col-xs-12">
-                        <div id="verificationQR" style="margin-left: 50px;margin-top: 30px;" title="STUDENT NUMBER">
+                        <div id="verificationQR" style="margin-left: 100px;margin-top: 30px;" title="STUDENT NUMBER">
 
                             <canvas width="128" height="128" style="display: none;"></canvas><img
                                 src="data:image/png;base64,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"
@@ -83,7 +85,7 @@
 
                     <div class="col-md-4 col-xs-12" style="display: flex;
                     justify-content: center;">
-                        <div style="margin-top: 30px;">
+                        <div class="text-center" style="margin-top: 30px;">
                             <p id="full_name" style="font-size: 14px;">_</p>
                             <p id="student_id" style="font-size: 14px;font-family: Quicksand, sans-serif;">_
                             </p>
@@ -91,8 +93,10 @@
                             <p id="school_details" style="font-size: 14px;font-family: Poppins;">_</p>
                         </div>
                     </div>
-                    <div class="col-md-4 col-xs-12"><br>
-                        <img style="margin-bottom: 15px; margin-left: 80px;" id="student_image" src="" width="110px">
+                    <div class="col-md-4 col-xs-12" style="display: flex;
+                    justify-content: center;"><br>
+                        <img style="margin-bottom: 15px; margin-top: 15px;" id="student_image" src="" 
+ height="150px" width="130px">
                     </div>
                 </div>
             </div>

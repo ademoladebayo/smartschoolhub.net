@@ -2,13 +2,8 @@
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 
-// DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/test";
-
-// LIVE IP
- var ip = "https://smartschoolhub.net/backend/test";
- var domain = "https://test.smartschoolhub.net";
+var ip = localStorage["ip"];
+var domain = localStorage["domain"];
 
 // CBT VARIABLES
 var question = [];
@@ -17,7 +12,11 @@ var questions_number = [];
 var answer = [];
 
 getSchoolDetails();
+collapseSidebar();
 //getCurrentSession();
+
+// VAR
+result_list = {};
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
@@ -55,7 +54,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -121,6 +120,17 @@ function loadDashBoardInformation() {
       .no_of_assigned_subject
   )}</span>
     </div>`;
+
+  document.getElementById(
+    "cbt_no"
+  ).innerHTML = `<span class="counter" data-num="${parseInt(
+    formatNumber(
+      JSON.parse(localStorage["user_data"]).dashboard_information.cbt.cbt_no
+    )
+  )}">${formatNumber(
+    JSON.parse(localStorage["user_data"]).dashboard_information.cbt.cbt_no
+  )}</span>
+      </div>`;
 }
 
 function getProfileData() {
@@ -161,84 +171,84 @@ function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a onclick="goTo('dashboard.html')" id="dashboard" href="#" class="nav-link"><i
+        <a  onclick="goTo('dashboard.html')" id="dashboard" href="#" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('my-profile.html')"    id="my-profile" href="#" class="nav-link"><i class="far fa-address-card"></i><span>My profile</span></a>
+        <a  onclick="goTo('my-profile.html')"    id="my-profile" href="#" class="nav-link"><i class="far fa-address-card"></i><span>My profile</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('my-student.html')"  id="my-student" href="#" class="nav-link"> <i class="fas fa-users"></i>
+        <a  onclick="goTo('my-student.html')"  id="my-student" href="#" class="nav-link"> <i class="fas fa-users"></i>
         <span>My Students</span></a>
     </li>
 
     <li class="nav-item">
-        <a data-bs-placement="top" data-bs-toggle="tooltip" title="Coming Soon ..."  id="learning-hub" href="learning-hub.html" class="nav-link"><i
+        <a   id="learning-hub" href="learning-hub-frame.html" class="nav-link"><i
                 class="flaticon-open-book"></i><span>Learning Hub</span></a>
     </li>
 
     
     <li class="nav-item">
-    <a  onclick="goTo('subject-registration.html')"  id="subject-registration" href="#" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
+    <a   onclick="goTo('subject-registration.html')"  id="subject-registration" href="#" class="nav-link"><i class="fas fa-plus"></i><span>Subject Registration</span></a>
     </li>
 
     <!-- <li class="nav-item">
-    <a  id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
+    <a   id="idcard" href="id-card.html" class="nav-link"><i class="fa fa-id-badge"></i>
     <span>Attendance Card</span></a>
     </li> --!>
 
 
     <li class="nav-item">
-        <a id="timetable" href="#" class="nav-link"><i
+        <a  id="timetable" href="#" class="nav-link"><i
                 class="flaticon-calendar"></i><span>My Timetable <sup><small>Coming Soon ...</small></sup></span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('attendance.html')"  id="attendance" href="#" class="nav-link"><i class="fas fa-chart-line"></i>
+        <a  onclick="goTo('attendance.html')"  id="attendance" href="#" class="nav-link"><i class="fas fa-chart-line"></i>
         <span>Mark Attendance</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('cbt.html')"  id="cbt" href="#" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
+        <a  onclick="goTo('cbt.html')"  id="cbt" href="#" class="nav-link"><i class="fas fa-desktop"></i><span>CBT</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+        <a  onclick="goTo('result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
     </li>
 
     <li class="nav-item">
-        <a onclick="goTo('change-password.html')"  id="change-password" href="#" class="nav-link"><i
+        <a  onclick="goTo('change-password.html')"  id="change-password" href="#" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
     <li class="nav-item">
-        <a onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -272,7 +282,7 @@ function signIn() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -282,6 +292,12 @@ function signIn() {
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
           localStorage.setItem("user_data", JSON.stringify(data));
+          username = JSON.parse(localStorage["user_data"]).data.first_name;
+          localStorage.setItem("username", username);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.teacher_id
+          );
           localStorage.setItem("token", data.token);
           setTimeout(function () {
             window.location.href = "dashboard.html";
@@ -290,6 +306,60 @@ function signIn() {
           errortoast("<b>" + data.message + "</b>");
         }
 
+        document.getElementById("signin").innerHTML = `Sign In`;
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
+function reAuth() {
+  var id = localStorage["user_id"];
+  var password = document.getElementById("password").value;
+  if (id != "" && password != "") {
+    // PUSH TO API
+    document.getElementById("signin").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Processing ...`;
+    fetch(ip + "/api/teacher/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        password: password,
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          openAuthenticationModal();
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
+          //parent.getStoredCredential();
+          username = JSON.parse(localStorage["user_data"]).data.first_name;
+          localStorage.setItem("username", username);
+          localStorage.setItem(
+            "user_id",
+            JSON.parse(localStorage["user_data"]).data.teacher_id
+          );
+          setTimeout(function () {
+            parent.$("#authenticationModal").modal("hide");
+            parent.document.getElementById("authenticationModal").remove();
+          }, 1000);
+        } else {
+          errortoast(data.message);
+        }
         document.getElementById("signin").innerHTML = `Sign In`;
       })
       .catch((err) => console.log(err));
@@ -319,6 +389,8 @@ function getTermAndSession() {
 function goTo(page) {
   if (page == "") {
     localStorage.clear();
+    window.parent.location.assign(domain);
+    return 0;
   }
   window.parent.location.assign(domain + "/teacher/" + page);
 }
@@ -344,7 +416,7 @@ function getAllStudentForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -357,7 +429,8 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.id;
           if (
             student_class !=
-            JSON.parse(localStorage["user_data"]).data.assigned_class.id
+              JSON.parse(localStorage["user_data"]).data.assigned_class.id ||
+            data[i].profile_status == "DISABLED"
           ) {
             continue;
           }
@@ -377,15 +450,19 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-          <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+          <a  onmouseover="viewStudent(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
-          <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-            /"/g,
-            "'"
-          )})" class="btn gradient-orange-peel text-black"><i
+          <a  onclick="viewStudentResult(${JSON.stringify(data[i])
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn gradient-orange-peel text-black"><i
                       class="fas fa-poll"></i>
                   Result</a>
       </tr>`;
@@ -476,7 +553,7 @@ function createStudent() {
   var joining_session = document.getElementById("joining_session").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
 
   var guardian_name = document.getElementById("guardian_name").value;
   var guardian_phone = document.getElementById("guardian_phone").value;
@@ -527,7 +604,7 @@ function createStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -560,7 +637,7 @@ function updateStudent() {
   var joining_session = document.getElementById("joining_session").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
 
   var guardian_name = document.getElementById("guardian_name").value;
   var guardian_phone = document.getElementById("guardian_phone").value;
@@ -612,7 +689,7 @@ function updateStudent() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -648,7 +725,7 @@ function updateStudentProfileStatus(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -680,7 +757,7 @@ function deleteStudent(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -711,7 +788,7 @@ function searchStudent(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -742,33 +819,40 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-lock"></i> Disable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -787,33 +871,40 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -834,33 +925,40 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-lock"></i> Disable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
 
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -879,33 +977,40 @@ function searchStudent(search_data) {
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               <td>${data[i].class.class_name}</td>
               <td>
-              <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              <a  onmouseover="viewStudent(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-              <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+              <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a onclick="updateStudentProfileStatus(${
+              <a  onclick="updateStudentProfileStatus(${
                 data[i].id
               })" class="btn btn-secondary text-black"><i
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
-              <a onclick="viewStudentResult(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+              <a  onclick="viewStudentResult(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a onclick="deleteStudent(${
+              <a  onclick="deleteStudent(${
                 data[i].id
               })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
@@ -1271,7 +1376,7 @@ function getResult(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1335,12 +1440,20 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
               <td style="color: ${
-                result.grade == "F" ? "red" : "blue"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
               <td style="color: ${
-                result.grade == "F" ? "red" : "blue"
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
               } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
@@ -1375,7 +1488,7 @@ function getCommentsAndPsycho(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1441,7 +1554,7 @@ function uploadCommentAndRating(type, value, rating_type) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1479,7 +1592,7 @@ function getAttendanceSummary(value) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1515,7 +1628,7 @@ function getPreviousSubjectRegistration() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1550,7 +1663,7 @@ function getAllSubjectForTable() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1689,7 +1802,7 @@ function registerSubject() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.location.href = "index.html";
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -1731,7 +1844,7 @@ function getAssignedSubject() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        // window.parent.location.assign(domain + "/teacher/");
+        // openAuthenticationModal();
         openAuthenticationModal();
         return 0;
       }
@@ -1741,6 +1854,12 @@ function getAssignedSubject() {
     .then((data) => {
       document.getElementById("subject_table").innerHTML = ``;
       for (i in data) {
+        // GET CBT COUNT
+        var cbt_details = JSON.parse(localStorage["user_data"])
+          .dashboard_information.cbt;
+        var index = cbt_details.cbt_subject_id.indexOf(data[i].id);
+        var count = index == -1 ? 0 : cbt_details.cbt_subject_count[index];
+
         document.getElementById("subject_table").innerHTML += `
                   <tr>
           
@@ -1749,7 +1868,8 @@ function getAssignedSubject() {
                         <td>${data[i].class.class_name}</td>
                         <td>
                             <button onclick="showCBTList('${data[i].subject_name}','${data[i].id}','${data[i].class.class_name}','${data[i].class.id}')" type="button" class="btn btn-primary">
-                                SEE AVAILABLE CBT
+                               <span id="" class="badge bg-white"
+                      style="color:blue">${count}</span> CBT AVAILABLE
                             </button>
                        </td>
                         
@@ -1798,7 +1918,7 @@ function getCBTForSubject() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1830,24 +1950,29 @@ function getCBTForSubject() {
   
           <td>
               <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary" onclick="viewCBT(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(/"/g, "'")})"
-                 ><i class="fas fa-eye"></i> View</button>
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(/"/g, "'")
+                .replace(/&#39;/g, "™")})"
+                 ><i class="fas fa-eye"></i></button>
               <button style="text-decoration: none; cursor: pointer;" onclick=" reloadEditFrame(); editCBT(${JSON.stringify(
-               data[i]).replace(/'/g,"").replace(/"/g, "'")})"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(/"/g, "'")
+                .replace(/&#39;/g, "™")})"
                   class="btn-sm btn-warning" data-bs-toggle="modal"
-                  data-bs-target="#editModal"><i class="fas fa-edit"></i>
-                  Edit</button>
+                  data-bs-target="#editModal"><i class="fas fa-edit"></i></button>
               <button style="text-decoration: none; cursor: pointer;" onclick="viewResultForCBT(${
                 data[i].id
               })"
-                  class="btn-sm btn-success"><i class="fas fa-poll"></i>
-                  Check Result</button>
+                  class="btn-sm btn-success"><i class="fas fa-poll"></i></button>
 
               ${
                 data[i].cbt_status == "OPEN"
                   ? ` <button style="text-decoration: none; cursor: pointer;" onclick="changeCBTStatus(${data[i].id},'CLOSE')"
-                      class="btn-sm btn-secondary"><i class="fas fa-lock"></i></i>
-                      Close CBT</button>`
+                      class="btn-sm btn-secondary"><i class="fas fa-lock"></i></i></button>`
                   : `
                   <button
                     style="text-decoration: none; cursor: pointer;"
@@ -1855,15 +1980,13 @@ function getCBTForSubject() {
                     class="btn-sm btn-secondary"
                   >
                   <i class="fas fa-lock-open"></i>
-                    Open CBT
                   </button>`
               }
 
               <button style="text-decoration: none; cursor: pointer;" onclick="deleteCBT(${
                 data[i].id
               })"
-                  class="btn-sm btn-danger"><i class="fas fa-trash"></i>
-                  Delete</button>
+                  class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
 
               </td>
           </td>
@@ -1918,7 +2041,7 @@ function proceedToSetQuestion() {
       localStorage.setItem("cbt_instruction", cbt_instruction);
       localStorage.setItem("question_no", question_no);
       window.parent.parent.location.assign(
-        domain + "/teacher/cbt/cbt-questions-create.html"
+        domain + "/teacher/cbt/frame-cbt-question-create.html"
       );
     }
   } else {
@@ -1978,13 +2101,19 @@ function getSavedQuestions() {
 `;
   for (n = 0; n < questions_number.length; n++) {
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
-     <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
-      questions_number[n]
-    }" contenteditable="true">${question[questions_number[n]].replace(
-      /⌑/g,
-      ","
-    )}</span></p>
-   <div class="pl-2">
+    <div id="demo" class="" class="card-body text-dark bg-light">
+    <b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
+        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
+          questions_number[n]
+        }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
+            ${question[questions_number[n]]
+              .replace(/⌑/g, ",")
+              .replace(/™/g, "'")}
+        </div>
+    </div>
+    <br>
+  
+    <div class="pl-2">
              <div id="optionA${
                questions_number[n]
              }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
@@ -1994,12 +2123,13 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "A" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="A${
+    }" class="form-check-label" forr="A${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[0]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label> </input></div>
  
                <div id="optionB${
@@ -2011,12 +2141,13 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "B" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="B${
+    }" class="form-check-label" forr="B${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[1]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label></input> </div>
  
                  <div id="optionC${
@@ -2028,12 +2159,13 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "C" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="C${
+    }" class="form-check-label" forr="C${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[2]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label> </input> </div>
  
                    <div id="optionD${
@@ -2045,12 +2177,13 @@ function getSavedQuestions() {
       answer[questions_number[n]] == "D" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="D${
+    }" class="form-check-label" forr="D${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[3]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                      </label></input> </div>
               </div>
     </div>
@@ -2076,8 +2209,11 @@ function getSavedQuestions() {
 }
 
 function saveQuestion(number, question_text) {
-  // REPLACE EVERY "," with "⌑"
-  question[number] = question_text.replace(/,/g, "⌑");
+  // REPLACE EVERY "," with "⌑" AND EVERY "'" WITH ""
+  question[number] = question_text
+    .replace(/,/g, "⌑")
+    .replace(/'/g, "™")
+    .replace(/&#39;/g, "™");
 }
 
 function saveAnswer(text) {
@@ -2104,7 +2240,9 @@ function saveOptions(number) {
         .getElementById("option" + option[i].id)
         .children[1].innerHTML.trim()
         .replace(/~/g, "®")
-        .replace(/,/g, "⌑") + "~";
+        .replace(/,/g, "⌑")
+        .replace(/'/g, "™")
+        .replace(/&#39;/g, "™") + "~";
   }
   options[number] = new_options;
 }
@@ -2159,7 +2297,7 @@ function saveCBT() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2258,10 +2396,14 @@ function getCBTdetailsView() {
 <hr>
 `;
   for (n = 0; n < questions_number.length; n++) {
-    document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
-   <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
-      questions_number[n]
-    }" >${question[questions_number[n]].replace(/⌑/g, ",")}</span></p>
+    document.getElementById("cbt_view").innerHTML += ` 
+  <div class="mb-3">
+   <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
+   <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
+     questions_number[n]
+   }" >${question[questions_number[n]]
+      .replace(/⌑/g, ",")
+      .replace(/™/g, "'")}</span></p>
  <div class="pl-2">
            <div id="optionA${
              questions_number[n]
@@ -2277,7 +2419,8 @@ function getCBTdetailsView() {
     ]
       .split("~")[0]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
              </label> </input></div>
 
              <div id="optionB${
@@ -2294,7 +2437,8 @@ function getCBTdetailsView() {
     ]
       .split("~")[1]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label></input> </div>
 
                <div id="optionC${
@@ -2311,7 +2455,8 @@ function getCBTdetailsView() {
     ]
       .split("~")[2]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label> </input> </div>
 
                  <div id="optionD${
@@ -2328,8 +2473,9 @@ function getCBTdetailsView() {
     ]
       .split("~")[3]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
-                   </label></input> </div>
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
+                   </label></in put> </div>
             </div>
   </div>
 
@@ -2398,7 +2544,7 @@ function proceedToEditQuestion() {
       localStorage.setItem("cbt_instruction", cbt_instruction);
 
       window.parent.parent.location.assign(
-        domain + "/teacher/cbt/cbt-questions-edit.html"
+        domain + "/teacher/cbt/frame-cbt-question-edit.html"
       );
     }
   } else {
@@ -2448,12 +2594,20 @@ function getCBTdetailsEdit() {
 `;
   for (n = 0; n < questions_number.length; n++) {
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
-     <p  class="mb-1"><b>${c}: </b> <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
-      questions_number[n]
-    }" contenteditable="true">${question[questions_number[n]].replace(
-      /⌑/g,
-      ","
-    )}</span></p>
+
+    <div id="demo" class="" class="card-body text-dark bg-light">
+    <b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
+        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
+          questions_number[n]
+        }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
+            ${question[questions_number[n]]
+              .replace(/⌑/g, ",")
+              .replace(/™/g, "'")}
+        </div>
+    </div>
+    <br>
+
+
    <div class="pl-2">
              <div id="optionA${
                questions_number[n]
@@ -2464,12 +2618,13 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "A" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="A${
+    }" class="form-check-label" forr="A${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[0]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label> </input></div>
  
                <div id="optionB${
@@ -2481,12 +2636,13 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "B" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="B${
+    }" class="form-check-label" forr="B${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[1]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label></input> </div>
  
                  <div id="optionC${
@@ -2498,12 +2654,13 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "C" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="C${
+    }" class="form-check-label" forr="C${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[2]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label> </input> </div>
  
                    <div id="optionD${
@@ -2515,12 +2672,13 @@ function getCBTdetailsEdit() {
       answer[questions_number[n]] == "D" ? `checked` : ""
     }> <label oninput="saveOptions(this.id)" id="${
       questions_number[n]
-    }" class="form-check-label" for="D${
+    }" class="form-check-label" forr="D${
       questions_number[n]
     }" contenteditable="true">${options[questions_number[n]]
       .split("~")[3]
       .replace(/⌑/g, ",")
-      .replace(/®/g, "~")}
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                      </label></input> </div>
               </div>
     </div>
@@ -2578,7 +2736,7 @@ function updateCBT() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/teacher/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -2611,7 +2769,7 @@ function deleteCBT(cbt_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2635,7 +2793,7 @@ function changeCBTStatus(cbt_id, status) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2670,7 +2828,7 @@ function getResultForCBT() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2720,7 +2878,7 @@ function useCBTResultFor() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2751,7 +2909,7 @@ function getAssignedSubjectForResultUpload() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2793,6 +2951,9 @@ function showResultUpload(subject_name, subject_id, class_name, class_id) {
 }
 
 function getAllstudentForSubjectResultUpload(refresh) {
+  // CLEAR RESUL LIST
+  result_list = {};
+
   if (!refresh) {
     document.getElementById("result_subject_class").innerHTML +=
       localStorage["result_upload_subject_name"] +
@@ -2815,7 +2976,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2838,20 +2999,22 @@ function getAllstudentForSubjectResultUpload(refresh) {
           <td>${
             data.result[i].student.first_name +
             " " +
+            data.result[i].student.middle_name +
+            " " +
             data.result[i].student.last_name
           }</td>
           
-          <td class="allownumeric" oninput="uploadResultDebouncer('${
+          <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${
             data.result[i].id
           }','first_ca',this.innerHTML)" contenteditable="true" >${
             data.result[i].first_ca
           }</td>
-          <td oninput="uploadResultDebouncer('${
+          <td oninput="scoreLimit(this); addToResultList('${
             data.result[i].id
           }','second_ca',this.innerHTML)" contenteditable="true">${
             data.result[i].second_ca
           }</td>
-          <td oninput="uploadResultDebouncer('${
+          <td oninput="scoreLimit(this); addToResultList('${
             data.result[i].id
           }','examination',this.innerHTML)" contenteditable="true">${
             data.result[i].examination
@@ -2861,7 +3024,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           }</b></td>
           <td> 
             <div class="select">
-                <select onChange="uploadResultDebouncer('${
+                <select onChange="addToResultList('${
                   data.result[i].id
                 }','grade',this.value)" id="standard-select" id="grade" value="${
             data.result[i].grade == "-"
@@ -2891,7 +3054,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           </td>
           <td> 
           <div class="select">
-              <select onChange="uploadResultDebouncer('${
+              <select onChange="addToResultList('${
                 data.result[i].id
               }','remark',this.value)" id="standard-select" id="remark" value="<b>${
             data.result[i].grade == "-"
@@ -2929,7 +3092,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
           "student_registered"
         ).innerHTML = `<h4 style="text-align:center;">NO RECORD FOUND</h4>`;
       }
-      paginateTable();
+      //paginateTable();
     })
     .catch((err) => console.log(err));
 }
@@ -2966,7 +3129,7 @@ function uploadResult(id, result_type, score) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -2994,6 +3157,53 @@ function uploadResult(id, result_type, score) {
     .catch((err) => console.log(err));
 
   console.log(score);
+}
+
+function addToResultList(id, result_type, score) {
+  let result_obj = {};
+
+  // CHECK IF KEY EXIST
+  if (result_list[id]) {
+    result_list[id][result_type] = score;
+  } else {
+    result_obj[result_type] = score;
+    result_list[id] = result_obj;
+  }
+  console.log(result_list);
+}
+
+function uploadBulkResult() {
+  if (Object.keys(result_list).length === 0) {
+    errortoast("No result found");
+    return 0;
+  }
+  warningtoast("Uploading result please wait ...");
+  fetch(ip + "/api/teacher/upload-result/bulk", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify(result_list),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      toastr.remove();
+      if (data.success) {
+        successtoast(data.message);
+        getAllstudentForSubjectResultUpload(true);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // ATTENDANCE
@@ -3075,7 +3285,7 @@ function takeAttendance() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/admin/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -3119,7 +3329,7 @@ function getAttendance() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3184,7 +3394,7 @@ function takeAttendanceByStudentID() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3207,8 +3417,9 @@ function takeAttendanceByStudentID() {
     .catch((err) => console.log(err));
 }
 
-// LESSON PLAN
+// LESSON PLAN AND LEARNING HUB
 function getLessonPlan(week) {
+  openSpinnerModal();
   if (week == "") {
     week = document.getElementById("week").value;
   }
@@ -3229,34 +3440,44 @@ function getLessonPlan(week) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
 
     .then((data) => {
+      removeSpinnerModal();
       document.getElementById("lesson_plan_for").innerHTML =
         "LESSON PLAN FOR " +
         localStorage["LESSON-PLAN"].split("-")[1] +
         " " +
         localStorage["LESSON-PLAN"].split("-")[2];
 
-      document.getElementById("week1").innerHTML =
-        ` <option value="${data.week}">${data.week}</option>` +
-        document.getElementById("week1").innerHTML;
+      document.getElementById("lp_status").innerHTML = `<span class="badge ${
+        data.status == "APPROVED"
+          ? `bg-success`
+          : data.status == "DISAPPROVED"
+          ? `bg-danger`
+          : `bg-warning`
+      }"><b>${data.status}</b></span>`;
 
-      document.getElementById("instructional_material").value =
+      // document.getElementById("week1").value =
+      //   ` <option value="${data.week}">${data.week}</option>` +
+      //   document.getElementById("week1").value;
+
+      document.getElementById("instructional_material").innerHTML =
         data.instructional_material;
-      document.getElementById("previous_knowledge").value =
+      document.getElementById("previous_knowledge").innerHTML =
         data.previous_knowledge;
-      document.getElementById("previous_lesson").value = data.previous_lesson;
-      document.getElementById("behavioural_objective").value =
+      document.getElementById("previous_lesson").innerHTML =
+        data.previous_lesson;
+      document.getElementById("behavioural_objective").innerHTML =
         data.behavioural_objective;
-      document.getElementById("content").value = data.content;
-      document.getElementById("presentation").value = data.presentation;
-      document.getElementById("evaluation").value = data.evaluation;
-      document.getElementById("conclusion").value = data.conclusion;
-      document.getElementById("assignment").value = data.assignment;
+      CKEDITOR.instances.editor1.setData(data.content);
+      document.getElementById("presentation").innerHTML = data.presentation;
+      document.getElementById("evaluation").innerHTML = data.evaluation;
+      document.getElementById("conclusion").innerHTML = data.conclusion;
+      document.getElementById("assignment").innerHTML = data.assignment;
       document.getElementById("lesson_id").value = data.id;
     })
     .catch((err) => console.log(err));
@@ -3281,7 +3502,7 @@ function getAssignedSubjectForLearningHub() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        // window.parent.location.assign(domain + "/teacher/");
+        // openAuthenticationModal();
         openAuthenticationModal();
         return 0;
       }
@@ -3298,10 +3519,10 @@ function getAssignedSubjectForLearningHub() {
                         <td> <small>${data[i].subject_name}</td>
                         <td>${data[i].class.class_name}</td>
                         <td>
-                          <button type="button" class="btn btn-primary btn-block"
-                              data-bs-toggle="modal" data-bs-target="#staticBackdrop" disabled>
+                          <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].id}'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name} ${data[i].class.class_name}'); getLearningHubMaterials('${data[i].id}'); getScheduledClass();" type="button" class="btn btn-primary btn-block"
+                              data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                               Materials
-                          </button>
+                          </a     >
                           <button type="button" class="btn btn-primary btn-block  btn-sm" onclick="loadLessonPage('${data[i].id}-${data[i].subject_name}-${data[i].class.class_name}')">
                             Lesson Plan
                           </button>
@@ -3321,7 +3542,7 @@ function getAssignedSubjectForLearningHub() {
 }
 
 function saveLessonPlan() {
-  warningtoast("Processing ... please wait");
+  openSpinnerModal();
   fetch(ip + "/api/teacher/save-lesson-plan", {
     method: "POST",
     headers: {
@@ -3330,30 +3551,32 @@ function saveLessonPlan() {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
-      week: document.getElementById("week1").value,
+      //week: document.getElementById("week1").value,
       instructional_material: document.getElementById("instructional_material")
-        .value,
-      previous_knowledge: document.getElementById("previous_knowledge").value,
-      previous_lesson: document.getElementById("previous_lesson").value,
+        .innerHTML,
+      previous_knowledge:
+        document.getElementById("previous_knowledge").innerHTML,
+      previous_lesson: document.getElementById("previous_lesson").innerHTML,
       behavioural_objective: document.getElementById("behavioural_objective")
-        .value,
-      content: document.getElementById("content").value,
-      presentation: document.getElementById("presentation").value,
-      evaluation: document.getElementById("evaluation").value,
-      conclusion: document.getElementById("conclusion").value,
-      assignment: document.getElementById("assignment").value,
+        .innerHTML,
+      content: CKEDITOR.instances.editor1.getData(),
+      presentation: document.getElementById("presentation").innerHTML,
+      evaluation: document.getElementById("evaluation").innerHTML,
+      conclusion: document.getElementById("conclusion").innerHTML,
+      assignment: document.getElementById("assignment").innerHTML,
       id: document.getElementById("lesson_id").value,
     }),
   })
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/student/");
+        openAuthenticationModal();
       }
       return res.json();
     })
 
     .then((data) => {
+      removeSpinnerModal();
       toastr.remove();
       if (data.success) {
         successtoast(data.message);
@@ -3367,6 +3590,644 @@ function saveLessonPlan() {
 function loadLessonPage(value) {
   localStorage.setItem("LESSON-PLAN", value);
   goTo("lesson-plan.html");
+}
+
+function processContent() {
+  var CONTENT_ACTION = localStorage["CONTENT_ACTION"];
+  var CONTENT_TYPE = localStorage["CONTENT_TYPE"];
+  var CONTENT = CKEDITOR.instances.editor1.getData();
+  var TOPIC = document.getElementById("topic").value;
+
+  if (CONTENT_ACTION == "CREATE") {
+    if (CONTENT != "" && TOPIC != "") {
+      postMaterial(TOPIC, CONTENT, CONTENT_TYPE);
+    } else {
+      warningtoast("Check that no feild is empty.");
+    }
+  } else if (CONTENT_ACTION == "EDIT") {
+    if (CONTENT != "" && TOPIC != "") {
+      editMaterial(TOPIC, CONTENT, CONTENT_TYPE);
+    } else {
+      warningtoast("Check that no feild is empty.");
+    }
+  }
+}
+
+function postMaterial(TOPIC, CONTENT, material_type) {
+  openSpinnerModal();
+
+  body = "";
+  headers = "";
+
+  if (material_type == "UPLOAD") {
+    var file = document.getElementById("file-upload").files[0];
+
+    // USE FORM DATA
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("material_type", material_type);
+    formData.append("subject_id", localStorage["LH_SUBJECT_ID"]);
+
+    headers = {
+      Accept: "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    };
+
+    body = formData;
+  } else {
+    headers = {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    };
+
+    body = JSON.stringify({
+      material_type: material_type,
+      topic: TOPIC,
+      content: CONTENT,
+      subject_id: localStorage["LH_SUBJECT_ID"],
+      mark_obtainable:
+        document.getElementById("mark_obtainable").value != ""
+          ? document.getElementById("mark_obtainable").value
+          : 0,
+    });
+  }
+
+  fetch(ip + "/api/teacher/subject-material", {
+    method: "POST",
+    headers: headers,
+    body: body,
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          history.back();
+          getLearningHubMaterials(localStorage["LH_SUBJECT_ID"]);
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function editMaterial(TOPIC, CONTENT, material_type) {
+  openSpinnerModal();
+  fetch(ip + "/api/teacher/subject-material", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      material_id: JSON.parse(
+        CryptoJS.AES.decrypt(
+          localStorage["LH_EDIT_MATERIAL"],
+          "AESENCRYPT"
+        ).toString(CryptoJS.enc.Utf8)
+      ).id,
+      material_type: material_type,
+      topic: TOPIC,
+      content: CONTENT,
+      subject_id: localStorage["LH_SUBJECT_ID"],
+      mark_obtainable:
+        document.getElementById("mark_obtainable").value != ""
+          ? document.getElementById("mark_obtainable").value
+          : 0,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          history.back();
+          getLearningHubMaterials(localStorage["LH_SUBJECT_ID"]);
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function deleteMaterial(material_id, material_type) {
+  if (!confirm("You are about to delete this material ")) {
+    return 0;
+  }
+
+  openSpinnerModal();
+  fetch(ip + "/api/teacher/subject-material", {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      material_id: material_id,
+      material_type: material_type,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        alert(data.message);
+        setTimeout(function () {
+          getLearningHubMaterials(localStorage["LH_SUBJECT_ID"]);
+        }, 1000);
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getLearningHubMaterials(subject_id) {
+  openSpinnerModal("Loading materials");
+  document.getElementById("subject").innerHTML =
+    "LEARNING HUB FOR " + localStorage["LH_SUBJECT_CLASS"];
+  fetch(ip + "/api/teacher/subject-material/" + subject_id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      //POPULATE COUNTS
+      document.getElementById("note-count").innerHTML = data.note.length;
+      document.getElementById("upload-count").innerHTML = data.upload.length;
+      document.getElementById("video-count").innerHTML = data.video.length;
+      document.getElementById("assignment-count").innerHTML =
+        data.assignment.length;
+
+      // DISPLAY UPLOADED NOTE
+      if (data.note.length > 0) {
+        document.getElementById("notes-content-main").innerHTML = ``;
+        data.note.forEach((note) => {
+          console.log(note);
+          document.getElementById(
+            "notes-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('note_${
+                note.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    note.date
+                  }</small>
+                  <a  onclick="deleteMaterial('${
+                    note.id
+                  }','NOTE')" target="_blank"
+                      class="btn  btn-circle btn-sm float-right">
+                      <i style="color:red;" class="fas fa-trash-alt"></i></i>
+                  </a>
+                  <a  onclick="content('EDIT','NOTE','${CryptoJS.AES.encrypt(
+                    JSON.stringify(note),
+                    "AESENCRYPT"
+                  )}')" target="_blank"
+                      class="btn  btn-circle btn-sm float-right">
+                      <i style="color:black;" class="far fa-edit"></i>
+                  </a>
+                  <br>
+                  <span class="m-0 text-primary">
+                      <a  id="topic" data-toggle="collapse" href="#demo">${
+                        note.topic
+                      }</a>
+                  </span>
+              </div>
+              <div id="note_${note.id}" class="collapse"
+                  class="card-body text-dark bg-light">
+                  <div class="p-2"
+                      style="overflow: auto; height: auto; border:1px solid black; color: black;">
+                    ${note.content}
+
+                  </div>
+              </div>
+              </div>`;
+        });
+      } else {
+        document.getElementById("notes-content-main").innerHTML = ``;
+        document.getElementById(
+          "notes-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                                    <div class="card-body" 
+                                                    style="justify-content:center; display:flex">No Note Here</div>
+                                                </div>`;
+      }
+
+      // DISPLAY UPLOADED CONTENT
+      if (data.upload.length > 0) {
+        document.getElementById("uploads-content-main").innerHTML = ``;
+        data.upload.forEach((upload) => {
+          document.getElementById(
+            "uploads-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+        <div onclick="collapseContent('upload_${
+          upload.id
+        }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${
+              upload.date
+            }</small>
+            <a  onclick="deleteMaterial('${
+              upload.id
+            }','UPLOAD')" target="_blank"
+                class="btn  btn-circle btn-sm float-right">
+                <i style="color:red;" class="fas fa-trash-alt"></i></i>
+            </a>
+            <br>
+            <span class="m-0 text-primary">
+                <a  id="topic" data-toggle="collapse" href="#demo">${
+                  upload.url
+                }</a>
+            </span>
+        </div>
+        <div id="upload_${upload.id}" class="collapse"
+            class="card-body text-dark bg-light">
+           
+ <object data="${
+   domain + "/backend/storage/app/public/fileupload/learninghub/" + upload.url
+ }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
+        <embed
+            src="${
+              domain +
+              "/backend/storage/app/public/fileupload/learninghub/" +
+              upload.url
+            }"
+            type="application/pdf" class="img-fluid">
+    </object>
+        </div>
+        </div>`;
+        });
+      } else {
+        document.getElementById("uploads-content-main").innerHTML = ``;
+        document.getElementById(
+          "uploads-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                              <div class="card-body" 
+                                              style="justify-content:center; display:flex">No upload here</div>
+                                          </div>`;
+      }
+
+      // DISPLAY VIDEO CONTENT
+      if (data.video.length > 0) {
+        document.getElementById("videos-content-main").innerHTML = ``;
+        c = data.video.length;
+        data.video.forEach((video) => {
+          document.getElementById(
+            "videos-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+        <div onclick="collapseContent('video_${video.id}')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${video.date}</small>
+            <a  onclick="deleteMaterial('${video.id}','VIDEO')" target="_blank"
+                class="btn  btn-circle btn-sm float-right">
+                <i style="color:red;" class="fas fa-trash-alt"></i></i>
+            </a>
+            <br>
+            <span class="m-0 text-primary">
+                <a  id="topic" data-toggle="collapse" href="#demo">Video ${c}</a>
+            </span>
+        </div>
+        <div id="video_${video.id}" class="collapse"
+            class="card-body text-dark bg-light">
+            <iframe width="100%" height="300px"
+            src="${video.url}" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+        </div>`;
+          c = c - 1;
+        });
+      } else {
+        document.getElementById("videos-content-main").innerHTML = ``;
+        document.getElementById(
+          "videos-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                              <div class="card-body" 
+                                              style="justify-content:center; display:flex">No video here</div>
+                                          </div>`;
+      }
+
+      // DISPLAY UPLOADED ASSIGNMENT
+      if (data.assignment.length > 0) {
+        document.getElementById("assignments-content-main").innerHTML = ``;
+        data.assignment.forEach((assignment) => {
+          console.log(assignment);
+          document.getElementById(
+            "assignments-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('assignment_${
+                assignment.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    assignment.date
+                  }</small>
+                  <a  onclick="deleteMaterial('${
+                    assignment.id
+                  }','ASSIGNMENT')" target="_blank"
+                      class="btn  btn-circle btn-sm float-right">
+                      <i style="color:red;" class="fas fa-trash-alt"></i></i>
+                  </a>
+
+
+                  <a onclick="assignmentSubmission('${assignment.id}','${
+            assignment.topic
+          }','${
+            assignment.mark_obtainable
+          }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:green;" class="fas fa-poll"></i>
+                  </a>
+ 
+
+                  <a onclick="updateAssignmentStatus('${
+                    assignment.id
+                  }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:blue;" class="${
+            assignment.status == "OPEN" ? `fas fa-lock` : `fas fa-unlock-alt`
+          }"></i>
+                  </a>
+
+
+                  <a  onclick="content('EDIT','ASSIGNMENT','${CryptoJS.AES.encrypt(
+                    JSON.stringify(assignment),
+                    "AESENCRYPT"
+                  )}')" target="_blank"
+                      class="btn  btn-circle btn-sm float-right">
+                      <i style="color:black;" class="far fa-edit"></i>
+                  </a>
+                  <br>
+                  <span class="m-0 text-primary">
+                      <a  id="topic" data-toggle="collapse" href="#demo">${
+                        assignment.topic
+                      } 
+                      
+                      <sup> 
+                      ${
+                        assignment.status == "OPEN"
+                          ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
+                          : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
+                      }
+                  </sup>
+                      </a>
+                      
+                  </span>
+              </div>
+              <div id="assignment_${assignment.id}" class="collapse"
+                  class="card-body text-dark bg-light">
+                  <div class="p-2"
+                      style="overflow: auto; height: auto; border:1px solid black; color: black;">
+                    ${assignment.content} 
+                  </div>
+              </div>
+              </div>`;
+        });
+      } else {
+        document.getElementById("assignments-content-main").innerHTML = ``;
+        document.getElementById(
+          "assignments-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                                    <div class="card-body" 
+                                                    style="justify-content:center; display:flex">No Assignment Here</div>
+                                                </div>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function updateAssignmentStatus(id) {
+  if (!confirm("You are about to change this material status")) {
+    return 0;
+  }
+  openSpinnerModal("Updating status");
+  fetch(ip + "/api/teacher/subject-material", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      material_id: id + "-STATUS",
+      material_type: "ASSIGNMENT",
+      subject_id: localStorage["LH_SUBJECT_ID"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          //history.back();
+          getLearningHubMaterials(localStorage["LH_SUBJECT_ID"]);
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function assignmentSubmission(id, topic, mark) {
+  if (topic != "" || mark != "") {
+    document.getElementById("assignments-submission-tab").hidden = false;
+    showMaterial("assignments-submission");
+    document.getElementById("assignment").innerHTML =
+      topic + " ASSIGNMENT SUBMISSION (" + mark + " MARKS)";
+  }
+
+  // GET SUBMISSIONS FOR ASSIGNMENT
+  openSpinnerModal("Loading submissions");
+
+  fetch(ip + "/api/teacher/assignment-submission/" + id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      //POPULATE COUNTS
+      document.getElementById("assignment-submission-count").innerHTML =
+        data.submission.length;
+
+      // DISPLAY UPLOADED NOTE
+      if (data.submission.length > 0) {
+        document.getElementById(
+          "assignments-submission-content-main"
+        ).innerHTML = ``;
+        data.submission.forEach((submission) => {
+          document.getElementById(
+            "assignments-submission-content-main"
+          ).innerHTML += `  <div class="card shadow mb-3">
+              <div onclick="collapseContent('submission_${
+                submission.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    submission.date
+                  }</small>
+
+                  <div class="">
+                      <div class="left">
+                          <span class="m-0 text-primary">
+                              <a  id="student_name" data-toggle="collapse" href="#demo">${
+                                submission.student_name
+                              }
+                              
+                                  <sup> 
+                                    ${
+                                      submission.graded == "TRUE"
+                                        ? ` <span class="badge bg-success" style="color: white;"><b> Graded </b></span>`
+                                        : ` <span class="badge bg-danger" style="color: white;"><b> Not Graded</b></span>`
+                                    }
+                                  </sup>
+                              </a>
+                          </span>
+                  </div>
+
+                  <div class="right">
+                      <input id="score_${submission.id}" value="${
+            submission.score
+          }" type="number" placeholder="score" class="input-field no-arrow" min="0">
+                      <button onclick="gradeAssignment('${submission.id}','${
+            submission.assignment_id
+          }')" class="submit-btn">Grade Assignment</button> 
+                  </div>
+
+                  
+            
+          </div>
+                  
+              </div>
+              <div id="submission_${submission.id}" class="collapse"
+                  class="card-body text-dark bg-light">
+                  <div class="p-2"
+                      style="overflow: auto; height: auto; border:1px solid black; color: black;">
+                    ${submission.content}
+                  </div>
+              </div>
+              </div>`;
+        });
+      } else {
+        document.getElementById(
+          "assignments-submission-content-main"
+        ).innerHTML = ``;
+        document.getElementById(
+          "assignments-submission-content-main"
+        ).innerHTML += ` <div class="card shadow mb-1">
+                                                    <div class="card-body" 
+                                                    style="justify-content:center; display:flex">No Submission Here</div>
+                                                </div>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function gradeAssignment(submission_id, assignment_id) {
+  if (!confirm("You are about to grade this assignment")) {
+    return 0;
+  }
+  openSpinnerModal("Grading Assignment");
+  fetch(ip + "/api/teacher/assignment-submission", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      submission_id: submission_id,
+      score: document.getElementById("score_" + submission_id).value,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        successtoast(data.message);
+        setTimeout(function () {
+          //history.back();
+          assignmentSubmission(assignment_id, "", "");
+        }, 1000);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 // CHANGE PASSWORD
@@ -3405,7 +4266,7 @@ function changePassword() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3557,7 +4418,7 @@ function getAllClassForDropDown() {
     .then((data) => {
       for (i in data) {
         document.getElementById(
-          "class"
+          "classes"
         ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
       }
     })
@@ -3566,7 +4427,7 @@ function getAllClassForDropDown() {
 
 // PROMOTE STUDENT
 function promoteStudent() {
-  class_id = document.getElementById("class").value;
+  class_id = document.getElementById("classes").value;
   class_name = document.getElementById("class");
   index = document.getElementById("class").selectedIndex;
 
@@ -3608,7 +4469,7 @@ function promoteStudent() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.parent.location.assign(domain + "/teacher/");
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -3651,44 +4512,6 @@ const uploadCommentAndRatingDebouncer = debounce((type, value, rating_type) =>
   uploadCommentAndRating(type, value, rating_type)
 );
 
-function openAuthenticationModal() {
-  authenticationModal = `
-  <div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog" aria-labelledby="endModalTitle"
-                aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title col-12 text-center" id="authenticationModalTitle"><b>RE-Authentication Needed</b></h1>
-
-                        </div>
-                        <div class="modal-body text-center">
-                            <h3 class="modal-title col-12 text-center" id="authenticationModalTitle"><b>Are you ? </b></h3> <br>
-                            <p style="text-align: center;">
-                                <b>Input your password.</b>.
-                            </p>
-                            <input type="password"/>
-
-                            <button onclick="submitCBT()" class="btn btn-lg btn-primary">
-                                <span role="status" aria-hidden="true"></span>
-                                Login</button>
-
-                            <button onclick="submitCBT()" class="btn btn-lg btn-danger">
-                            <span role="status" aria-hidden="true"></span>
-                            Logout</button>
-                        </div>
-                    </div>
-                </div>
-  </div>
-  `;
-  // $("#exampleModal").modal("show");
-
-  //window.top.document.body.innerHTML += authenticationModal;
-  console.log(window.top.document.body);
-  // // document.getElementById("backdrop").style.display = "block";
-  // document.getElementById("authenticationModal").style.display = "block";
-  // document.getElementById("authenticationModal").classList.add("show");
-}
-
 // COUNT ARRAY DISTINT VALUE
 function countDistinct(arr, n) {
   let res = 1;
@@ -3707,11 +4530,11 @@ function countDistinct(arr, n) {
 function editLessonPlan() {
   document.getElementById("save_lesson_bt").hidden = false;
 
-  lesson_content = document.getElementsByName("lesson_plan_content");
+  lesson_content = document.getElementsByClassName("lesson_plan_content");
 
-  lesson_content.forEach((element) => {
-    element.disabled = false;
-  });
+  for (var i = 0; i < lesson_content.length; i++) {
+    lesson_content[i].contentEditable = true;
+  }
 }
 
 // GET SCHOOL DETAILS
@@ -3756,7 +4579,7 @@ function loadCustomSessionTerm() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -3787,6 +4610,593 @@ function useCustomSessionTerm(session_term) {
   //getDashboardInfo();
 }
 
+function scoreLimit(element) {
+  var max_chars = 2;
+  if (element.innerHTML.length > max_chars) {
+    element.innerHTML = element.innerHTML.substr(0, max_chars);
+    element.blur();
+  }
+}
+
+$(document).click(function (e) {
+  if (!$(e.target).closest("#authenticationModal").length) {
+    modalExist = parent.document.getElementById("authenticationModal");
+    if (modalExist != null) {
+      modalExist.remove();
+
+      parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
+        console.log(el);
+        el.remove();
+      });
+    }
+  }
+});
+
+//  SCHEDULE LIVE CLASS
+function scheduleClass() {
+  topic = document.getElementById("topic1").value;
+  date = document.getElementById("date").value;
+  time = document.getElementById("time").value;
+  if (time == "" || date == "" || topic == "") {
+    warningtoast("Check that no feild is empty.");
+    return 0;
+  }
+
+  openSpinnerModal("Scheduling live class");
+  fetch(ip + "/api/teacher/live-class", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      subject_id: localStorage["LH_SUBJECT_ID"],
+      topic: topic,
+      date: date,
+      time: time,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        closeModal("scheduleLiveClass");
+        getScheduledClass();
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getScheduledClass() {
+  openSpinnerModal("Loading scheduled class");
+  fetch(ip + "/api/teacher/live-class/" + localStorage["LH_SUBJECT_ID"], {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      uc = 1;
+      pc = 1;
+      today = getDate().split("~")[1];
+      today =
+        today.split("/")[2] +
+        "-" +
+        today.split("/")[1] +
+        "-" +
+        today.split("/")[0];
+      today = new Date(today); //.replace(new RegExp('/', 'g'),'-')
+
+      console.log("DATE : " + today);
+      removeSpinnerModal();
+
+      if (data.length > 0) {
+        document.getElementById("upcoming_class").innerHTML = ``;
+        document.getElementById("previous_class").innerHTML = ``;
+        data.forEach((LC) => {
+          if (new Date(LC.date) >= today) {
+            // UPCOMING CLASS
+            document.getElementById("upcoming_class").innerHTML += `
+           <tr>
+                  <td>${uc}.</td>
+                  <td><small>${LC.topic} ${
+              LC.status == "LIVE"
+                ? ` <span class="badge bg-success"
+                  style="color: white;"><b> LIVE </b></span>`
+                : ``
+            }</small></td>
+                  <td><small>${LC.date}</small></td>
+                  <td><small>${LC.time}</small></td>
+                  <td>
+
+                      <a onclick="openLiveClass('${LC.topic}')" ${
+              LC.status != "LIVE" ? `hidden` : ``
+            } class="btn btn-sm btn-primary btn-block"><i
+                                  class="fas fa-video"></i></a>
+
+                      <a onclick="startLiveClass('${LC.id}','${LC.topic}','${
+              LC.live_id
+            }')" ${
+              LC.status == "LIVE" ? `hidden` : ``
+            } class="btn btn-primary"><i
+                              class="fas fa-video"></i></a>
+
+
+                       <small> <a ${
+                         LC.status == "LIVE" ? `hidden` : ``
+                       } onmouseover="editLiveClass('${encryptData(
+              JSON.stringify(LC)
+            )}')" class="btn btn-warning" data-bs-toggle="modal"
+                        data-bs-target="#editLiveClass"><i class="fas fa-edit"></i></a></small>
+            
+                        <small><a ${
+                          LC.status == "LIVE" ? `hidden` : ``
+                        } onclick="deleteLiveClass(${
+              LC.id
+            })" class="btn btn-danger text-white"><i
+                                class="fa fa-trash"></i></a></small>
+
+
+                  </td>
+                </tr>
+           `;
+            uc = uc + 1;
+          } else {
+            // PREVIOUS CLASS
+            document.getElementById("previous_class").innerHTML += `
+                <tr>
+                  <td>${pc}.</td>
+                  <td><small>${LC.topic}</small></td>
+                  <td><small>${LC.date}</small></td>
+                  <td><small>${LC.time}</small></td>
+                  <td>
+                  <small><a onclick="deleteLiveClass(${
+              LC.id
+            })" class="btn btn-danger text-white"><i
+                          class="fa fa-trash"></i></a></small>
+
+                          <small><a onclick="showMaterial('videos')" class="btn btn-primary text-white"><i
+                                        class="fa fa-video"></i></a></small>
+
+                  </td>
+                </tr>
+            `;
+            pc = pc + 1;
+          }
+        });
+
+        if (document.getElementById("upcoming_class").innerHTML == "") {
+          document.getElementById("upcoming_class").innerHTML = `
+            <tr>
+                <td colspan="4">
+                    <center>No scheduled class yet.</center>
+                </td>
+            </tr>
+          `;
+        }
+
+        if (document.getElementById("previous_class").innerHTML == "") {
+          document.getElementById("previous_class").innerHTML = `
+          <tr>
+              <td colspan="4">
+                  <center>No previous class yet.</center>
+              </td>
+          </tr>
+          `;
+        }
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function editLiveClass(data) {
+  data = JSON.parse(decryptData(data));
+  document.getElementById("e_topic1").value = data.topic;
+  document.getElementById("e_date").value = data.date;
+  document.getElementById("e_time").value = data.time;
+  document.getElementById("live_id").value = data.id;
+}
+
+function updateScheduledClass() {
+  topic = document.getElementById("e_topic1").value;
+  date = document.getElementById("e_date").value;
+  time = document.getElementById("e_time").value;
+  if (time == "" || date == "" || topic == "") {
+    warningtoast("Check that no feild is empty.");
+    return 0;
+  }
+
+  openSpinnerModal("Updating schedule");
+  fetch(ip + "/api/teacher/live-class", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      live_id: document.getElementById("live_id").value,
+      subject_id: localStorage["LH_SUBJECT_ID"],
+      topic: topic,
+      date: date,
+      time: time,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        closeModal("editLiveClass");
+        getScheduledClass();
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function deleteLiveClass(id) {
+  if (!confirm("You are about to delete this scheduled live class")) {
+    return 0;
+  }
+
+  openSpinnerModal("Delete live class");
+  fetch(ip + "/api/teacher/live-class/" + id, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      parent.$("#spinnerModal").modal("hide");
+      parent.document.getElementById("spinnerModal").remove();
+      toastr.remove();
+
+      if (data.success) {
+        alert(data.message);
+        setTimeout(function () {
+          getScheduledClass();
+        }, 1000);
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function startLiveClass(id, topic) {
+  if (!confirm("YOU ARE ABOUT TO START LIVE CLASS " + topic)) {
+    return 0;
+  }
+
+  openSpinnerModal("Starting live class");
+  fetch(ip + "/api/teacher/live-class", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      live_id: id,
+      topic: "LIVE",
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        successtoast(data.message);
+        getScheduledClass();
+        openLiveClass(topic);
+      } else {
+        errortoast(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function openLiveClass(topic) {
+  openModal("liveClass");
+  teacher = JSON.parse(localStorage["user_data"]).data;
+  roomName = topic + " (" + localStorage["LH_SUBJECT_CLASS"] + ")";
+
+  if (!document.getElementById("jitsi-view").innerHTML.includes(roomName)) {
+    var domain = "meet.jit.si";
+    var options = {
+      roomName: roomName,
+      width: 1700,
+      height: 700,
+      parentNode: document.querySelector("#jitsi-view"),
+
+      userInfo: {
+        //email: 'email@jitsiexamplemail.com',
+        displayName:
+          teacher.title +
+          " " +
+          teacher.first_name +
+          " " +
+          teacher.last_name +
+          " (TEACHER)",
+      },
+    };
+    var api = new JitsiMeetExternalAPI(domain, options);
+  }
+}
+
+// RE - AUTHENTICATION MODAL
+function openAuthenticationModal() {
+  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="authenticationModalTitle">
+                <b>Session Timeout !</b>
+            </h4>
+
+        </div>
+        <div class="modal-body text-center">
+            <div class="row">
+                <div class="col-lg-12 img-box">
+                    <img src="../asset/images/login-banner.png" alt="">
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <div class="login-box">
+                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                        <div style="display: flex;
+                        justify-content: center;" class="row">
+
+                            <b>
+                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                    <i style="color: #051f3e;"
+                                        class="fas fa-graduation-cap fa-xs"></i>
+                                    SMARTSCHOOLHUB.net
+                                </h3>
+                            </b>
+
+                        </div>
+                        <br>
+
+                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                           ${localStorage["username"]},</script> please
+                            signin
+                            to continue
+                        </h5>
+                       <form autocomplete="off">   
+                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                            <div class="login-row row no-margin">
+                               
+                                <input id="password" type="password" autocomplete="new-password"
+                                    class="form-control form-control-sm">
+                                    <br>
+                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
+                            </div>
+                        </form>    
+                        <br>
+                        <a  style="float: right; color: red;" href="./index.html">Log out</a>
+
+
+                        <div class="login-row btnroo row no-margin">
+                            <button id="signin" onclick="reAuth()"
+                                class="btn btn-primary btn-sm ">Sign
+                                In</button>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <footer class="footer">
+                        <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a  style="color: #051f3e;"
+                                href="../#"><b>
+                                    Dextroux Technologies</b></a></div>
+                    </footer>
+                </div>
+
+            </div>
+            <script>
+                const password = document.querySelector('#password');
+                togglePass.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                })
+            </script>
+            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+        </div>
+    </div>
+</div>
+</div>
+`;
+
+  authenticationModal = parent.document.getElementById("authenticationModal");
+  if (authenticationModal != null) {
+    return 0;
+  }
+
+  // JQUERY LIBRARY
+  //document.body.innerHTML += `<script src="../js/jquery-3.3.1.min.js"></script>`;
+
+  parent.$("body").append(modal);
+  parent
+    .$("#authenticationModal")
+    .modal({ backdrop: "static", keyboard: false });
+  parent.$("#authenticationModal").modal("show");
+}
+
+function openSpinnerModal(message) {
+  modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body text-center">
+        <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-warning" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-dark" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+        </div>
+
+        <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <small><b>${
+                  message != null && message != "" && message != undefined
+                    ? message
+                    : ``
+                }</b><br>
+                <b>Processing ...</b>
+                </small>
+            </h4>
+            <br>
+    </div>
+</div>
+</div>
+`;
+
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    return 0;
+  }
+
+  parent.$("body").append(modal);
+  parent.$("#spinnerModal").modal({ backdrop: "static", keyboard: false });
+  parent.$("#spinnerModal").modal("show");
+}
+
+function removeSpinnerModal() {
+  parent.$("#spinnerModal").modal("hide");
+  el = parent.document.getElementById("spinnerModal");
+  el != null ? el.remove() : ``;
+}
+
+function scrollToElement(target) {
+  window.location.href = "#" + target;
+}
+
+function collapseSidebar() {
+  if (
+    navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    // navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i) ||
+    navigator.userAgent.match(/Windows Phone/i)
+  ) {
+    // MOBILE
+    a = true;
+  } else {
+    // DESKTOP
+    wrapper = document.getElementById("wrapper");
+    if (wrapper != null) {
+      if ((wrapper.className = "wrapper bg-ash")) {
+        wrapper.className = "wrapper bg-ash sidebar-collapsed";
+        if (document.getElementById("logo").innerHTML != "") {
+          changeLogo();
+        }
+      }
+    }
+  }
+}
+
+function closeModal(id) {
+  parent.$("#" + id).modal("hide");
+  el = parent.document.getElementById("#" + id);
+  el != null ? el.remove() : ``;
+}
+
+function openModal(id) {
+  parent.$("#" + id).modal("show");
+}
+
+function encryptData(data) {
+  return CryptoJS.AES.encrypt(data, "AESENCRYPT");
+}
+
+function decryptData(data) {
+  return CryptoJS.AES.decrypt(data, "AESENCRYPT").toString(CryptoJS.enc.Utf8);
+}
 // TOAST
 function successtoast(message, time) {
   toastr.success(message, "", {

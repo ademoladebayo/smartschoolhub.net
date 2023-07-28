@@ -61,7 +61,7 @@ class StudentController extends Controller
 
     public function paymentHistory(Request $request)
     {
-        return PaymentHistoryModel::where('student_id', $request->student_id)->orderBy('id', 'DESC')->get();
+        return PaymentHistoryModel::where('student_id', $request->student_id)->where('session',$request->session)->where('term',$request->term)->orderBy('id', 'DESC')->get();
     }
 
     public function addOptionalFee(Request $request)
@@ -70,6 +70,11 @@ class StudentController extends Controller
         return $StudentService->addOptionalFee($request);
     }
 
+    public function getReceipt(Request $request)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getReceipt($request);
+    }
 
     // RESULT
     public function getResult(Request $request)
@@ -99,4 +104,12 @@ class StudentController extends Controller
         $StudentService = new StudentService();
         return $StudentService->changePassword($request);
     }
+
+    // CONTINOUS ASSESSMENT
+    public function getContinuousAssessment($student_id)
+    {
+        $StudentService = new StudentService();
+        return $StudentService->getContinuousAssessment($student_id);
+    }
+     
 }

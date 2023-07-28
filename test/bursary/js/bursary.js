@@ -1,15 +1,14 @@
-// DEVELOPMENT IP
-//var ip = "http://127.0.0.1:8000";
-//var domain = "http://localhost/smartschoolhub.net/test";
-
-
-// LIVE IP
- var ip = "https://smartschoolhub.net/backend/test";
- var domain = "https://test.smartschoolhub.net";
+var ip = localStorage["ip"];
+var domain = localStorage["domain"];
 
 getSchoolDetails();
+collapseSidebar();
+
 // getCurrentSession();
-if (!window.location.href.includes("portal-subscription") && localStorage["token"] != null) {
+if (
+  !window.location.href.includes("portal-subscription") &&
+  localStorage["token"] != null
+) {
   checkPortalSubscription();
 }
 
@@ -17,79 +16,85 @@ function loadSideNav(page) {
   document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
-        <a id="index" href="dashboard.html" class="nav-link"><i
+        <a  id="index" href="dashboard.html" class="nav-link"><i
                 class="flaticon-dashboard"></i><span>Dashboard</span></a>
     </li>
 
     <li class="nav-item">
-        <a   id="manual-payment" href="manual-payment.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span>Manual Payment</span></a>
+        <a    id="manual-payment" href="manual-payment.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span>Manual Payment</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="online-payment" href="online-payment.html" class="nav-link"> <i class="fas fa-globe"></i>
+        <a   id="online-payment" href="online-payment.html" class="nav-link"> <i class="fas fa-globe"></i>
         <span>Online Payments</span></a>
     </li>
 
 
     <li class="nav-item">
-        <a  id="debitors" href="debitors.html" class="nav-link"><i class="fas fa-times-circle"></i>
-        <span>Debitors</span></a>
+        <a   id="payment-report" href="payment-report.html" class="nav-link"><i class="fas fa-book"></i>
+        <span>Payment Report</span></a>
+    </li>
+
+    <i class=""></i>
+
+    <li class="nav-item">
+        <a    id="new-fee" href="new-fee.html" class="nav-link"><i class="fas fa-plus"></i><span>Fee Management</span></a>
     </li>
 
     <li class="nav-item">
-        <a   id="new-fee" href="new-fee.html" class="nav-link"><i class="fas fa-plus"></i><span>Fee Management</span></a>
+        <a    id="optional-fee-request" href="optional-fee-request.html" class="nav-link"><i class="fas fa-clipboard-list"></i><span>Optional Fee Request</span></a>
     </li>
 
     <li class="nav-item">
-        <a  id="expense" href="expense.html" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Expenses</span></a>
+        <a   id="expense" href="expense.html" class="nav-link"><i class="fas fa-file-invoice-dollar"></i><span>Expenses</span></a>
     </li>
 
     
     <li class="nav-item">
-        <a  id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment History</span></a>
+        <a   id="payment-history" href="payment-history.html" class="nav-link"><i class="flaticon-money"></i><span>Payment History</span></a>
     </li>
 
     <!-- <li class="nav-item">
-        <a id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
+        <a  id="portal-subscription" href="portal-subscription.html" class="nav-link"><i class="fa fa-wrench" aria-hidden="true"></i><span>Portal Subscription</span></a>
     </li> --!>
 
     <li class="nav-item">
-        <a  id="change-password" href="#?change-password.html" class="nav-link"><i
+        <a   id="change-password" href="#?change-password.html" class="nav-link"><i
                 class="flaticon-settings"></i><span>Change Password</span></a>
     </li>
     <li class="nav-item">
-        <a onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
+        <a  onclick="goTo('');" href="#" class="nav-link"><i class="flaticon-turn-off"></i><span>Log
                 Out</span></a>
     </li>
 
    <!-- <li class="nav-item">
-       <a style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+       <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
          domain + "/admin/dashboard.html"
        }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
     </li> --!>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
-    <a href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
+    <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <!-- <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link"><i class=""></i><span></span></a>
+        <a  href="" class="nav-link"><i class=""></i><span></span></a>
     </li> -->
 
 
@@ -123,7 +128,7 @@ function signIn() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.parent.location.assign(domain + "/bursary/");
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -133,6 +138,9 @@ function signIn() {
         if (data.success) {
           localStorage.setItem("user_data", JSON.stringify(data));
           localStorage.setItem("token", data.token);
+          username = JSON.parse(localStorage["user_data"]).data.username;
+          localStorage.setItem("user_id", username);
+          localStorage.setItem("username", username);
           getStoredCredential();
           setTimeout(function () {
             window.location.href = "dashboard.html";
@@ -148,6 +156,59 @@ function signIn() {
     warningtoast("<b>Please check that no field is empty.</b>");
   }
 }
+
+function reAuth() {
+  var id = localStorage["username"];
+  var password = document.getElementById("password").value;
+  if (id != "" && password != "") {
+    // PUSH TO API
+    document.getElementById("signin").innerHTML = `<i
+    class="fa fa-spinner fa-spin"></i> Processing ...`;
+    fetch(ip + "/api/bursary/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        password: password,
+      }),
+    })
+      .then(function (res) {
+        console.log(res.status);
+        if (res.status == 401) {
+          openAuthenticationModal();
+        }
+        return res.json();
+      })
+
+      .then((data) => {
+        toastr.remove();
+        if (data.success) {
+          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+          localStorage.setItem("user_data", JSON.stringify(data));
+          localStorage.setItem("token", data.token);
+          parent.getStoredCredential();
+          username = JSON.parse(localStorage["user_data"]).data.username;
+          id = JSON.parse(localStorage["user_data"]).data.id;
+          localStorage.setItem("username", username);
+          localStorage.setItem("user_id", id);
+          setTimeout(function () {
+            parent.$("#authenticationModal").modal("hide");
+            parent.document.getElementById("authenticationModal").remove();
+          }, 1000);
+        } else {
+          errortoast(data.message);
+        }
+        document.getElementById("signin").innerHTML = `Sign In`;
+      })
+      .catch((err) => console.log(err));
+  } else {
+    warningtoast("<b>Please check that no field is empty.</b>");
+  }
+}
+
 function changeLogo() {
   document.getElementById("logo").innerHTML =
     document.getElementById("logo").innerHTML != ""
@@ -184,7 +245,7 @@ function getCurrentSession() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/bursary/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -255,6 +316,8 @@ function loadDashBoardInformation() {
 function goTo(page) {
   if (page == "") {
     localStorage.clear();
+    window.parent.location.assign(domain);
+    return 0;
   }
   window.parent.location.assign(domain + "/bursary/" + page);
 }
@@ -269,7 +332,7 @@ function createFee() {
   var description = document.getElementById("description").value;
   var amount = document.getElementById("amount").value;
   var fee_type = document.getElementById("fee_type").value;
-  var class_payment = document.getElementById("class").value;
+  var class_payment = document.getElementById("classes").value;
 
   if (
     description != "" &&
@@ -298,7 +361,7 @@ function createFee() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -336,7 +399,7 @@ function getAllFee() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -357,13 +420,13 @@ function getAllFee() {
             }</td>
             <td>${formatNumber(data[i].amount)}</td>
             <td>
-                <a onmouseover="reloadEditFrame();localStorage.setItem('editFee','${
+                <a  onmouseover="reloadEditFrame();localStorage.setItem('editFee','${
                   data[i].id
                 }~${data[i].description}~${data[i].type}~${data[i].class}~${
             data[i].amount
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a onclick="deleteFee(${
+                <a  onclick="deleteFee(${
                   data[i].id
                 })" href="#" class="btn btn-danger"><i
                         class="fas fa-trash"></i>
@@ -401,7 +464,7 @@ function updateFee() {
   var description = document.getElementById("description").value;
   var amount = document.getElementById("amount").value;
   var fee_type = document.getElementById("fee_type").value;
-  var class_payment = document.getElementById("class").value;
+  var class_payment = document.getElementById("classes").value;
 
   if (
     description != "" &&
@@ -429,7 +492,7 @@ function updateFee() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -463,7 +526,7 @@ function deleteFee(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -476,6 +539,334 @@ function deleteFee(id) {
       } else {
         errortoast("<b>" + data.message + "</b>");
       }
+    })
+    .catch((err) => console.log(err));
+}
+
+// FEE
+function getFee(student_id, session, term, student_class) {
+  openSpinnerModal("Payable Fee");
+  return fetch(ip + "/api/student/all-fee", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: student_id,
+      session: session,
+      term: term,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      optional_fee = [];
+      optional_fee = data.optional_fee_id;
+      approved_optional_fee = data.approved_optional_fee_id;
+
+      document.getElementById("expected_amount").innerHTML =
+        "₦" + formatNumber(data.expected_amount);
+      document.getElementById("total_paid").innerHTML =
+        "₦" + formatNumber(data.total_paid);
+      document.getElementById("term_bal").innerHTML =
+        "₦" + formatNumber(data.due_balance);
+
+      document.getElementById("arrears").innerHTML =
+        "₦" + formatNumber(data.arrears);
+
+      document.getElementById("total_due_balance").innerHTML =
+        "₦" + formatNumber(data.total_due_balance);
+
+      // document.getElementById("amount").value = data.due_balance;
+
+      document.getElementById("fee_table").innerHTML = ``;
+      c = 1;
+      if (data.fee_breakdown.length > 0) {
+        data.fee_breakdown.forEach((fee) => {
+          document.getElementById("fee_table").innerHTML += `
+          <tr>
+               ${
+                 fee.type == "COMPULSORY" ||
+                 approved_optional_fee.includes(fee.id.toString())
+                   ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+               value="${fee.id}" checked  onclick="this.checked = !this.checked">`
+                   : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+                   value="${fee.id}"  ${
+                       optional_fee.includes(fee.id.toString())
+                         ? `checked  onclick="this.checked = !this.checked"`
+                         : ``
+                     }>`
+               }
+               <td>${c}.</td>
+               <td>${fee.description}</td>
+               <td>${
+                 approved_optional_fee.includes(fee.id.toString())
+                   ? `OPTIONAL (Approved)`
+                   : fee.type
+               }</td>
+               <td>${
+                 fee.class == localStorage["PD_STUDENT_CLASS"]
+                   ? localStorage["PD_STUDENT_CLASSNAME"]
+                   : fee.class
+               }</td>
+              <td>₦${formatNumber(fee.amount)}</td>
+          </tr>
+          `;
+
+          c = c + 1;
+        });
+      } else {
+        document.getElementById("fee_table").innerHTML = `
+        <td colspan="12">
+        <center>No fee found</center>
+        </td>
+        `;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function getAllOptionalFeeRequest() {
+  openSpinnerModal("Optional Fee Request");
+  return fetch(ip + "/api/bursary/optional-fee-request", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      c = 1;
+      if (data.length > 0) {
+        document.getElementById("fee_table").innerHTML = ``;
+        data.forEach((data) => {
+          document.getElementById("fee_table").innerHTML += `
+          <tr>
+               <td>${c}.</td>
+               <td>${
+                 data.student.first_name + " " + data.student.last_name
+               }</td>
+               <td>${data.student.student_id}</td>
+               <td>${data.class_name}</td>
+               <td>${data.fee.description}</td>
+               <td>${data.fee.type}</td>
+               <td>${
+                 data.fee.class == data.student.class
+                   ? data.class_name
+                   : data.fee.class
+               }</td>
+               <td>₦${formatNumber(data.fee.amount)}</td>
+               <td>${
+                 data.approved == 1
+                   ? `<span style="color:white" class="badge bg-success"><b>APPROVED</b></span>`
+                   : `<span style="color:white" class="badge bg-danger"><b>NOT APPROVED</b></span>`
+               }</td>
+              <td>
+                  <select onchange="updateOptionalFeeRequestStatus(event,'${
+                    data.id
+                  }',this.value)" id="approval" class="select2">
+                      <option value="1" ${
+                        data.approved == 1 ? `selected="selected"` : ``
+                      }>APPROVE</option>
+                      <option value="0" ${
+                        data.approved == 0 ? `selected="selected"` : ``
+                      }>DISAPPROVE</option>
+                  </select>
+              </td>
+          </div>
+          </tr>
+          `;
+
+          c = c + 1;
+        });
+        paginateTable();
+      } else {
+        document.getElementById("fee_table").innerHTML = `
+        <td colspan="12">
+        <center>No request found</center>
+        </td>
+        `;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+function updateOptionalFeeRequestStatus(event, id, status) {
+  if (
+    !confirm(
+      status == 1
+        ? `You are about to approve this request`
+        : `You are about to disapprove this request`
+    )
+  ) {
+    event.target.selectedIndex = status == 1 ? 1 : 0;
+    event.preventDefault();
+    return 0;
+  }
+  openSpinnerModal("Update fee status");
+  return fetch(ip + "/api/bursary/optional-fee-request", {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      id: id,
+      status: status,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      if (data.success) {
+        //successtoast(data.message);
+        getAllOptionalFeeRequest();
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
+async function getReceipt() {
+  sessions = localStorage["receipt_session"];
+  openSpinnerModal("Payment Receipt");
+  fetch(ip + "/api/student/receipt", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: localStorage["PD_STUDENT_ID"],
+      session: sessions.split("-")[0],
+      term: sessions.split("-")[1],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      // SLIP HEADER
+      //user_data = JSON.parse(localStorage["user_data"]);
+
+      getStudent(localStorage["PD_STUDENT_ID"]).then(function (user_data) {
+        console.log(user_data);
+        // IMAGE URL
+        url =
+          domain +
+          "/backend/storage/app/public/fileupload/student/" +
+          user_data.data.student_id +
+          ".png";
+
+        // SCHOOL LOGO URL
+        school_logo_url =
+          domain + "/backend/storage/app/public/fileupload/school_logo.png";
+
+        // SCHOOL_LOGO
+        document.getElementById("school_logo").src = school_logo_url;
+
+        // STUDENT_IMAGE
+        document.getElementById("student_image").src = url;
+
+        // POPULATE STUDENTS INFORMATION
+        document.getElementById("full_name").innerHTML =
+          "<b>" +
+          user_data.data.last_name +
+          "</b>" +
+          " " +
+          user_data.data.first_name +
+          " " +
+          user_data.data.middle_name;
+
+        document.getElementById("student_id").innerHTML =
+          user_data.data.student_id;
+        document.getElementById("class_sector").innerHTML =
+          user_data.data.class.class_sector;
+        document.getElementById("school_details").innerHTML =
+          localStorage["SCHOOL_NAME"] +
+          "<br> " +
+          localStorage["SCHOOL_ADDRESS"];
+
+        document.getElementById("student_class").innerHTML = data.class;
+
+        document.getElementById("session").innerHTML = sessions.split("-")[0];
+
+        document.getElementById("term").innerHTML = sessions.split("-")[1];
+
+        // SLIP FOOTER
+        document.getElementById("total_expected").innerHTML =
+          "₦" + formatNumber(data.expected_amount);
+
+        document.getElementById("total_paid").innerHTML =
+          "₦" + formatNumber(data.total_paid);
+
+        document.getElementById("percentage_paid").innerHTML =
+          data.percentage_paid;
+
+        document.getElementById("total_due_balance").innerHTML =
+          "₦" + formatNumber(data.due_balance);
+
+        document.getElementById("payment_receipt_table").innerHTML = ``;
+
+        c = 1;
+        data.payments.forEach((payment) => {
+          document.getElementById("payment_receipt_table").innerHTML += `
+        <tr>
+        <td>${c}.</td>
+        <td>${payment.payment_description}</td>
+        <td>${payment.fee_type}</td>
+        <td>${payment.payment_type}</td>
+        <td>${payment.date}</td>
+        <td><b>₦${formatNumber(payment.amount)}</b></td>
+        </tr>
+        `;
+          c = c + 1;
+        });
+      });
     })
     .catch((err) => console.log(err));
 }
@@ -508,7 +899,7 @@ function createExpense() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -546,7 +937,7 @@ function getAllExpense() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -565,13 +956,13 @@ function getAllExpense() {
               <td>${data[i].date_incurred}</td>
               <td>${data[i].last_modified}</td>
               <td>
-                  <a onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${
+                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${
                     data[i].id
                   }~${data[i].description}~${data[i].date_incurred}~${
             data[i].amount
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a onclick="deleteExpense(${
+                  <a  onclick="deleteExpense(${
                     data[i].id
                   })" href="#" class="btn btn-danger"><i
                           class="fas fa-trash"></i>
@@ -626,7 +1017,7 @@ function updateExpense() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -660,7 +1051,7 @@ function deleteExpense(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -679,7 +1070,7 @@ function deleteExpense(id) {
 
 // MANUAL PAYMENT MANAGEMENT
 function createManualPayment() {
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
   var student = document.getElementById("student").value;
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
@@ -745,7 +1136,7 @@ function createManualPayment() {
         .then(function (res) {
           console.log(res.status);
           if (res.status == 401) {
-            window.location.href = "index.html";
+            openAuthenticationModal();
           }
           return res.json();
         })
@@ -784,7 +1175,7 @@ function getAllManualPayment() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -809,9 +1200,18 @@ function getAllManualPayment() {
                 <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
-                    <a onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
-                      data[i].id
-                    }~${data[i].student.id}~${
+                    <a ${
+                      data[i].payment_description.includes(
+                        "WAS USED TO SETTLE THE ARREARS"
+                      ) ||
+                      data[i].payment_description.includes(
+                        "WAS USED TO SETTLE PART OF THE ARREARS"
+                      )
+                        ? `hidden`
+                        : ``
+                    }  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
+            data[i].id
+          }~${data[i].student.id}~${
             data[i].student.first_name + " " + data[i].student.last_name
           }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${
             data[i].payment_type
@@ -819,7 +1219,7 @@ function getAllManualPayment() {
             data[i].fee_type
           }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                    <a onclick="deleteManualPayment(${
+                    <a hidden onclick="deleteManualPayment(${
                       data[i].id
                     })" href="#" class="btn btn-danger"><i
                             class="fas fa-trash"></i>
@@ -839,11 +1239,11 @@ function editManualPaymentDetails() {
   // 1~8~CHRISTINA ABEGUNDE~2~SS2~03/01/2022~BANK~Payment description~25000
   //   0  1          2        3  4        5      6     7                 8
 
-  document.getElementById("class").innerHTML =
+  document.getElementById("classes").innerHTML =
     `
   <option value="${localStorage["editManualPayment"].split("~")[3]}">${
       localStorage["editManualPayment"].split("~")[4]
-    }</option>` + document.getElementById("class").innerHTML;
+    }</option>` + document.getElementById("classes").innerHTML;
 
   document.getElementById("student").innerHTML =
     `
@@ -874,7 +1274,7 @@ function editManualPaymentDetails() {
 }
 
 function updateManualPayment() {
-  var student_class = document.getElementById("class").value;
+  var student_class = document.getElementById("classes").value;
   var student = document.getElementById("student").value;
   var date = document.getElementById("date").value;
   var amount = document.getElementById("amount").value;
@@ -918,7 +1318,7 @@ function updateManualPayment() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -952,7 +1352,7 @@ function deleteManualPayment(id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -989,7 +1389,7 @@ function getAllPaymentHistory() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1025,6 +1425,65 @@ function getAllPaymentHistory() {
     .catch((err) => console.log(err));
 }
 
+// PAYMENT HISTORY
+function getAllPaymentHistory(student_id, session, term) {
+  openSpinnerModal("Payment History");
+  fetch(ip + "/api/student/payment-history", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      student_id: student_id,
+      session: session,
+      term: term,
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      c = 1;
+      document.getElementById("payment_history_table").innerHTML = ``;
+      if (data.length > 0) {
+        for (i in data) {
+          document.getElementById("payment_history_table").innerHTML += `
+                    <tr class='${c % 2 == 0 ? "even" : "odd"}'>
+            
+                    <td>${c}.</td>
+                    <td><b>${data[i].payment_type}</b></td>
+                    <td><b>${data[i].payment_description}</b></td>
+                    <td><b>${data[i].fee_type}</b></td>
+                    <td>${data[i].date}</td>
+                    <td>${data[i].session}</td>
+                    <td>${data[i].term}</td>
+                    <td>${formatNumber(parseInt(data[i].amount))}</td>
+                    
+                   </tr>
+                    `;
+          c = c + 1;
+        }
+      } else {
+        document.getElementById("payment_history_table").innerHTML = `
+        <td colspan="12">
+              <center>No history found</center>
+        </td>
+        `;
+      }
+      paginateTable();
+    })
+    .catch((err) => console.log(err));
+}
+
 function searchPayment(search_data) {
   fetch(ip + "/api/bursary/search-payment-history", {
     method: "POST",
@@ -1042,7 +1501,7 @@ function searchPayment(search_data) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/bursary/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1093,7 +1552,7 @@ function getAllDebitor() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1101,25 +1560,73 @@ function getAllDebitor() {
     .then((data) => {
       c = 1;
       document.getElementById("debitors_table").innerHTML = ``;
-      if (data.length > 0) {
-        document.getElementById("last_checked").innerHTML +=
-          typeof data[0].last_checked == "undefined"
-            ? " FOR ARREARS HAS NOT BEEN SYNCED"
-            : " WAS LAST UPDATED AT " + data[0].last_checked;
+      if (data.content.length > 0) {
+        document.getElementById("last_checked").innerHTML =
+          typeof data.last_checked == "undefined"
+            ? "DEBITORS LIST HAS NOT BEEN UPDATED"
+            : "DEBITORS LIST WAS LAST UPDATED AT " + data.last_checked;
 
-        for (i in data) {
+        for (i in data.content) {
           document.getElementById("debitors_table").innerHTML += `
                     <tr class='${c % 2 == 0 ? "even" : "odd"}'>
             
                     <td>${c}.</td>
-                    <td>${data[i].student_id}</td>
-                    <td>${data[i].first_name + " " + data[i].last_name}</td>  
-                    <td>${data[i].class == null ? data[i].graduation_details :data[i].class.class_name}</td>
-                    <td>${formatNumber(parseInt(data[i].expected_fee))}</td>
-                    <td>${formatNumber(parseInt(data[i].total_paid))}</td>
-                    <td>${formatNumber(parseInt(data[i].balance))}</td>
-                    <td>${formatNumber(parseInt(data[i].arrears))}</td>
-                    <td>${formatNumber(parseInt(data[i].total_balance))}</td>
+                    <td>${data.content[i].student_id}</td>
+                    <td>${
+                      data.content[i].first_name +
+                      " " +
+                      data.content[i].last_name
+                    }</td>  
+                    <td>${
+                      data.content[i].class == null
+                        ? data.content[i].graduation_details
+                        : data.content[i].class.class_name
+                    }</td>
+
+                    <td><span style="color:white" class="badge ${
+                      data.content[i].profile_status == "DISABLED"
+                        ? `bg-danger`
+                        : `bg-success`
+                    }"><b>${data.content[i].profile_status}</b></span></td>
+
+                    <td style="color:blue"><b>${formatNumber(
+                      parseInt(data.content[i].expected_fee)
+                    )}</b></td>
+                    <td style="color: ${
+                      data.content[i].total_paid > 0 ? "green" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].total_paid)
+          )}</b></td>
+                    <td style="color: ${
+                      data.content[i].balance > 0 ? "red" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].balance)
+          )}</b></td>
+                    <td style="color: ${
+                      data.content[i].arrears > 0 ? "red" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].arrears)
+          )}</b></td>
+                    <td style="color: ${
+                      data.content[i].total_balance > 0 ? "red" : "black"
+                    } "><b>${formatNumber(
+            parseInt(data.content[i].total_balance)
+          )}</b></td>
+
+                    <td ${data.content[i].graduation != "-" ? `hidden` : ``}>
+                          <a onclick="storePDStudentId(${data.content[i].id},${
+            data.content[i].class != null ? data.content[i].class.id : ``
+          },'${
+            data.content[i].class != null
+              ? data.content[i].class.class_name
+              : ``
+          }','${
+            data.content[i].first_name + " " + data.content[i].last_name
+          }'); getPaymentDetails()" style="color:white" class="btn btn-primary" data-bs-toggle="modal"
+                          data-bs-target="#viewModal"><i class="fas fa-eye"></i> View Details</a>
+                    </td>
+
+                   
                     
                    </tr>
                     `;
@@ -1159,7 +1666,7 @@ function syncLatestDebitor() {
       .then(function (res) {
         console.log(res.status);
         if (res.status == 401) {
-          window.location.href = "index.html";
+          openAuthenticationModal();
         }
         return res.json();
       })
@@ -1170,6 +1677,7 @@ function syncLatestDebitor() {
           getAllDebitor();
         } else {
           errortoast(data.message);
+          getAllDebitor();
         }
       })
       .catch((err) => console.log(err));
@@ -1189,7 +1697,7 @@ function getPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1216,7 +1724,7 @@ function getPortalSubscription() {
                     <td>   
                       ${
                         data[i].status == "NOT PAID"
-                          ? `<a id="" onclick="payWithPaystack('${data[i].id}',
+                          ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',
                           '${data[i].description}'
@@ -1266,7 +1774,7 @@ function getAllClassForDropDown() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/bursary/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1274,7 +1782,7 @@ function getAllClassForDropDown() {
     .then((data) => {
       for (i in data) {
         document.getElementById(
-          "class"
+          "classes"
         ).innerHTML += `<option value="${data[i].id}">${data[i].class_name}</option>`;
       }
     })
@@ -1294,7 +1802,7 @@ function getAllStudent(class_id) {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/teacher/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1305,7 +1813,7 @@ function getAllStudent(class_id) {
         for (i in data) {
           student_class =
             data[i].class == null ? `GRADUATED` : data[i].class.id;
-          if (student_class != class_id) {
+          if (student_class != class_id || data[i].profile_status == "DISABLED") {
             continue;
           }
           document.getElementById("student").innerHTML += `<option value="${
@@ -1317,6 +1825,28 @@ function getAllStudent(class_id) {
           "student"
         ).innerHTML = ` <option value="">NO STUDENT FOUND IN THE SELECTED CLASS</option>`;
       }
+    })
+    .catch((err) => console.log(err));
+}
+
+async function getStudent(id) {
+  return fetch(ip + "/api/admin/student/" + id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      return data;
     })
     .catch((err) => console.log(err));
 }
@@ -1345,6 +1875,7 @@ function debounce(func, timeout = 2000) {
 }
 
 function getDashboardInfo() {
+  openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
     headers: {
@@ -1360,12 +1891,16 @@ function getDashboardInfo() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/admin/");
+        openAuthenticationModal();
       }
       return res.json();
     })
 
     .then((data) => {
+      removeSpinnerModal();
+      //DASHBOARD CHART DATA
+      dashboardChart(JSON.stringify(data.chart_data));
+
       document.getElementById("student_no").innerHTML = `<span class="counter"
       data-num="${data.student_no}">${data.student_no}</span>`;
 
@@ -1377,11 +1912,297 @@ function getDashboardInfo() {
         parseInt(data.total_arrears)
       );
 
+      document.getElementById("total").innerHTML =
+        "₦" +
+        formatNumber(
+          parseInt(data.total_arrears) + parseInt(data.total_manual_payment)
+        );
+
       document.getElementById("total_expense").innerHTML = formatNumber(
         parseInt(data.total_expense)
       );
+
+      document.getElementById("total_debt").innerHTML = formatNumber(data.total_debt);
     })
     .catch((err) => console.log(err));
+
+  // if(document.getElementById("total").innerHTML == "---"){
+
+  // }
+}
+
+function dashboardChart(chart_data) {
+  chart_data = JSON.parse(chart_data);
+  current_term = localStorage['current_term'].toLowerCase().replace(' ',"_");
+  current_expected = chart_data.fee.expected[current_term];
+  current_received = chart_data.fee.collected[current_term];
+
+
+  // FEE
+  document.getElementById("income_expected").innerHTML =
+    formatNumber(current_expected);
+
+  document.getElementById("received").innerHTML =
+    formatNumber(current_received);
+
+  document.getElementById("chart_term_balance").innerHTML = formatNumber(
+    current_expected - current_received
+  );
+
+  // EXPENSE
+  document.getElementById("expense_first_term").innerHTML = formatNumber(
+    chart_data.expenses.first_term
+  );
+  document.getElementById("expense_second_term").innerHTML = formatNumber(
+    chart_data.expenses.second_term
+  );
+  document.getElementById("expense_third_term").innerHTML = formatNumber(
+    chart_data.expenses.third_term
+  );
+
+  /*-------------------------------------
+        LINE CHART
+    -------------------------------------*/
+  if ($("#earning-line-chart").length) {
+    var lineChartData = {
+      labels: ["", "FIRST TERM", "SECOND TERM", "THIRD TERM",""],
+      datasets: [
+        // RECEIVED CHART
+        {
+          data: [
+            0,
+            chart_data.fee.collected.first_term,
+            chart_data.fee.collected.second_term,
+            chart_data.fee.collected.third_term,
+          ],
+          backgroundColor: "#1DE9B6",
+          borderColor: "#1DE9B6",
+          borderWidth: 1,
+          pointRadius: 0,
+          pointBackgroundColor: "#1DE9B6",
+          pointBorderColor: "#ffffff",
+          pointHoverRadius: 6,
+          pointHoverBorderWidth: 3,
+          fill: "origin",
+          label: "Received",
+        },
+
+        //INCOME EXPECTED
+        {
+          data: [0,
+            chart_data.fee.expected.first_term,
+            chart_data.fee.expected.second_term,
+            chart_data.fee.expected.third_term,
+          ],
+          backgroundColor: "#ff0000",
+          borderColor: "#ff0000",
+          borderWidth: 1,
+          pointRadius: 0,
+          pointBackgroundColor: "#ff0000",
+          pointBorderColor: "#ffffff",
+          pointHoverRadius: 6,
+          pointHoverBorderWidth: 3,
+          fill: "origin",
+          label: "Income Expected",
+        },
+      ],
+    };
+    var lineChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 2000,
+      },
+      scales: {
+        xAxes: [
+          {
+            display: true,
+            ticks: {
+              display: true,
+              fontColor: "#222222",
+              fontSize: 16,
+              padding: 20,
+            },
+            gridLines: {
+              display: true,
+              drawBorder: true,
+              color: "#cccccc",
+              borderDash: [5, 5],
+            },
+          },
+        ],
+        yAxes: [
+          {
+            display: true,
+            ticks: {
+              display: true,
+              autoSkip: true,
+              maxRotation: 0,
+              fontColor: "#646464",
+              fontSize: 16,
+              stepSize: chart_data.fee_min,
+              padding: 20,
+              callback: function (value) {
+                var ranges = [
+                  {
+                    divider: 1e6,
+                    suffix: "M",
+                  },
+                  {
+                    divider: 1e3,
+                    suffix: "k",
+                  },
+                ];
+
+                function formatNumber(n) {
+                  for (var i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (
+                        (n / ranges[i].divider).toString() + ranges[i].suffix
+                      );
+                    }
+                  }
+                  return n;
+                }
+                return formatNumber(value);
+              },
+            },
+            gridLines: {
+              display: true,
+              drawBorder: false,
+              color: "#cccccc",
+              borderDash: [5, 5],
+              zeroLineBorderDash: [5, 5],
+            },
+          },
+        ],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        mode: "index",
+        intersect: false,
+        enabled: true,
+      },
+      elements: {
+        line: {
+          tension: 0.35,
+        },
+        point: {
+          pointStyle: "circle",
+        },
+      },
+    };
+    var earningCanvas = $("#earning-line-chart").get(0).getContext("2d");
+    var earningChart = new Chart(earningCanvas, {
+      type: "line",
+      data: lineChartData,
+      options: lineChartOptions,
+    });
+  }
+
+  /*-------------------------------------
+       BAR CHART
+    -------------------------------------*/
+  if ($("#expense-bar-chart").length) {
+    var barChartData = {
+      labels: ["FIRST TERM", "SECOND TERM", "THIRD TERM"],
+      datasets: [
+        {
+          backgroundColor: ["#40dfcd", "#417dfc", "#ffaa01"],
+          data: [
+            chart_data.expenses.first_term,
+            chart_data.expenses.second_term,
+            chart_data.expenses.third_term,
+          ],
+          label: "Expenses",
+        },
+      ],
+    };
+    var barChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 2000,
+      },
+      scales: {
+        xAxes: [
+          {
+            display: false,
+            maxBarThickness: 100,
+            ticks: {
+              display: false,
+              padding: 0,
+              fontColor: "#646464",
+              fontSize: 14,
+            },
+            gridLines: {
+              display: true,
+              color: "#e1e1e1",
+            },
+          },
+        ],
+        yAxes: [
+          {
+            display: true,
+            ticks: {
+              display: true,
+              autoSkip: false,
+              fontColor: "#646464",
+              fontSize: 14,
+              stepSize: chart_data.expense_min,
+              padding: 20,
+              beginAtZero: true,
+              callback: function (value) {
+                var ranges = [
+                  {
+                    divider: 1e6,
+                    suffix: "M",
+                  },
+                  {
+                    divider: 1e3,
+                    suffix: "k",
+                  },
+                ];
+
+                function formatNumber(n) {
+                  for (var i = 0; i < ranges.length; i++) {
+                    if (n >= ranges[i].divider) {
+                      return (
+                        (n / ranges[i].divider).toString() + ranges[i].suffix
+                      );
+                    }
+                  }
+                  return n;
+                }
+                return formatNumber(value);
+              },
+            },
+            gridLines: {
+              display: true,
+              drawBorder: true,
+              color: "#e1e1e1",
+              zeroLineColor: "#e1e1e1",
+            },
+          },
+        ],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: true,
+      },
+      elements: {},
+    };
+    var expenseCanvas = $("#expense-bar-chart").get(0).getContext("2d");
+    var expenseChart = new Chart(expenseCanvas, {
+      type: "bar",
+      data: barChartData,
+      options: barChartOptions,
+    });
+  }
 }
 
 // GET SCHOOL DETAILS
@@ -1414,7 +2235,57 @@ function paginateTable() {
 }
 
 // CUSTOM SESSION TERM
-function loadCustomSessionTerm() {
+async function loadCustomSessionTerm() {
+  // CALL API THAT GET ALL SESSION
+  return fetch(
+    ip + "/api/general/all-session/STD-" + localStorage["PD_STUDENT_ID"],
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
+    }
+  )
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        removeSpinnerModal();
+        openAuthenticationModal();
+        return 0;
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      document.getElementById("session_term").innerHTML = ``;
+
+      if (data.length > 0) {
+        session_term = data;
+        for (i = session_term.length - 1; i >= 0; i--) {
+          document.getElementById(
+            "session_term"
+          ).innerHTML += `<option value="${
+            session_term[i].session + "-" + session_term[i].term
+          }">${
+            session_term[i].session + " - " + session_term[i].term
+          }</option>`;
+        }
+
+        console.table(session_term);
+        console.table(data);
+      } else {
+        document.getElementById("session_term").innerHTML += `<option value="${
+          localStorage["current_session"] + "-" + localStorage["current_term"]
+        }">${
+          localStorage["current_session"] + " - " + localStorage["current_term"]
+        }</option>`;
+      }
+    });
+}
+
+function loadCustomSessionTermForDashboard() {
   term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
 
   fetch(ip + "/api/general/all-session/DESC", {
@@ -1428,7 +2299,7 @@ function loadCustomSessionTerm() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.parent.location.assign(domain + "/bursary/");
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1452,6 +2323,7 @@ function loadCustomSessionTerm() {
     .catch((err) => console.log(err));
 }
 
+
 function useCustomSessionTerm(session_term) {
   console.log(session_term);
   localStorage.setItem("current_session", session_term.split("-")[0]);
@@ -1472,7 +2344,7 @@ function checkPortalSubscription() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1481,10 +2353,8 @@ function checkPortalSubscription() {
       for (i in data) {
         if (data[i].status == "NOT PAID") {
           alert("YOU HAVE AN UNPAID PORTAL USAGE CONTACT YOUR ADMIN !");
-          localStorage.clear()
-          window.parent.location.assign(
-            domain + "/bursary/"
-          );
+          localStorage.clear();
+          window.parent.location.assign(domain + "/bursary/");
         }
       }
     })
@@ -1550,7 +2420,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
               .then(function (res) {
                 console.log(res.status);
                 if (res.status == 401) {
-                  window.location.href = "index.html";
+                  openAuthenticationModal();
                 }
                 return res.json();
               })
@@ -1592,7 +2462,7 @@ function getStoredCredential() {
     .then(function (res) {
       console.log(res.status);
       if (res.status == 401) {
-        window.location.href = "index.html";
+        openAuthenticationModal();
       }
       return res.json();
     })
@@ -1602,6 +2472,270 @@ function getStoredCredential() {
       localStorage.setItem("PSSK", data.PSSK);
     })
     .catch((err) => console.log(err));
+}
+
+function scoreLimit(element) {
+  var max_chars = 2;
+  if (element.innerHTML.length > max_chars) {
+    element.innerHTML = element.innerHTML.substr(0, max_chars);
+    element.blur();
+  }
+}
+
+// PAYMENT DETAILS
+function storePDStudentId(
+  student_id,
+  student_class,
+  student_class_name,
+  student_name
+) {
+  localStorage.setItem("PD_STUDENT_ID", student_id);
+  localStorage.setItem("PD_STUDENT_CLASS", student_class);
+  localStorage.setItem("PD_STUDENT_CLASSNAME", student_class_name);
+
+  document.getElementById("pd_label").innerHTML =
+    student_name + " PAYMENT DETAILS";
+  //localStorage.setItem('PD_STUDENT_NAME',student_name);
+}
+
+function getPaymentDetails() {
+  student_id = localStorage["PD_STUDENT_ID"];
+  CustomSessionTerm().then(function () {
+    session = localStorage["current_session"];
+    term = localStorage["current_term"];
+    getFee(student_id, session, term);
+    getAllPaymentHistory(student_id, session, term);
+  });
+}
+
+function getPaymentDetails2() {
+  student_id = localStorage["PD_STUDENT_ID"];
+  session_value = document.getElementById("session_term").value;
+  session = session_value.split("-")[0];
+  term = session_value.split("-")[1];
+  getFee(student_id, session, term);
+  getAllPaymentHistory(student_id, session, term);
+}
+
+$(document).click(function (e) {
+  if (!$(e.target).closest("#authenticationModal").length) {
+    modalExist = parent.document.getElementById("authenticationModal");
+    if (modalExist != null) {
+      modalExist.remove();
+
+      parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
+        console.log(el);
+        el.remove();
+      });
+    }
+  }
+});
+
+function download(filename) {
+  filename = filename == null ? "file" : filename;
+  const payment_slip = this.document.getElementById("payment-slip");
+  console.log(payment_slip);
+  console.log(window);
+  var opt = {
+    margin: 0.1,
+    filename: filename + ".pdf",
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  };
+  html2pdf().from(payment_slip).set(opt).save();
+}
+
+// RE - AUTHENTICATION MODAL
+function openAuthenticationModal() {
+  modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="authenticationModalTitle">
+                <b>Session Timeout !</b>
+            </h4>
+
+        </div>
+        <div class="modal-body text-center">
+            <div class="row">
+                <div class="col-lg-12 img-box">
+                    <img src="../asset/images/login-banner.png" alt="">
+                </div>
+                <div class="col-lg-12 no-padding">
+                    <div class="login-box">
+                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                        <div style="display: flex;
+                        justify-content: center;" class="row">
+
+                            <b>
+                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                    <i style="color: #051f3e;"
+                                        class="fas fa-graduation-cap fa-xs"></i>
+                                    SMARTSCHOOLHUB.net
+                                </h3>
+                            </b>
+
+                        </div>
+                        <br>
+
+                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                           ${localStorage["username"]},</script> please
+                            signin
+                            to continue
+                        </h5>
+                       <form autocomplete="off">   
+                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                            <div class="login-row row no-margin">
+                               
+                                <input id="password" type="password" autocomplete="new-password"
+                                    class="form-control form-control-sm">
+                                    <br>
+                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
+                            </div>
+                        </form>    
+                        <br>
+                        <a  style="float: right; color: red;" href="./index.html">Log out</a>
+
+
+                        <div class="login-row btnroo row no-margin">
+                            <button id="signin" onclick="reAuth()"
+                                class="btn btn-primary btn-sm ">Sign
+                                In</button>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <footer class="footer">
+                        <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a  style="color: #051f3e;"
+                                href="../#"><b>
+                                    Dextroux Technologies</b></a></div>
+                    </footer>
+                </div>
+
+            </div>
+            <script>
+                const password = document.querySelector('#password');
+                togglePass.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                })
+            </script>
+            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+        </div>
+    </div>
+</div>
+</div>
+`;
+
+  authenticationModal = parent.document.getElementById("authenticationModal");
+  if (authenticationModal != null) {
+    return 0;
+  }
+
+  parent.$("body").append(modal);
+  parent
+    .$("#authenticationModal")
+    .modal({ backdrop: "static", keyboard: false });
+  parent.$("#authenticationModal").modal("show");
+}
+
+function openSpinnerModal(message) {
+  modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
+aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-body text-center">
+        <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-warning" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-dark" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+        </div>
+
+        <h4 style="font-family: Poppins; font-weight: bold;"
+                class="modal-title col-12 text-center" id="spinnerModalTitle">
+                <b>${message != null || message != "" ? message : ``} </b><br/>
+                <b>Processing ...</b>
+            </h4>
+            <br>
+    </div>
+</div>
+</div>
+`;
+
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    return 0;
+  }
+
+  parent.$("body").append(modal);
+  parent.$("#spinnerModal").modal({ backdrop: "static", keyboard: false });
+  parent.$("#spinnerModal").modal("show");
+}
+
+function removeSpinnerModal() {
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  if (spinnerModal != null) {
+    parent.$("#spinnerModal").modal("hide");
+    parent.document.getElementById("spinnerModal").remove();
+  }
+}
+
+function collapseSidebar() {
+  if (
+    navigator.userAgent.match(/Android/i) ||
+    navigator.userAgent.match(/webOS/i) ||
+    navigator.userAgent.match(/iPhone/i) ||
+    // navigator.userAgent.match(/iPad/i) ||
+    navigator.userAgent.match(/iPod/i) ||
+    navigator.userAgent.match(/BlackBerry/i) ||
+    navigator.userAgent.match(/Windows Phone/i)
+  ) {
+    // MOBILE
+    a = true;
+  } else {
+    // DESKTOP
+    wrapper = document.getElementById("wrapper");
+    if (wrapper != null) {
+      if ((wrapper.className = "wrapper bg-ash")) {
+        wrapper.className = "wrapper bg-ash sidebar-collapsed";
+        if (document.getElementById("logo").innerHTML != "") {
+          changeLogo();
+        }
+      }
+    }
+  }
 }
 
 // TOAST
@@ -1716,12 +2850,14 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.class_name
           }</td>
           <td>
-            <a onmouseover="viewStudent(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            <a  onmouseover="viewStudent(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
-            <a onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
+            <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
               data[i]
             ).replace(
               /"/g,
@@ -1731,22 +2867,21 @@ function getAllStudentForTable() {
 
             ${
               data[i].profile_status == "ENABLED"
-                ? ` <a onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
+                ? ` <a  onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  `
-                : `  <a onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
+                : `  <a  onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
             
             `
             }
           
 
-            <a onclick="viewStudentIDCard(${JSON.stringify(data[i]).replace(/'/g,"").replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-secondary text-white"><i
+            <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a onclick="deleteStudent(${
+            <a  onclick="deleteStudent(${
               data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Model\PortalSubscription;
 use App\Model\SessionModel;
+use App\Model\ControlPanelModel;
 use App\Service\AdminService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -52,7 +53,7 @@ class SessionRepository
             $portalSubcription->save();
         }
 
-
+        $this->closeResultAccess();
         return response()->json(['success' => true, 'message' => 'Session was created successfully.']);
     }
 
@@ -84,6 +85,7 @@ class SessionRepository
             $portalSubcription->save();
         }
 
+        $this->closeResultAccess();
         return response()->json(['success' => true, 'message' => 'Session updated successfully.']);
     }
 
@@ -94,5 +96,11 @@ class SessionRepository
         } else {
             return response()->json(['success' => true, 'session' => SessionModel::where("session_status", "CURRENT")->get()[0]]);
         }
+    }
+
+    public function closeResultAccess(){
+        $ControlPanel = ControlPanelModel::find(1);
+        $ControlPanel->access_result = "NO";
+        $ControlPanel->save();
     }
 }

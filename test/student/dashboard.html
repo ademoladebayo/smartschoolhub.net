@@ -34,7 +34,8 @@
     <script src="../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"   onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('dashboard'); getCurrentSession(); getProfileData(); getFee(); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -101,8 +102,7 @@
                                     </li>
                                     <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
                                             Settings</a></li>
-                                    <li><a onclick="localStorage.removeItem('token')" href="index.html"><i
-                                                class="flaticon-turn-off"></i>Log Out</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i class="flaticon-turn-off"></i>Log Out</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -116,7 +116,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -150,7 +151,7 @@
                     <div class="col-8-xxxl col-12">
                         <div class="row">
                             <!-- Summery Area Start Here -->
-                            <div class="col-lg-4">
+                            <div class="col-lg-4" onclick="goTo('cbt.html')" >
                                 <div class="dashboard-summery-one">
                                     <div class="row">
                                         <div class="col-6">
@@ -161,10 +162,11 @@
                                         <div class="col-6">
                                             <div class="item-content">
                                                 <div style="color: black; font-family: Poppins;" class="item-title">
-                                                    <b>No of CBT</b>
+                                                    <b>CBT Completed</b>
                                                 </div>
-                                                <div class="item-number"><span class="counter"
-                                                        data-num="0"><b>0</b></span>
+                                                <div class="item-number">
+                                                    <span id="cbt_no" style="font-style: bold; color: black;">Loading
+                                                        ...</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -172,10 +174,10 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-4">
+                            <div class="col-lg-4" onclick="goTo('attendance.html')">
                                 <div class="dashboard-summery-one">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div  class="col-6">
                                             <div style="padding: 5px;" class="item-icon bg-light-yellow">
                                                 <i class="fas fa-chart-line text-orange"></i>
                                             </div>
@@ -185,8 +187,11 @@
                                                 <div style="color: black; font-family: Poppins;" class="item-title">
                                                     <b>Attendance</b>
                                                 </div>
-                                                <div class="item-number"><span class="counter"
-                                                        data-num="0"><b>0</b></span><span>%</span></div>
+                                                <div class="item-number">
+                                                    <span id="attendance_perc"
+                                                        style="font-style: bold; color: black;">Loading
+                                                        ...</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -215,7 +220,7 @@
 
 
                                                 <a href="#"
-                                                onclick="makePayment(JSON.parse(localStorage['fee']).due_balance)"
+                                                    onclick="alert('Online payment coming soon')"
                                                     class="text-green"><b>Pay
                                                         now</b></a><br>
                                                 <a href="#" onclick="reloadBreakdownFrame();" data-bs-toggle="modal"
@@ -232,7 +237,7 @@
                     </div>
 
                     <!-- Student Info Area Start Here -->
-                    <div id="my-profile" class="col-4-xxxl col-12">
+                    <div id="my-profile" class=" col-12">
                         <div class="card dashboard-card-ten">
                             <div class="card-body">
                                 <div class="heading-layout1">
@@ -265,7 +270,7 @@
                         </div>
                     </div>
                     <!-- Student Info Area End Here -->
-                    <div class="col-lg-6 col-4-xxxl col-xl-6">
+                    <div class="col-lg-6  col-xl-6">
                         <div class="card dashboard-card-six">
                             <div class="card-body">
                                 <div class="heading-layout1 mg-b-17">
@@ -325,7 +330,7 @@
                         </div>
                     </div>
 
-                    <div class="col-4-xxxl col-xl-6 col-12">
+                    <div class=" col-xl-6 col-12">
                         <div class="card dashboard-card-thirteen">
                             <div class="card-body">
                                 <div class="heading-layout1">
@@ -362,9 +367,9 @@
 
                                 <!--Content-->
                                 <div class="modal-content">
-                                    <div class="modal-header justify-content-center">
+                                    <div style="display: flex; justify-content: center; padding:5px;">
                                         <h5 style="font-weight: bold; font-family: Poppins;" class="modal-title"
-                                            id="exampleModalLabel">DUE BALANCE BREAKDOWN</h5>
+                                            id="exampleModalLabel">FEE BREAKDOWN</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
@@ -372,9 +377,119 @@
                                     <!--Body-->
                                     <div class="modal-body mb-0 p-0">
 
-                                        <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
-                                            <iframe id="breakdown" class="embed-responsive-item"
+                                        <!-- <div class="embed-responsive embed-responsive-16by9">
+                                            <iframe id="breakdown" class="embed-responsive-item" 
                                                 src="./due-balance.html" allowfullscreen></iframe>
+                                        </div> -->
+
+                                        <div id="wrapper">
+
+
+                                            <div id="content-wrapper" class="d-flex flex-column">
+
+                                                <div class="card shadow mb-4">
+
+                                                    <div class="card-header py-3">
+<!-- 
+                                                        <i onclick="window.location.reload();"
+                                                            style="color: black; float: right; margin-right: 3px; cursor: pointer;"
+                                                            class="fas fa-sync-alt">
+                                                            Refresh</i> -->
+                                                        <h6 class="m-0 font-weight-bold text-primary">EXPECTED AMOUNT :
+                                                            <span style="color: black;" id="expected_amount"></span>
+                                                        </h6>
+                                                        <p class="m-0 font-weight-bold " style="color: green;">TOTAL
+                                                            PAID : <span style="color: black;" id="total_paid"></span>
+
+                                                        <p class="m-0 font-weight-bold " style="color: #EE4B2B;">TERM
+                                                            BALANCE : <span style="color: black;"
+                                                                id="term_bal"></span>
+                                                        </p>
+
+                                                        <p class="m-0 font-weight-bold " style="color: #FF0000;">ARREARS
+                                                            : <span style="color: black;" id="arrears"></span>
+                                                        </p>
+
+                                                        <p class="m-0 font-weight-bold " style="color: #FF2400;">TOTAL
+                                                            DUE : <span style="color: black;"
+                                                                id="total_due_balance"></span>
+                                                        </p>
+
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-custom" width="100%"
+                                                                cellspacing="0" style="margin-bottom: 50px;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>_</th>
+                                                                        <th>S/N</th>
+                                                                        <th>Description</th>
+                                                                        <th>Fee Type</th>
+                                                                        <th>Class Sector</th>
+                                                                        <th>Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="table-custom" id="fee_table">
+                                                                    <tr>
+                                                                        <td><input type="checkbox"
+                                                                                class="form-check-input ml-0"
+                                                                                name="course0" value="CIT 410"
+                                                                                id="c4977" checked=""
+                                                                                onclick="this.checked = !this.checked">
+                                                                        </td>
+                                                                        <td>
+                                                                            1.</td>
+                                                                        <td>
+                                                                            Loading ...</td>
+
+                                                                        <td>
+                                                                            Loading ...</td>
+                                                                        <td>
+                                                                            Loading ...</td>
+                                                                        <td>
+                                                                            Loading ...</td>
+
+
+
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+
+                                                            <button id="add_optional_fee" onclick="generatePayment()"
+                                                                type="button" class="btn btn-primary btn-block">
+                                                                <i class="fas fa-sync-alt"></i> GENERATE NEW PAYMENT
+                                                                SLIP
+                                                            </button>
+
+                                                            <button id="" onclick="getPaymentSlip(true)" type="button"
+                                                                class="btn btn-primary btn-block">
+                                                                <i class="fas fa-print"></i> PRINT PAYMENT SLIP
+                                                            </button>
+
+                                                            <br>
+                                                            <!-- <label for="">How much do you want to pay ?</label>
+                                                            <input id="amount" placeholder="ENTER AMOUNT HERE 10,000" type="number" value=""
+                                                                style="float: right; border-color: blue; width: 330px; margin-bottom: 20px;">
+                                    
+                                                            <button
+                                                                onclick="$('#viewModal').modal('hide'); makePayment(document.getElementById('amount').value)"
+                                                                type="button" class="btn btn-primary btn-block">
+                                                                <i class="flaticon-money"></i> Pay Now
+                                                            </button> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Scroll to Top Button-->
+                                                <a class="scroll-to-top rounded" href="#page-top"
+                                                    style="display: none;">
+                                                    <i class="fas fa-angle-up"></i>
+                                                </a>
+                                            </div>
+                                            <!-- End of Content Wrapper -->
+
                                         </div>
 
                                     </div>
@@ -432,6 +547,22 @@
     <script src="./js/student.js"></script>
     <script src="../common-library.js"></script>
 
+    <style>
+        .table-custom th {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .table-custom td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .table-custom tr {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
 
 </body>
 

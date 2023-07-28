@@ -20,15 +20,30 @@ class StudentRepository
         $studentModel->profile_status = 'ENABLED';
         // hash::make(strtolower($studentModel->last_name));
         $studentModel->password = env("DEFAULT_PASSWORD");
-        $studentModel->save();
 
-        // CREATE STUDENT ID
-        if (strlen($studentModel->id) == 1) {
-            $studentModel->student_id = date("Y") . "-STD-00" . $studentModel->id;
-        } elseif (strlen($studentModel->id) == 2) {
-            $studentModel->student_id = date("Y") . "-STD-0" . $studentModel->id;
+        $last_student_id = StudentModel::orderBy('id', 'DESC')->get();
+
+        if (count($last_student_id) > 0) {  // IF ATLEAST A STUDENT HAS BEEN CREATED
+            // THE IS A PREVIOUS STUDENT
+            $last_student_id = $last_student_id[0]->student_id;
+            $year = intval(explode("-", $last_student_id)[0]);
+            $number = intval(explode("-", $last_student_id)[2]);
+            $current_year = intval(date("Y"));
+
+            if ($current_year > $year) {
+                $studentModel->student_id = date("Y") . "-STD-" . "001";
+            } else {
+                $new_number = $number + 1;
+                if (strlen($new_number) == 1) {
+                    $studentModel->student_id = date("Y") . "-STD-00" . $new_number;
+                } elseif (strlen($new_number) == 2) {
+                    $studentModel->student_id = date("Y") . "-STD-0" . $new_number;
+                } else {
+                    $studentModel->student_id = date("Y") . "-STD-" . $new_number;
+                }
+            }
         } else {
-            $studentModel->student_id = date("Y") . "-STD-" . $studentModel->id;
+            $studentModel->student_id = date("Y") . "-STD-" . "001";
         }
 
         $student_id =  $studentModel->student_id;
@@ -101,11 +116,19 @@ class StudentRepository
         return response()->json(['success' => true, 'message' => 'Profile updated successfully.']);
     }
 
+    public function updateStudentTranscriptAccess($id)
+    {
+        $StudentModel =  StudentModel::find($id);
+        $StudentModel->can_access_transcript =  $StudentModel->can_access_transcript == 'YES' ? 'NO' : 'YES';
+        $StudentModel->save();
+        return response()->json(['success' => true, 'message' => 'Transcript access updated successfully.']);
+    }
+
     public function getNoOfClassStudent($class_id)
     {
-        $class_no =  DB::select('select count(class) as class_no from student where class =' . $class_id)[0]->class_no;
-        $male = DB::select('select count(class) as male from student where class =' . $class_id . ' and gender = "MALE"')[0]->male;
-        $female =  DB::select('select count(class) as female from student where class =' . $class_id . ' and gender = "FEMALE"')[0]->female;
+        $class_no =  DB::select('select count(class) as class_no from student where profile_status ="ENABLED" and  class =' . $class_id)[0]->class_no;
+        $male = DB::select('select count(class) as male from student where profile_status = "ENABLED" and class =' . $class_id . ' and gender = "MALE"')[0]->male;
+        $female =  DB::select('select count(class) as female from student where profile_status = "ENABLED" and class =' . $class_id . ' and gender = "FEMALE"')[0]->female;
         return [$class_no, $male, $female];
     }
 
