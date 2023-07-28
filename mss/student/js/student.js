@@ -3443,31 +3443,32 @@ function getScheduledClass() {
             pc = pc + 1;
           }
 
+        });
 
-          if(document.getElementById("upcoming_class").innerHTML == ""){
-            document.getElementById("upcoming_class").innerHTML = 
-            `
-              <tr>
-                  <td colspan="4">
-                      <center>No scheduled class yet.</center>
-                  </td>
-              </tr>
-            `
 
-          }
-
-          if(document.getElementById("previous_class").innerHTML == ""){
-            document.getElementById("previous_class").innerHTML = 
-            `
+        
+        if(document.getElementById("upcoming_class").innerHTML == ""){
+          document.getElementById("upcoming_class").innerHTML = 
+          `
             <tr>
                 <td colspan="4">
-                    <center>No previous class yet.</center>
+                    <center>No scheduled class yet.</center>
                 </td>
             </tr>
-            `
-          }
+          `
 
-        });
+        }
+
+        if(document.getElementById("previous_class").innerHTML == ""){
+          document.getElementById("previous_class").innerHTML = 
+          `
+          <tr>
+              <td colspan="4">
+                  <center>No previous class yet.</center>
+              </td>
+          </tr>
+          `
+        }
       }
     })
     .catch((err) => console.log(err));
