@@ -84,8 +84,8 @@ class BursaryService
 
 
         // CHART DATA
-        // EXPECTED FEE , TOTAL COLLECTED , SESSION/TERM 
-        $active_students = StudentModel::where('profile_status', 'ENABLED')->get();
+        // EXPECTED FEE , TOTAL COLLECTED , SESSION/TERM
+        $active_students = StudentModel::where('profile_status', 'ENABLED')->where('class','!=','GRADUATED')->get();
         $session = $request->session;
         $terms = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
 
@@ -104,12 +104,12 @@ class BursaryService
 
 
             foreach ($active_students as $student) {
-                // GET EXPECTED 
+                // GET EXPECTED
                 $expect_fee = $bursaryService->getPayableForClass($student->class, $session, $term);
                 $optional_fee = $bursaryService->getOptionalFeeRequest($student->id, $session, $term);
                 $expected += ($expect_fee + $optional_fee);
 
-                // GET COLLECTED 
+                // GET COLLECTED
                 // $collected +=  $bursaryService->getTotalPaid($student->id, $session, $term);    ONLY ACTIVE STUDENT
             }
 
@@ -340,16 +340,16 @@ class BursaryService
         return response(['success' => true, 'message' => "Manual Payment was deleted successfully."]);
     }
 
-    // DEBITOR MANAGEMENT  
+    // DEBITOR MANAGEMENT
     public function syncLastestDebitor(Request $request)
     {
         $ControlPanelModel =  ControlPanelModel::find(1);
-        // CHECK IF ACTION IS PERMITTED 
+        // CHECK IF ACTION IS PERMITTED
         if (explode("-", $ControlPanelModel->debitor_list_last_update)[1] == "NO") {
             return response(['success' => false, 'message' => "This action is locked, Contact your admin."]);
         }
 
-        //LOOP THROUGH ALL STUDENT 
+        //LOOP THROUGH ALL STUDENT
         $all_student = StudentModel::select("id", "class")->where("profile_status", "ENABLED")->get();
         $c = 0;
         foreach ($all_student as $student) {
@@ -375,9 +375,9 @@ class BursaryService
                 }
             }
 
-            // SCHOOL OWES STUDENT 
+            // SCHOOL OWES STUDENT
             if ($balance < 0) {
-                // TO BE IMPLEMENTED IN THE FUTURE 
+                // TO BE IMPLEMENTED IN THE FUTURE
             }
 
 
@@ -473,7 +473,7 @@ class BursaryService
         $ControlPanelModel =  ControlPanelModel::find(1);
         $last_checked = explode("-", $ControlPanelModel->debitor_list_last_update)[0];
 
-        //LOOP THROUGH ALL STUDENT 
+        //LOOP THROUGH ALL STUDENT
         $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id", "graduation", "profile_status")->orderBy('id', 'DESC')->with("class")->get();
         //$all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->whereNotIn('class', ['GRADUATED'])->with("class")->get();
         $c = 0;
