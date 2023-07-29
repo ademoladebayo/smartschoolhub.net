@@ -4429,7 +4429,7 @@ function getAllClassForDropDown() {
 function promoteStudent() {
   class_id = document.getElementById("classes").value;
   class_name = document.getElementById("class");
-  index = document.getElementById("class").selectedIndex;
+  index = document.getElementById("classes").selectedIndex;
 
   if (class_id == "") {
     alert("Please select a class to promote student to !");
