@@ -389,6 +389,7 @@ class TeacherService
 
             if ($request->new_class == "GRADUATED") {
                 $student->graduation = $request->old_class . "_" . $session_term[0]->session . "_" . $session_term[0]->term;
+                $student->profile_status = "DISABLED";
             }
             $student->save();
         }

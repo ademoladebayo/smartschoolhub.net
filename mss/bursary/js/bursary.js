@@ -234,7 +234,7 @@ function formatNumber(number) {
 }
 
 function getCurrentSession() {
-  fetch(ip + "/api/general/current-session", {
+  return fetch(ip + "/api/general/current-session", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -1874,7 +1874,9 @@ function debounce(func, timeout = 2000) {
   };
 }
 
-function getDashboardInfo() {
+async function getDashboardInfo() {
+   await getCurrentSession();
+   await loadCustomSessionTermForDashboard();
   openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
@@ -2288,7 +2290,7 @@ async function loadCustomSessionTerm() {
 function loadCustomSessionTermForDashboard() {
   term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
 
-  fetch(ip + "/api/general/all-session/DESC", {
+  return fetch(ip + "/api/general/all-session/DESC", {
     method: "GET",
     headers: {
       Accept: "application/json",
