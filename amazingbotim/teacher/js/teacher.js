@@ -4428,7 +4428,7 @@ function getAllClassForDropDown() {
 // PROMOTE STUDENT
 function promoteStudent() {
   class_id = document.getElementById("classes").value;
-  class_name = document.getElementById("class");
+  class_name = document.getElementById("classes");
   index = document.getElementById("classes").selectedIndex;
 
   if (class_id == "") {
