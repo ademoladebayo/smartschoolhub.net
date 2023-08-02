@@ -234,7 +234,7 @@ function formatNumber(number) {
 }
 
 function getCurrentSession() {
-  fetch(ip + "/api/general/current-session", {
+  return fetch(ip + "/api/general/current-session", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -1874,7 +1874,9 @@ function debounce(func, timeout = 2000) {
   };
 }
 
-function getDashboardInfo() {
+async function getDashboardInfo() {
+   await getCurrentSession();
+   await loadCustomSessionTermForDashboard();
   openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
@@ -1930,6 +1932,63 @@ function getDashboardInfo() {
 
   // }
 }
+
+ function getDashboardInfo2() {
+   openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
+   fetch(ip + "/api/bursary/dashboard-information", {
+     method: "POST",
+     headers: {
+       Accept: "application/json",
+       "Content-type": "application/json",
+       Authorization: "Bearer " + localStorage["token"],
+     },
+     body: JSON.stringify({
+       session: localStorage["current_session"],
+       term: localStorage["current_term"],
+     }),
+   })
+     .then(function (res) {
+       console.log(res.status);
+       if (res.status == 401) {
+         openAuthenticationModal();
+       }
+       return res.json();
+     })
+ 
+     .then((data) => {
+       removeSpinnerModal();
+       //DASHBOARD CHART DATA
+       dashboardChart(JSON.stringify(data.chart_data));
+ 
+       document.getElementById("student_no").innerHTML = `<span class="counter"
+       data-num="${data.student_no}">${data.student_no}</span>`;
+ 
+       document.getElementById("total_manual_payment").innerHTML = formatNumber(
+         parseInt(data.total_manual_payment)
+       );
+ 
+       document.getElementById("total_arrears").innerHTML = formatNumber(
+         parseInt(data.total_arrears)
+       );
+ 
+       document.getElementById("total").innerHTML =
+         "₦" +
+         formatNumber(
+           parseInt(data.total_arrears) + parseInt(data.total_manual_payment)
+         );
+ 
+       document.getElementById("total_expense").innerHTML = formatNumber(
+         parseInt(data.total_expense)
+       );
+ 
+       document.getElementById("total_debt").innerHTML = formatNumber(data.total_debt);
+     })
+     .catch((err) => console.log(err));
+ 
+   // if(document.getElementById("total").innerHTML == "---"){
+ 
+   // }
+ }
 
 function dashboardChart(chart_data) {
   chart_data = JSON.parse(chart_data);
@@ -2288,7 +2347,7 @@ async function loadCustomSessionTerm() {
 function loadCustomSessionTermForDashboard() {
   term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
 
-  fetch(ip + "/api/general/all-session/DESC", {
+  return fetch(ip + "/api/general/all-session/DESC", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -2328,7 +2387,7 @@ function useCustomSessionTerm(session_term) {
   console.log(session_term);
   localStorage.setItem("current_session", session_term.split("-")[0]);
   localStorage.setItem("current_term", session_term.split("-")[1]);
-  getDashboardInfo();
+  getDashboardInfo2();
 }
 
 //CHECK PORTAL SUBSCRIPTION

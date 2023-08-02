@@ -132,7 +132,7 @@ class StudentService
             $StudentResultCommentModel->term = $request->term;
             $StudentResultCommentModel->save();
 
-            // RATINGS 
+            // RATINGS
             $StudentResultRatingModel->student_id = $request->student_id;
             $StudentResultRatingModel->session =  $request->session;
             $StudentResultRatingModel->term = $request->term;
@@ -403,7 +403,7 @@ class StudentService
         $result =  SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class', 'subject')->get();
 
         if (count($result) > 0) {
-            $no_student = DB::select('select count(distinct student_id) as no_student from subject_registration where class_id ="' . $result[0]->class->id . '" and session ="' . $request->session . '" and term ="' . $request->term . '"')[0]->no_student;
+            $no_student = DB::select('select count(distinct sr.student_id) as no_student from subject_registration sr join student s on sr.student_id = s.id where s.profile_status ="ENABLED" and   class_id ="' . $result[0]->class->id . '" and session ="' . $request->session . '" and term ="' . $request->term . '"')[0]->no_student;
         }
 
         // LOOP THROUGH RESULT AND ATTACH GRADE
@@ -412,11 +412,21 @@ class StudentService
             $all_score = [];
 
             // TAKE EACH TOTAL SCORE AND GET GRADE , REMARK , AVG , MIN ,MAX AND POSITION
-            $avg =  SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
-            $min =  SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
-            $max =  SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
-            $scores =  SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get();
+            $avg =  SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get()[0]->avg;
 
+            $min =  SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get()[0]->min;
+
+            $max =  SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get()[0]->max;
+
+            $scores =  SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->whereHas('student', function ($query) {
+                $query->where('profile_status', 'ENABLED');
+            })->get();
 
 
 

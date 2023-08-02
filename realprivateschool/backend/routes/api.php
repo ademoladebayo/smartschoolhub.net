@@ -228,8 +228,8 @@ Route::middleware([ActivityLog::class])->group(function () {
     })->middleware(Cors::class)->withoutMiddleware([ActivityLog::class]);
 
 
-     // TEACHER {CBT}
-     Route::post('teacher/create-cbt', 'TeacherController@createCBT', function () {
+    // TEACHER {CBT}
+    Route::post('teacher/create-cbt', 'TeacherController@createCBT', function () {
     })->middleware(Cors::class);
 
     Route::post('teacher/edit-cbt', 'TeacherController@editCBT', function () {
@@ -325,7 +325,7 @@ Route::middleware([ActivityLog::class])->group(function () {
         Route::get('teacher/assignment-submission/{id}', 'TeacherController@getSubmission', function () {
         })->middleware(Cors::class);
 
-    
+
 
         // TEACHER {LIVE CLASS}
         Route::post('teacher/live-class', 'TeacherController@scheduleLiveClass', function () {
@@ -503,7 +503,6 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         Route::delete('bursary/portal-subscription/{id}', 'BursaryController@deletePortalSubscription', function () {
         })->middleware(Cors::class);
-        
     });
 
     // =============================================================================
@@ -524,15 +523,13 @@ Route::middleware([ActivityLog::class])->group(function () {
     Route::get('general/current-session', 'GeneralController@getCurrentSession', function () {
     })->middleware(Cors::class)->withoutMiddleware([ActivityLog::class]);
 
-
-
+    // GET STORED CREDENTIALS
+    Route::get('general/stored-credential', 'GeneralController@storedCredentials', function () {
+    })->middleware(Cors::class);
+    
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('general/all-session/{sort}', 'GeneralController@allSession', function () {
-        })->middleware(Cors::class);
-
-        // GET STORED CREDENTIALS
-        Route::get('general/stored-credential', 'GeneralController@storedCredentials', function () {
         })->middleware(Cors::class);
     });
     // ===================================================================

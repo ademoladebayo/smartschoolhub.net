@@ -6305,7 +6305,8 @@ function checkPortalSubscription() {
     .catch((err) => console.log(err));
 }
 
-function payWithPaystack(id, amount, subscription_id, description) {
+async function payWithPaystack(id, amount, subscription_id, description) {
+  await getStoredCredential();
   var handler = PaystackPop.setup({
     key: localStorage["PSPK"], //put your public key here
     email: localStorage["SCHOOL_EMAIL"], //put your customer's email here
@@ -6372,6 +6373,8 @@ function payWithPaystack(id, amount, subscription_id, description) {
                 if (data.success) {
                   toastr.remove();
                   successtoast(data.message);
+                  localStorage.removeItem('PSSK');
+                  localStorage.removeItem('PSPK');
                   getPortalSubscription();
                 } else {
                   errortoast(data.message);

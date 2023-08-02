@@ -117,7 +117,7 @@ class TeacherService
                 array_push($previous_registration_id, $data->subject_id);
             }
 
-            
+
             Log::debug("PREVIOUS REGISTRATION : ");
             Log::debug($previous_registration_id);
 
@@ -171,7 +171,7 @@ class TeacherService
                 $StudentResultCommentModel->term = $request->term;
                 $StudentResultCommentModel->save();
 
-                // RATINGS 
+                // RATINGS
                 $StudentResultRatingModel->student_id = $students_id[$i];
                 $StudentResultRatingModel->session =  $request->session;
                 $StudentResultRatingModel->term = $request->term;
@@ -294,7 +294,13 @@ class TeacherService
     // RESULT UPLOAD
     public function getStudentRegistered(Request $request)
     {
-        $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
+        // $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
+
+        $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->whereHas('student', function ($query) {
+            $query->where('profile_status', 'ENABLED');
+        })->get();
+
+
         // LOOP THROUGH RESULT AND ATTACH GRADE
 
         foreach ($result as $data) {
@@ -383,6 +389,7 @@ class TeacherService
 
             if ($request->new_class == "GRADUATED") {
                 $student->graduation = $request->old_class . "_" . $session_term[0]->session . "_" . $session_term[0]->term;
+                //$student->profile_status = "DISABLED";
             }
             $student->save();
         }
