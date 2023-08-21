@@ -451,10 +451,10 @@ function editFeeDetails() {
       localStorage["editFee"].split("~")[2]
     }</option>` + document.getElementById("fee_type").innerHTML;
 
-  document.getElementById("class").innerHTML =
+  document.getElementById("classes").innerHTML =
     `<option value="${localStorage["editFee"].split("~")[3]}">${
       localStorage["editFee"].split("~")[3]
-    }</option>` + document.getElementById("class").innerHTML;
+    }</option>` + document.getElementById("classes").innerHTML;
 
   document.getElementById("amount").value =
     localStorage["editFee"].split("~")[4];
