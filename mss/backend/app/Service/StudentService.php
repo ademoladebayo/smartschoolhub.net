@@ -246,7 +246,7 @@ class StudentService
             $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
         }
 
-        $class_name = ClassModel::find($class)->get()->class_name;
+        $class_name = ClassModel::find($class)->class_name;
 
         $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
         $fees =  FeeModel::where('class', $class)->where('session', $request->session)->where('term', $request->term)
