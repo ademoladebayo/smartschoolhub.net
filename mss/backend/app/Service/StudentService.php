@@ -237,13 +237,17 @@ class StudentService
         $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->get();
 
         $class = "";
+        $class_name = "";
         if (count($paymentHistory) != 0) {
             // USE CLASS STUDENT WAS IN
             $class = $paymentHistory[0]->class_id;
-        }else{
+        } else {
             // USE THE CURRENT CLASS
             $class = StudentModel::select('class')->where('id', $request->student_id)->get()[0]->class;
         }
+
+        $class_name = ClassModel::find($class)->get()->class_name;
+
         $class_sector = ClassModel::select('class_sector')->where('id', $class)->get()[0]->class_sector;
         $fees =  FeeModel::where('class', $class)->where('session', $request->session)->where('term', $request->term)
             ->orWhere('class', $class_sector)->where('session', $request->session)->where('term', $request->term)
@@ -278,7 +282,7 @@ class StudentService
         }
 
 
-        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'approved_optional_fee_id' => $approved_optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid)];
+        return ['fee_breakdown' => $fees, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'optional_fee_id' => $optional_fee_id, 'approved_optional_fee_id' => $approved_optional_fee_id, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid, 'arrears' => $arrears, 'total_due_balance' => $arrears + (($expected_fee + $optional_fee) - $total_paid) , 'class_name' =>  $class_name];
     }
 
 

@@ -615,11 +615,7 @@ function getFee(student_id, session, term, student_class) {
                    ? `OPTIONAL (Approved)`
                    : fee.type
                }</td>
-               <td>${
-                 fee.class == localStorage["PD_STUDENT_CLASS"]
-                   ? localStorage["PD_STUDENT_CLASSNAME"]
-                   : fee.class
-               }</td>
+               <td>${ data.class_name}</td>
               <td>₦${formatNumber(fee.amount)}</td>
           </tr>
           `;
