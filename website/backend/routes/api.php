@@ -26,4 +26,7 @@ Route::post('website/save-visitor', 'VisitorController@saveVisitor', function ()
 Route::post('website/create-affilate', 'AffilateController@createAffilate', function () {
 })->middleware(Cors::class);
 
+Route::get('schools', 'SchoolController@getSchools', function () {
+})->middleware(Cors::class);
+
 

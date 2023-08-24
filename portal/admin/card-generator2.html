@@ -1,0 +1,329 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+
+<head id="common-library">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>SSHUB | ID Card</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="../img/favicon.png">
+    <!-- Normalize CSS -->
+    <link rel="stylesheet" href="../css/normalize.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="../css/all.min.css">
+    <!-- Flaticon CSS -->
+    <link rel="stylesheet" href="../fonts/flaticon.css">
+    <!-- Full Calender CSS -->
+    <link rel="stylesheet" href="../css/fullcalendar.min.css">
+    <!-- Select 2 CSS -->
+    <link rel="stylesheet" href="../css/select2.min.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="../css/animate.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../style.css">
+
+    <!-- QR CDN -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+
+    <link rel="stylesheet" href="../css/id-card2.css">
+    <!-- Modernize js -->
+    <script src="../js/modernizr-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+</head>
+
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('card-generator'); loadDashBoardInformation()">
+    <!-- Preloader Start Here -->
+    <div id="preloader"></div>
+    <!-- Preloader End Here -->
+    <div id="wrapper" class="wrapper bg-ash">
+        <!-- Header Menu Area Start Here -->
+        <div class="navbar navbar-expand-md header-menu-one bg-light">
+            <div class="nav-bar-header-one">
+                <b style="margin-left: 5px; margin-top: 5px;" id="logo">
+                    <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                        <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                    </h1>
+                </b>
+                <div class="toggle-button sidebar-toggle">
+                    <button onclick="changeLogo()" type="button" class="item-link">
+                        <span class="btn-icon-wrap">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="d-md-none mobile-nav-bar">
+                <button class="navbar-toggler pulse-animation" type="button" data-toggle="collapse"
+                    data-target="#mobile-navbar" aria-expanded="false">
+                    <i class="far fa-arrow-alt-circle-down"></i>
+                </button>
+                <button type="button" class="navbar-toggler sidebar-toggle-mobile">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="header-main-menu collapse navbar-collapse" id="mobile-navbar">
+                <ul class="navbar-nav">
+                    <li class="navbar-item header-search-bar">
+                        <div class="input-group stylish-input-group">
+                            <span class="input-group-addon">
+                                <button type="submit">
+                                    <span class="flaticon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Find Something . . .">
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="navbar-item dropdown header-admin">
+                        <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                            aria-expanded="false">
+                            <div class="admin-title">
+                                <h5 id="user_name" class="item-title"></h5>
+                                <span id="user_type">ADMIN</span>
+                            </div>
+                            <div id="user_img" class="admin-img">
+                                <img src="../img/figure/admin.jpg" alt="Admin">
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="item-header">
+                                <h6 id="user_name1" class="item-title"></h6>
+                            </div>
+                            <div class="item-content">
+                                <ul class="settings-list">
+                                    <li><a href="dashboard.html?#my-profile"><i class="flaticon-user"></i>My Profile</a>
+                                    </li>
+                                    <li><a href="change-password.html"><i class="flaticon-gear-loading"></i>Account
+                                            Settings</a></li>
+                                    <li><a onclick="goTo('')" href="#"><i
+                                                class="flaticon-turn-off"></i>Log Out</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+        <!-- Header Menu Area End Here -->
+        <!-- Page Area Start Here -->
+        <div class="dashboard-page-one">
+            <!-- Sidebar Area Start Here -->
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+
+
+                <div class="mobile-sidebar-header d-md-none">
+                    <div class="header-logo">
+                        <a href="dashboard.html"><b id="logo">
+                                <h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+                                    <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB
+                                </h1>
+                            </b></a>
+                    </div>
+                </div>
+                <div id="side_nav" class="sidebar-menu-content ">
+
+                </div>
+            </div>
+            <!-- Sidebar Area End Here -->
+            <div class="dashboard-content-one">
+                <div style="float: right;" class="header-inline item-header">
+                    <div class="header-elements">
+                        <ul>
+                            <!-- <li><a href="#"><i class="far fa-edit"></i></a></li> -->
+                            <li><a onclick="print1('print-content')" href="#"><i class="fas fa-print"></i></a></li>
+                            <!-- <li><a href="#"><i class="fas fa-download"></i></a></li> -->
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 style="text-align: center; font-weight: bold; font-family: Poppins; text-align: center">
+                    ID CARD GENERATOR
+                </h2>
+
+                <div class="row">
+                    <div class=" col-12">
+                        <div class="card height-auto">
+                            <div class="card-body">
+                                <div class="row gutters-8">
+                                    <div class="col-lg-5 col-12 form-group">
+                                        <select id="user_type_card" class="select2">
+                                            <option value="">SELECT STUDENT OR STAFF</option>
+                                            <option value="STUDENT">STUDENT</option>
+                                            <option value="STAFF">STAFF</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-5 col-12 form-group">
+                                        <select id="user_class_sector" class="select2">
+                                            <option value="ALL STUDENT">IF STUDENT, SELECT CLASS SECTOR</option>
+                                            <option value="ALL CLASS">ALL CLASS</option>
+                                            <option value="PRIMARY">PRIMARY</option>
+                                            <option value="JUNIOR SECONDARY">JUNIOR SECONDARY</option>
+                                            <option value="SENIOR SECONDARY">SENIOR SECONDARY</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-5 col-12 form-group" style="margin-right: 15px;">
+                                        <button id="generate_idcard" onclick="generateIDCard2('')"
+                                            class="fw-btn-fill btn-gradient-yellow">Generate ID Card</button>
+                                    </div>
+
+                                    <div class="col-lg-5 col-12 form-group">
+                                        <!-- <button id="generate_idcard" onclick="downloadAsPDF('idcard_list')"
+                                            class="fw-btn-fill btn-primary">Download</button> -->
+                                        <button id="generate_idcard" onclick="print()"
+                                            class="fw-btn-fill btn-primary">Download</button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="idcard_list">
+                    <!-- <div style="margin-top: 20px;" class="container">
+                        <div class="padding">
+                            <div class="font">
+                                <div class="top">
+                                    <b>
+                                        <h4 id="school_name"
+                                            style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                                            ________________
+                                        </h4>
+                                    </b>
+                                    <div
+                                        style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
+                                        <img id="school_logo_mini" style="padding: 0%;" src="" width="px">
+                                    </div>
+
+
+                                    <img id="user_image"
+                                        style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+                                        src="../assets/img/sample_image.png" width="">
+
+
+                                </div>
+                                <div class="bottom">
+                                    <div style="margin-bottom:5px">
+                                        <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+                                    ;color: black;">________________</p>
+                                        <p id="id" style="margin-bottom: 1px; color: black; ">________________</p>
+
+                                        <small>
+                                            <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                                                ________________</p>
+                                        </small>
+
+                                    </div>
+                                    <br>
+
+
+                                    <div style="display: flex; justify-content: center; margin-top: 0px">
+                                        <img id="school_logo_mini"
+                                            style="border-color: white; border-style: solid;padding: 0%;" src=""
+                                            width="px">
+                                    </div>
+
+                                    <div style="margin-top: 20px;margin-bottom: 210px;">
+                                        <h5 id ="user_type" style="font-family: Poppins
+                                    ;color: black; text-align: center;">_______________</h5>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="back">
+                            <h1 style="margin-bottom: 0; font-family: Poppins
+                            ;" class="Details">INFORMATION</h1>
+                            <hr style="background-color: white !important;">
+                            <small>
+                                <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+                                </h6>
+                            </small>
+                            <div style="margin-top: 0%;" class="qrcode">
+                                <div style="display: flex; justify-content: center; text-align: center;" id="IDQR">
+                                </div>
+                            </div>
+                            <div class="details-info">
+                                <h6 style="text-align: center;color: white !important;">if found please return to
+                                </h6>
+                                <h6 id="school_address"
+                                    style="text-align: center;color: white !important; margin-bottom: 10px;">
+                                    ________________</h6>
+
+                            </div>
+                        </div>
+                    </div> -->
+
+
+                </div>
+
+                <footer class="footer-wrap-layout1">
+                    <div class="copyright">© Copyrights <a href="../#"><b>Smart School Hub</b></a> 2021. All rights
+                        reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
+                </footer>
+            </div>
+
+
+
+        </div>
+    </div>
+    <!-- Page Area End Here -->
+    </div>
+    <!-- jquery-->
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <!-- Plugins js -->
+    <script src="../js/plugins.js"></script>
+    <!-- Popper js -->
+    <script src="../js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- Counterup Js -->
+    <script src="../js/jquery.counterup.min.js"></script>
+    <!-- Moment Js -->
+    <script src="../js/moment.min.js"></script>
+    <!-- Waypoints Js -->
+    <script src="../js/jquery.waypoints.min.js"></script>
+    <!-- Scroll Up Js -->
+    <script src="../js/jquery.scrollUp.min.js"></script>
+    <!-- Full Calender Js -->
+    <script src="../js/fullcalendar.min.js"></script>
+    <!-- Chart Js -->
+    <script src="../js/Chart.min.js"></script>
+    <!-- Select 2 Js -->
+    <script src="../js/select2.min.js"></script>
+    <!-- Custom Js -->
+    <script src="../js/main.js"></script>
+    <!-- Custom Js -->
+    <script src="../js/student.js"></script>
+    <script src="./js/admin.js?v=1"></script>
+    <script src="../js/iframeSizer.min.js"></script>
+    <script src="../common-library.js"></script>
+    <script src="../js/frame_script.js"></script>
+    <script src="./js/qrcode.min.js"></script>
+
+
+</body>
+
+
+<!-- Mirrored from www.radiustheme.com/demo/html/psdboss/SSHUB/SSHUB/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 07 Jul 2021 15:19:04 GMT -->
+
+</html>
