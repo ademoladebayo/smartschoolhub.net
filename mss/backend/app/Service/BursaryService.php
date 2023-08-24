@@ -509,7 +509,6 @@ class BursaryService
 
                 $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $student->class)->where('session', $request->session)->where('term', $request->term)->get();
                 $class = "";
-                $class_name = "";
                 if (count($paymentHistory) != 0) {
                     // USE CLASS STUDENT WAS IN
                     $class = $paymentHistory[0]->class_id;
@@ -518,7 +517,7 @@ class BursaryService
                     $class = $student->class;
                 }
 
-                $student->class = ClassModel::find($class);
+                $student["class"] = ClassModel::find($class);
 
 
                 $expected_fee = $this->getPayableForClass($class, $request->session, $request->term);
