@@ -474,7 +474,10 @@ class BursaryService
         $last_checked = explode("-", $ControlPanelModel->debitor_list_last_update)[0];
 
         //LOOP THROUGH ALL STUDENT
-        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id", "graduation", "profile_status")->orderBy('id', 'DESC')->with("class")->get();
+        $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id", "graduation", "profile_status")->orderBy('id', 'DESC')->get();
+
+        // $all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id", "graduation", "profile_status")->orderBy('id', 'DESC')->with("class")->get();
+
         //$all_student = StudentModel::select("id", "class", "first_name", "last_name", "student_id")->whereNotIn('class', ['GRADUATED'])->with("class")->get();
         $c = 0;
         foreach ($all_student as $student) {
@@ -503,7 +506,21 @@ class BursaryService
             } else {
                 // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
                 Log::alert("ELSE : " . $student->first_name);
-                $expected_fee = $this->getPayableForClass($student->class, $request->session, $request->term);
+
+                $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $student->id)->where('session', $request->session)->where('term', $request->term)->get();
+                $class = "";
+                if (count($paymentHistory) != 0) {
+                    // USE CLASS STUDENT WAS IN
+                    $class = $paymentHistory[0]->class_id;
+                } else {
+                    // USE THE CURRENT CLASS
+                    $class = $student->class;
+                }
+
+                $student["class"] = ClassModel::find($class);
+
+
+                $expected_fee = $this->getPayableForClass($class, $request->session, $request->term);
                 $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
                 $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
                 $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();

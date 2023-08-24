@@ -616,7 +616,7 @@ function getFee(student_id, session, term, student_class) {
                    : fee.type
                }</td>
                <td>${
-                 fee.class == localStorage["PD_STUDENT_CLASS"]
+                 fee.class == localStorage["PD_STUDENT_CLASS"] || data.class_name == localStorage["PD_STUDENT_CLASS"]
                    ? localStorage["PD_STUDENT_CLASSNAME"]
                    : fee.class
                }</td>
@@ -1813,7 +1813,10 @@ function getAllStudent(class_id) {
         for (i in data) {
           student_class =
             data[i].class == null ? `GRADUATED` : data[i].class.id;
-          if (student_class != class_id || data[i].profile_status == "DISABLED") {
+          if (
+            student_class != class_id ||
+            data[i].profile_status == "DISABLED"
+          ) {
             continue;
           }
           document.getElementById("student").innerHTML += `<option value="${
@@ -1875,9 +1878,14 @@ function debounce(func, timeout = 2000) {
 }
 
 async function getDashboardInfo() {
-   await getCurrentSession();
-   await loadCustomSessionTermForDashboard();
-  openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
+  await getCurrentSession();
+  await loadCustomSessionTermForDashboard();
+  openSpinnerModal(
+    "Statistics for " +
+      localStorage["current_session"] +
+      " - " +
+      localStorage["current_term"]
+  );
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
     headers: {
@@ -1924,7 +1932,9 @@ async function getDashboardInfo() {
         parseInt(data.total_expense)
       );
 
-      document.getElementById("total_debt").innerHTML = formatNumber(data.total_debt);
+      document.getElementById("total_debt").innerHTML = formatNumber(
+        data.total_debt
+      );
     })
     .catch((err) => console.log(err));
 
@@ -1933,69 +1943,75 @@ async function getDashboardInfo() {
   // }
 }
 
- function getDashboardInfo2() {
-   openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
-   fetch(ip + "/api/bursary/dashboard-information", {
-     method: "POST",
-     headers: {
-       Accept: "application/json",
-       "Content-type": "application/json",
-       Authorization: "Bearer " + localStorage["token"],
-     },
-     body: JSON.stringify({
-       session: localStorage["current_session"],
-       term: localStorage["current_term"],
-     }),
-   })
-     .then(function (res) {
-       console.log(res.status);
-       if (res.status == 401) {
-         openAuthenticationModal();
-       }
-       return res.json();
-     })
- 
-     .then((data) => {
-       removeSpinnerModal();
-       //DASHBOARD CHART DATA
-       dashboardChart(JSON.stringify(data.chart_data));
- 
-       document.getElementById("student_no").innerHTML = `<span class="counter"
+function getDashboardInfo2() {
+  openSpinnerModal(
+    "Statistics for " +
+      localStorage["current_session"] +
+      " - " +
+      localStorage["current_term"]
+  );
+  fetch(ip + "/api/bursary/dashboard-information", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      //DASHBOARD CHART DATA
+      dashboardChart(JSON.stringify(data.chart_data));
+
+      document.getElementById("student_no").innerHTML = `<span class="counter"
        data-num="${data.student_no}">${data.student_no}</span>`;
- 
-       document.getElementById("total_manual_payment").innerHTML = formatNumber(
-         parseInt(data.total_manual_payment)
-       );
- 
-       document.getElementById("total_arrears").innerHTML = formatNumber(
-         parseInt(data.total_arrears)
-       );
- 
-       document.getElementById("total").innerHTML =
-         "₦" +
-         formatNumber(
-           parseInt(data.total_arrears) + parseInt(data.total_manual_payment)
-         );
- 
-       document.getElementById("total_expense").innerHTML = formatNumber(
-         parseInt(data.total_expense)
-       );
- 
-       document.getElementById("total_debt").innerHTML = formatNumber(data.total_debt);
-     })
-     .catch((err) => console.log(err));
- 
-   // if(document.getElementById("total").innerHTML == "---"){
- 
-   // }
- }
+
+      document.getElementById("total_manual_payment").innerHTML = formatNumber(
+        parseInt(data.total_manual_payment)
+      );
+
+      document.getElementById("total_arrears").innerHTML = formatNumber(
+        parseInt(data.total_arrears)
+      );
+
+      document.getElementById("total").innerHTML =
+        "₦" +
+        formatNumber(
+          parseInt(data.total_arrears) + parseInt(data.total_manual_payment)
+        );
+
+      document.getElementById("total_expense").innerHTML = formatNumber(
+        parseInt(data.total_expense)
+      );
+
+      document.getElementById("total_debt").innerHTML = formatNumber(
+        data.total_debt
+      );
+    })
+    .catch((err) => console.log(err));
+
+  // if(document.getElementById("total").innerHTML == "---"){
+
+  // }
+}
 
 function dashboardChart(chart_data) {
   chart_data = JSON.parse(chart_data);
-  current_term = localStorage['current_term'].toLowerCase().replace(' ',"_");
+  current_term = localStorage["current_term"].toLowerCase().replace(" ", "_");
   current_expected = chart_data.fee.expected[current_term];
   current_received = chart_data.fee.collected[current_term];
-
 
   // FEE
   document.getElementById("income_expected").innerHTML =
@@ -2024,7 +2040,7 @@ function dashboardChart(chart_data) {
     -------------------------------------*/
   if ($("#earning-line-chart").length) {
     var lineChartData = {
-      labels: ["", "FIRST TERM", "SECOND TERM", "THIRD TERM",""],
+      labels: ["", "FIRST TERM", "SECOND TERM", "THIRD TERM", ""],
       datasets: [
         // RECEIVED CHART
         {
@@ -2048,7 +2064,8 @@ function dashboardChart(chart_data) {
 
         //INCOME EXPECTED
         {
-          data: [0,
+          data: [
+            0,
             chart_data.fee.expected.first_term,
             chart_data.fee.expected.second_term,
             chart_data.fee.expected.third_term,
@@ -2381,7 +2398,6 @@ function loadCustomSessionTermForDashboard() {
     })
     .catch((err) => console.log(err));
 }
-
 
 function useCustomSessionTerm(session_term) {
   console.log(session_term);
