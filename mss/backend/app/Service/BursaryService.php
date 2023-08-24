@@ -495,7 +495,7 @@ class BursaryService
                     $session_before_graduation = explode("_", $student->graduation)[1];
                     $term_before_graduation = explode("_", $student->graduation)[2];
                     $student->graduation_details = "GRADUATED (" . $session_before_graduation . "-" . $term_before_graduation . ")";
-                    $student["class"] = $student->graduation_details;
+                    $student["class"] = null;
                 }else{
                     $student["class"] = ClassModel::find($student->class);
                 }
