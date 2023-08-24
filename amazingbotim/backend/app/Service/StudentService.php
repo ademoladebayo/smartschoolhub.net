@@ -232,8 +232,6 @@ class StudentService
     function allFee(Request $request)
     {
         $bursaryService = new BursaryService();
-        $class = PaymentHistoryModel::select('class_id')->where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->get()[0]->class_id;
-
         $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->get();
 
         $class = "";
