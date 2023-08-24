@@ -507,7 +507,7 @@ class BursaryService
                 // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
                 Log::alert("ELSE : " . $student->first_name);
 
-                $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $student->class)->where('session', $request->session)->where('term', $request->term)->get();
+                $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $student->id)->where('session', $request->session)->where('term', $request->term)->get();
                 $class = "";
                 if (count($paymentHistory) != 0) {
                     // USE CLASS STUDENT WAS IN
