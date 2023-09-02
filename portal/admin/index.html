@@ -94,6 +94,64 @@
 <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
 <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
 
+<!-- FIREBASE CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script>
+<script>
+
+    ip = localStorage["ip"];
+    domain = localStorage["domain"];
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
+        authDomain: "dextroux-technologies.firebaseapp.com",
+        projectId: "dextroux-technologies",
+        storageBucket: "dextroux-technologies.appspot.com",
+        messagingSenderId: "1099192792266",
+        appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
+        measurementId: "G-QWNY4DPSNH",
+    };
+    const app = firebase.initializeApp(firebaseConfig)
+    const messaging = firebase.messaging();
+
+    function initFirebaseMessagingRegistration() {
+       return messaging.getToken({ vapidKey: 'BCaDCU0B1hVyl5wJLgYeqoEK_H884I0EB1foOClfC-b-bg_WFFE9XQVOiiYfUl0OTvojVK9am5vQ0AlAbw_hQtc' }).then((currentToken) => {
+            // app token used for sending notifications
+            if (currentToken) {
+                console.log(currentToken);
+                return currentToken;
+            } else {
+                return null;
+            }
+        }).catch((err) => {
+            // notifications are manually blocked, you can ask for unblock here
+            console.log('An error occurred while retrieving token. ', err);
+            couldNotGetToken();
+        });
+
+
+    }
+
+
+    messaging.onMessage((payload) => {
+        // notification data receive here, use it however you want
+        // keep in mind if message receive here, it will not notify in background
+        alert(payload.data.body)
+        console.log('in app notify ', payload);
+        const notificationTitle = payload.data.title;
+        const notificationOptions = {
+            body: payload.data.body,
+            icon: payload.data.icon,
+        };
+        var notification = new Notification(notificationTitle, notificationOptions);
+        console.log('Notification created:', notification)
+
+    });
+
+   
+</script>
+
+
 
 <script>
     const togglePassword = document.querySelector('#togglePassword');

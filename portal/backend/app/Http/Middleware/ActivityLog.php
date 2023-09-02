@@ -34,6 +34,7 @@ class ActivityLog
     {
         // REQUEST
         $token = $request->header("Authorization");
+        $school = $request->header("school");
         $request_data = $request->input();
         $request_method = $request->method();
         $request_url = $request->fullUrl();
@@ -53,7 +54,7 @@ class ActivityLog
         $request_data = count($request_data) > 0 ? $request_data : "NO DATA WAS SENT";
         $utils = new Utils();
         $activityLog = new ActivityLogModel();
-        $activityLog->request = $request_method . " | " . $request_url . "\n" . json_encode($request_data). "\n" . $request->header("User-Agent");
+        $activityLog->request = $request_method . " | " . $request_url . " | \n" . json_encode($request_data) . " | \n" . $request->header("User-Agent") . " | \n" . $school;
         $activityLog->date_time = $response->getdate();
         $response = strlen($response_content) > 500 ? "RETURNED A LONG DATA" : $response_content;
         $req = strlen($activityLog->request) > 500 ? $request_method . " | " . $request_url . "\n"  . $request->header("User-Agent") : $activityLog->request;

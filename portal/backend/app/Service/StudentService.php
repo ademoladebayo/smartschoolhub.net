@@ -41,8 +41,8 @@ class StudentService
             return  response(['success' => false, 'message' => "Invalid Student!"]);
         } else {
             // CHECK IF IT PARENT
-            $id = explode("-", $request->id)[2];
-            if ($request->password == "PARENT" . $id) {
+            $year_id = explode("-", $request->id)[0].explode("-", $request->id)[2];
+            if ($request->password == "PARENT" . $year_id) {
                 $token = $student->createToken('token')->plainTextToken;
                 return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, Parent(' . $student->first_name . " " . $student->last_name . ")", 'isParent' => true, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student)]);
             }
@@ -362,8 +362,10 @@ class StudentService
         $total_paid = 0;
 
 
+
+        $class = StudentModel::find($request->student_id)->class;
         // SO GET STUDENT'S, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
-        $expected_fee = $bursaryService->getPayableForClass($payments[0]->class_id, $request->session, $request->term);
+        $expected_fee = $bursaryService->getPayableForClass($class, $request->session, $request->term);
         $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
         $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
 
@@ -373,7 +375,7 @@ class StudentService
             $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
         }
 
-        $class = ClassModel::find($payments[0]->class_id)->class_name;
+        $class = ClassModel::find($class)->class_name;
         return ['payments' => $payments, 'class' => $class, 'expected_amount' => $expected_fee + $optional_fee, 'total_paid' => $total_paid, 'percentage_paid' => number_format($percentage_paid, 2) . '%', 'optional_fee' => $optional_fee, 'due_balance' => ($expected_fee + $optional_fee) - $total_paid];
     }
 

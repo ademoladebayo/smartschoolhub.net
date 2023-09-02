@@ -68,9 +68,8 @@ function loadSideNav(page) {
     </li>
 
    <!-- <li class="nav-item">
-       <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
-         domain + "/admin/dashboard.html"
-       }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
+       <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + "/admin/dashboard.html"
+    }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
     </li> --!>
     <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <a  href="" class="nav-link"><i class=""></i><span></span></a>
@@ -142,6 +141,11 @@ function signIn() {
           localStorage.setItem("user_id", username);
           localStorage.setItem("username", username);
           getStoredCredential();
+
+          //REGISTER USER DEVICE
+          deviceToken = await initFirebaseMessagingRegistration();
+          await sendTokenToServer(deviceToken, "BURSAR", data.data.id);
+
           setTimeout(function () {
             window.location.href = "dashboard.html";
           }, 1000);
@@ -275,12 +279,10 @@ function getCurrentSession() {
 }
 
 function loadDashBoardInformation() {
-  document.getElementById("user_name").innerHTML = `<b>${
-    JSON.parse(localStorage["user_data"]).data.username
-  }</b>`;
-  document.getElementById("user_name1").innerHTML = `<b>${
-    JSON.parse(localStorage["user_data"]).data.username
-  }</b>`;
+  document.getElementById("user_name").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.username
+    }</b>`;
+  document.getElementById("user_name1").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.username
+    }</b>`;
   //   document.getElementById("male").innerHTML = formatNumber(
   //     JSON.parse(localStorage["user_data"]).dashboard_information.male
   //   );
@@ -315,7 +317,9 @@ function loadDashBoardInformation() {
 
 function goTo(page) {
   if (page == "") {
+    school = localStorage['school'];
     localStorage.clear();
+    localStorage.setItem('school', school);
     window.parent.location.assign(domain);
     return 0;
   }
@@ -415,20 +419,16 @@ function getAllFee() {
             <td>${c}.</td>
             <td>${data[i].description}</td>
             <td>${data[i].type}</td>
-            <td>${
-              data[i].pay_by == null ? data[i].class : data[i].pay_by.class_name
+            <td>${data[i].pay_by == null ? data[i].class : data[i].pay_by.class_name
             }</td>
             <td>${formatNumber(data[i].amount)}</td>
             <td>
-                <a  onmouseover="reloadEditFrame();localStorage.setItem('editFee','${
-                  data[i].id
-                }~${data[i].description}~${data[i].type}~${data[i].class}~${
-            data[i].amount
-          }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
+                <a  onmouseover="reloadEditFrame();localStorage.setItem('editFee','${data[i].id
+            }~${data[i].description}~${data[i].type}~${data[i].class}~${data[i].amount
+            }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a  onclick="deleteFee(${
-                  data[i].id
-                })" href="#" class="btn btn-danger"><i
+                <a  onclick="deleteFee(${data[i].id
+            })" href="#" class="btn btn-danger"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -447,13 +447,11 @@ function editFeeDetails() {
     localStorage["editFee"].split("~")[1];
 
   document.getElementById("fee_type").innerHTML =
-    `<option value="${localStorage["editFee"].split("~")[2]}">${
-      localStorage["editFee"].split("~")[2]
+    `<option value="${localStorage["editFee"].split("~")[2]}">${localStorage["editFee"].split("~")[2]
     }</option>` + document.getElementById("fee_type").innerHTML;
 
   document.getElementById("classes").innerHTML =
-    `<option value="${localStorage["editFee"].split("~")[3]}">${
-      localStorage["editFee"].split("~")[3]
+    `<option value="${localStorage["editFee"].split("~")[3]}">${localStorage["editFee"].split("~")[3]
     }</option>` + document.getElementById("classes").innerHTML;
 
   document.getElementById("amount").value =
@@ -596,30 +594,26 @@ function getFee(student_id, session, term, student_class) {
         data.fee_breakdown.forEach((fee) => {
           document.getElementById("fee_table").innerHTML += `
           <tr>
-               ${
-                 fee.type == "COMPULSORY" ||
-                 approved_optional_fee.includes(fee.id.toString())
-                   ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+               ${fee.type == "COMPULSORY" ||
+              approved_optional_fee.includes(fee.id.toString())
+              ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
                value="${fee.id}" checked  onclick="this.checked = !this.checked">`
-                   : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
-                   value="${fee.id}"  ${
-                       optional_fee.includes(fee.id.toString())
-                         ? `checked  onclick="this.checked = !this.checked"`
-                         : ``
-                     }>`
-               }
+              : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+                   value="${fee.id}"  ${optional_fee.includes(fee.id.toString())
+                ? `checked  onclick="this.checked = !this.checked"`
+                : ``
+              }>`
+            }
                <td>${c}.</td>
                <td>${fee.description}</td>
-               <td>${
-                 approved_optional_fee.includes(fee.id.toString())
-                   ? `OPTIONAL (Approved)`
-                   : fee.type
-               }</td>
-               <td>${
-                 fee.class == localStorage["PD_STUDENT_CLASS"] || data.class_name == localStorage["PD_STUDENT_CLASS"]
-                   ? localStorage["PD_STUDENT_CLASSNAME"]
-                   : fee.class
-               }</td>
+               <td>${approved_optional_fee.includes(fee.id.toString())
+              ? `OPTIONAL (Approved)`
+              : fee.type
+            }</td>
+               <td>${fee.class == localStorage["PD_STUDENT_CLASS"] || data.class_name == localStorage["PD_STUDENT_CLASS"]
+              ? localStorage["PD_STUDENT_CLASSNAME"]
+              : fee.class
+            }</td>
               <td>₦${formatNumber(fee.amount)}</td>
           </tr>
           `;
@@ -670,34 +664,28 @@ function getAllOptionalFeeRequest() {
           document.getElementById("fee_table").innerHTML += `
           <tr>
                <td>${c}.</td>
-               <td>${
-                 data.student.first_name + " " + data.student.last_name
-               }</td>
+               <td>${data.student.first_name + " " + data.student.last_name
+            }</td>
                <td>${data.student.student_id}</td>
                <td>${data.class_name}</td>
                <td>${data.fee.description}</td>
                <td>${data.fee.type}</td>
-               <td>${
-                 data.fee.class == data.student.class
-                   ? data.class_name
-                   : data.fee.class
-               }</td>
+               <td>${data.fee.class == data.student.class
+              ? data.class_name
+              : data.fee.class
+            }</td>
                <td>₦${formatNumber(data.fee.amount)}</td>
-               <td>${
-                 data.approved == 1
-                   ? `<span style="color:white" class="badge bg-success"><b>APPROVED</b></span>`
-                   : `<span style="color:white" class="badge bg-danger"><b>NOT APPROVED</b></span>`
-               }</td>
+               <td>${data.approved == 1
+              ? `<span style="color:white" class="badge bg-success"><b>APPROVED</b></span>`
+              : `<span style="color:white" class="badge bg-danger"><b>NOT APPROVED</b></span>`
+            }</td>
               <td>
-                  <select onchange="updateOptionalFeeRequestStatus(event,'${
-                    data.id
-                  }',this.value)" id="approval" class="select2">
-                      <option value="1" ${
-                        data.approved == 1 ? `selected="selected"` : ``
-                      }>APPROVE</option>
-                      <option value="0" ${
-                        data.approved == 0 ? `selected="selected"` : ``
-                      }>DISAPPROVE</option>
+                  <select onchange="updateOptionalFeeRequestStatus(event,'${data.id
+            }',this.value)" id="approval" class="select2">
+                      <option value="1" ${data.approved == 1 ? `selected="selected"` : ``
+            }>APPROVE</option>
+                      <option value="0" ${data.approved == 0 ? `selected="selected"` : ``
+            }>DISAPPROVE</option>
                   </select>
               </td>
           </div>
@@ -956,15 +944,12 @@ function getAllExpense() {
               <td>${data[i].date_incurred}</td>
               <td>${data[i].last_modified}</td>
               <td>
-                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${
-                    data[i].id
-                  }~${data[i].description}~${data[i].date_incurred}~${
-            data[i].amount
-          }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
+                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${data[i].id
+            }~${data[i].description}~${data[i].date_incurred}~${data[i].amount
+            }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteExpense(${
-                    data[i].id
-                  })" href="#" class="btn btn-danger"><i
+                  <a  onclick="deleteExpense(${data[i].id
+            })" href="#" class="btn btn-danger"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -1190,9 +1175,8 @@ function getAllManualPayment() {
         
                 <td>${c}.</td>
                 <td>${data[i].student.student_id}</td>
-                <td>${
-                  data[i].student.first_name + " " + data[i].student.last_name
-                }</td>
+                <td>${data[i].student.first_name + " " + data[i].student.last_name
+            }</td>
                 <td>${data[i].class.class_name}</td>
                 <td>${data[i].date}</td>
                 <td><b>${data[i].payment_type}</b></td>
@@ -1200,28 +1184,22 @@ function getAllManualPayment() {
                 <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
-                    <a ${
-                      data[i].payment_description.includes(
-                        "WAS USED TO SETTLE THE ARREARS"
-                      ) ||
-                      data[i].payment_description.includes(
-                        "WAS USED TO SETTLE PART OF THE ARREARS"
-                      )
-                        ? `hidden`
-                        : ``
-                    }  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
-            data[i].id
-          }~${data[i].student.id}~${
-            data[i].student.first_name + " " + data[i].student.last_name
-          }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${
-            data[i].payment_type
-          }~${data[i].payment_description}~${data[i].amount}~${
-            data[i].fee_type
-          }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
+                    <a ${data[i].payment_description.includes(
+              "WAS USED TO SETTLE THE ARREARS"
+            ) ||
+              data[i].payment_description.includes(
+                "WAS USED TO SETTLE PART OF THE ARREARS"
+              )
+              ? `hidden`
+              : ``
+            }  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${data[i].id
+            }~${data[i].student.id}~${data[i].student.first_name + " " + data[i].student.last_name
+            }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${data[i].payment_type
+            }~${data[i].payment_description}~${data[i].amount}~${data[i].fee_type
+            }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                    <a hidden onclick="deleteManualPayment(${
-                      data[i].id
-                    })" href="#" class="btn btn-danger"><i
+                    <a hidden onclick="deleteManualPayment(${data[i].id
+            })" href="#" class="btn btn-danger"><i
                             class="fas fa-trash"></i>
                         Delete</a>
                 </td>
@@ -1241,14 +1219,12 @@ function editManualPaymentDetails() {
 
   document.getElementById("classes").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[3]}">${
-      localStorage["editManualPayment"].split("~")[4]
+  <option value="${localStorage["editManualPayment"].split("~")[3]}">${localStorage["editManualPayment"].split("~")[4]
     }</option>` + document.getElementById("classes").innerHTML;
 
   document.getElementById("student").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[1]}">${
-      localStorage["editManualPayment"].split("~")[2]
+  <option value="${localStorage["editManualPayment"].split("~")[1]}">${localStorage["editManualPayment"].split("~")[2]
     }</option>` + document.getElementById("student").innerHTML;
 
   document.getElementById("date").value =
@@ -1256,8 +1232,7 @@ function editManualPaymentDetails() {
 
   document.getElementById("payment_type").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[6]}">${
-      localStorage["editManualPayment"].split("~")[6]
+  <option value="${localStorage["editManualPayment"].split("~")[6]}">${localStorage["editManualPayment"].split("~")[6]
     }</option>` + document.getElementById("payment_type").innerHTML;
 
   document.getElementById("payment_description").value =
@@ -1268,8 +1243,7 @@ function editManualPaymentDetails() {
 
   document.getElementById("fee_type").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[9]}">${
-      localStorage["editManualPayment"].split("~")[9]
+  <option value="${localStorage["editManualPayment"].split("~")[9]}">${localStorage["editManualPayment"].split("~")[9]
     }</option>` + document.getElementById("fee_type").innerHTML;
 }
 
@@ -1370,7 +1344,7 @@ function deleteManualPayment(id) {
 }
 
 // ONLINE PAYMENT MANAGEMENT
-function getAllOnlinePayment() {}
+function getAllOnlinePayment() { }
 
 // PAYMENT HISTORY
 function getAllPaymentHistory() {
@@ -1404,11 +1378,10 @@ function getAllPaymentHistory() {
             
                     <td>${c}.</td>
                     <td>${data[i].student.student_id}</td>
-                    <td>${
-                      data[i].student.first_name +
-                      " " +
-                      data[i].student.last_name
-                    }</td>
+                    <td>${data[i].student.first_name +
+            " " +
+            data[i].student.last_name
+            }</td>
                     <td>${data[i].class.class_name}</td>
                     <td><b>${data[i].payment_type}</b></td>
                     <td><b>${data[i].payment_description}</b></td>
@@ -1516,11 +1489,10 @@ function searchPayment(search_data) {
               
                       <td>${c}.</td>
                       <td>${data[i].student.student_id}</td>
-                      <td>${
-                        data[i].student.first_name +
-                        " " +
-                        data[i].student.last_name
-                      }</td>
+                      <td>${data[i].student.first_name +
+            " " +
+            data[i].student.last_name
+            }</td>
                       <td>${data[i].class.class_name}</td>
                       <td><b>${data[i].payment_type}</b></td>
                       <td>${data[i].date}</td>
@@ -1572,57 +1544,47 @@ function getAllDebitor() {
             
                     <td>${c}.</td>
                     <td>${data.content[i].student_id}</td>
-                    <td>${
-                      data.content[i].first_name +
-                      " " +
-                      data.content[i].last_name
-                    }</td>  
-                    <td>${
-                      data.content[i].class == null
-                        ? data.content[i].graduation_details
-                        : data.content[i].class.class_name
-                    }</td>
+                    <td>${data.content[i].first_name +
+            " " +
+            data.content[i].last_name
+            }</td>  
+                    <td>${data.content[i].class == null
+              ? data.content[i].graduation_details
+              : data.content[i].class.class_name
+            }</td>
 
-                    <td><span style="color:white" class="badge ${
-                      data.content[i].profile_status == "DISABLED"
-                        ? `bg-danger`
-                        : `bg-success`
-                    }"><b>${data.content[i].profile_status}</b></span></td>
+                    <td><span style="color:white" class="badge ${data.content[i].profile_status == "DISABLED"
+              ? `bg-danger`
+              : `bg-success`
+            }"><b>${data.content[i].profile_status}</b></span></td>
 
                     <td style="color:blue"><b>${formatNumber(
-                      parseInt(data.content[i].expected_fee)
-                    )}</b></td>
-                    <td style="color: ${
-                      data.content[i].total_paid > 0 ? "green" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].total_paid)
-          )}</b></td>
-                    <td style="color: ${
-                      data.content[i].balance > 0 ? "red" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].balance)
-          )}</b></td>
-                    <td style="color: ${
-                      data.content[i].arrears > 0 ? "red" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].arrears)
-          )}</b></td>
-                    <td style="color: ${
-                      data.content[i].total_balance > 0 ? "red" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].total_balance)
-          )}</b></td>
+              parseInt(data.content[i].expected_fee)
+            )}</b></td>
+                    <td style="color: ${data.content[i].total_paid > 0 ? "green" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].total_paid)
+            )}</b></td>
+                    <td style="color: ${data.content[i].balance > 0 ? "red" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].balance)
+            )}</b></td>
+                    <td style="color: ${data.content[i].arrears > 0 ? "red" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].arrears)
+            )}</b></td>
+                    <td style="color: ${data.content[i].total_balance > 0 ? "red" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].total_balance)
+            )}</b></td>
 
                     <td ${data.content[i].graduation != "-" ? `hidden` : ``}>
-                          <a onclick="storePDStudentId(${data.content[i].id},${
-            data.content[i].class != null ? data.content[i].class.id : ``
-          },'${
-            data.content[i].class != null
+                          <a onclick="storePDStudentId(${data.content[i].id},${data.content[i].class != null ? data.content[i].class.id : ``
+            },'${data.content[i].class != null
               ? data.content[i].class.class_name
               : ``
-          }','${
-            data.content[i].first_name + " " + data.content[i].last_name
-          }'); getPaymentDetails()" style="color:white" class="btn btn-primary" data-bs-toggle="modal"
+            }','${data.content[i].first_name + " " + data.content[i].last_name
+            }'); getPaymentDetails()" style="color:white" class="btn btn-primary" data-bs-toggle="modal"
                           data-bs-target="#viewModal"><i class="fas fa-eye"></i> View Details</a>
                     </td>
 
@@ -1713,26 +1675,24 @@ function getPortalSubscription() {
                     <td>${c}.</td>
                     <td>${data[i].subscription_id}</td>
                     <td>${data[i].description}</td>  
-                    <td><span style="color:white" class="badge ${
-                      data[i].status == "NOT PAID"
-                        ? `bg-danger`
-                        : data[i].status == "USAGE IN-PROGRESS"
-                        ? `bg-warning`
-                        : `bg-success`
-                    }"><b>${data[i].status}</b></span></td>
+                    <td><span style="color:white" class="badge ${data[i].status == "NOT PAID"
+              ? `bg-danger`
+              : data[i].status == "USAGE IN-PROGRESS"
+                ? `bg-warning`
+                : `bg-success`
+            }"><b>${data[i].status}</b></span></td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     <td>   
-                      ${
-                        data[i].status == "NOT PAID"
-                          ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
+                      ${data[i].status == "NOT PAID"
+              ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',
                           '${data[i].description}'
                         )" href="#" class="btn btn-primary">
                                  Pay Now
                             </a>`
-                          : ``
-                      }
+              : ``
+            }
                     </td>
                    </tr>
                     `;
@@ -1816,9 +1776,8 @@ function getAllStudent(class_id) {
           if (student_class != class_id || data[i].profile_status == "DISABLED") {
             continue;
           }
-          document.getElementById("student").innerHTML += `<option value="${
-            data[i].id
-          }">${data[i].first_name + " " + data[i].last_name}</option>`;
+          document.getElementById("student").innerHTML += `<option value="${data[i].id
+            }">${data[i].first_name + " " + data[i].last_name}</option>`;
         }
       } else {
         document.getElementById(
@@ -1875,9 +1834,9 @@ function debounce(func, timeout = 2000) {
 }
 
 async function getDashboardInfo() {
-   await getCurrentSession();
-   await loadCustomSessionTermForDashboard();
-  openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
+  await getCurrentSession();
+  await loadCustomSessionTermForDashboard();
+  openSpinnerModal("Statistics for " + localStorage["current_session"] + " - " + localStorage["current_term"])
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
     headers: {
@@ -1933,66 +1892,66 @@ async function getDashboardInfo() {
   // }
 }
 
- function getDashboardInfo2() {
-   openSpinnerModal("Statistics for "+ localStorage["current_session"] +" - "+ localStorage["current_term"])
-   fetch(ip + "/api/bursary/dashboard-information", {
-     method: "POST",
-     headers: {
-       Accept: "application/json",
-       "Content-type": "application/json",
-       Authorization: "Bearer " + localStorage["token"],
-     },
-     body: JSON.stringify({
-       session: localStorage["current_session"],
-       term: localStorage["current_term"],
-     }),
-   })
-     .then(function (res) {
-       console.log(res.status);
-       if (res.status == 401) {
-         openAuthenticationModal();
-       }
-       return res.json();
-     })
- 
-     .then((data) => {
-       removeSpinnerModal();
-       //DASHBOARD CHART DATA
-       dashboardChart(JSON.stringify(data.chart_data));
- 
-       document.getElementById("student_no").innerHTML = `<span class="counter"
+function getDashboardInfo2() {
+  openSpinnerModal("Statistics for " + localStorage["current_session"] + " - " + localStorage["current_term"])
+  fetch(ip + "/api/bursary/dashboard-information", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+    body: JSON.stringify({
+      session: localStorage["current_session"],
+      term: localStorage["current_term"],
+    }),
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+      removeSpinnerModal();
+      //DASHBOARD CHART DATA
+      dashboardChart(JSON.stringify(data.chart_data));
+
+      document.getElementById("student_no").innerHTML = `<span class="counter"
        data-num="${data.student_no}">${data.student_no}</span>`;
- 
-       document.getElementById("total_manual_payment").innerHTML = formatNumber(
-         parseInt(data.total_manual_payment)
-       );
- 
-       document.getElementById("total_arrears").innerHTML = formatNumber(
-         parseInt(data.total_arrears)
-       );
- 
-       document.getElementById("total").innerHTML =
-         "₦" +
-         formatNumber(
-           parseInt(data.total_arrears) + parseInt(data.total_manual_payment)
-         );
- 
-       document.getElementById("total_expense").innerHTML = formatNumber(
-         parseInt(data.total_expense)
-       );
- 
-       document.getElementById("total_debt").innerHTML = formatNumber(data.total_debt);
-     })
-     .catch((err) => console.log(err));
- 
-   // if(document.getElementById("total").innerHTML == "---"){
- 
-   // }
- }
+
+      document.getElementById("total_manual_payment").innerHTML = formatNumber(
+        parseInt(data.total_manual_payment)
+      );
+
+      document.getElementById("total_arrears").innerHTML = formatNumber(
+        parseInt(data.total_arrears)
+      );
+
+      document.getElementById("total").innerHTML =
+        "₦" +
+        formatNumber(
+          parseInt(data.total_arrears) + parseInt(data.total_manual_payment)
+        );
+
+      document.getElementById("total_expense").innerHTML = formatNumber(
+        parseInt(data.total_expense)
+      );
+
+      document.getElementById("total_debt").innerHTML = formatNumber(data.total_debt);
+    })
+    .catch((err) => console.log(err));
+
+  // if(document.getElementById("total").innerHTML == "---"){
+
+  // }
+}
 
 function dashboardChart(chart_data) {
   chart_data = JSON.parse(chart_data);
-  current_term = localStorage['current_term'].toLowerCase().replace(' ',"_");
+  current_term = localStorage['current_term'].toLowerCase().replace(' ', "_");
   current_expected = chart_data.fee.expected[current_term];
   current_received = chart_data.fee.collected[current_term];
 
@@ -2024,7 +1983,7 @@ function dashboardChart(chart_data) {
     -------------------------------------*/
   if ($("#earning-line-chart").length) {
     var lineChartData = {
-      labels: ["", "FIRST TERM", "SECOND TERM", "THIRD TERM",""],
+      labels: ["", "FIRST TERM", "SECOND TERM", "THIRD TERM", ""],
       datasets: [
         // RECEIVED CHART
         {
@@ -2325,21 +2284,17 @@ async function loadCustomSessionTerm() {
         for (i = session_term.length - 1; i >= 0; i--) {
           document.getElementById(
             "session_term"
-          ).innerHTML += `<option value="${
-            session_term[i].session + "-" + session_term[i].term
-          }">${
-            session_term[i].session + " - " + session_term[i].term
-          }</option>`;
+          ).innerHTML += `<option value="${session_term[i].session + "-" + session_term[i].term
+          }">${session_term[i].session + " - " + session_term[i].term
+            }</option>`;
         }
 
         console.table(session_term);
         console.table(data);
       } else {
-        document.getElementById("session_term").innerHTML += `<option value="${
-          localStorage["current_session"] + "-" + localStorage["current_term"]
-        }">${
-          localStorage["current_session"] + " - " + localStorage["current_term"]
-        }</option>`;
+        document.getElementById("session_term").innerHTML += `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
+          }">${localStorage["current_session"] + " - " + localStorage["current_term"]
+          }</option>`;
       }
     });
 }
@@ -2364,17 +2319,14 @@ function loadCustomSessionTermForDashboard() {
     })
 
     .then((data) => {
-      document.getElementById("session_term").innerHTML = `<option value="${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }">${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }</option>`;
+      document.getElementById("session_term").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
+        }">${localStorage["current_session"] + "-" + localStorage["current_term"]
+        }</option>`;
       data.forEach((sessions) => {
         term.forEach((term) => {
           document.getElementById(
             "session_term"
-          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
-            sessions.session + "-" + term
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${sessions.session + "-" + term
           }</option>`;
         });
       });
@@ -2603,6 +2555,34 @@ function download(filename) {
     jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
   };
   html2pdf().from(payment_slip).set(opt).save();
+}
+
+// DEVICE TOKEN
+async function sendTokenToServer(deviceToken, user_type, id) {
+  return fetch(ip + "/api/device-token", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      "school": localStorage["school"]
+    },
+    body: JSON.stringify({
+      id: id,
+      device_token: deviceToken,
+      user_type: user_type,
+
+    }),
+  })
+    .then(function (res) {
+      return res.json();
+    })
+
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => console.log(err));
+
+
 }
 
 // RE - AUTHENTICATION MODAL
@@ -2900,14 +2880,12 @@ function getAllStudentForTable() {
           <td>${data[i].student_id}</td>
           <td>${data[i].first_name + " " + data[i].last_name}</td>
           <td>${data[i].gender}</td>
-          ${
-            data[i].profile_status == "ENABLED"
+          ${data[i].profile_status == "ENABLED"
               ? `<td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>`
               : ` <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td> `
-          }
-          <td>${
-            data[i].class == null ? `GRADUATED` : data[i].class.class_name
-          }</td>
+            }
+          <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
+            }</td>
           <td>
             <a  onmouseover="viewStudent(${JSON.stringify(data[i])
               .replace(/'/g, "")
@@ -2917,18 +2895,17 @@ function getAllStudentForTable() {
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              ).replace(
+                /"/g,
+                "'"
+              )})" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
-            ${
-              data[i].profile_status == "ENABLED"
-                ? ` <a  onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
+            ${data[i].profile_status == "ENABLED"
+              ? ` <a  onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  `
-                : `  <a  onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
+              : `  <a  onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
             
             `
             }
@@ -2940,8 +2917,7 @@ function getAllStudentForTable() {
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a  onclick="deleteStudent(${
-              data[i].id
+            <a  onclick="deleteStudent(${data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>

@@ -33,14 +33,14 @@ class AdminService
         $AdminRepository = new AdminRepository();
         $admin = AdminModel::where('username', $request->id)->get()->first();
         if ($admin == null) {
-            return  response(['success' => false, 'message' => "Invalid Admin!"]);
+            return response(['success' => false, 'message' => "Invalid Admin!"]);
         } else {
 
             if ($AdminRepository->getPassword($request->id) == $request->password) {
                 $token = $admin->createToken('token')->plainTextToken;
-                return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, Admin', 'data' => $admin, 'dashboard_information' => ""]);
+                return response(['token' => $token, 'success' => true, 'message' => 'Welcome, Admin', 'data' => $admin, 'dashboard_information' => ""]);
             } else {
-                return  response(['success' => false, 'message' => "Invalid Password"]);
+                return response(['success' => false, 'message' => "Invalid Password"]);
             }
         }
     }
@@ -51,9 +51,9 @@ class AdminService
         $ClassModel = new ClassModel();
         $ClassRepository = new ClassRepository();
 
-        $ClassModel->class_name =  $request->class_name;
-        $ClassModel->class_sector =  $request->class_sector;
-        $ClassModel->class_teacher =  $request->class_teacher;
+        $ClassModel->class_name = $request->class_name;
+        $ClassModel->class_sector = $request->class_sector;
+        $ClassModel->class_teacher = $request->class_teacher;
 
 
         if ($ClassModel->class_name != '') {
@@ -61,7 +61,7 @@ class AdminService
             if ($request->class_teacher != "-") {
                 $this->removeClassFromTeacher($request->class_id);
             }
-            return  $ClassRepository->createClass($ClassModel);
+            return $ClassRepository->createClass($ClassModel);
         } else {
             return response()->json(['success' => false, 'message' => 'Please check that no field is left empty.']);
         }
@@ -70,13 +70,13 @@ class AdminService
     public function editClass(Request $request)
     {
         $ClassRepository = new ClassRepository();
-        return  $ClassRepository->editClass($request);
+        return $ClassRepository->editClass($request);
     }
 
     public function removeClassFromTeacher($class_id)
     {
         $TeacherRepository = new TeacherRepository();
-        return  $TeacherRepository->removeClassFromTeacher($class_id);
+        return $TeacherRepository->removeClassFromTeacher($class_id);
     }
 
     // SUBJECT
@@ -85,9 +85,9 @@ class AdminService
         $SubjectModel = new SubjectModel();
         $SubjectRepository = new SubjectRepository();
 
-        $SubjectModel->subject_name =  $request->subject_name;
-        $SubjectModel->teacher =  $request->teacher;
-        $SubjectModel->class =  $request->class_id;
+        $SubjectModel->subject_name = $request->subject_name;
+        $SubjectModel->teacher = $request->teacher;
+        $SubjectModel->class = $request->class_id;
 
 
 
@@ -95,8 +95,8 @@ class AdminService
             // CREATE FOR ALL CLASS OR DO MULTIPLE CREATION
             return $SubjectRepository->multiCreateSubject($request);
         } else {
-            if ($SubjectModel->subject_name !=  '' && $SubjectModel->class != '') {
-                return  $SubjectRepository->createSubject($SubjectModel);
+            if ($SubjectModel->subject_name != '' && $SubjectModel->class != '') {
+                return $SubjectRepository->createSubject($SubjectModel);
             } else {
                 return response()->json(['success' => false, 'message' => 'Please check that no field is left empty.']);
             }
@@ -106,7 +106,7 @@ class AdminService
     public function editSubject(Request $request)
     {
         $SubjectRepository = new SubjectRepository();
-        return  $SubjectRepository->editSubject($request);
+        return $SubjectRepository->editSubject($request);
     }
 
     // STUDENT
@@ -116,31 +116,31 @@ class AdminService
         $studentModel = new StudentModel();
         $studentRepository = new StudentRepository();
 
-        $studentModel->first_name =  $request->first_name;
-        $studentModel->last_name =  $request->last_name;
-        $studentModel->middle_name =  $request->middle_name;
-        $studentModel->gender =  $request->gender;
-        $studentModel->dob =  $request->dob;
-        $studentModel->religion =  $request->religion;
-        $studentModel->state =  $request->state;
-        $studentModel->home_address =  $request->home_address;
-        $studentModel->joining_date =  $request->joining_date;
-        $studentModel->class =  $request->student_class;
+        $studentModel->first_name = $request->first_name;
+        $studentModel->last_name = $request->last_name;
+        $studentModel->middle_name = $request->middle_name;
+        $studentModel->gender = $request->gender;
+        $studentModel->dob = $request->dob;
+        $studentModel->religion = $request->religion;
+        $studentModel->state = $request->state;
+        $studentModel->home_address = $request->home_address;
+        $studentModel->joining_date = $request->joining_date;
+        $studentModel->class = $request->student_class;
 
 
-        $studentModel->guardian_name =  $request->guardian_name;
-        $studentModel->guardian_phone =  $request->guardian_phone;
-        $studentModel->guardian_email =  $request->guardian_email;
-        $studentModel->guardian_address =  $request->guardian_address;
+        $studentModel->guardian_name = $request->guardian_name;
+        $studentModel->guardian_phone = $request->guardian_phone;
+        $studentModel->guardian_email = $request->guardian_email;
+        $studentModel->guardian_address = $request->guardian_address;
 
 
-        return  $studentRepository->createStudent($studentModel);
+        return $studentRepository->createStudent($studentModel);
     }
 
     public function editStudent($request)
     {
         $StudentRepository = new StudentRepository();
-        return  $StudentRepository->editStudent($request);
+        return $StudentRepository->editStudent($request);
     }
 
     public function updateStudentClass($student_id, $class_name)
@@ -158,20 +158,20 @@ class AdminService
     // STUDENT IMAGE
     public function uploadImage(Request $request)
     {
-        Log::alert($request);
+        $school_name = $request->header("school");
         if ($request->hasFile('file')) {
 
             if ($request->type == "STUDENT") {
+                $path = "public/fileupload/" . $school_name . "/student";
                 // GET FILENAME
                 $file_name = $_FILES['file']['name'];
-
-                $storage_path =  $request->file->storeAs('public/fileupload/student', $request->id . ".png");
+                $storage_path = $request->file->storeAs($path, $request->id . ".png");
                 return response()->json(['success' => true, 'message' => 'file uploaded', 'url' => $storage_path]);
             } else {
-
+                $path = "public/fileupload/" . $school_name . "/staff";
                 // GET FILENAME
                 $file_name = $_FILES['file']['name'];
-                $storage_path =  $request->file->storeAs('public/fileupload/staff', $request->id . ".png");
+                $storage_path = $request->file->storeAs($path, $request->id . ".png");
                 return response()->json(['success' => true, 'message' => 'file uploaded', 'url' => $storage_path]);
             }
         } else {
@@ -185,26 +185,26 @@ class AdminService
         $TeacherModel = new TeacherModel();
         $TeacherRepository = new TeacherRepository();
 
-        $TeacherModel->title =  $request->title;
-        $TeacherModel->first_name =  $request->first_name;
-        $TeacherModel->last_name =  $request->last_name;
+        $TeacherModel->title = $request->title;
+        $TeacherModel->first_name = $request->first_name;
+        $TeacherModel->last_name = $request->last_name;
         $TeacherModel->middle_name = $request->middle_name == "" ? "" : $request->middle_name;
-        $TeacherModel->gender =  $request->gender;
-        $TeacherModel->phone =  $request->teacher_phone;
-        $TeacherModel->email =  $request->teacher_email == "" ? "" : $request->teacher_email;
-        $TeacherModel->dob =  $request->dob;
-        $TeacherModel->religion =  $request->religion;
-        $TeacherModel->joining_date =  $request->joining_date == "" ? "" : $request->joining_date;
-        $TeacherModel->home_address =  $request->home_address;
-        $TeacherModel->state =  $request->state;
+        $TeacherModel->gender = $request->gender;
+        $TeacherModel->phone = $request->teacher_phone;
+        $TeacherModel->email = $request->teacher_email == "" ? "" : $request->teacher_email;
+        $TeacherModel->dob = $request->dob;
+        $TeacherModel->religion = $request->religion;
+        $TeacherModel->joining_date = $request->joining_date == "" ? "" : $request->joining_date;
+        $TeacherModel->home_address = $request->home_address;
+        $TeacherModel->state = $request->state;
 
-        return  $TeacherRepository->createTeacher($TeacherModel);
+        return $TeacherRepository->createTeacher($TeacherModel);
     }
 
     public function editTeacher($request)
     {
         $TeacherRepository = new TeacherRepository();
-        return  $TeacherRepository->editTeacher($request);
+        return $TeacherRepository->editTeacher($request);
     }
 
     public function updateTeacherClass($teacher_id, $class_name)
@@ -270,7 +270,7 @@ class AdminService
 
                 // CHECK IF ALREADY TAKEN 
                 $request->staff_id = $teacher[0]->id;
-                $alreadytaken =  $this->takenAttendance($request);
+                $alreadytaken = $this->takenAttendance($request);
 
 
                 if ($alreadytaken) {
@@ -300,7 +300,7 @@ class AdminService
 
         //   USING CARD
         // CHECK IF ALREADY TAKEN 
-        $alreadytaken =  $this->takenAttendance($request);
+        $alreadytaken = $this->takenAttendance($request);
 
         if ($alreadytaken) {
             // CHECK OUT STAFF
@@ -368,14 +368,14 @@ class AdminService
 
     public function getTeacherAttendance(Request $request)
     {
-        $TeacherAttendanceModel =  new TeacherAttendanceModel();
-        return  $TeacherAttendanceModel->with('teacher')->where('date', $request->date)->get();
+        $TeacherAttendanceModel = new TeacherAttendanceModel();
+        return $TeacherAttendanceModel->with('teacher')->where('date', $request->date)->get();
     }
 
     // CONTROL PANEL
     public function saveControl(Request $request)
     {
-        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel = ControlPanelModel::find(1);
         $ControlPanelModel->access_result = $request->access_result;
         $ControlPanelModel->register_subject = $request->register_subject;
         $ControlPanelModel->check_debitors = $request->check_debitors;
@@ -388,7 +388,7 @@ class AdminService
 
     public function isSubjectRegistrationOpened()
     {
-        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel = ControlPanelModel::find(1);
         if ($ControlPanelModel->register_subject == "YES") {
             return true;
         } else {
@@ -398,7 +398,7 @@ class AdminService
 
     public function isResultAccessOpened()
     {
-        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel = ControlPanelModel::find(1);
         if ($ControlPanelModel->access_result == "YES") {
             return true;
         } else {
@@ -409,11 +409,11 @@ class AdminService
     public function isResumptionTimeCheckOpened()
     {
         $response = "";
-        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel = ControlPanelModel::find(1);
         if (explode("-", $ControlPanelModel->max_resumption_time)[1] == "YES") {
-            $response =  true . "-" . explode("-", $ControlPanelModel->max_resumption_time)[0];
+            $response = true . "-" . explode("-", $ControlPanelModel->max_resumption_time)[0];
         } else {
-            $response =  false . "-" . explode("-", $ControlPanelModel->max_resumption_time)[0];
+            $response = false . "-" . explode("-", $ControlPanelModel->max_resumption_time)[0];
         }
         return $response;
     }
@@ -421,11 +421,11 @@ class AdminService
     public function isCheckDebitorsOpened()
     {
         $response = "";
-        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel = ControlPanelModel::find(1);
         if (explode("-", $ControlPanelModel->check_debitors)[1] == "YES") {
-            $response =  true . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
+            $response = true . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
         } else {
-            $response =  false . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
+            $response = false . "-" . explode("-", $ControlPanelModel->check_debitors)[0];
         }
         return $response;
     }
@@ -450,7 +450,7 @@ class AdminService
         foreach ($subjects as $subject) {
             for ($i = 0; $i < count($term); $i++) {
                 for ($j = 0; $j < count($week); $j++) {
-                    $LessonPlanModel = new  LessonPlanModel();
+                    $LessonPlanModel = new LessonPlanModel();
                     $LessonPlanModel->subject_id = $subject->id;
                     $LessonPlanModel->term = $term[$i];
                     $LessonPlanModel->week = $week[$j];
@@ -482,7 +482,7 @@ class AdminService
 
         for ($i = 0; $i < count($term); $i++) {
             for ($j = 0; $j < count($week); $j++) {
-                $LessonPlanModel = new  LessonPlanModel();
+                $LessonPlanModel = new LessonPlanModel();
                 $LessonPlanModel->subject_id = $subject_id;
                 $LessonPlanModel->term = $term[$i];
                 $LessonPlanModel->week = $week[$j];
@@ -555,21 +555,21 @@ class AdminService
         $communication->message = $request->message;
         $communication->message_type = $request->message_type;
         $communication->receiver_seen = ",";
-        $communication->date =  date("Y-m-d") . " | " . date("h:i a");
+        $communication->date = date("Y-m-d") . " | " . date("h:i a");
         $communication->save();
         return response()->json(['success' => true, 'message' => 'Message was successful.']);
     }
 
     public function editMessage(Request $request)
     {
-        $communication =  CommunicationModel::find($request->id);
+        $communication = CommunicationModel::find($request->id);
 
         if ($request->edit_type == "REPLY") {
             $communication->reply = $request->reply;
         } else {
             // CHECK IF RECEIVER SEEN AS PREVIOUSLY BEEN SAVED
             if (!in_array($request->receiver_seen, explode(",", $communication->receiver_seen))) {
-                $communication->receiver_seen =   $communication->receiver_seen == "," ? $request->receiver_seen . "," : $communication->receiver_seen . $request->receiver_seen;
+                $communication->receiver_seen = $communication->receiver_seen == "," ? $request->receiver_seen . "," : $communication->receiver_seen . $request->receiver_seen;
             }
         }
         $communication->save();

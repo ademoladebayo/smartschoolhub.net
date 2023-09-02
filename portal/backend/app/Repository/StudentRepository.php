@@ -23,7 +23,7 @@ class StudentRepository
 
         $last_student_id = StudentModel::orderBy('id', 'DESC')->get();
 
-        if (count($last_student_id) > 0) {  // IF ATLEAST A STUDENT HAS BEEN CREATED
+        if (count($last_student_id) > 0) { // IF ATLEAST A STUDENT HAS BEEN CREATED
             // THE IS A PREVIOUS STUDENT
             $last_student_id = $last_student_id[0]->student_id;
             $year = intval(explode("-", $last_student_id)[0]);
@@ -46,14 +46,15 @@ class StudentRepository
             $studentModel->student_id = date("Y") . "-STD-" . "001";
         }
 
-        $student_id =  $studentModel->student_id;
+        $student_id = $studentModel->student_id;
+        $studentModel->guardian_pass = "PARENT" . explode("-", $student_id)[0] . explode("-", $student_id)[2];
         $studentModel->save();
         return response()->json(['success' => true, 'student_id' => $student_id, 'message' => 'Student was created successfully.']);
     }
     public function getAllStudent()
     {
-        $StudentModel =  new StudentModel();
-        return  $StudentModel->with('class')->orderBy('id', 'DESC')->get();
+        $StudentModel = new StudentModel();
+        return $StudentModel->with('class')->orderBy('id', 'DESC')->get();
     }
     public function updateStudentClass($student_id, $class_id)
     {
@@ -63,7 +64,7 @@ class StudentRepository
     }
     public function removeClassFromStudent($class_id)
     {
-        $StudentModel =  StudentModel::where('assigned_class', $class_id)->first();
+        $StudentModel = StudentModel::where('assigned_class', $class_id)->first();
         if ($StudentModel != "") {
             log::debug($StudentModel);
             $StudentModel->assigned_class = "";
@@ -74,22 +75,22 @@ class StudentRepository
     public function editStudent(Request $request)
     {
         $studentModel = StudentModel::find($request->student_id);
-        $studentModel->first_name =  $request->first_name;
-        $studentModel->last_name =  $request->last_name;
-        $studentModel->middle_name =  $request->middle_name;
-        $studentModel->gender =  $request->gender;
-        $studentModel->dob =  $request->dob;
-        $studentModel->religion =  $request->religion;
-        $studentModel->state =  $request->state;
-        $studentModel->home_address =  $request->home_address;
-        $studentModel->joining_date =  $request->joining_date;
-        $studentModel->class =  $request->student_class;
+        $studentModel->first_name = $request->first_name;
+        $studentModel->last_name = $request->last_name;
+        $studentModel->middle_name = $request->middle_name;
+        $studentModel->gender = $request->gender;
+        $studentModel->dob = $request->dob;
+        $studentModel->religion = $request->religion;
+        $studentModel->state = $request->state;
+        $studentModel->home_address = $request->home_address;
+        $studentModel->joining_date = $request->joining_date;
+        $studentModel->class = $request->student_class;
 
 
-        $studentModel->guardian_name =  $request->guardian_name;
-        $studentModel->guardian_phone =  $request->guardian_phone;
-        $studentModel->guardian_email =  $request->guardian_email;
-        $studentModel->guardian_address =  $request->guardian_address;
+        $studentModel->guardian_name = $request->guardian_name;
+        $studentModel->guardian_phone = $request->guardian_phone;
+        $studentModel->guardian_email = $request->guardian_email;
+        $studentModel->guardian_address = $request->guardian_address;
 
 
         $studentModel->save();
@@ -105,30 +106,30 @@ class StudentRepository
 
     public function searchStudent($search_data)
     {
-        return  StudentModel::where('student_id', 'like', '%' . $search_data . '%')->orWhere('first_name', 'like', '%' . $search_data . '%')->orWhere('last_name', 'like', '%' . $search_data . '%')->with("class")->get();
+        return StudentModel::where('student_id', 'like', '%' . $search_data . '%')->orWhere('first_name', 'like', '%' . $search_data . '%')->orWhere('last_name', 'like', '%' . $search_data . '%')->with("class")->get();
     }
 
     public function updateStudentProfileStatus($id)
     {
-        $StudentModel =  StudentModel::find($id);
-        $StudentModel->profile_status =  $StudentModel->profile_status == 'ENABLED' ? 'DISABLED' : 'ENABLED';
+        $StudentModel = StudentModel::find($id);
+        $StudentModel->profile_status = $StudentModel->profile_status == 'ENABLED' ? 'DISABLED' : 'ENABLED';
         $StudentModel->save();
         return response()->json(['success' => true, 'message' => 'Profile updated successfully.']);
     }
 
     public function updateStudentTranscriptAccess($id)
     {
-        $StudentModel =  StudentModel::find($id);
-        $StudentModel->can_access_transcript =  $StudentModel->can_access_transcript == 'YES' ? 'NO' : 'YES';
+        $StudentModel = StudentModel::find($id);
+        $StudentModel->can_access_transcript = $StudentModel->can_access_transcript == 'YES' ? 'NO' : 'YES';
         $StudentModel->save();
         return response()->json(['success' => true, 'message' => 'Transcript access updated successfully.']);
     }
 
     public function getNoOfClassStudent($class_id)
     {
-        $class_no =  DB::select('select count(class) as class_no from student where profile_status ="ENABLED" and  class =' . $class_id)[0]->class_no;
+        $class_no = DB::select('select count(class) as class_no from student where profile_status ="ENABLED" and  class =' . $class_id)[0]->class_no;
         $male = DB::select('select count(class) as male from student where profile_status = "ENABLED" and class =' . $class_id . ' and gender = "MALE"')[0]->male;
-        $female =  DB::select('select count(class) as female from student where profile_status = "ENABLED" and class =' . $class_id . ' and gender = "FEMALE"')[0]->female;
+        $female = DB::select('select count(class) as female from student where profile_status = "ENABLED" and class =' . $class_id . ' and gender = "FEMALE"')[0]->female;
         return [$class_no, $male, $female];
     }
 

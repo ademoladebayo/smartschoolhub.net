@@ -488,13 +488,14 @@ class TeacherService
             $assignment->session = $util->getCurrentSession()[0];
             $assignment->term =  $util->getCurrentSession()[1];
             $assignment->save();
-        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
+        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") { 
+            $school_name = $request->header("school");
             // NEW UPLOAD OR VIDEO
             $upload = new UploadModel();
             if ($request->material_type == "UPLOAD") {
                 // GET FILENAME
                 $file_name = $_FILES['file']['name'];
-                $request->file->storeAs('public/fileupload/learninghub', $file_name);
+                $request->file->storeAs('public/fileupload/'.$school_name.'/learninghub', $file_name);
             } else {
                 $file_name = $request->content;
                 if (str_contains($file_name, "watch?v=")) {
