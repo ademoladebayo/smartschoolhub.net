@@ -35,6 +35,8 @@ class ActivityLog
         // REQUEST
         $token = $request->header("Authorization");
         $school = $request->header("school");
+        config(['database.default' => $school]);
+        
         $request_data = $request->input();
         $request_method = $request->method();
         $request_url = $request->fullUrl();

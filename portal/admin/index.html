@@ -115,7 +115,7 @@
     const messaging = firebase.messaging();
 
     function initFirebaseMessagingRegistration() {
-       return messaging.getToken({ vapidKey: 'BCaDCU0B1hVyl5wJLgYeqoEK_H884I0EB1foOClfC-b-bg_WFFE9XQVOiiYfUl0OTvojVK9am5vQ0AlAbw_hQtc' }).then((currentToken) => {
+        return messaging.getToken({ vapidKey: 'BCaDCU0B1hVyl5wJLgYeqoEK_H884I0EB1foOClfC-b-bg_WFFE9XQVOiiYfUl0OTvojVK9am5vQ0AlAbw_hQtc' }).then((currentToken) => {
             // app token used for sending notifications
             if (currentToken) {
                 console.log(currentToken);
@@ -126,7 +126,7 @@
         }).catch((err) => {
             // notifications are manually blocked, you can ask for unblock here
             console.log('An error occurred while retrieving token. ', err);
-            couldNotGetToken();
+            return null;
         });
 
 
@@ -148,7 +148,7 @@
 
     });
 
-   
+
 </script>
 
 

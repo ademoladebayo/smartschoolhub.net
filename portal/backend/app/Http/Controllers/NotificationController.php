@@ -116,7 +116,7 @@ class NotificationController extends Controller
             $student->save();
         }else {
             $student = StudentModel::find($request->id);
-            $student->device_token = $request->guardian_device_token;
+            $student->guardian_device_token = $request->device_token;
             $student->save();
         }
         return  response(['success' => true, 'message' => "Device token saved."]);

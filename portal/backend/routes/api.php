@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ActivityLog;
+use App\Http\Middleware\SwitchDatabaseConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Cors;
@@ -530,7 +531,7 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
         // DEVICE TOKEN
         Route::post('device-token', 'NotificationController@saveToken', function () {
         })->middleware(Cors::class)->withoutMiddleware([ActivityLog::class]);
-        
+
 
         Route::middleware('auth:sanctum')->group(function () {
             Route::get('general/all-session/{sort}', 'GeneralController@allSession', function () {

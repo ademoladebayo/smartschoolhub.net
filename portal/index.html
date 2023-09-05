@@ -20,21 +20,21 @@
 
     <link rel="manifest" href="manifest.json">
     <!-- ios support -->
-    <link rel="apple-touch-icon" href="icons/Icon-72.png">
-    <link rel="apple-touch-icon" href="icons/Icon-96.png">
-    <link rel="apple-touch-icon" href="icons/Icon-128.png">
-    <link rel="apple-touch-icon" href="icons/Icon-144.png">
-    <link rel="apple-touch-icon" href="icons/Icon-152.png">
-    <link rel="apple-touch-icon" href="icons/Icon-192.png">
-    <link rel="apple-touch-icon" href="icons/Icon-384.png">
-    <link rel="apple-touch-icon" href="icons/Icon-512.png">
+    <link rel="apple-touch-icon" href="icons/72.png">
+    <link rel="apple-touch-icon" href="icons/96.png">
+    <link rel="apple-touch-icon" href="icons/128.png">
+    <link rel="apple-touch-icon" href="icons/144.png">
+    <link rel="apple-touch-icon" href="icons/152.png">
+    <link rel="apple-touch-icon" href="icons/192.png">
+    <link rel="apple-touch-icon" href="icons/384.png">
+    <link rel="apple-touch-icon" href="icons/512.png">
     <meta name="apple-mobile-web-app-status-bar" content="#051f3e">
     <meta name="theme-color" content="#051f3e">
     <!-- Select 2 CSS -->
-    <link rel="stylesheet" href="/css/select2.min.css">
+    <link rel="stylesheet" href="./css/select2.min.css">
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;" onload="getSchools()">
+<body style="font-family: Poppins; font-weight: bold;" onload="">
     <div class="container-fluid">
         <div class="container">
             <div class="col-xl-10 col-lg-11 login-container">
@@ -64,8 +64,8 @@
                             <div id="select_school" style="display: flex; justify-content: center;" class="row">
                                 <p style="color: #051f3e;text-align: center;"> <b>Please select your school</b></p>
                                 <br><br>
-                                <select onchange="getSchoolDetails(this.value)" id="schools"
-                                    style="display: flex; justify-content: center;" id="class_sector" class="select2">
+                                <select onchange="getSchoolDetails(this.value)" id="schools" style="text-align: center;"
+                                    id="class_sector" class="select2">
                                     <option value="">CLICK TO SELECT YOUR SCHOOL</option>
                                 </select>
                             </div>
@@ -124,6 +124,9 @@
                                     </div>
                                 </div>
 
+                                <p onclick="changeSchool()" style="color: red;text-align: center;">
+                                    <b>Change school</b>
+                                </p><br>
 
                             </div>
 
@@ -131,7 +134,7 @@
                         <footer class="footer">
                             <div style="display: flex;
                             justify-content: center; font-family: Poppins;" class="copyright"><a
-                                    style="color: #051f3e;" href="#"><b><small> © 2022
+                                    style="color: #051f3e;" href="#"><b><small> © 2023
                                             Dextroux Technologies</small></b></a></div>
                         </footer>
                     </div>
@@ -157,7 +160,7 @@
 <script src="assets/js/lib/sweetalert/sweetalert.min.js"></script>
 <script src="assets/js/lib/sweetalert/sweetalert.init.js"></script>
 <!-- Select 2 Js -->
-<script src="/js/select2.min.js"></script>
+<script src="./js/select2.min.js"></script>
 <script src="js/app.js"></script>
 
 <style>
@@ -229,7 +232,9 @@
     const config = new Config();
     localStorage.setItem("ip", config.url.ip);
     localStorage.setItem("domain", config.url.domain);
+</script>
 
+<script>
     function getSchools() {
         //var route = "https://smartschoolhub.net/backend/website/api/website/schools";
         var route = "http://localhost:8001/api/schools"
@@ -252,7 +257,7 @@
                 data.forEach(school => {
                     document.getElementById('schools').innerHTML +=
                         `
-                    <option value="${school.alias}">${school.name}</option>
+                    <option style="text-align:center; padding-left:50px" value="${school.alias}">${school.name}</option>
                 `;
                 });
             })
@@ -357,8 +362,19 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
             parent.$("#spinnerModal").modal("hide");
             parent.document.getElementById("spinnerModal").remove();
         }
+
+        const backdrop = document.querySelector('.modal-backdrop fade show');
+        if (backdrop) {
+            parent.backdrop.remove()
+        }
     }
 
+    function changeSchool() {
+        document.getElementById("school_name").innerHTML = "Welcome !";
+        document.getElementById("schools").selectedIndex = 0;
+        document.getElementById("sign_in_as").hidden = true;
+        document.getElementById("select_school").hidden = false;
+    }
     window.addEventListener("load", () => {
         getSchools();
         //getSchoolDetails();
@@ -389,6 +405,66 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
 </script>
 
+
+<script>
+    // Select the <body> element
+    const body = document.querySelector('body');
+
+    // Create a new MutationObserver instance
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Get the class value of the new element
+                    const classValue = node.className;
+
+                    // Get the new element itself
+                    const newElement = node.querySelector('.new-class');
+
+                    if (classValue.includes("modal-backdrop fade show")) {
+
+                        spinnerModal = parent.document.getElementById("spinnerModal");
+                        authenticationModal = parent.document.getElementById("authenticationModal");
+                        if (spinnerModal == null && authenticationModal == null) {
+                            const backdrop = document.querySelector('.modal-backdrop fade show');
+                            if (backdrop) {
+                                parent.backdrop.remove()
+                            }
+                            console.log(`${node.tagName} element with class "${classValue}" added to the <body> element`);
+                            console.log(`New element with class "new-class" added to the <body> element:`, newElement);
+                        }
+                    }
+
+
+                }
+            });
+        });
+    });
+
+    // Configure the observer to watch for changes to the <body> element
+    const observerConfig = {
+        childList: true, // Watch for changes to the list of child nodes
+        subtree: true, // Watch for changes to the entire subtree of the <body> element
+        characterData: true // Watch for changes to the text content of the <body> element
+    };
+
+    // Start observing the <body> element for changes
+    observer.observe(body, observerConfig);
+
+
+    $(document).click(function (e) {
+        spinnerModal = parent.document.getElementById("spinnerModal");
+        authenticationModal = parent.document.getElementById("authenticationModal");
+        if (spinnerModal == null && authenticationModal == null) {
+            const backdrop = document.getElementsByClassName("modal-backdrop fade show");
+            Array.from(backdrop).forEach(function (bd) {
+                bd.remove();
+            });
+        }
+    });
+
+
+</script>
 <!-- Mirrored from www.smarteyeapps.com/demo/html5-template-login-page/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 15 Oct 2021 08:09:14 GMT -->
 
 </html>

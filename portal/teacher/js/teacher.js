@@ -47,7 +47,7 @@ function getCurrentSession() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -81,14 +81,16 @@ function getCurrentSession() {
 }
 
 function loadDashBoardInformation() {
-  document.getElementById("user_name").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.first_name +
+  document.getElementById("user_name").innerHTML = `<b>${
+    JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
-    }</b>`;
-  document.getElementById("user_name1").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.first_name +
+  }</b>`;
+  document.getElementById("user_name1").innerHTML = `<b>${
+    JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
-    }</b>`;
+  }</b>`;
   document.getElementById("male").innerHTML = formatNumber(
     JSON.parse(localStorage["user_data"]).dashboard_information.male
   );
@@ -155,9 +157,11 @@ function getProfileData() {
     document.getElementById("profile_data").innerHTML += ` 
         <tr>
                 <td>${data_key[i].toUpperCase().replace("_", " ")}:</td>
-                <td id="${data_key[i]
-      }" name="profile_data" class="font-medium text-dark-medium">${user_data[data_key[i]]
-      }</td>
+                <td id="${
+                  data_key[i]
+                }" name="profile_data" class="font-medium text-dark-medium">${
+      user_data[data_key[i]]
+    }</td>
         </tr>
         
         `;
@@ -258,7 +262,7 @@ function loadSideNav(page) {
   document.getElementById(page).className += " menu-active";
 }
 
-function signIn() {
+async function signIn() {
   var id = document.getElementById("id").value;
   var password = document.getElementById("password").value;
   if (id != "" && password != "") {
@@ -269,7 +273,7 @@ function signIn() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
       },
       body: JSON.stringify({
@@ -285,7 +289,7 @@ function signIn() {
         return res.json();
       })
 
-      .then((data) => {
+      .then(async (data) => {
         toastr.remove();
         if (data.success) {
           successtoast("<b>" + data.message + "</b>");
@@ -328,7 +332,7 @@ function reAuth() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
       },
       body: JSON.stringify({
@@ -392,9 +396,9 @@ function getTermAndSession() {
 
 function goTo(page) {
   if (page == "") {
-    school = localStorage['school'];
+    school = localStorage["school"];
     localStorage.clear();
-    localStorage.setItem('school', school);
+    localStorage.setItem("school", school);
     window.parent.location.assign(domain);
     return 0;
   }
@@ -415,7 +419,7 @@ function getAllStudentForTable() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -436,7 +440,7 @@ function getAllStudentForTable() {
             data[i].class == null ? `GRADUATED` : data[i].class.id;
           if (
             student_class !=
-            JSON.parse(localStorage["user_data"]).data.assigned_class.id ||
+              JSON.parse(localStorage["user_data"]).data.assigned_class.id ||
             data[i].profile_status == "DISABLED"
           ) {
             continue;
@@ -448,26 +452,28 @@ function getAllStudentForTable() {
           <td>${data[i].student_id}</td>
           <td>${data[i].first_name + " " + data[i].last_name}</td>
           <td>${data[i].gender}</td>
-          <td class="text-white">${data[i].profile_status == "ENABLED"
+          <td class="text-white">${
+            data[i].profile_status == "ENABLED"
               ? `<span class="badge bg-success"><b>ENABLED</b></span>`
               : `<span class="badge bg-danger"><b>DISABLED</b></span>`
-            }</td>
-          <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
+          }</td>
+          <td>${
+            data[i].class == null ? `GRADUATED` : data[i].class.class_name
+          }</td>
           <td>
           <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-              .replace(/'/g, "")
-              .replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
           <a  onclick="viewStudentResult(${JSON.stringify(data[i])
-              .replace(/'/g, "")
-              .replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn gradient-orange-peel text-black"><i
                       class="fas fa-poll"></i>
                   Result</a>
       </tr>`;
@@ -585,7 +591,7 @@ function createStudent() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
       },
@@ -670,7 +676,7 @@ function updateStudent() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
       },
@@ -725,7 +731,7 @@ function updateStudentProfileStatus(id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -758,7 +764,7 @@ function deleteStudent(id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -790,7 +796,7 @@ function searchStudent(search_data) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -830,39 +836,41 @@ function searchStudent(search_data) {
               <td>${data[i].class.class_name}</td>
               <td>
               <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" class="btn btn-secondary text-black"><i
+              <a  onclick="updateStudentProfileStatus(${
+                data[i].id
+              })" class="btn btn-secondary text-black"><i
                   class="fas fa-lock"></i> Disable</a>  
 
               
               <a  onclick="viewStudentResult(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn gradient-orange-peel text-black"><i
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a  onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteStudent(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -880,39 +888,41 @@ function searchStudent(search_data) {
               <td>${data[i].class.class_name}</td>
               <td>
               <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" class="btn btn-secondary text-black"><i
+              <a  onclick="updateStudentProfileStatus(${
+                data[i].id
+              })" class="btn btn-secondary text-black"><i
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
               <a  onclick="viewStudentResult(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn gradient-orange-peel text-black"><i
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a  onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteStudent(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -932,39 +942,41 @@ function searchStudent(search_data) {
               <td>${data[i].class.class_name}</td>
               <td>
               <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" class="btn btn-secondary text-black"><i
+              <a  onclick="updateStudentProfileStatus(${
+                data[i].id
+              })" class="btn btn-secondary text-black"><i
                   class="fas fa-lock"></i> Disable</a>  
 
               
               <a  onclick="viewStudentResult(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn gradient-orange-peel text-black"><i
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
 
-              <a  onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteStudent(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -982,39 +994,41 @@ function searchStudent(search_data) {
               <td>${data[i].class.class_name}</td>
               <td>
               <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" class="btn btn-secondary text-black"><i
+              <a  onclick="updateStudentProfileStatus(${
+                data[i].id
+              })" class="btn btn-secondary text-black"><i
                   class="fas fa-unlock-alt"></i> Enable</a>  
 
               
               <a  onclick="viewStudentResult(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn gradient-orange-peel text-black"><i
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn gradient-orange-peel text-black"><i
                           class="fas fa-poll"></i>
                       Result</a> 
               
-              <a  onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteStudent(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -1364,7 +1378,7 @@ function getResult(value) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1442,20 +1456,22 @@ function getResult(value) {
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               <b>${result.position}</b>
               </td>
-              <td style="color: ${result.grade.includes("F")
-              ? "red"
-              : result.grade.includes("A")
-                ? "blue"
-                : "black"
-            } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
+              <td style="color: ${
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
-              <td style="color: ${result.grade.includes("F")
-              ? "red"
-              : result.grade.includes("A")
-                ? "blue"
-                : "black"
-            } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td style="color: ${
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
             </tr>`;
@@ -1477,7 +1493,7 @@ function getCommentsAndPsycho(value) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1541,7 +1557,7 @@ function uploadCommentAndRating(type, value, rating_type) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1583,7 +1599,7 @@ function getAttendanceSummary(value) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1619,7 +1635,7 @@ function getPreviousSubjectRegistration() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1661,7 +1677,7 @@ function getAllSubjectForTable() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1696,14 +1712,16 @@ function getAllSubjectForTable() {
                 </td>
   
                 <td>${c}.</td>
-                <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name
-              }</td>
-                <td>${data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
-              }</td>
+                <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${
+                  data[i].subject_name
+                }</td>
+                <td>${
+                  data[i].teacher.title +
+                  " " +
+                  data[i].teacher.first_name +
+                  " " +
+                  data[i].teacher.last_name
+                }</td>
                 
       
             <tr>`;
@@ -1717,11 +1735,12 @@ function getAllSubjectForTable() {
 
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-              <td>${data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
+              <td>${
+                data[i].teacher.title +
+                " " +
+                data[i].teacher.first_name +
+                " " +
+                data[i].teacher.last_name
               }</td>
               
     
@@ -1779,9 +1798,9 @@ function registerSubject() {
     if (
       confirm(
         "Kindly confirm you would like to register the selected subject for session " +
-        localStorage["current_session"] +
-        " " +
-        localStorage["current_term"]
+          localStorage["current_session"] +
+          " " +
+          localStorage["current_term"]
       )
     ) {
       document.getElementById("register_subject").innerHTML = `<i
@@ -1792,7 +1811,7 @@ function registerSubject() {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "school": localStorage["school"],
+          school: localStorage["school"],
           "Content-type": "application/json",
           Authorization: "Bearer " + localStorage["token"],
         },
@@ -1836,7 +1855,7 @@ function getAssignedSubject() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1911,7 +1930,7 @@ function getCBTForSubject() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -1946,37 +1965,40 @@ function getCBTForSubject() {
           <td>
           ${data[i].start_time}</td>
           <td>
-          ${data[i].cbt_status == "OPEN"
+          ${
+            data[i].cbt_status == "OPEN"
               ? `<span class="badge bg-success text-white"><b>${data[i].cbt_status}</b></span>`
               : `<span class="badge bg-danger text-white"><b>${data[i].cbt_status}</b></span>`
-            }</td>
+          }</td>
   
           
   
           <td>
               <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary" onclick="viewCBT(${JSON.stringify(
-              data[i]
-            )
-              .replace(/'/g, "")
-              .replace(/"/g, "'")
-              .replace(/&#39;/g, "™")})"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(/"/g, "'")
+                .replace(/&#39;/g, "™")})"
                  ><i class="fas fa-eye"></i></button>
               <button style="text-decoration: none; cursor: pointer;" onclick=" reloadEditFrame(); editCBT(${JSON.stringify(
                 data[i]
               )
-              .replace(/'/g, "")
-              .replace(/"/g, "'")
-              .replace(/&#39;/g, "™")})"
+                .replace(/'/g, "")
+                .replace(/"/g, "'")
+                .replace(/&#39;/g, "™")})"
                   class="btn-sm btn-warning" data-bs-toggle="modal"
                   data-bs-target="#editModal"><i class="fas fa-edit"></i></button>
-              <button style="text-decoration: none; cursor: pointer;" onclick="viewResultForCBT(${data[i].id
-            })"
+              <button style="text-decoration: none; cursor: pointer;" onclick="viewResultForCBT(${
+                data[i].id
+              })"
                   class="btn-sm btn-success"><i class="fas fa-poll"></i></button>
 
-              ${data[i].cbt_status == "OPEN"
-              ? ` <button style="text-decoration: none; cursor: pointer;" onclick="changeCBTStatus(${data[i].id},'CLOSE')"
+              ${
+                data[i].cbt_status == "OPEN"
+                  ? ` <button style="text-decoration: none; cursor: pointer;" onclick="changeCBTStatus(${data[i].id},'CLOSE')"
                       class="btn-sm btn-secondary"><i class="fas fa-lock"></i></i></button>`
-              : `
+                  : `
                   <button
                     style="text-decoration: none; cursor: pointer;"
                     onclick="changeCBTStatus(${data[i].id},'OPEN')"
@@ -1984,10 +2006,11 @@ function getCBTForSubject() {
                   >
                   <i class="fas fa-lock-open"></i>
                   </button>`
-            }
+              }
 
-              <button style="text-decoration: none; cursor: pointer;" onclick="deleteCBT(${data[i].id
-            })"
+              <button style="text-decoration: none; cursor: pointer;" onclick="deleteCBT(${
+                data[i].id
+              })"
                   class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
 
               </td>
@@ -2027,13 +2050,13 @@ function proceedToSetQuestion() {
   ) {
     confirmed = window.confirm(
       "Kindly confirm you are about to set " +
-      cbt_title +
-      " which will be taken on " +
-      cbt_date +
-      " by " +
-      start_time +
-      " duration will be " +
-      cbt_duration
+        cbt_title +
+        " which will be taken on " +
+        cbt_date +
+        " by " +
+        start_time +
+        " duration will be " +
+        cbt_duration
     );
     if (confirmed) {
       localStorage.setItem("cbt_title", cbt_title);
@@ -2080,8 +2103,8 @@ function getCBTdetails() {
   for (i = 0; i < localStorage["question_no"]; i++) {
     question.push(
       "Type question " +
-      (i + 1) +
-      " here &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        (i + 1) +
+        " here &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
     );
     options.push(
       "Option A &nbsp;&nbsp;&nbsp;&nbsp;~ Option B &nbsp;&nbsp;&nbsp;&nbsp;~ Option C &nbsp;&nbsp;&nbsp;&nbsp;~ Option D &nbsp;&nbsp;&nbsp;&nbsp;"
@@ -2105,72 +2128,94 @@ function getSavedQuestions() {
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3">
     <div id="demo" class="" class="card-body text-dark bg-light">
     <b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
-        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${questions_number[n]
-      }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
+        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
+          questions_number[n]
+        }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
             ${question[questions_number[n]]
-        .replace(/⌑/g, ",")
-        .replace(/™/g, "'")}
+              .replace(/⌑/g, ",")
+              .replace(/™/g, "'")}
         </div>
     </div>
     <br>
   
     <div class="pl-2">
-             <div id="optionA${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                     id="A${questions_number[n]}" value="A"  ${answer[questions_number[n]] == "A" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="A${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[0]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+             <div id="optionA${
+               questions_number[n]
+             }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                     id="A${questions_number[n]}" value="A"  ${
+      answer[questions_number[n]] == "A" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="A${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[0]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label> </input></div>
  
-               <div id="optionB${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                       id="B${questions_number[n]}" value="B"  ${answer[questions_number[n]] == "B" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="B${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[1]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+               <div id="optionB${
+                 questions_number[n]
+               }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                       id="B${questions_number[n]}" value="B"  ${
+      answer[questions_number[n]] == "B" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="B${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[1]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label></input> </div>
  
-                 <div id="optionC${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                         id="C${questions_number[n]}" value="C"  ${answer[questions_number[n]] == "C" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="C${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[2]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+                 <div id="optionC${
+                   questions_number[n]
+                 }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                         id="C${questions_number[n]}" value="C"  ${
+      answer[questions_number[n]] == "C" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="C${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[2]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label> </input> </div>
  
-                   <div id="optionD${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                           id="D${questions_number[n]}" value="D"  ${answer[questions_number[n]] == "D" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="D${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[3]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+                   <div id="optionD${
+                     questions_number[n]
+                   }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                           id="D${questions_number[n]}" value="D"  ${
+      answer[questions_number[n]] == "D" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="D${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[3]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                      </label></input> </div>
               </div>
     </div>
  
-    <small class="ml-1 btn btn-sm text-right mb-2 text-danger pr-2" onclick="deleteQuestion(${questions_number[n]
-      })"><span
+    <small class="ml-1 btn btn-sm text-right mb-2 text-danger pr-2" onclick="deleteQuestion(${
+      questions_number[n]
+    })"><span
                                      id="" class="" role="status">
                                      <b><i class="fas fa-times"></i> Delete
                                          Question </b></small>
@@ -2255,7 +2300,7 @@ function saveCBT() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
       },
@@ -2349,9 +2394,9 @@ function getCBTdetailsView() {
   ) {
     n = Math.floor(
       Math.random() *
-      JSON.parse(localStorage["cbt_detail"]).cbt_questions_number.split(",")
-        .length +
-      0
+        JSON.parse(localStorage["cbt_detail"]).cbt_questions_number.split(",")
+          .length +
+        0
     );
     if (!randomQuestion.includes(n)) {
       randomQuestion.push(n);
@@ -2380,65 +2425,82 @@ function getCBTdetailsView() {
     document.getElementById("cbt_view").innerHTML += ` 
   <div class="mb-3">
    <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
-   <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${questions_number[n]
-      }" >${question[questions_number[n]]
-        .replace(/⌑/g, ",")
-        .replace(/™/g, "'")}</span></p>
+   <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
+     questions_number[n]
+   }" >${question[questions_number[n]]
+      .replace(/⌑/g, ",")
+      .replace(/™/g, "'")}</span></p>
  <div class="pl-2">
-           <div id="optionA${questions_number[n]
-      }" class="form-check"> <input  class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                   id="A${questions_number[n]}" value="A"    ${answer[questions_number[n]] == "A" ? `checked` : `disabled='disabled'`
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="A${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[0]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+           <div id="optionA${
+             questions_number[n]
+           }" class="form-check"> <input  class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                   id="A${questions_number[n]}" value="A"    ${
+      answer[questions_number[n]] == "A" ? `checked` : `disabled='disabled'`
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="A${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[0]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
              </label> </input></div>
 
-             <div id="optionB${questions_number[n]
-      }" class="form-check"> <input  class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                     id="B${questions_number[n]}" value="B" ${answer[questions_number[n]] == "B" ? `checked` : `disabled='disabled'`
-      } > <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="B${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[1]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+             <div id="optionB${
+               questions_number[n]
+             }" class="form-check"> <input  class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                     id="B${questions_number[n]}" value="B" ${
+      answer[questions_number[n]] == "B" ? `checked` : `disabled='disabled'`
+    } > <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="B${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[1]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label></input> </div>
 
-               <div id="optionC${questions_number[n]
-      }" class="form-check"> <input class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                       id="C${questions_number[n]}" value="C" ${answer[questions_number[n]] == "C" ? `checked` : `disabled='disabled'`
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="C${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[2]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+               <div id="optionC${
+                 questions_number[n]
+               }" class="form-check"> <input class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                       id="C${questions_number[n]}" value="C" ${
+      answer[questions_number[n]] == "C" ? `checked` : `disabled='disabled'`
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="C${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[2]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label> </input> </div>
 
-                 <div id="optionD${questions_number[n]
-      }" class="form-check"> <input class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                         id="D${questions_number[n]}" value="D" ${answer[questions_number[n]] == "D" ? `checked` : `disabled='disabled'`
-      } > <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="D${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[3]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+                 <div id="optionD${
+                   questions_number[n]
+                 }" class="form-check"> <input class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                         id="D${questions_number[n]}" value="D" ${
+      answer[questions_number[n]] == "D" ? `checked` : `disabled='disabled'`
+    } > <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="D${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[3]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label></in put> </div>
             </div>
   </div>
@@ -2492,13 +2554,13 @@ function proceedToEditQuestion() {
   ) {
     confirmed = window.confirm(
       "Kindly confirm you are about to edit " +
-      cbt_title +
-      " which will be taken on " +
-      cbt_date +
-      " by " +
-      start_time +
-      " duration will be " +
-      cbt_duration
+        cbt_title +
+        " which will be taken on " +
+        cbt_date +
+        " by " +
+        start_time +
+        " duration will be " +
+        cbt_duration
     );
     if (confirmed) {
       localStorage.setItem("cbt_title", cbt_title);
@@ -2561,73 +2623,95 @@ function getCBTdetailsEdit() {
 
     <div id="demo" class="" class="card-body text-dark bg-light">
     <b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
-        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${questions_number[n]
-      }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
+        <div onclick="openQuestionModal(this.id,this.innerHTML); scrollToElement('C0')" onchange="alert('chnage');saveQuestion(this.id,this.innerHTML)"  id="${
+          questions_number[n]
+        }" style="overflow: auto; height: 25vh; border:1px solid black" contenteditable="true">
             ${question[questions_number[n]]
-        .replace(/⌑/g, ",")
-        .replace(/™/g, "'")}
+              .replace(/⌑/g, ",")
+              .replace(/™/g, "'")}
         </div>
     </div>
     <br>
 
 
    <div class="pl-2">
-             <div id="optionA${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                     id="A${questions_number[n]}" value="A"  ${answer[questions_number[n]] == "A" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="A${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[0]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+             <div id="optionA${
+               questions_number[n]
+             }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                     id="A${questions_number[n]}" value="A"  ${
+      answer[questions_number[n]] == "A" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="A${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[0]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label> </input></div>
  
-               <div id="optionB${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                       id="B${questions_number[n]}" value="B"  ${answer[questions_number[n]] == "B" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="B${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[1]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+               <div id="optionB${
+                 questions_number[n]
+               }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                       id="B${questions_number[n]}" value="B"  ${
+      answer[questions_number[n]] == "B" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="B${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[1]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label></input> </div>
  
-                 <div id="optionC${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                         id="C${questions_number[n]}" value="C"  ${answer[questions_number[n]] == "C" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="C${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[2]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+                 <div id="optionC${
+                   questions_number[n]
+                 }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                         id="C${questions_number[n]}" value="C"  ${
+      answer[questions_number[n]] == "C" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="C${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[2]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label> </input> </div>
  
-                   <div id="optionD${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                           id="D${questions_number[n]}" value="D"  ${answer[questions_number[n]] == "D" ? `checked` : ""
-      }> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" forr="D${questions_number[n]
-      }" contenteditable="true">${options[questions_number[n]]
-        .split("~")[3]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+                   <div id="optionD${
+                     questions_number[n]
+                   }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                           id="D${questions_number[n]}" value="D"  ${
+      answer[questions_number[n]] == "D" ? `checked` : ""
+    }> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" forr="D${
+      questions_number[n]
+    }" contenteditable="true">${options[questions_number[n]]
+      .split("~")[3]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                      </label></input> </div>
               </div>
     </div>
  
-    <small class="ml-1 btn btn-sm text-right mb-2 text-danger pr-2" onclick="deleteQuestion(${questions_number[n]
-      })"><span
+    <small class="ml-1 btn btn-sm text-right mb-2 text-danger pr-2" onclick="deleteQuestion(${
+      questions_number[n]
+    })"><span
                                      id="" class="" role="status">
                                      <b><i class="fas fa-times"></i> Delete
                                          Question </b></small>
@@ -2655,7 +2739,7 @@ function updateCBT() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
       },
@@ -2705,7 +2789,7 @@ function deleteCBT(cbt_id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -2730,7 +2814,7 @@ function changeCBTStatus(cbt_id, status) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -2766,7 +2850,7 @@ function getResultForCBT() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -2787,8 +2871,9 @@ function getResultForCBT() {
           document.getElementById("cbt_result").innerHTML += `
         <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
               <td>${c}.</td>
-              <td>${data[i].student.first_name + " " + data[i].student.last_name
-            }</td>
+              <td>${
+                data[i].student.first_name + " " + data[i].student.last_name
+              }</td>
               <td>${data[i].score}</td>
         </tr>
         `;
@@ -2805,17 +2890,17 @@ function useCBTResultFor() {
   // PUSH TO API
   fetch(
     ip +
-    "/api/teacher/use-cbt-result/" +
-    localStorage["cbt_result_cbt_id"] +
-    "/" +
-    document.getElementById("use_result_for").value +
-    "/" +
-    localStorage["cbt_subject_id"],
+      "/api/teacher/use-cbt-result/" +
+      localStorage["cbt_result_cbt_id"] +
+      "/" +
+      document.getElementById("use_result_for").value +
+      "/" +
+      localStorage["cbt_subject_id"],
     {
       method: "GET",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
       },
@@ -2843,7 +2928,7 @@ function getAssignedSubjectForResultUpload() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -2911,7 +2996,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -2944,36 +3029,48 @@ function getAllstudentForSubjectResultUpload(refresh) {
           <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
 
           <td>${c}.</td>
-          <td>${data.result[i].student.first_name +
+          <td>${
+            data.result[i].student.first_name +
             " " +
             data.result[i].student.middle_name +
             " " +
             data.result[i].student.last_name
-            }</td>
+          }</td>
           
-          <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','first_ca',this.innerHTML)" contenteditable="true" >${data.result[i].first_ca
-            }</td>
-          <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','second_ca',this.innerHTML)" contenteditable="true">${data.result[i].second_ca
-            }</td>
-          <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','examination',this.innerHTML)" contenteditable="true">${data.result[i].examination
-            }</td>
-          <td style="font-size:20px; font-style:bold;"><b>${data.result[i].total
-            }</b></td>
+          <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','first_ca',this.innerHTML)" contenteditable="true" >${
+            data.result[i].first_ca
+          }</td>
+          <td oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','second_ca',this.innerHTML)" contenteditable="true">${
+            data.result[i].second_ca
+          }</td>
+          <td oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','examination',this.innerHTML)" contenteditable="true">${
+            data.result[i].examination
+          }</td>
+          <td style="font-size:20px; font-style:bold;"><b>${
+            data.result[i].total
+          }</b></td>
           <td> 
             <div class="select">
-                <select onChange="addToResultList('${data.result[i].id
-            }','grade',this.value)" id="standard-select" id="grade" value="${data.result[i].grade == "-"
+                <select onChange="addToResultList('${
+                  data.result[i].id
+                }','grade',this.value)" id="standard-select" id="grade" value="${
+            data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
-            }" class="select2">
-                <option value="<b>${data.result[i].grade == `-` ? `-` : `${data.result[i].grade}`
-            }</b>">${data.result[i].grade == "-"
+          }" class="select2">
+                <option value="<b>${
+                  data.result[i].grade == `-` ? `-` : `${data.result[i].grade}`
+                }</b>">${
+            data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
-            }</option>
+          }</option>
           ${
             // <option value="A">A</option>
             // <option value="B">B</option>
@@ -2982,7 +3079,7 @@ function getAllstudentForSubjectResultUpload(refresh) {
             // <option value="E">E</option>
             // <option value="F">F</option>
             ""
-            }
+          }
                 </select>
            
                <span class="focus"></span>
@@ -2990,25 +3087,29 @@ function getAllstudentForSubjectResultUpload(refresh) {
           </td>
           <td> 
           <div class="select">
-              <select onChange="addToResultList('${data.result[i].id
-            }','remark',this.value)" id="standard-select" id="remark" value="<b>${data.result[i].grade == "-"
+              <select onChange="addToResultList('${
+                data.result[i].id
+              }','remark',this.value)" id="standard-select" id="remark" value="<b>${
+            data.result[i].grade == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
-            }</b>" class="select2">
-              <option value="${data.result[i].remark == `-` ? `-` : `${data.result[i].remark}`
-            }">${data.result[i].remark == "-"
+          }</b>" class="select2">
+              <option value="${
+                data.result[i].remark == `-` ? `-` : `${data.result[i].remark}`
+              }">${
+            data.result[i].remark == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
-            }</option>
+          }</option>
                ${
-            //<option value="EXCELLENT">EXCELLENT</option>
-            // <option value="VERY GOOD">VERY GOOD</option>
-            // <option value="GOOD">GOOD</option>
-            // <option value="FAIR">FAIR</option>
-            // <option value="POOR">POOR</option>
-            // <option value="VERY POOR">VERY POOR</option>
-            ""
-            }
+                 //<option value="EXCELLENT">EXCELLENT</option>
+                 // <option value="VERY GOOD">VERY GOOD</option>
+                 // <option value="GOOD">GOOD</option>
+                 // <option value="FAIR">FAIR</option>
+                 // <option value="POOR">POOR</option>
+                 // <option value="VERY POOR">VERY POOR</option>
+                 ""
+               }
               </select>
               <span class="focus"></span>
             <div>
@@ -3049,7 +3150,7 @@ function uploadResult(id, result_type, score) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3115,7 +3216,7 @@ function uploadBulkResult() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3204,7 +3305,7 @@ function takeAttendance() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "school": localStorage["school"],
+        school: localStorage["school"],
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
       },
@@ -3251,7 +3352,7 @@ function getAttendance() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3279,10 +3380,11 @@ function getAttendance() {
               <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
       
                     <td>${c}.</td>
-                    <td>${data[i].student.first_name +
-            " " +
-            data[i].student.last_name
-            }</td>
+                    <td>${
+                      data[i].student.first_name +
+                      " " +
+                      data[i].student.last_name
+                    }</td>
                     <td>${data[i].class.class_name}</td>
                     <td>${data[i].student.gender}</td>
                     <td>${data[i].date}</td>
@@ -3314,7 +3416,7 @@ function takeAttendanceByStudentID() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3364,7 +3466,7 @@ function getLessonPlan(week) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3390,12 +3492,13 @@ function getLessonPlan(week) {
         " " +
         localStorage["LESSON-PLAN"].split("-")[2];
 
-      document.getElementById("lp_status").innerHTML = `<span class="badge ${data.status == "APPROVED"
-        ? `bg-success`
-        : data.status == "DISAPPROVED"
+      document.getElementById("lp_status").innerHTML = `<span class="badge ${
+        data.status == "APPROVED"
+          ? `bg-success`
+          : data.status == "DISAPPROVED"
           ? `bg-danger`
           : `bg-warning`
-        }"><b>${data.status}</b></span>`;
+      }"><b>${data.status}</b></span>`;
 
       // document.getElementById("week1").value =
       //   ` <option value="${data.week}">${data.week}</option>` +
@@ -3426,7 +3529,7 @@ function getAssignedSubjectForLearningHub() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3484,7 +3587,7 @@ function saveLessonPlan() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3568,7 +3671,7 @@ function postMaterial(TOPIC, CONTENT, material_type) {
 
     headers = {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       Authorization: "Bearer " + localStorage["token"],
     };
 
@@ -3576,7 +3679,7 @@ function postMaterial(TOPIC, CONTENT, material_type) {
   } else {
     headers = {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     };
@@ -3630,7 +3733,7 @@ function editMaterial(TOPIC, CONTENT, material_type) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3687,7 +3790,7 @@ function deleteMaterial(material_id, material_type) {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3729,7 +3832,7 @@ function getLearningHubMaterials(subject_id) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -3759,26 +3862,30 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "notes-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-              <div onclick="collapseContent('note_${note.id
-            }')" class="card-header">
-                  <small id="date_time" class="m-0 text-primary">${note.date
-            }</small>
-                  <a  onclick="deleteMaterial('${note.id
-            }','NOTE')" target="_blank"
+              <div onclick="collapseContent('note_${
+                note.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    note.date
+                  }</small>
+                  <a  onclick="deleteMaterial('${
+                    note.id
+                  }','NOTE')" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:red;" class="fas fa-trash-alt"></i></i>
                   </a>
                   <a  onclick="content('EDIT','NOTE','${CryptoJS.AES.encrypt(
-              JSON.stringify(note),
-              "AESENCRYPT"
-            )}')" target="_blank"
+                    JSON.stringify(note),
+                    "AESENCRYPT"
+                  )}')" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:black;" class="far fa-edit"></i>
                   </a>
                   <br>
                   <span class="m-0 text-primary">
-                      <a  id="topic" data-toggle="collapse" href="#demo">${note.topic
-            }</a>
+                      <a  id="topic" data-toggle="collapse" href="#demo">${
+                        note.topic
+                      }</a>
                   </span>
               </div>
               <div id="note_${note.id}" class="collapse"
@@ -3808,30 +3915,36 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "uploads-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-        <div onclick="collapseContent('upload_${upload.id
-            }')" class="card-header">
-            <small id="date_time" class="m-0 text-primary">${upload.date
+        <div onclick="collapseContent('upload_${
+          upload.id
+        }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${
+              upload.date
             }</small>
-            <a  onclick="deleteMaterial('${upload.id
+            <a  onclick="deleteMaterial('${
+              upload.id
             }','UPLOAD')" target="_blank"
                 class="btn  btn-circle btn-sm float-right">
                 <i style="color:red;" class="fas fa-trash-alt"></i></i>
             </a>
             <br>
             <span class="m-0 text-primary">
-                <a  id="topic" data-toggle="collapse" href="#demo">${upload.url
-            }</a>
+                <a  id="topic" data-toggle="collapse" href="#demo">${
+                  upload.url
+                }</a>
             </span>
         </div>
         <div id="upload_${upload.id}" class="collapse"
             class="card-body text-dark bg-light">
            
- <object data="${domain + "/backend/storage/app/public/fileupload/learninghub/" + upload.url
-            }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
+ <object data="${
+   domain + "/backend/storage/app/public/fileupload/learninghub/" + upload.url
+ }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
         <embed
-            src="${domain +
-            "/backend/storage/app/public/fileupload/learninghub/" +
-            upload.url
+            src="${
+              domain +
+              "/backend/storage/app/public/fileupload/learninghub/" +
+              upload.url
             }"
             type="application/pdf" class="img-fluid">
     </object>
@@ -3895,46 +4008,55 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "assignments-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-              <div onclick="collapseContent('assignment_${assignment.id
-            }')" class="card-header">
-                  <small id="date_time" class="m-0 text-primary">${assignment.date
-            }</small>
-                  <a  onclick="deleteMaterial('${assignment.id
-            }','ASSIGNMENT')" target="_blank"
+              <div onclick="collapseContent('assignment_${
+                assignment.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    assignment.date
+                  }</small>
+                  <a  onclick="deleteMaterial('${
+                    assignment.id
+                  }','ASSIGNMENT')" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:red;" class="fas fa-trash-alt"></i></i>
                   </a>
 
 
-                  <a onclick="assignmentSubmission('${assignment.id}','${assignment.topic
-            }','${assignment.mark_obtainable
-            }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:green;" class="fas fa-poll"></i>
+                  <a onclick="assignmentSubmission('${assignment.id}','${
+            assignment.topic
+          }','${
+            assignment.mark_obtainable
+          }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:green;" class="fas fa-poll"></i>
                   </a>
  
 
-                  <a onclick="updateAssignmentStatus('${assignment.id
-            }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:blue;" class="${assignment.status == "OPEN" ? `fas fa-lock` : `fas fa-unlock-alt`
-            }"></i>
+                  <a onclick="updateAssignmentStatus('${
+                    assignment.id
+                  }')" target="_blank" class="btn  btn-circle btn-sm float-right"><i style="color:blue;" class="${
+            assignment.status == "OPEN" ? `fas fa-lock` : `fas fa-unlock-alt`
+          }"></i>
                   </a>
 
 
                   <a  onclick="content('EDIT','ASSIGNMENT','${CryptoJS.AES.encrypt(
-              JSON.stringify(assignment),
-              "AESENCRYPT"
-            )}')" target="_blank"
+                    JSON.stringify(assignment),
+                    "AESENCRYPT"
+                  )}')" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
                       <i style="color:black;" class="far fa-edit"></i>
                   </a>
                   <br>
                   <span class="m-0 text-primary">
-                      <a  id="topic" data-toggle="collapse" href="#demo">${assignment.topic
-            } 
+                      <a  id="topic" data-toggle="collapse" href="#demo">${
+                        assignment.topic
+                      } 
                       
                       <sup> 
-                      ${assignment.status == "OPEN"
-              ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
-              : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
-            }
+                      ${
+                        assignment.status == "OPEN"
+                          ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
+                          : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
+                      }
                   </sup>
                       </a>
                       
@@ -3971,7 +4093,7 @@ function updateAssignmentStatus(id) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4022,7 +4144,7 @@ function assignmentSubmission(id, topic, mark) {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4050,32 +4172,38 @@ function assignmentSubmission(id, topic, mark) {
           document.getElementById(
             "assignments-submission-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-              <div onclick="collapseContent('submission_${submission.id
-            }')" class="card-header">
-                  <small id="date_time" class="m-0 text-primary">${submission.date
-            }</small>
+              <div onclick="collapseContent('submission_${
+                submission.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    submission.date
+                  }</small>
 
                   <div class="">
                       <div class="left">
                           <span class="m-0 text-primary">
-                              <a  id="student_name" data-toggle="collapse" href="#demo">${submission.student_name
-            }
+                              <a  id="student_name" data-toggle="collapse" href="#demo">${
+                                submission.student_name
+                              }
                               
                                   <sup> 
-                                    ${submission.graded == "TRUE"
-              ? ` <span class="badge bg-success" style="color: white;"><b> Graded </b></span>`
-              : ` <span class="badge bg-danger" style="color: white;"><b> Not Graded</b></span>`
-            }
+                                    ${
+                                      submission.graded == "TRUE"
+                                        ? ` <span class="badge bg-success" style="color: white;"><b> Graded </b></span>`
+                                        : ` <span class="badge bg-danger" style="color: white;"><b> Not Graded</b></span>`
+                                    }
                                   </sup>
                               </a>
                           </span>
                   </div>
 
                   <div class="right">
-                      <input id="score_${submission.id}" value="${submission.score
-            }" type="number" placeholder="score" class="input-field no-arrow" min="0">
-                      <button onclick="gradeAssignment('${submission.id}','${submission.assignment_id
-            }')" class="submit-btn">Grade Assignment</button> 
+                      <input id="score_${submission.id}" value="${
+            submission.score
+          }" type="number" placeholder="score" class="input-field no-arrow" min="0">
+                      <button onclick="gradeAssignment('${submission.id}','${
+            submission.assignment_id
+          }')" class="submit-btn">Grade Assignment</button> 
                   </div>
 
                   
@@ -4116,7 +4244,7 @@ function gradeAssignment(submission_id, assignment_id) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4174,7 +4302,7 @@ function changePassword() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4325,7 +4453,7 @@ function getAllClassForDropDown() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4369,9 +4497,9 @@ function promoteStudent() {
     if (
       confirm(
         "You are about to promote all students in " +
-        JSON.parse(localStorage["user_data"]).data.assigned_class.class_name +
-        " to " +
-        class_name[index].text
+          JSON.parse(localStorage["user_data"]).data.assigned_class.class_name +
+          " to " +
+          class_name[index].text
       )
     ) {
       // CALL API
@@ -4380,7 +4508,7 @@ function promoteStudent() {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "school": localStorage["school"],
+          school: localStorage["school"],
           "Content-type": "application/json",
           Authorization: "Bearer " + localStorage["token"],
         },
@@ -4467,7 +4595,7 @@ function getSchoolDetails() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
     },
   })
@@ -4497,7 +4625,7 @@ function loadCustomSessionTerm() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4511,14 +4639,17 @@ function loadCustomSessionTerm() {
     })
 
     .then((data) => {
-      document.getElementById("session_term0").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
-        }">${localStorage["current_session"] + "-" + localStorage["current_term"]
-        }</option>`;
+      document.getElementById("session_term0").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
       data.forEach((sessions) => {
         term.forEach((term) => {
           document.getElementById(
             "session_term0"
-          ).innerHTML += `<option value="${sessions.session + "-" + term}">${sessions.session + "-" + term
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + "-" + term
           }</option>`;
         });
       });
@@ -4553,6 +4684,17 @@ $(document).click(function (e) {
       });
     }
   }
+
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  authenticationModal = parent.document.getElementById("authenticationModal");
+  if (spinnerModal == null && authenticationModal == null) {
+    const backdrop = document.getElementsByClassName(
+      "modal-backdrop fade show"
+    );
+    Array.from(backdrop).forEach(function (bd) {
+      bd.remove();
+    });
+  }
 });
 
 //  SCHEDULE LIVE CLASS
@@ -4570,7 +4712,7 @@ function scheduleClass() {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4610,7 +4752,7 @@ function getScheduledClass() {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4649,34 +4791,41 @@ function getScheduledClass() {
             document.getElementById("upcoming_class").innerHTML += `
            <tr>
                   <td>${uc}.</td>
-                  <td><small>${LC.topic} ${LC.status == "LIVE"
+                  <td><small>${LC.topic} ${
+              LC.status == "LIVE"
                 ? ` <span class="badge bg-success"
                   style="color: white;"><b> LIVE </b></span>`
                 : ``
-              }</small></td>
+            }</small></td>
                   <td><small>${LC.date}</small></td>
                   <td><small>${LC.time}</small></td>
                   <td>
 
-                      <a onclick="openLiveClass('${LC.topic}')" ${LC.status != "LIVE" ? `hidden` : ``
-              } class="btn btn-sm btn-primary btn-block"><i
+                      <a onclick="openLiveClass('${LC.topic}')" ${
+              LC.status != "LIVE" ? `hidden` : ``
+            } class="btn btn-sm btn-primary btn-block"><i
                                   class="fas fa-video"></i></a>
 
-                      <a onclick="startLiveClass('${LC.id}','${LC.topic}','${LC.live_id
-              }')" ${LC.status == "LIVE" ? `hidden` : ``
-              } class="btn btn-primary"><i
+                      <a onclick="startLiveClass('${LC.id}','${LC.topic}','${
+              LC.live_id
+            }')" ${
+              LC.status == "LIVE" ? `hidden` : ``
+            } class="btn btn-primary"><i
                               class="fas fa-video"></i></a>
 
 
-                       <small> <a ${LC.status == "LIVE" ? `hidden` : ``
-              } onmouseover="editLiveClass('${encryptData(
-                JSON.stringify(LC)
-              )}')" class="btn btn-warning" data-bs-toggle="modal"
+                       <small> <a ${
+                         LC.status == "LIVE" ? `hidden` : ``
+                       } onmouseover="editLiveClass('${encryptData(
+              JSON.stringify(LC)
+            )}')" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editLiveClass"><i class="fas fa-edit"></i></a></small>
             
-                        <small><a ${LC.status == "LIVE" ? `hidden` : ``
-              } onclick="deleteLiveClass(${LC.id
-              })" class="btn btn-danger text-white"><i
+                        <small><a ${
+                          LC.status == "LIVE" ? `hidden` : ``
+                        } onclick="deleteLiveClass(${
+              LC.id
+            })" class="btn btn-danger text-white"><i
                                 class="fa fa-trash"></i></a></small>
 
 
@@ -4693,8 +4842,7 @@ function getScheduledClass() {
                   <td><small>${LC.date}</small></td>
                   <td><small>${LC.time}</small></td>
                   <td>
-                  <small><a onclick="deleteLiveClass(${LC.id
-              })" class="btn btn-danger text-white"><i
+                  <small><a onclick="deleteLiveClass(${LC.id})" class="btn btn-danger text-white"><i
                           class="fa fa-trash"></i></a></small>
 
                           <small><a onclick="showMaterial('videos')" class="btn btn-primary text-white"><i
@@ -4753,7 +4901,7 @@ function updateScheduledClass() {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4798,7 +4946,7 @@ function deleteLiveClass(id) {
     method: "DELETE",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4838,7 +4986,7 @@ function startLiveClass(id, topic) {
     method: "PUT",
     headers: {
       Accept: "application/json",
-      "school": localStorage["school"],
+      school: localStorage["school"],
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
     },
@@ -4905,13 +5053,12 @@ async function sendTokenToServer(deviceToken, user_type, id) {
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
-      "school": localStorage["school"]
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       id: id,
       device_token: deviceToken,
       user_type: user_type,
-
     }),
   })
     .then(function (res) {
@@ -4922,8 +5069,6 @@ async function sendTokenToServer(deviceToken, user_type, id) {
       console.log(data);
     })
     .catch((err) => console.log(err));
-
-
 }
 
 // RE - AUTHENTICATION MODAL
@@ -5068,10 +5213,11 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
         <h4 style="font-family: Poppins; font-weight: bold;"
                 class="modal-title col-12 text-center" id="spinnerModalTitle">
-                <small><b>${message != null && message != "" && message != undefined
-      ? message
-      : ``
-    }</b><br>
+                <small><b>${
+                  message != null && message != "" && message != undefined
+                    ? message
+                    : ``
+                }</b><br>
                 <b>Processing ...</b>
                 </small>
             </h4>
@@ -5095,6 +5241,10 @@ function removeSpinnerModal() {
   parent.$("#spinnerModal").modal("hide");
   el = parent.document.getElementById("spinnerModal");
   el != null ? el.remove() : ``;
+  const backdrop = document.querySelector(".modal-backdrop fade show");
+  if (backdrop) {
+    parent.backdrop.remove();
+  }
 }
 
 function scrollToElement(target) {
@@ -5205,3 +5355,54 @@ function errortoast(message, time) {
     tapToDismiss: false,
   });
 }
+
+// Select the <body> element
+const body = document.querySelector("body");
+
+// Create a new MutationObserver instance
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    mutation.addedNodes.forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        // Get the class value of the new element
+        const classValue = node.className;
+
+        // Get the new element itself
+        const newElement = node.querySelector(".new-class");
+
+        if (classValue.includes("modal-backdrop fade show")) {
+          spinnerModal = parent.document.getElementById("spinnerModal");
+          authenticationModal = parent.document.getElementById(
+            "authenticationModal"
+          );
+          if (spinnerModal == null && authenticationModal == null) {
+            const backdrop = document.querySelector(
+              ".modal-backdrop fade show"
+            );
+            if (backdrop) {
+              parent.backdrop.remove();
+            }
+          }
+        }
+
+        console.log(
+          `${node.tagName} element with class "${classValue}" added to the <body> element`
+        );
+        console.log(
+          `New element with class "new-class" added to the <body> element:`,
+          newElement
+        );
+      }
+    });
+  });
+});
+
+// Configure the observer to watch for changes to the <body> element
+const observerConfig = {
+  childList: true, // Watch for changes to the list of child nodes
+  subtree: true, // Watch for changes to the entire subtree of the <body> element
+  characterData: true, // Watch for changes to the text content of the <body> element
+};
+
+// Start observing the <body> element for changes
+observer.observe(body, observerConfig);
