@@ -7580,53 +7580,53 @@ function errortoast(message, time) {
   });
 }
 
-// Select the <body> element
-const body = document.querySelector("body");
+// // Select the <body> element
+// const body = document.querySelector("body");
 
-// Create a new MutationObserver instance
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    mutation.addedNodes.forEach((node) => {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        // Get the class value of the new element
-        const classValue = node.className;
+// // Create a new MutationObserver instance
+// const observer = new MutationObserver((mutations) => {
+//   mutations.forEach((mutation) => {
+//     mutation.addedNodes.forEach((node) => {
+//       if (node.nodeType === Node.ELEMENT_NODE) {
+//         // Get the class value of the new element
+//         const classValue = node.className;
 
-        // Get the new element itself
-        const newElement = node.querySelector(".new-class");
+//         // Get the new element itself
+//         const newElement = node.querySelector(".new-class");
 
-        if (classValue.includes("modal-backdrop fade show")) {
-          spinnerModal = parent.document.getElementById("spinnerModal");
-          authenticationModal = parent.document.getElementById(
-            "authenticationModal"
-          );
-          if (spinnerModal == null && authenticationModal == null) {
-            const backdrop = document.querySelector(
-              ".modal-backdrop fade show"
-            );
-            if (backdrop) {
-              parent.backdrop.remove();
-            }
-          }
-        }
+//         if (classValue.includes("modal-backdrop fade show")) {
+//           spinnerModal = parent.document.getElementById("spinnerModal");
+//           authenticationModal = parent.document.getElementById(
+//             "authenticationModal"
+//           );
+//           if (spinnerModal == null && authenticationModal == null) {
+//             const backdrop = document.querySelector(
+//               ".modal-backdrop fade show"
+//             );
+//             if (backdrop) {
+//               parent.backdrop.remove();
+//             }
+//           }
+//         }
 
-        console.log(
-          `${node.tagName} element with class "${classValue}" added to the <body> element`
-        );
-        console.log(
-          `New element with class "new-class" added to the <body> element:`,
-          newElement
-        );
-      }
-    });
-  });
-});
+//         console.log(
+//           `${node.tagName} element with class "${classValue}" added to the <body> element`
+//         );
+//         console.log(
+//           `New element with class "new-class" added to the <body> element:`,
+//           newElement
+//         );
+//       }
+//     });
+//   });
+// });
 
-// Configure the observer to watch for changes to the <body> element
-const observerConfig = {
-  childList: true, // Watch for changes to the list of child nodes
-  subtree: true, // Watch for changes to the entire subtree of the <body> element
-  characterData: true, // Watch for changes to the text content of the <body> element
-};
+// // Configure the observer to watch for changes to the <body> element
+// const observerConfig = {
+//   childList: true, // Watch for changes to the list of child nodes
+//   subtree: true, // Watch for changes to the entire subtree of the <body> element
+//   characterData: true, // Watch for changes to the text content of the <body> element
+// };
 
-// Start observing the <body> element for changes
-observer.observe(body, observerConfig);
+// // Start observing the <body> element for changes
+// observer.observe(body, observerConfig);

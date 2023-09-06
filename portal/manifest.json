@@ -14,9 +14,9 @@
         "sizes": "72x72"
       },
       {
-        "src": "./icons/76.png",
+        "src": "./icons/92.png",
         "type": "image/png",
-        "sizes": "96x96"
+        "sizes": "92x92"
       },
       {
         "src": "./icons/128.png",
@@ -33,16 +33,7 @@
         "type": "image/png",
         "sizes": "152x152"
       },
-      {
-        "src": "./icons/192.png",
-        "type": "image/png",
-        "sizes": "192x192"
-      },
-      {
-        "src": "./icons/384.png",
-        "type": "image/png",
-        "sizes": "384x384"
-      },
+      
       {
         "src": "./icons/512.png",
         "type": "image/png",
