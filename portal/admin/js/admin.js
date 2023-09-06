@@ -7279,11 +7279,6 @@ $(document).click(function (e) {
     }
   }
 
-  parent.document.querySelectorAll(".modal-backdrop").forEach((el) => {
-    console.log(el);
-    el.remove();
-  });
-
   spinnerModal = parent.document.getElementById("spinnerModal");
   authenticationModal = parent.document.getElementById("authenticationModal");
   if (spinnerModal == null && authenticationModal == null) {
