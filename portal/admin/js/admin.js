@@ -558,12 +558,12 @@ function getAllTeacherForClass() {
           document.getElementById(
             "class_teacher"
           ).innerHTML += `<option value="${data[i].id}">${data[i].title + " " + data[i].first_name + " " + data[i].last_name
-            }</option>`;
+          }</option>`;
         } else {
           document.getElementById(
             "class_teacher"
           ).innerHTML += `<option value="${data[i].id}">${data[i].title + " " + data[i].first_name + " " + data[i].last_name
-            }<p style='color:green'> (${data[i].assigned_class.class_name}
+          }<p style='color:green'> (${data[i].assigned_class.class_name}
             Already Assigned)</p></option>`;
         }
       }
@@ -1701,13 +1701,13 @@ function getTranscript() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/student/" +
+    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
     user_data.student_id +
     ".png";
 
   // SCHOOL LOGO URL
   school_logo_url =
-    domain + "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/school_logo.png";
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
 
   // SCHOOL_LOGO
   document.getElementById("school_logo").src = school_logo_url;
@@ -2911,7 +2911,7 @@ async function getStudentIDCard() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/student/" +
+    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
     JSON.parse(student_id).student_id +
     ".png";
 
@@ -2965,7 +2965,7 @@ async function getStaffIDCard() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/staff/" +
+    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/staff/" +
     JSON.parse(staff_id).teacher_id +
     ".png";
 
@@ -2976,7 +2976,7 @@ async function getStaffIDCard() {
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo_mini.png";
   document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
@@ -5746,10 +5746,10 @@ function populateLessonDetails(lesson) {
   document.getElementById("lp_subject_class").innerHTML =
     localStorage["lp_subject_class"];
   document.getElementById("lp_status").innerHTML = `<span class="badge ${lesson.status == "APPROVED"
-      ? `bg-success`
-      : lesson.status == "DISAPPROVED"
-        ? `bg-danger`
-        : `bg-warning`
+    ? `bg-success`
+    : lesson.status == "DISAPPROVED"
+      ? `bg-danger`
+      : `bg-warning`
     }"><b>${lesson.status}</b></span>`;
 
   document.getElementById("lp_teacher").innerHTML = lesson.teacher;
@@ -6422,11 +6422,11 @@ async function generateIDCard() {
 
   await getSchoolDetails();
   // STUDENT_IMAGE
-  user_image = domain + "/backend/storage/app/public/fileupload";
+  user_image = domain + "/backend/storage/app/public/fileupload/" + localStorage["school"];
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/school_logo_mini.png";
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo_mini.png";
 
   if (user_type == "STUDENT") {
     user_image = user_image + "/student/";
@@ -7019,7 +7019,7 @@ function loadCustomSessionTerm() {
           document.getElementById(
             "session_term"
           ).innerHTML += `<option value="${sessions.session + "-" + term}">${sessions.session + " - " + term
-            }</option>`;
+          }</option>`;
         });
       });
     })
