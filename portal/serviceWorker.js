@@ -1,12 +1,5 @@
-// const version = 1.0;
-// const afidem_cache = `afidem-cache-${version}`;
 const afidem_cache = `smartschoolhub-cache`;
-const INTERNAL_ENDPOINT = [
-  "http://127.0.0.1:8000",
-  "https://afidemglobalresource.com.ng/backend/afidem",
-];
-
-const URLToIgnore = ["/api/admin/upload-image",];
+const URLToIgnore = ["/api/admin/upload-image"];
 
 const assets = ["/"];
 

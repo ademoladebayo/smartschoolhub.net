@@ -3825,6 +3825,9 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 }
 
 function openSpinnerModal(message) {
+  if (!navigator.onLine) {
+    return 0;
+  }
   modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -4002,6 +4005,18 @@ function errortoast(message, time) {
     tapToDismiss: false,
   });
 }
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    const data = event.data;
+    if (data.success) {
+      successtoast(data.message);
+    } else {
+      errortoast(data.message);
+    }
+  });
+}
+
 
 // // Select the <body> element
 // const body = document.querySelector("body");

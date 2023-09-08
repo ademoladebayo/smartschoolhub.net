@@ -1058,13 +1058,13 @@ function getTranscript() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/student/" +
+    "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/student/" +
     user_data.student_id +
     ".png";
 
   // SCHOOL LOGO URL
   school_logo_url =
-    domain + "/backend/storage/app/public/fileupload/school_logo.png";
+    domain + "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/school_logo.png";
 
   // SCHOOL_LOGO
   document.getElementById("school_logo").src = school_logo_url;
@@ -5180,6 +5180,9 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 }
 
 function openSpinnerModal(message) {
+  if (!navigator.onLine) {
+    return 0;
+  }
   modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -5355,6 +5358,18 @@ function errortoast(message, time) {
     tapToDismiss: false,
   });
 }
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    const data = event.data;
+    if (data.success) {
+      successtoast(data.message);
+    } else {
+      errortoast(data.message);
+    }
+  });
+}
+
 
 // // Select the <body> element
 // const body = document.querySelector("body");
