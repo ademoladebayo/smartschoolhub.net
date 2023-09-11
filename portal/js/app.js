@@ -1,5 +1,6 @@
 const version = "1.0.2"; // Change this to a new value whenever you update the service worker
-
+const installButton = document.getElementById('install-pwa-button');
+let deferredPrompt;
 if ("serviceWorker" in navigator) {
   // UNREGISTER OLD SERVICE WORKER
   navigator.serviceWorker.getRegistrations().then((registrations) => {
@@ -16,8 +17,7 @@ if ("serviceWorker" in navigator) {
   });
 
 
-  const installButton = document.getElementById('install-pwa-button');
-  let deferredPrompt;
+
   window.addEventListener('beforeinstallprompt', (e) => {
     // Prevent the browser's default install prompt
     e.preventDefault();
@@ -73,19 +73,19 @@ function openInstallModal() {
                           <link rel="stylesheet" type="text/css" href="./asset/css/style.css">
                           <link href="./assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
                           <link href="./assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
-                          <!-- <div style="display: flex;
+                          <div style="display: flex;
                           justify-content: center;" class="row">
   
                               <b>
-                                  <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                                  <h3 style="font-weight: bold; font-family: Rowdies; color:white;">
                                       SMARTSCHOOLHUB.net
                                   </h3>
                               </b>
   
-                          </div> -->
+                          </div>
                           
   
-                          <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Intall app for better expirence
+                          <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Install app for better experience
                           </h5>
   
                           <div class="row  no-margin" style="padding:10px">
