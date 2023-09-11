@@ -89,7 +89,7 @@ function openInstallModal() {
                           </h5>
   
                           <div class="row  no-margin" style="padding:10px">
-                              <button style="border-color:white; margin-top:10px;" onclick="instalApp()" class="btn btn-primary btn-sm  col-md-6">Install App</button>
+                              <button style="border-color:white; margin-top:10px;" onclick="installApp()" class="btn btn-primary btn-sm  col-md-6">Install App</button>
       <button style="border-color:white;margin-top:10px;" onclick="closeInstallModal()" class="btn btn-primary btn-sm  col-md-6">Close</button>
                               
                           </div>
