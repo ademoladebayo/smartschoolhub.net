@@ -32,7 +32,8 @@ if ("serviceWorker" in navigator) {
 
 }
 
-installButton.addEventListener('click', () => {
+
+function installApp() {
   // Trigger the deferred prompt
   deferredPrompt.prompt();
 
@@ -48,10 +49,9 @@ installButton.addEventListener('click', () => {
 
     // Reset the prompt
     deferredPrompt = null;
-    // Hide the custom prompt
-    document.getElementById('custom-pwa-prompt').style.display = 'none';
   });
-});
+}
+
 
 function openInstallModal() {
   var modal = `<div class="modal fade show" id="installModal" tabindex="-1" role="dialog" aria-labelledby="endModalTitle" data-backdrop="static" data-keyboard="false" style="display: block;">
@@ -89,7 +89,7 @@ function openInstallModal() {
                           </h5>
   
                           <div class="row  no-margin" style="padding:10px">
-                              <button style="border-color:white; margin-top:10px;" id="install-pwa-button" class="btn btn-primary btn-sm  col-md-6">Install App</button>
+                              <button style="border-color:white; margin-top:10px;" onclick="instalApp()" class="btn btn-primary btn-sm  col-md-6">Install App</button>
       <button style="border-color:white;margin-top:10px;" onclick="closeInstallModal()" class="btn btn-primary btn-sm  col-md-6">Close</button>
                               
                           </div>
