@@ -40,15 +40,30 @@ function installApp() {
   // Wait for the user to respond to the prompt
   deferredPrompt.userChoice.then((choiceResult) => {
     if (choiceResult.outcome === 'accepted') {
-      localStorage.set("sshub_app_installed", true)
+      localStorage.setItem("sshub_app_installed", true)
       console.log('User accepted the PWA installation');
     } else {
       console.log('User declined the PWA installation');
-      localStorage.set("sshub_app_installed", false)
+      localStorage.setItem("sshub_app_installed", false)
     }
 
     // Reset the prompt
     deferredPrompt = null;
+
+
+    // ASK FOR PERMISSION FOR NOTIFICATION
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted');
+          // You can now send notifications
+        } else if (permission === 'denied') {
+          console.log('Notification permission denied');
+        } else if (permission === 'default') {
+          console.log('Notification permission dismissed');
+        }
+      });
+    }
   });
 }
 
@@ -85,7 +100,7 @@ function openInstallModal() {
                           </div>
                           
   
-                          <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Install app for better experience
+                          <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Install app and allow notication for better experience
                           </h5>
   
                           <div class="row  no-margin" style="padding:10px">
