@@ -1,4 +1,4 @@
-const version = "1.0.2"; // Change this to a new value whenever you update the service worker
+const version = "1.0.3"; // Change this to a new value whenever you update the service worker
 const installButton = document.getElementById('install-pwa-button');
 let deferredPrompt;
 if ("serviceWorker" in navigator) {
@@ -25,9 +25,9 @@ if ("serviceWorker" in navigator) {
     deferredPrompt = e;
 
     // Show your custom install button
-    if (!localStorage["sshub_app_installed"]) {
+    //if (!localStorage["sshub_app_installed"]) {
       openInstallModal();
-    }
+    //}
   });
 
 }
