@@ -6407,10 +6407,14 @@ function resetAccount(user_type, id) {
 // ID CARD GENERATOR
 async function generateIDCard() {
   document.getElementById("idcard_list").innerHTML = ``;
-  user_type =
-    document.getElementById("user_type_card").value == ""
-      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
-      : document.getElementById("user_type_card").value;
+
+  user_type = document.getElementById("user_type_card").value;
+  if (user_type == "") {
+    alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?");
+    return 0;
+  } else {
+    user_type = document.getElementById("user_type_card").value;
+  }
 
   user_class_sector = document.getElementById("user_class_sector").value =
     document.getElementById("user_class_sector").value;
@@ -6438,11 +6442,13 @@ async function generateIDCard() {
   json_to_generate_qr = [];
   c = 1;
   response.then(function (data) {
+    document.getElementById("generate_idcard").innerHTML = `Generate Card`;
+
     // CREATE TEMPLATE
     for (i in data) {
       if (
         user_type == "STUDENT" &&
-        (data[i].class == null || data[i].class == "GRADUATED")
+        (data[i].class == null || data[i].class == "GRADUATED" || data[i].profile_status == "DISABLED")
       ) {
         continue;
       }
@@ -6543,10 +6549,13 @@ async function generateIDCard() {
 
 async function generateIDCard2() {
   document.getElementById("idcard_list").innerHTML = ``;
-  user_type =
-    document.getElementById("user_type_card").value == ""
-      ? alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?")
-      : document.getElementById("user_type_card").value;
+  user_type = document.getElementById("user_type_card").value;
+  if (user_type == "") {
+    alert("WHO DO YOU WANT TO GENERATE ID CARD FOR ?");
+    return 0;
+  } else {
+    user_type = document.getElementById("user_type_card").value;
+  }
 
   user_class_sector = document.getElementById("user_class_sector").value =
     document.getElementById("user_class_sector").value;
@@ -6581,11 +6590,13 @@ async function generateIDCard2() {
   json_to_generate_qr = [];
   c = 1;
   response.then(function (data) {
+    document.getElementById("generate_idcard").innerHTML = `Generate Card`;
+
     // CREATE TEMPLATE
     for (i in data) {
       if (
         user_type == "STUDENT" &&
-        (data[i].class == null || data[i].class == "GRADUATED")
+        (data[i].class == null || data[i].class == "GRADUATED" || data[i].profile_status == "DISABLED")
       ) {
         continue;
       }
@@ -7046,10 +7057,17 @@ function downloadAsPDF(container) {
 function print() {
   var divContents = document.getElementById("idcard_list").innerHTML;
   var head = document.getElementById("common-library").innerHTML;
-  console.log(divContents);
+  // console.log(divContents);
   var a = window.open("", "", "height=1000, width=1000");
   a.document.write("<html>");
   a.document.write(head);
+  a.document.write(
+    `<style>
+        :root {
+          --front-color: ${localStorage["SCHOOL_COLOR"].split("~")[0]};
+          --back-color: ${localStorage["SCHOOL_COLOR"].split("~")[1]};
+        }
+     </style>`);
   a.document.write(divContents);
   a.document.write(`</body></html>`);
   a.print();
