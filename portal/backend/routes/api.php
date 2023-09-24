@@ -81,7 +81,7 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
 
             // ADMIN {STUDENT}
             Route::post('admin/create-student', 'AdminController@createStudent', function () {
-            })->middleware(Cors::class);
+            })->middleware(Cors::class)->middleware(SwitchDatabaseConnection::class);
 
             Route::post('admin/edit-student', 'AdminController@editStudent', function () {
             })->middleware(Cors::class);

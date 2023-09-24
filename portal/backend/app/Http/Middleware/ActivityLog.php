@@ -36,7 +36,7 @@ class ActivityLog
         $token = $request->header("Authorization");
         $school = $request->header("school");
         config(['database.default' => $school]);
-        
+
         $request_data = $request->input();
         $request_method = $request->method();
         $request_url = $request->fullUrl();
@@ -46,8 +46,8 @@ class ActivityLog
         $response_content = $response->content();
 
 
-        // Log::debug($token);
-        // Log::debug($request_data);
+         Log::debug($school);
+        Log::debug(request()->header());
         // Log::debug($request_method);
         // Log::debug($request_url);
         // Log::debug($response_status);
@@ -59,7 +59,7 @@ class ActivityLog
         $activityLog->request = $request_method . " | " . $request_url . " | \n" . json_encode($request_data) . " | \n" . $request->header("User-Agent") . " | \n" . $school;
         $activityLog->date_time = $response->getdate();
         $response = strlen($response_content) > 500 ? "RETURNED A LONG DATA" : $response_content;
-        $req = strlen($activityLog->request) > 500 ? $request_method . " | " . $request_url . "\n"  . $request->header("User-Agent") : $activityLog->request;
+        $req = strlen($activityLog->request) > 500 ? $request_method . " | " . $request_url . "\n"  . $request->header("User-Agent") . " | \n" . $school : $activityLog->request;
 
         $activityLog->request = $req;
         $activityLog->response = $response_status . " :::: " . $response;
