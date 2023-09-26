@@ -7136,6 +7136,7 @@ $(document).click(function (e) {
       bd.remove();
     });
   }
+  document.body.style.overflow = "auto";
 });
 
 // DEVICE TOKEN
