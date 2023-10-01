@@ -39,6 +39,9 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
         Route::get('admin/create-lesson-note', 'AdminController@lessonPlan', function () {
         })->middleware(Cors::class);
 
+        Route::post('admin/create-student', 'AdminController@createStudent', function () {
+        })->middleware(Cors::class)->middleware(SwitchDatabaseConnection::class);
+
         Route::middleware('auth:sanctum')->group(function () {
             // ADMIN {CLASS}
             Route::post('admin/create-class', 'AdminController@createClass', function () {
@@ -80,8 +83,8 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
 
 
             // ADMIN {STUDENT}
-            Route::post('admin/create-student', 'AdminController@createStudent', function () {
-            })->middleware(Cors::class)->middleware(SwitchDatabaseConnection::class);
+            // Route::post('admin/create-student', 'AdminController@createStudent', function () {
+            // })->middleware(Cors::class)->middleware(SwitchDatabaseConnection::class);
 
             Route::post('admin/edit-student', 'AdminController@editStudent', function () {
             })->middleware(Cors::class);
