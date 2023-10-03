@@ -6452,6 +6452,13 @@ async function generateIDCard() {
       ) {
         continue;
       }
+
+      if (
+        user_type == "TEACHER" &&
+        (data[i].profile_status == "DISABLED")
+      ) {
+        continue;
+      }
       document.getElementById(
         "idcard_list"
       ).innerHTML += `<div style="margin-top: 20px;" class="container">
@@ -6599,6 +6606,14 @@ async function generateIDCard2() {
       ) {
         continue;
       }
+
+      if (
+        user_type == "TEACHER" &&
+        (data[i].profile_status == "DISABLED")
+      ) {
+        continue;
+      }
+      
       document.getElementById(
         "idcard_list"
       ).innerHTML += `<div style="margin-top: 20px;" class="container">
