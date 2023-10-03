@@ -6570,8 +6570,7 @@ async function generateIDCard2() {
   user_image =
     domain +
     "/backend/storage/app/public/fileupload/" +
-    localStorage["school"] +
-    "/";
+    localStorage["school"];
 
   // MINI SCHOOL LOGO
   school_logo_mini =
