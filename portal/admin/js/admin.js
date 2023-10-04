@@ -4,6 +4,7 @@
 var successSound = new Audio("../asset/sound/verified.mp3");
 var warningSound = new Audio("../asset/sound/warning.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
+const timestamp = new Date().getTime();
 
 //const config = new Config();
 
@@ -710,7 +711,7 @@ function viewTeacher(json) {
     localStorage["school"] +
     "/staff/" +
     json.teacher_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
   document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
 
   document.getElementById("title").value = json.title;
@@ -742,7 +743,7 @@ function getTeacherDetails() {
     localStorage["school"] +
     "/staff/" +
     json.teacher_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
   document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
 
   document.getElementById("title").innerHTML =
@@ -1444,7 +1445,7 @@ function viewStudent(json) {
     localStorage["school"] +
     "/student/" +
     json.student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
   document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
 
   document.getElementById("first_name").value = json.first_name;
@@ -1475,7 +1476,7 @@ function getStudentDetails() {
     localStorage["school"] +
     "/student/" +
     json.student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
   document.getElementById("imagePreview").style.backgroundImage = `url(${url})`;
 
   document.getElementById("first_name").value = json.first_name;
@@ -1703,7 +1704,7 @@ function getTranscript() {
     domain +
     "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
     user_data.student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
 
   // SCHOOL LOGO URL
   school_logo_url =
@@ -2913,7 +2914,7 @@ async function getStudentIDCard() {
     domain +
     "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
     JSON.parse(student_id).student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
 
   // STUDENT_IMAGE
   document.getElementById("user_image").src = url;
@@ -2922,7 +2923,7 @@ async function getStudentIDCard() {
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo_mini.png";
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + `/school_logo_mini.png?timestamp=${timestamp}`;
   document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
@@ -2967,7 +2968,7 @@ async function getStaffIDCard() {
     domain +
     "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/staff/" +
     JSON.parse(staff_id).teacher_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
 
   // staff_IMAGE
   document.getElementById("user_image").src = url;
@@ -2976,7 +2977,7 @@ async function getStaffIDCard() {
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo_mini.png";
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + `/school_logo_mini.png?timestamp=${timestamp}`;
   document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
@@ -6430,7 +6431,7 @@ async function generateIDCard() {
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo_mini.png";
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + `/school_logo_mini.png?timestamp=${timestamp}`;
 
   if (user_type == "STUDENT") {
     user_image = user_image + "/student/";
@@ -6480,8 +6481,8 @@ async function generateIDCard() {
                   <img id="user_image"
                       style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
                       src="${user_type == "STUDENT"
-          ? user_image + data[i].student_id + ".png"
-          : user_image + data[i].teacher_id + ".png"
+          ? user_image + data[i].student_id + `.png?timestamp=${timestamp}`
+          : user_image + data[i].teacher_id + `.png?timestamp=${timestamp}`
         }" width="">
 
 
@@ -6584,7 +6585,7 @@ async function generateIDCard2() {
     domain +
     "/backend/storage/app/public/fileupload/" +
     localStorage["school"] +
-    "/school_logo_mini.png";
+    `/school_logo_mini.png?timestamp=${timestamp}`;
 
   if (user_type == "STUDENT") {
     user_image = user_image + "/student/";
@@ -6613,7 +6614,7 @@ async function generateIDCard2() {
       ) {
         continue;
       }
-      
+
       document.getElementById(
         "idcard_list"
       ).innerHTML += `<div style="margin-top: 20px;" class="container">
@@ -6631,8 +6632,8 @@ async function generateIDCard2() {
                   <img id="user_image"
                       style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
                       src="${user_type == "STUDENT"
-          ? user_image + data[i].student_id + ".png"
-          : user_image + data[i].teacher_id + ".png"
+          ? user_image + data[i].student_id + `.png?timestamp=${timestamp}`
+          : user_image + data[i].teacher_id + `.png?timestamp=${timestamp}`
         }" width="">
 
 

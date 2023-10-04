@@ -1,6 +1,7 @@
 // SOUND VARIABLES
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
+const timestamp = new Date().getTime();
 
 var ip = localStorage["ip"];
 var domain = localStorage["domain"];
@@ -310,7 +311,7 @@ function loadDashBoardInformation() {
     localStorage["school"] +
     "/student/" +
     student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
 
   document.getElementById("user_name").innerHTML = `<b>${
     JSON.parse(localStorage["user_data"]).data.first_name +
@@ -1335,7 +1336,7 @@ async function getTranscript() {
     localStorage["school"] +
     "/student/" +
     user_data.data.student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
 
   // SCHOOL LOGO URL
   school_logo_url =
@@ -2420,7 +2421,7 @@ async function getIDCard() {
     domain +
     "/backend/storage/app/public/fileupload/student/" +
     student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
 
   // STUDENT_IMAGE
   document.getElementById("student_image").src = url;
@@ -2703,7 +2704,7 @@ async function getPaymentSlip(loadPage) {
       domain +
       "/backend/storage/app/public/fileupload/student/" +
       user_data.data.student_id +
-      ".png";
+      `.png?timestamp=${timestamp}`;
 
     // SCHOOL LOGO URL
     school_logo_url =
@@ -2839,7 +2840,7 @@ async function getReceipt() {
         localStorage["school"] +
         "/student/" +
         user_data.data.student_id +
-        ".png";
+        `.png?timestamp=${timestamp}`;
 
       // SCHOOL LOGO URL
       school_logo_url =

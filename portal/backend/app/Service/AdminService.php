@@ -165,13 +165,13 @@ class AdminService
                 $path = "public/fileupload/" . $school_name . "/student";
                 // GET FILENAME
                 $file_name = $_FILES['file']['name'];
-                $storage_path = $request->file->storeAs($path, $request->id . ".png");
+                $storage_path = $request->file->storeAs($path, $request->id . `.png?timestamp=${timestamp}`);
                 return response()->json(['success' => true, 'message' => 'file uploaded', 'url' => $storage_path]);
             } else {
                 $path = "public/fileupload/" . $school_name . "/staff";
                 // GET FILENAME
                 $file_name = $_FILES['file']['name'];
-                $storage_path = $request->file->storeAs($path, $request->id . ".png");
+                $storage_path = $request->file->storeAs($path, $request->id . `.png?timestamp=${timestamp}`);
                 return response()->json(['success' => true, 'message' => 'file uploaded', 'url' => $storage_path]);
             }
         } else {

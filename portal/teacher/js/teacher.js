@@ -1,6 +1,7 @@
 // SOUND VARIABLES
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
+const timestamp = new Date().getTime();
 
 var ip = localStorage["ip"];
 var domain = localStorage["domain"];
@@ -1060,7 +1061,7 @@ function getTranscript() {
     domain +
     "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/student/" +
     user_data.student_id +
-    ".png";
+    `.png?timestamp=${timestamp}`;
 
   // SCHOOL LOGO URL
   school_logo_url =

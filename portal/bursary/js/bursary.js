@@ -1,5 +1,6 @@
 var ip = localStorage["ip"];
 var domain = localStorage["domain"];
+const timestamp = new Date().getTime();
 
 getSchoolDetails();
 collapseSidebar();
@@ -807,7 +808,7 @@ async function getReceipt() {
           domain +
           "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/student/" +
           user_data.data.student_id +
-          ".png";
+          `.png?timestamp=${timestamp}`;
 
         // SCHOOL LOGO URL
         school_logo_url =
