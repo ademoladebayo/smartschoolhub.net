@@ -45,7 +45,7 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
         Route::middleware('auth:sanctum')->group(function () {
             // ADMIN {CLASS}
             Route::post('admin/create-class', 'AdminController@createClass', function () {
-            })->middleware(Cors::class);
+            })->middleware(Cors::class)->withoutMiddleware('auth:sanctum');
 
             Route::post('admin/edit-class', 'AdminController@editClass', function () {
             })->middleware(Cors::class);
