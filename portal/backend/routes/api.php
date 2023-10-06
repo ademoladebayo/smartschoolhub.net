@@ -42,7 +42,7 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
         Route::post('admin/create-student', 'AdminController@createStudent', function () {
         })->middleware(Cors::class)->middleware(SwitchDatabaseConnection::class);
 
-        Route::middleware('auth:sanctums')->group(function () {
+        // Route::middleware('auth:sanctums')->group(function () {
             // ADMIN {CLASS}
             Route::post('admin/create-class', 'AdminController@createClass', function () {
             })->middleware(Cors::class)->withoutMiddleware('auth:sanctum');
@@ -545,4 +545,4 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
         // ===================================================================
 
     });
-});
+//});
