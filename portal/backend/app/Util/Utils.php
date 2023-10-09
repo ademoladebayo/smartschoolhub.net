@@ -28,21 +28,29 @@ class Utils
         // Bearer 1879|eFWVAg8ZOcFknibEzb5rFaVQg5C8a2X4HsijIBSf 
         $token_id = trim(explode(" ", explode("|", $token)[0])[1]);
         $token_data = DB::table("personal_access_tokens")->where("id", $token_id)->get()[0];
+
+        // CHECK IF TOKEN IS EXPIRED
+        if ($this->tokenExpired($token_data->created_date)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Session Expired ! '
+            ], 401);
+        }
         //Log::debug("TOKEN DATA ::::: ". $token_data);
         $user_type = explode("\\", $token_data->tokenable_type)[2];
         $user_id = $token_data->tokenable_id;
 
         if (str_contains($user_type, "Student")) {
-            $user =   StudentModel::where("id", $user_id)->get()[0];
+            $user = StudentModel::where("id", $user_id)->get()[0];
             return "STUDENT | " . $user->first_name . " " . $user->last_name;
         } else if (str_contains($user_type, "Teacher")) {
-            $user =   TeacherModel::where("id", $user_id)->get()[0];
+            $user = TeacherModel::where("id", $user_id)->get()[0];
             return "TEACHER | " . $user->first_name . " " . $user->last_name;
         } else if (str_contains($user_type, "Bursary")) {
-            $user =   BursaryModel::where("id", $user_id)->get()[0];
+            $user = BursaryModel::where("id", $user_id)->get()[0];
             return "BURSAR | " . $user->username;
         } else {
-            $user =   AdminModel::where("id", $user_id)->get()[0];
+            $user = AdminModel::where("id", $user_id)->get()[0];
             return "ADMIN | " . $user->username;
         }
     }
@@ -59,8 +67,24 @@ class Utils
     function getCurrentSession()
     {
         // GET CURRENT SESSION AND TERM
-        $session =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
-        $term =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
+        $session = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
+        $term = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
         return [$session, $term];
+    }
+
+    function tokenExpired($createDate)
+    {
+        $currentDateTime = new DateTime();
+        $createDateTime = new DateTime($createDate);
+
+        // Calculate the difference in minutes
+        $interval = $currentDateTime->diff($createDateTime);
+        $minutesDifference = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
+
+        if ($minutesDifference > 2) {
+            return true;
+        }
+
+        return false;
     }
 }
