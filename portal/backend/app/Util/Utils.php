@@ -7,9 +7,9 @@ use App\Model\AdminModel;
 use App\Model\BursaryModel;
 use App\Model\StudentModel;
 use App\Model\TeacherModel;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use App\Model\SessionModel;
-use DateTime;
 use Illuminate\Support\Facades\Log;
 
 class Utils

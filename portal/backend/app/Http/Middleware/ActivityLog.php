@@ -19,6 +19,9 @@ class ActivityLog
      */
     public function handle($request, Closure $next)
     {
+        $token = $request->header("Authorization");
+        $utils = new Utils();
+        $utils->logUserActivity($token, null);
 
         return $next($request);
     }
