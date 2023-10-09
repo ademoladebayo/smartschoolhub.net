@@ -30,13 +30,6 @@ class Utils
         $token_id = trim(explode(" ", explode("|", $token)[0])[1]);
         $token_data = DB::table("personal_access_tokens")->where("id", $token_id)->get()[0];
 
-        // CHECK IF TOKEN IS EXPIRED
-        if ($this->tokenExpired($token_data->created_at)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Session Expired ! '
-            ], 401);
-        }
         //Log::debug("TOKEN DATA ::::: ". $token_data);
         $user_type = explode("\\", $token_data->tokenable_type)[2];
         $user_id = $token_data->tokenable_id;
@@ -73,19 +66,23 @@ class Utils
         return [$session, $term];
     }
 
-    function tokenExpired($createDate)
+    function tokenExpired($token)
     {
+        $token_id = trim(explode(" ", explode("|", $token)[0])[1]);
+        $token_data = DB::table("personal_access_tokens")->where("id", $token_id)->get()[0];
+
         $currentDateTime = new DateTime();
-        $createDateTime = new DateTime($createDate);
+        $createDateTime = new DateTime($token_data->created_at);
 
         // Calculate the difference in minutes
         $interval = $currentDateTime->diff($createDateTime);
         $minutesDifference = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
 
         if ($minutesDifference > 2) {
-            return true;
+            return response()->json([
+                'success' => false,
+                'message' => 'Session Expired ! '
+            ], 401);
         }
-
-        return false;
     }
 }

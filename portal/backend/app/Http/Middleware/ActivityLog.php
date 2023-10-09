@@ -21,8 +21,7 @@ class ActivityLog
     {
         $token = $request->header("Authorization");
         $utils = new Utils();
-        $utils->logUserActivity($token, new ActivityLog());
-
+        $utils->tokenExpired($token);
         return $next($request);
     }
 
