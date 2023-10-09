@@ -30,7 +30,7 @@ class Utils
         $token_data = DB::table("personal_access_tokens")->where("id", $token_id)->get()[0];
 
         // CHECK IF TOKEN IS EXPIRED
-        if ($this->tokenExpired($token_data->created_date)) {
+        if ($this->tokenExpired($token_data->created_at)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Session Expired ! '
