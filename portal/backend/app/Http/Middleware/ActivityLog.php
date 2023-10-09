@@ -21,7 +21,12 @@ class ActivityLog
     {
         $token = $request->header("Authorization");
         $utils = new Utils();
-        $utils->tokenExpired($token);
+        if($utils->tokenExpired($token)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Session Expired ! '
+            ], 401);
+        }
         return $next($request);
     }
 
