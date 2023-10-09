@@ -21,7 +21,7 @@ class ActivityLog
     {
         $token = $request->header("Authorization");
         $utils = new Utils();
-        $utils->logUserActivity($token, null);
+        $utils->logUserActivity($token, new ActivityLog());
 
         return $next($request);
     }
