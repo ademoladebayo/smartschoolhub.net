@@ -15,8 +15,8 @@ export default class Config {
     } else if (this.APP_MODE == "LIVE") {
       // LIVE IP
       this.url.ip = "https://smartschoolhub.net/backend/" + this.SCHOOL_NAME;
-      // this.url.domain = "https://" + this.SCHOOL_NAME + ".smartschoolhub.net";
-      this.url.domain = "https://smartschoolhub.net/" + this.SCHOOL_NAME + "/";
+      this.url.domain = "https://" + this.SCHOOL_NAME + ".smartschoolhub.net";
+      //this.url.domain = "https://smartschoolhub.net/" + this.SCHOOL_NAME;
     } else {
       // TEST-LIVE IP
       this.url.ip = "https://smartschoolhub.net/backend/" + this.SCHOOL_NAME;

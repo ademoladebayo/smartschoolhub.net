@@ -1437,6 +1437,51 @@ function getAllStudentForDropDown(class_id) {
     .catch((err) => console.log(err));
 }
 
+function getAllStudentAndClassForDropDown() {
+  openSpinnerModal("Fetch student ");
+  fetch(ip + "/api/admin/all-student", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      school: localStorage["school"],
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+    .then((data) => {
+      removeSpinnerModal();
+      console.log(data);
+      document.getElementById("student").innerHTML = ``;
+      if (data.length > 0) {
+        document.getElementById(
+          "student"
+        ).innerHTML = `<option value="">Select student for registration </option>`;
+        for (i in data) {
+          student_class =
+            data[i].class == null ? `GRADUATED` : data[i].class.id;
+          if (student_class == "GRADUATED" || data[i].profile_status == "DISABLED") {
+            continue;
+          }
+
+          document.getElementById("student").innerHTML += `<option value="${data[i].id
+            }">${data[i].first_name + " " + data[i].last_name + " (" + data[i].class.class_name + ")"}</option>`;
+        }
+      } else {
+        document.getElementById(
+          "student"
+        ).innerHTML = ` <option value="">NO STUDENT FOUND IN THE SELECTED CLASS</option>`;
+      }
+    })
+    .catch((err) => console.log(err));
+}
+
 function viewStudent(json) {
   // IMAGE URL
   url =
@@ -3944,7 +3989,7 @@ function getAllSubjectForRegistration() {
     term
   );
 
-  var c = 1;
+  var c = 0;
   // GET REGISTERED SUBJECT
   fetch(ip + "/api/student/registered-subject", {
     method: "POST",
@@ -3985,7 +4030,7 @@ function getAllSubjectForRegistration() {
                   value="${data[i].subject_id}" checked  onclick="this.checked = !this.checked">
                   </td>
     
-                  <td>${c}.</td>
+                  <td>${c + 1}.</td>
                   <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
@@ -4002,7 +4047,7 @@ function getAllSubjectForRegistration() {
                   value="${data[i].subject_id}" checked ">
                   </td>
     
-                  <td>${c}.</td>
+                  <td>${c + 1}.</td>
                   <td> <small><i class="fa fa-shapes" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
@@ -4039,7 +4084,8 @@ function getAllSubjectForRegistration() {
             if (registered_subject.includes(data[i].id.toString())) {
               continue;
             }
-            if (data[i].class.id != class_id) {
+
+            if (data[i].class.id != parseInt(class_id)) {
               continue;
             }
             document.getElementById("subject_table").innerHTML += `
@@ -4049,7 +4095,7 @@ function getAllSubjectForRegistration() {
                       value="${data[i].id}">
                       </td>
         
-                      <td>${c}.</td>
+                      <td>${c + 1}.</td>
                       <td><i class="fa fa-shapes"></i> ${data[i].subject_name
               }</td>
                       <td>ELECTIVE</td>
@@ -4324,7 +4370,6 @@ function getAllSubjectForTable2() {
   registered_subject = getPreviousSubjectRegistration2(class_id, session, term);
 
   console.log(registered_subject);
-  c = 1;
   fetch(ip + "/api/admin/all-subject", {
     method: "GET",
     headers: {
@@ -4346,7 +4391,8 @@ function getAllSubjectForTable2() {
       removeSpinnerModal();
       console.log("DEBUG =>   RESULT: " + data);
       document.getElementById("subject_table").innerHTML = ``;
-      var c = 1;
+      var c = 0;
+      var nc = 1;
       for (i in data) {
         if (data[i].class.id != class_id) {
           continue;
@@ -4361,7 +4407,7 @@ function getAllSubjectForTable2() {
                 value="${data[i].id}" checked>
                 </td>
   
-                <td>${c}.</td>
+                <td>${nc}.</td>
                 <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name
               }</td>
                 <td>COMPULSORY</td>
@@ -4374,6 +4420,7 @@ function getAllSubjectForTable2() {
                 
       
             </tr>`;
+            c = c + 1;
           } else {
             document.getElementById("subject_table").innerHTML += `
               <tr>
@@ -4381,7 +4428,7 @@ function getAllSubjectForTable2() {
               <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
               value="${data[i].id}">
               </td>
-              <td>${c}.</td>
+              <td>${c + 1}.</td>
               <td>${data[i].subject_name}</td>
               <td>COMPULSORY</td>
               <td>${data[i].teacher.title +
@@ -4402,12 +4449,13 @@ function getAllSubjectForTable2() {
               <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
                 value="${data[i].id}" checked>
               </td>
-              <td>${c}.</td>
+              <td>${nc}.</td>
               <td><small><i class="fa fa-star" aria-hidden="true"></i> ${data[i].subject_name}</td>
               <td>COMPULSORY</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
     
           </tr>`;
+            c = c + 1;
           } else {
             document.getElementById("subject_table").innerHTML += `
               <tr>
@@ -4415,7 +4463,7 @@ function getAllSubjectForTable2() {
               <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
               value="${data[i].id}">
               </td>
-              <td>${c}.</td>
+              <td>${c + 1}.</td>
               <td>${data[i].subject_name}</td>
               <td>COMPULSORY</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
@@ -4424,12 +4472,12 @@ function getAllSubjectForTable2() {
           }
         }
 
-        c = c + 1;
+        nc = nc + 1;
       }
+      document.getElementById("number_registered").innerHTML = "Total registered: " + c;
     })
     .catch((err) => console.log(err));
-  // document.getElementById("number_registered").innerHTML =
-  //   document.getElementById("number_registered").innerHTML + c;
+
 }
 
 function registerSubject2() {
@@ -7016,7 +7064,7 @@ function loadCustomSubjectClass() {
 }
 
 // CUSTOM SESSION TERM
-function loadCustomSessionTerm() {
+ function loadCustomSessionTerm() {
   term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
 
   fetch(ip + "/api/general/all-session/DESC", {

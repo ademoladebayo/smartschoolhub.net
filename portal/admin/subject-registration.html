@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="../css/animate.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
-   
+
     <!-- Data Table CSS -->
     <link rel="stylesheet" href="../css/jquery.dataTables.min.css">
     <!-- Select 2 CSS -->
@@ -44,7 +44,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="loadSideNav('subject-registration'); loadCustomSessionTerm(); getAllClassForDropDown(); loadDashBoardInformation()">
+    onload="loadSideNav('subject-registration');  loadCustomSessionTerm(); getAllStudentAndClassForDropDown(); getAllClassForDropDown(); loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -164,43 +164,55 @@
 
                             </div>
                             <div class="row gutters-8 ">
-
-                                <div class="col-xl-3 col-12 form-group">
-                                    <label>Session Term *</label>
-                                    <select
-                                        onchange="document.getElementById('proceedbtn').hidden = true; getAllStudentForDropDown(`${document.getElementById('classes').value}`)"
-                                        id="session_term" class="select2">
-                                        <option value="">Please Select Session *</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-xl-3 col-12 form-group">
+                                <!-- MAIN SELECTION -->
+                                <div class="col-xl-12 col-12 form-group">
                                     <label>Registration Type *</label>
-                                    <select onchange="getAllClassForDropDown()" id="registration_type" class="select2">
-                                        <option value="STUDENT">Student</option>
-                                        <option value="CLASS">Class</option>
+                                    <select onchange="setRegType(this.value)" id="registration_type" class="select2">
+                                        <option value="">SELECT A REGISTRATION TYPE</option>
+                                        <option value="STUDENT">A STUDENT</option>
+                                        <option value="CLASS">A CLASS</option>
                                     </select>
                                 </div>
 
-                                <div class="col-xl-3 col-12 form-group">
-                                    <label>Student Class *</label>
-                                    <select
-                                        onchange="document.getElementById('proceedbtn').hidden = true; getAllStudentForDropDown(`${document.getElementById('classes').value}`); checkIfTypeIsClass();"
-                                        id="classes" class="select2">
-                                        <option value="">Select class</option>
-                                    </select>
+                                <!-- MAIN ACTIONS -->
+                                <div id="registration_params" class="row gutters-8" hidden>
+                                    <!-- SESSION | TERM -->
+                                    <div class="col-xl-4 col-12 form-group">
+                                        <label>Session Term *</label>
+                                        <select onchange=" document.getElementById('classes').selectedIndex = 0;"
+                                            id="session_term" class="select2">
+                                            <option value="">Please Select Session *</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- STUDENTS -->
+                                    <div class="col-xl-4 col-12 form-group">
+                                        <label>Student *</label>
+                                        <br />
+                                        <div id="student_div">
+                                            <!-- document.getElementById('proceedbtn').hidden = false; -->
+                                            <select onchange="enableClass(this.options[this.selectedIndex].text)"
+                                                style="font-style: bold; font-size: 15px; color: black;" id="student"
+                                                class="select2">
+                                                <option value="">Loading ...</option>
+                                            </select>
+                                        </div>
+                                        <label id="student_label" hidden><b>All student(s) in the class</b></label>
+                                    </div>
+
+                                    <!-- CLASS -->
+                                    <!-- getAllStudentForDropDown(`${document.getElementById('classes').value}`); 
+                                        document.getElementById('proceedbtn').hidden = true;  
+                                    
+                                    -->
+                                    <div class="col-xl-4 col-12 form-group">
+                                        <label id="class_label">Select Class *</label>
+                                        <select onchange="checkIfTypeIsClass();" id="classes" class="select2" disabled>
+                                            <option value="">Select class</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <div class="col-xl-3 col-12 form-group">
-                                    <label>Student *</label>
-                                    <select onchange="document.getElementById('proceedbtn').hidden = false;"
-                                        style="font-style: bold; font-size: 15px; color: black;" id="student"
-                                        class="select2">
-                                        <option value="">Loading ...</option>
-                                    </select>
-
-
-                                </div>
 
                                 <!-- <div class="col-lg-2 col-12 form-group">
                                     <button id="proceed" onclick="getAllstudentForSubjectResultUpload('')"
@@ -417,11 +429,7 @@
 
         function checkIfTypeIsClass() {
             type = document.getElementById("registration_type").value;
-
-            if (type == "CLASS") {
-                getAllSubjectForTable2();
-            }
-
+            getAllSubject();
         }
 
 
@@ -437,6 +445,7 @@
 
         }
 
+
         function getAllSubject() {
             type = document.getElementById("registration_type").value;
 
@@ -451,6 +460,62 @@
             }
         }
 
+
+
+
+        // SET REG SETTING 
+        function setRegType(type) {
+            if (type == "") {
+                document.getElementById("registration_params").hidden = true;
+                document.getElementById("classes").disabled = true;
+                alert("SELECT A REGISTRATION TYPE !")
+                return 0;
+            } else if (type == "STUDENT") {
+                document.getElementById("classes").disabled = true;
+                document.getElementById("student_label").hidden = true;
+                document.getElementById("student_div").hidden = false;
+                document.getElementById("registration_params").hidden = false;
+            } else {
+                document.getElementById("student_label").hidden = false;
+                document.getElementById("student_div").hidden = true;
+                document.getElementById("registration_params").hidden = false;
+                document.getElementById("classes").disabled = false;
+                document.getElementById("class_label").innerHTML = `Select Class *`;
+            }
+
+            document.getElementById("classes").selectedIndex = 0;
+            document.getElementById("student").selectedIndex = 0;
+        }
+
+
+        // ENABLE CLASS SELECTION 
+        function enableClass(student_name) {
+            type = document.getElementById("registration_type").value;
+            if (type == "") {
+                alert("SELECT A TYPE !")
+                return 0;
+            } else if (type == "STUDENT") {
+
+                if (document.getElementById("student").value == "") {
+                    alert("SELECT A STUDENT !")
+                    return 0;
+                }
+                document.getElementById("class_label").innerHTML = `<b style='color:red'>It is important you select the CORRECT class <span style='color:green'>${student_name}</span> belong to for <span style='color:green'>${document.getElementById("session_term").value}.</span></b>`;
+                document.getElementById("classes").disabled = false;
+                document.getElementById("classes").selectedIndex = 0;
+
+            } else {
+                //registerSubject2();
+            }
+            loadCustomSessionTerm();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // This function will be executed when the initial HTML document has been completely loaded and parsed
+            loadCustomSessionTerm();
+            // Your synchronous JavaScript code goes here
+            console.log("DOMContentLoaded event fired!");
+        });
     </script>
 
 </body>
