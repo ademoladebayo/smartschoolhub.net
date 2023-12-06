@@ -1,8 +1,16 @@
 var ip = localStorage["ip"];
 var domain = localStorage["domain"];
+const timestamp = new Date().getTime();
 
 getSchoolDetails();
 collapseSidebar();
+
+window.addEventListener("online", () =>
+  successtoast("<b>INTERNET CONNECTED</b>")
+);
+window.addEventListener("offline", () =>
+  errortoast("<b>INTERNET DISCONNECTED</b>")
+);
 
 // getCurrentSession();
 if (
@@ -68,9 +76,8 @@ function loadSideNav(page) {
     </li>
 
    <!-- <li class="nav-item">
-       <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
-         domain + "/admin/dashboard.html"
-       }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
+       <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + "/admin/dashboard.html"
+    }')" class="nav-link"><span><b>GOTO ADMIN</b></span></a>
     </li> --!>
     <a  href="" class="nav-link"><i class=""></i><span></span></a>
     <a  href="" class="nav-link"><i class=""></i><span></span></a>
@@ -107,7 +114,7 @@ function loadSideNav(page) {
   document.getElementById(page).className += " menu-active";
 }
 
-function signIn() {
+async function signIn() {
   var id = document.getElementById("id").value;
   var password = document.getElementById("password").value;
   if (id != "" && password != "") {
@@ -119,6 +126,7 @@ function signIn() {
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         id: id,
@@ -133,7 +141,7 @@ function signIn() {
         return res.json();
       })
 
-      .then((data) => {
+      .then(async (data) => {
         toastr.remove();
         if (data.success) {
           localStorage.setItem("user_data", JSON.stringify(data));
@@ -142,6 +150,11 @@ function signIn() {
           localStorage.setItem("user_id", username);
           localStorage.setItem("username", username);
           getStoredCredential();
+
+          //REGISTER USER DEVICE
+          deviceToken = await initFirebaseMessagingRegistration();
+          await sendTokenToServer(deviceToken, "BURSARY", data.data.id);
+
           setTimeout(function () {
             window.location.href = "dashboard.html";
           }, 1000);
@@ -169,6 +182,7 @@ function reAuth() {
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         id: id,
@@ -240,6 +254,7 @@ function getCurrentSession() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -275,12 +290,10 @@ function getCurrentSession() {
 }
 
 function loadDashBoardInformation() {
-  document.getElementById("user_name").innerHTML = `<b>${
-    JSON.parse(localStorage["user_data"]).data.username
-  }</b>`;
-  document.getElementById("user_name1").innerHTML = `<b>${
-    JSON.parse(localStorage["user_data"]).data.username
-  }</b>`;
+  document.getElementById("user_name").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.username
+    }</b>`;
+  document.getElementById("user_name1").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.username
+    }</b>`;
   //   document.getElementById("male").innerHTML = formatNumber(
   //     JSON.parse(localStorage["user_data"]).dashboard_information.male
   //   );
@@ -315,7 +328,9 @@ function loadDashBoardInformation() {
 
 function goTo(page) {
   if (page == "") {
+    school = localStorage["school"];
     localStorage.clear();
+    localStorage.setItem("school", school);
     window.parent.location.assign(domain);
     return 0;
   }
@@ -348,6 +363,7 @@ function createFee() {
         Accept: "application/json",
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         description: description,
@@ -390,6 +406,7 @@ function getAllFee() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -415,20 +432,16 @@ function getAllFee() {
             <td>${c}.</td>
             <td>${data[i].description}</td>
             <td>${data[i].type}</td>
-            <td>${
-              data[i].pay_by == null ? data[i].class : data[i].pay_by.class_name
+            <td>${data[i].pay_by == null ? data[i].class : data[i].pay_by.class_name
             }</td>
             <td>${formatNumber(data[i].amount)}</td>
             <td>
-                <a  onmouseover="reloadEditFrame();localStorage.setItem('editFee','${
-                  data[i].id
-                }~${data[i].description}~${data[i].type}~${data[i].class}~${
-            data[i].amount
-          }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
+                <a  onmouseover="reloadEditFrame();localStorage.setItem('editFee','${data[i].id
+            }~${data[i].description}~${data[i].type}~${data[i].class}~${data[i].amount
+            }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <a  onclick="deleteFee(${
-                  data[i].id
-                })" href="#" class="btn btn-danger"><i
+                <a  onclick="deleteFee(${data[i].id
+            })" href="#" class="btn btn-danger"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -447,13 +460,11 @@ function editFeeDetails() {
     localStorage["editFee"].split("~")[1];
 
   document.getElementById("fee_type").innerHTML =
-    `<option value="${localStorage["editFee"].split("~")[2]}">${
-      localStorage["editFee"].split("~")[2]
+    `<option value="${localStorage["editFee"].split("~")[2]}">${localStorage["editFee"].split("~")[2]
     }</option>` + document.getElementById("fee_type").innerHTML;
 
   document.getElementById("classes").innerHTML =
-    `<option value="${localStorage["editFee"].split("~")[3]}">${
-      localStorage["editFee"].split("~")[3]
+    `<option value="${localStorage["editFee"].split("~")[3]}">${localStorage["editFee"].split("~")[3]
     }</option>` + document.getElementById("classes").innerHTML;
 
   document.getElementById("amount").value =
@@ -480,6 +491,7 @@ function updateFee() {
         Accept: "application/json",
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         fee_id: localStorage["editFee"].split("~")[0],
@@ -521,6 +533,7 @@ function deleteFee(id) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -552,6 +565,7 @@ function getFee(student_id, session, term, student_class) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       student_id: student_id,
@@ -596,30 +610,27 @@ function getFee(student_id, session, term, student_class) {
         data.fee_breakdown.forEach((fee) => {
           document.getElementById("fee_table").innerHTML += `
           <tr>
-               ${
-                 fee.type == "COMPULSORY" ||
-                 approved_optional_fee.includes(fee.id.toString())
-                   ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+               ${fee.type == "COMPULSORY" ||
+              approved_optional_fee.includes(fee.id.toString())
+              ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
                value="${fee.id}" checked  onclick="this.checked = !this.checked">`
-                   : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
-                   value="${fee.id}"  ${
-                       optional_fee.includes(fee.id.toString())
-                         ? `checked  onclick="this.checked = !this.checked"`
-                         : ``
-                     }>`
-               }
+              : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+                   value="${fee.id}"  ${optional_fee.includes(fee.id.toString())
+                ? `checked  onclick="this.checked = !this.checked"`
+                : ``
+              }>`
+            }
                <td>${c}.</td>
                <td>${fee.description}</td>
-               <td>${
-                 approved_optional_fee.includes(fee.id.toString())
-                   ? `OPTIONAL (Approved)`
-                   : fee.type
-               }</td>
-               <td>${
-                 fee.class == localStorage["PD_STUDENT_CLASS"] || data.class_name == localStorage["PD_STUDENT_CLASS"]
-                   ? localStorage["PD_STUDENT_CLASSNAME"]
-                   : fee.class
-               }</td>
+               <td>${approved_optional_fee.includes(fee.id.toString())
+              ? `OPTIONAL (Approved)`
+              : fee.type
+            }</td>
+               <td>${fee.class == localStorage["PD_STUDENT_CLASS"] ||
+              data.class_name == localStorage["PD_STUDENT_CLASS"]
+              ? localStorage["PD_STUDENT_CLASSNAME"]
+              : fee.class
+            }</td>
               <td>₦${formatNumber(fee.amount)}</td>
           </tr>
           `;
@@ -645,6 +656,7 @@ function getAllOptionalFeeRequest() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -670,34 +682,28 @@ function getAllOptionalFeeRequest() {
           document.getElementById("fee_table").innerHTML += `
           <tr>
                <td>${c}.</td>
-               <td>${
-                 data.student.first_name + " " + data.student.last_name
-               }</td>
+               <td>${data.student.first_name + " " + data.student.last_name
+            }</td>
                <td>${data.student.student_id}</td>
                <td>${data.class_name}</td>
                <td>${data.fee.description}</td>
                <td>${data.fee.type}</td>
-               <td>${
-                 data.fee.class == data.student.class
-                   ? data.class_name
-                   : data.fee.class
-               }</td>
+               <td>${data.fee.class == data.student.class
+              ? data.class_name
+              : data.fee.class
+            }</td>
                <td>₦${formatNumber(data.fee.amount)}</td>
-               <td>${
-                 data.approved == 1
-                   ? `<span style="color:white" class="badge bg-success"><b>APPROVED</b></span>`
-                   : `<span style="color:white" class="badge bg-danger"><b>NOT APPROVED</b></span>`
-               }</td>
+               <td>${data.approved == 1
+              ? `<span style="color:white" class="badge bg-success"><b>APPROVED</b></span>`
+              : `<span style="color:white" class="badge bg-danger"><b>NOT APPROVED</b></span>`
+            }</td>
               <td>
-                  <select onchange="updateOptionalFeeRequestStatus(event,'${
-                    data.id
-                  }',this.value)" id="approval" class="select2">
-                      <option value="1" ${
-                        data.approved == 1 ? `selected="selected"` : ``
-                      }>APPROVE</option>
-                      <option value="0" ${
-                        data.approved == 0 ? `selected="selected"` : ``
-                      }>DISAPPROVE</option>
+                  <select onchange="updateOptionalFeeRequestStatus(event,'${data.id
+            }',this.value)" id="approval" class="select2">
+                      <option value="1" ${data.approved == 1 ? `selected="selected"` : ``
+            }>APPROVE</option>
+                      <option value="0" ${data.approved == 0 ? `selected="selected"` : ``
+            }>DISAPPROVE</option>
                   </select>
               </td>
           </div>
@@ -737,6 +743,7 @@ function updateOptionalFeeRequestStatus(event, id, status) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       id: id,
@@ -772,6 +779,7 @@ async function getReceipt() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       student_id: localStorage["PD_STUDENT_ID"],
@@ -798,13 +806,13 @@ async function getReceipt() {
         // IMAGE URL
         url =
           domain +
-          "/backend/storage/app/public/fileupload/student/" +
+          "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/student/" +
           user_data.data.student_id +
-          ".png";
+          `.png?timestamp=${timestamp}`;
 
         // SCHOOL LOGO URL
         school_logo_url =
-          domain + "/backend/storage/app/public/fileupload/school_logo.png";
+          domain + "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/school_logo.png";
 
         // SCHOOL_LOGO
         document.getElementById("school_logo").src = school_logo_url;
@@ -886,6 +894,7 @@ function createExpense() {
         Accept: "application/json",
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         description: description,
@@ -928,6 +937,7 @@ function getAllExpense() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -956,15 +966,12 @@ function getAllExpense() {
               <td>${data[i].date_incurred}</td>
               <td>${data[i].last_modified}</td>
               <td>
-                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${
-                    data[i].id
-                  }~${data[i].description}~${data[i].date_incurred}~${
-            data[i].amount
-          }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
+                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editExpense','${data[i].id
+            }~${data[i].description}~${data[i].date_incurred}~${data[i].amount
+            }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteExpense(${
-                    data[i].id
-                  })" href="#" class="btn btn-danger"><i
+                  <a  onclick="deleteExpense(${data[i].id
+            })" href="#" class="btn btn-danger"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -1003,6 +1010,7 @@ function updateExpense() {
         Accept: "application/json",
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         expense_id: localStorage["editExpense"].split("~")[0],
@@ -1046,6 +1054,7 @@ function deleteExpense(id) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -1120,6 +1129,7 @@ function createManualPayment() {
           Accept: "application/json",
           "Content-type": "application/json",
           Authorization: "Bearer " + localStorage["token"],
+          school: localStorage["school"],
         },
         body: JSON.stringify({
           student_class: student_class,
@@ -1166,6 +1176,7 @@ function getAllManualPayment() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -1190,9 +1201,8 @@ function getAllManualPayment() {
         
                 <td>${c}.</td>
                 <td>${data[i].student.student_id}</td>
-                <td>${
-                  data[i].student.first_name + " " + data[i].student.last_name
-                }</td>
+                <td>${data[i].student.first_name + " " + data[i].student.last_name
+            }</td>
                 <td>${data[i].class.class_name}</td>
                 <td>${data[i].date}</td>
                 <td><b>${data[i].payment_type}</b></td>
@@ -1200,28 +1210,22 @@ function getAllManualPayment() {
                 <td><b>${data[i].payment_description}</b></td>
                 <td>${formatNumber(parseInt(data[i].amount))}</td>
                 <td>
-                    <a ${
-                      data[i].payment_description.includes(
-                        "WAS USED TO SETTLE THE ARREARS"
-                      ) ||
-                      data[i].payment_description.includes(
-                        "WAS USED TO SETTLE PART OF THE ARREARS"
-                      )
-                        ? `hidden`
-                        : ``
-                    }  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${
-            data[i].id
-          }~${data[i].student.id}~${
-            data[i].student.first_name + " " + data[i].student.last_name
-          }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${
-            data[i].payment_type
-          }~${data[i].payment_description}~${data[i].amount}~${
-            data[i].fee_type
-          }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
+                    <a ${data[i].payment_description.includes(
+              "WAS USED TO SETTLE THE ARREARS"
+            ) ||
+              data[i].payment_description.includes(
+                "WAS USED TO SETTLE PART OF THE ARREARS"
+              )
+              ? `hidden`
+              : ``
+            }  onmouseover="reloadEditFrame();localStorage.setItem('editManualPayment','${data[i].id
+            }~${data[i].student.id}~${data[i].student.first_name + " " + data[i].student.last_name
+            }~${data[i].class.id}~${data[i].class.class_name}~${data[i].date}~${data[i].payment_type
+            }~${data[i].payment_description}~${data[i].amount}~${data[i].fee_type
+            }')" href="#" class="btn btn-warning" data-bs-toggle="modal"
                         data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                    <a hidden onclick="deleteManualPayment(${
-                      data[i].id
-                    })" href="#" class="btn btn-danger"><i
+                    <a hidden onclick="deleteManualPayment(${data[i].id
+            })" href="#" class="btn btn-danger"><i
                             class="fas fa-trash"></i>
                         Delete</a>
                 </td>
@@ -1241,14 +1245,12 @@ function editManualPaymentDetails() {
 
   document.getElementById("classes").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[3]}">${
-      localStorage["editManualPayment"].split("~")[4]
+  <option value="${localStorage["editManualPayment"].split("~")[3]}">${localStorage["editManualPayment"].split("~")[4]
     }</option>` + document.getElementById("classes").innerHTML;
 
   document.getElementById("student").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[1]}">${
-      localStorage["editManualPayment"].split("~")[2]
+  <option value="${localStorage["editManualPayment"].split("~")[1]}">${localStorage["editManualPayment"].split("~")[2]
     }</option>` + document.getElementById("student").innerHTML;
 
   document.getElementById("date").value =
@@ -1256,8 +1258,7 @@ function editManualPaymentDetails() {
 
   document.getElementById("payment_type").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[6]}">${
-      localStorage["editManualPayment"].split("~")[6]
+  <option value="${localStorage["editManualPayment"].split("~")[6]}">${localStorage["editManualPayment"].split("~")[6]
     }</option>` + document.getElementById("payment_type").innerHTML;
 
   document.getElementById("payment_description").value =
@@ -1268,8 +1269,7 @@ function editManualPaymentDetails() {
 
   document.getElementById("fee_type").innerHTML =
     `
-  <option value="${localStorage["editManualPayment"].split("~")[9]}">${
-      localStorage["editManualPayment"].split("~")[9]
+  <option value="${localStorage["editManualPayment"].split("~")[9]}">${localStorage["editManualPayment"].split("~")[9]
     }</option>` + document.getElementById("fee_type").innerHTML;
 }
 
@@ -1301,6 +1301,7 @@ function updateManualPayment() {
         Accept: "application/json",
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         manual_payment_id: localStorage["editManualPayment"].split("~")[0],
@@ -1347,6 +1348,7 @@ function deleteManualPayment(id) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -1370,7 +1372,7 @@ function deleteManualPayment(id) {
 }
 
 // ONLINE PAYMENT MANAGEMENT
-function getAllOnlinePayment() {}
+function getAllOnlinePayment() { }
 
 // PAYMENT HISTORY
 function getAllPaymentHistory() {
@@ -1380,6 +1382,7 @@ function getAllPaymentHistory() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -1404,11 +1407,10 @@ function getAllPaymentHistory() {
             
                     <td>${c}.</td>
                     <td>${data[i].student.student_id}</td>
-                    <td>${
-                      data[i].student.first_name +
-                      " " +
-                      data[i].student.last_name
-                    }</td>
+                    <td>${data[i].student.first_name +
+            " " +
+            data[i].student.last_name
+            }</td>
                     <td>${data[i].class.class_name}</td>
                     <td><b>${data[i].payment_type}</b></td>
                     <td><b>${data[i].payment_description}</b></td>
@@ -1434,6 +1436,7 @@ function getAllPaymentHistory(student_id, session, term) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       student_id: student_id,
@@ -1491,6 +1494,7 @@ function searchPayment(search_data) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       search_data: search_data,
@@ -1516,11 +1520,10 @@ function searchPayment(search_data) {
               
                       <td>${c}.</td>
                       <td>${data[i].student.student_id}</td>
-                      <td>${
-                        data[i].student.first_name +
-                        " " +
-                        data[i].student.last_name
-                      }</td>
+                      <td>${data[i].student.first_name +
+            " " +
+            data[i].student.last_name
+            }</td>
                       <td>${data[i].class.class_name}</td>
                       <td><b>${data[i].payment_type}</b></td>
                       <td>${data[i].date}</td>
@@ -1543,6 +1546,7 @@ function getAllDebitor() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -1572,57 +1576,47 @@ function getAllDebitor() {
             
                     <td>${c}.</td>
                     <td>${data.content[i].student_id}</td>
-                    <td>${
-                      data.content[i].first_name +
-                      " " +
-                      data.content[i].last_name
-                    }</td>  
-                    <td>${
-                      data.content[i].graduation !== "-"
-                        ? data.content[i].graduation_details
-                        : data.content[i].class.class_name
-                    }</td>
+                    <td>${data.content[i].first_name +
+            " " +
+            data.content[i].last_name
+            }</td>  
+                    <td>${data.content[i].graduation !== "-"
+              ? data.content[i].graduation_details
+              : data.content[i].class.class_name
+            }</td>
 
-                    <td><span style="color:white" class="badge ${
-                      data.content[i].profile_status == "DISABLED"
-                        ? `bg-danger`
-                        : `bg-success`
-                    }"><b>${data.content[i].profile_status}</b></span></td>
+                    <td><span style="color:white" class="badge ${data.content[i].profile_status == "DISABLED"
+              ? `bg-danger`
+              : `bg-success`
+            }"><b>${data.content[i].profile_status}</b></span></td>
 
                     <td style="color:blue"><b>${formatNumber(
-                      parseInt(data.content[i].expected_fee)
-                    )}</b></td>
-                    <td style="color: ${
-                      data.content[i].total_paid > 0 ? "green" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].total_paid)
-          )}</b></td>
-                    <td style="color: ${
-                      data.content[i].balance > 0 ? "red" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].balance)
-          )}</b></td>
-                    <td style="color: ${
-                      data.content[i].arrears > 0 ? "red" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].arrears)
-          )}</b></td>
-                    <td style="color: ${
-                      data.content[i].total_balance > 0 ? "red" : "black"
-                    } "><b>${formatNumber(
-            parseInt(data.content[i].total_balance)
-          )}</b></td>
+              parseInt(data.content[i].expected_fee)
+            )}</b></td>
+                    <td style="color: ${data.content[i].total_paid > 0 ? "green" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].total_paid)
+            )}</b></td>
+                    <td style="color: ${data.content[i].balance > 0 ? "red" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].balance)
+            )}</b></td>
+                    <td style="color: ${data.content[i].arrears > 0 ? "red" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].arrears)
+            )}</b></td>
+                    <td style="color: ${data.content[i].total_balance > 0 ? "red" : "black"
+            } "><b>${formatNumber(
+              parseInt(data.content[i].total_balance)
+            )}</b></td>
 
                     <td ${data.content[i].graduation != "-" ? `not hidden` : ``}>
-                          <a onclick="storePDStudentId(${data.content[i].id},${
-            data.content[i].class != null ? data.content[i].class.id : ``
-          },'${
-            data.content[i].class != null
+                          <a onclick="storePDStudentId(${data.content[i].id},${data.content[i].class != null ? data.content[i].class.id : ``
+            },'${data.content[i].class != null
               ? data.content[i].class.class_name
               : ``
-          }','${
-            data.content[i].first_name + " " + data.content[i].last_name
-          }'); getPaymentDetails()" style="color:white" class="btn btn-primary" data-bs-toggle="modal"
+            }','${data.content[i].first_name + " " + data.content[i].last_name
+            }'); getPaymentDetails()" style="color:white" class="btn btn-primary" data-bs-toggle="modal"
                           data-bs-target="#viewModal"><i class="fas fa-eye"></i> View Details</a>
                     </td>
 
@@ -1657,6 +1651,7 @@ function syncLatestDebitor() {
         Accept: "application/json",
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
+        school: localStorage["school"],
       },
       body: JSON.stringify({
         session: localStorage["current_session"],
@@ -1692,6 +1687,7 @@ function getPortalSubscription() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -1713,26 +1709,24 @@ function getPortalSubscription() {
                     <td>${c}.</td>
                     <td>${data[i].subscription_id}</td>
                     <td>${data[i].description}</td>  
-                    <td><span style="color:white" class="badge ${
-                      data[i].status == "NOT PAID"
-                        ? `bg-danger`
-                        : data[i].status == "USAGE IN-PROGRESS"
-                        ? `bg-warning`
-                        : `bg-success`
-                    }"><b>${data[i].status}</b></span></td>
+                    <td><span style="color:white" class="badge ${data[i].status == "NOT PAID"
+              ? `bg-danger`
+              : data[i].status == "USAGE IN-PROGRESS"
+                ? `bg-warning`
+                : `bg-success`
+            }"><b>${data[i].status}</b></span></td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     <td>   
-                      ${
-                        data[i].status == "NOT PAID"
-                          ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
+                      ${data[i].status == "NOT PAID"
+              ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',
                           '${data[i].description}'
                         )" href="#" class="btn btn-primary">
                                  Pay Now
                             </a>`
-                          : ``
-                      }
+              : ``
+            }
                     </td>
                    </tr>
                     `;
@@ -1769,6 +1763,7 @@ function getAllClassForDropDown() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -1797,6 +1792,7 @@ function getAllStudent(class_id) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -1819,9 +1815,8 @@ function getAllStudent(class_id) {
           ) {
             continue;
           }
-          document.getElementById("student").innerHTML += `<option value="${
-            data[i].id
-          }">${data[i].first_name + " " + data[i].last_name}</option>`;
+          document.getElementById("student").innerHTML += `<option value="${data[i].id
+            }">${data[i].first_name + " " + data[i].last_name}</option>`;
         }
       } else {
         document.getElementById(
@@ -1839,6 +1834,7 @@ async function getStudent(id) {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -1882,9 +1878,9 @@ async function getDashboardInfo() {
   await loadCustomSessionTermForDashboard();
   openSpinnerModal(
     "Statistics for " +
-      localStorage["current_session"] +
-      " - " +
-      localStorage["current_term"]
+    localStorage["current_session"] +
+    " - " +
+    localStorage["current_term"]
   );
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
@@ -1892,6 +1888,7 @@ async function getDashboardInfo() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -1946,9 +1943,9 @@ async function getDashboardInfo() {
 function getDashboardInfo2() {
   openSpinnerModal(
     "Statistics for " +
-      localStorage["current_session"] +
-      " - " +
-      localStorage["current_term"]
+    localStorage["current_session"] +
+    " - " +
+    localStorage["current_term"]
   );
   fetch(ip + "/api/bursary/dashboard-information", {
     method: "POST",
@@ -1956,6 +1953,7 @@ function getDashboardInfo2() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
     body: JSON.stringify({
       session: localStorage["current_session"],
@@ -2288,6 +2286,7 @@ function getSchoolDetails() {
     headers: {
       Accept: "application/json",
       "Content-type": "application/json",
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -2321,6 +2320,7 @@ async function loadCustomSessionTerm() {
         Accept: "application/json",
         "Content-type": "application/json",
         Authorization: "Bearer " + localStorage["token"],
+        school: localStorage["school"],
       },
     }
   )
@@ -2342,21 +2342,17 @@ async function loadCustomSessionTerm() {
         for (i = session_term.length - 1; i >= 0; i--) {
           document.getElementById(
             "session_term"
-          ).innerHTML += `<option value="${
-            session_term[i].session + "-" + session_term[i].term
-          }">${
-            session_term[i].session + " - " + session_term[i].term
-          }</option>`;
+          ).innerHTML += `<option value="${session_term[i].session + "-" + session_term[i].term
+            }">${session_term[i].session + " - " + session_term[i].term
+            }</option>`;
         }
 
         console.table(session_term);
         console.table(data);
       } else {
-        document.getElementById("session_term").innerHTML += `<option value="${
-          localStorage["current_session"] + "-" + localStorage["current_term"]
-        }">${
-          localStorage["current_session"] + " - " + localStorage["current_term"]
-        }</option>`;
+        document.getElementById("session_term").innerHTML += `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
+          }">${localStorage["current_session"] + " - " + localStorage["current_term"]
+          }</option>`;
       }
     });
 }
@@ -2370,6 +2366,7 @@ function loadCustomSessionTermForDashboard() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -2381,18 +2378,15 @@ function loadCustomSessionTermForDashboard() {
     })
 
     .then((data) => {
-      document.getElementById("session_term").innerHTML = `<option value="${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }">${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }</option>`;
+      document.getElementById("session_term").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
+        }">${localStorage["current_session"] + "-" + localStorage["current_term"]
+        }</option>`;
       data.forEach((sessions) => {
         term.forEach((term) => {
           document.getElementById(
             "session_term"
-          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
-            sessions.session + "-" + term
-          }</option>`;
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${sessions.session + "-" + term
+            }</option>`;
         });
       });
     })
@@ -2414,6 +2408,7 @@ function checkPortalSubscription() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -2464,8 +2459,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
           method: "GET",
           headers: {
             Accept: "application/json",
-            "Content-type": "application/json",
-            Authorization: "Bearer " + localStorage["PSSK"],
+            "Content-type": "application/json"
           },
         }
       )
@@ -2484,6 +2478,7 @@ function payWithPaystack(id, amount, subscription_id, description) {
                 Accept: "application/json",
                 "Content-type": "application/json",
                 Authorization: "Bearer " + localStorage["token"],
+                school: localStorage["school"],
               },
               body: JSON.stringify({
                 id: id,
@@ -2532,6 +2527,7 @@ function getStoredCredential() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -2604,6 +2600,18 @@ $(document).click(function (e) {
       });
     }
   }
+
+  spinnerModal = parent.document.getElementById("spinnerModal");
+  authenticationModal = parent.document.getElementById("authenticationModal");
+  if (spinnerModal == null && authenticationModal == null) {
+    const backdrop = document.getElementsByClassName(
+      "modal-backdrop fade show"
+    );
+    Array.from(backdrop).forEach(function (bd) {
+      bd.remove();
+    });
+  }
+  document.body.style.overflow = "auto";
 });
 
 function download(filename) {
@@ -2619,6 +2627,31 @@ function download(filename) {
     jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
   };
   html2pdf().from(payment_slip).set(opt).save();
+}
+
+// DEVICE TOKEN
+async function sendTokenToServer(deviceToken, user_type, id) {
+  return fetch(ip + "/api/device-token", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-type": "application/json",
+      school: localStorage["school"],
+    },
+    body: JSON.stringify({
+      id: id,
+      device_token: deviceToken,
+      user_type: user_type,
+    }),
+  })
+    .then(function (res) {
+      return res.json();
+    })
+
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => console.log(err));
 }
 
 // RE - AUTHENTICATION MODAL
@@ -2727,6 +2760,9 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 }
 
 function openSpinnerModal(message) {
+  if (!navigator.onLine) {
+    return 0;
+  }
   modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
 aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2784,6 +2820,11 @@ function removeSpinnerModal() {
   if (spinnerModal != null) {
     parent.$("#spinnerModal").modal("hide");
     parent.document.getElementById("spinnerModal").remove();
+  }
+
+  const backdrop = document.querySelector(".modal-backdrop fade show");
+  if (backdrop) {
+    parent.backdrop.remove();
   }
 }
 
@@ -2875,6 +2916,18 @@ function errortoast(message, time) {
   });
 }
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    const data = event.data;
+    if (data.success) {
+      successtoast(data.message);
+    } else {
+      errortoast(data.message);
+    }
+  });
+}
+
+
 // $(document).ready(function () {
 //   $('#dtBasicExample').DataTable();
 //   $('.dataTables_length').addClass('bs-select');
@@ -2896,6 +2949,7 @@ function getAllStudentForTable() {
       Accept: "application/json",
       "Content-type": "application/json",
       Authorization: "Bearer " + localStorage["token"],
+      school: localStorage["school"],
     },
   })
     .then(function (res) {
@@ -2916,14 +2970,12 @@ function getAllStudentForTable() {
           <td>${data[i].student_id}</td>
           <td>${data[i].first_name + " " + data[i].last_name}</td>
           <td>${data[i].gender}</td>
-          ${
-            data[i].profile_status == "ENABLED"
+          ${data[i].profile_status == "ENABLED"
               ? `<td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>`
               : ` <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td> `
-          }
-          <td>${
-            data[i].class == null ? `GRADUATED` : data[i].class.class_name
-          }</td>
+            }
+          <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
+            }</td>
           <td>
             <a  onmouseover="viewStudent(${JSON.stringify(data[i])
               .replace(/'/g, "")
@@ -2933,18 +2985,17 @@ function getAllStudentForTable() {
               )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-              data[i]
-            ).replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              ).replace(
+                /"/g,
+                "'"
+              )})" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
-            ${
-              data[i].profile_status == "ENABLED"
-                ? ` <a  onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
+            ${data[i].profile_status == "ENABLED"
+              ? ` <a  onclick="updateStudentProfileStatus(${data[i].id})" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  `
-                : `  <a  onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
+              : `  <a  onclick="updateStudentProfileStatus(${data[i].id})" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a> 
             
             `
             }
@@ -2956,8 +3007,7 @@ function getAllStudentForTable() {
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a  onclick="deleteStudent(${
-              data[i].id
+            <a  onclick="deleteStudent(${data[i].id
             })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
@@ -2976,3 +3026,54 @@ function getAllStudentForTable() {
     })
     .catch((err) => console.log(err));
 }
+
+// // Select the <body> element
+// const body = document.querySelector("body");
+
+// // Create a new MutationObserver instance
+// const observer = new MutationObserver((mutations) => {
+//   mutations.forEach((mutation) => {
+//     mutation.addedNodes.forEach((node) => {
+//       if (node.nodeType === Node.ELEMENT_NODE) {
+//         // Get the class value of the new element
+//         const classValue = node.className;
+
+//         // Get the new element itself
+//         const newElement = node.querySelector(".new-class");
+
+//         if (classValue.includes("modal-backdrop fade show")) {
+//           spinnerModal = parent.document.getElementById("spinnerModal");
+//           authenticationModal = parent.document.getElementById(
+//             "authenticationModal"
+//           );
+//           if (spinnerModal == null && authenticationModal == null) {
+//             const backdrop = document.querySelector(
+//               ".modal-backdrop fade show"
+//             );
+//             if (backdrop) {
+//               parent.backdrop.remove();
+//             }
+//           }
+//         }
+
+//         console.log(
+//           `${node.tagName} element with class "${classValue}" added to the <body> element`
+//         );
+//         console.log(
+//           `New element with class "new-class" added to the <body> element:`,
+//           newElement
+//         );
+//       }
+//     });
+//   });
+// });
+
+// // Configure the observer to watch for changes to the <body> element
+// const observerConfig = {
+//   childList: true, // Watch for changes to the list of child nodes
+//   subtree: true, // Watch for changes to the entire subtree of the <body> element
+//   characterData: true, // Watch for changes to the text content of the <body> element
+// };
+
+// // Start observing the <body> element for changes
+// observer.observe(body, observerConfig);
