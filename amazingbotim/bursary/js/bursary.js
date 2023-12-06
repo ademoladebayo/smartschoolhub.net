@@ -1578,7 +1578,7 @@ function getAllDebitor() {
                       data.content[i].last_name
                     }</td>  
                     <td>${
-                      data.content[i].class == null
+                      data.content[i].graduation != "-"
                         ? data.content[i].graduation_details
                         : data.content[i].class.class_name
                     }</td>
