@@ -36,6 +36,8 @@ if (
 
 // VAR
 var result_list = {};
+var session_list = {};
+
 
 // if(!window.location.href.includes("portal-subcription")){
 //   checkPortalSubscription();
@@ -1787,8 +1789,6 @@ function getTranscript() {
     correctLevel: QRCode.CorrectLevel.H,
   });
 
-  var sessions = [];
-  var terms = [];
 
   // CALL API THAT GET ALL SESSION
   fetch(ip + "/api/general/all-session/STD-" + user_data.id, {
@@ -1809,264 +1809,278 @@ function getTranscript() {
     })
 
     .then((data) => {
-      // STORE IN SESSIONS ARRAY
-      data.forEach((data) => {
-        if (!sessions.includes(data.session)) {
-          sessions.push(data.session);
-        }
 
-        if (!terms.includes(data.term)) {
-          terms.push(data.term);
+      // STORE IN AN ACCESIBLE LIST
+      data.forEach((data) => {
+        var term = {};
+        if (session_list[data.session]) {
+          session_list[data.session][data.term] = { "loaded": false };
+        } else {
+          term[data.term] = { "loaded": false };
+          session_list[data.session] = term;
         }
       });
 
+      console.log("SESSION TERM :::::: ")
+      console.table(data);
+      console.log(session_list);
+
+
       // CREATE RESULT TEMPLATE
-      if (sessions.length > 0) {
+      if (Object.keys(session_list).length !== 0) {
         document.getElementById("result_div").innerHTML = ``;
+
         // LOOP THROUGH EACH SESSION AND TERM
-        sessions.forEach((session) => {
-          terms.forEach((term) => {
-            // CREATE RESULT TEMPLATE
-            document.getElementById("result_div").innerHTML += `
-        <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
-        <div style="border:1px solid black; padding-bottom: 15px;" class="row">
+        for (const session in session_list) {
+          if (session_list.hasOwnProperty(session)) {
 
-            <div class="col-md-4">
-                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
-                </div>
-            </div>
+            for (const term in session_list[session]) {
+              if (session_list[session].hasOwnProperty(term)) {
 
-            <!-- ATTTENDANCE -->
-            <div style="margin-top: 15px;" class="container">
-                <p><b>(A) ATTTENDANCE</b></p>
-                <div class="row">
-                    <div class="col-md-12 table-responsive">
-                        <table style="padding: 0%;" class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        No of times school
-                                        opened
-                                    </td>
-                                    <td  id="opened_${session}_${term}"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                // CREATE RESULT TEMPLATE
+                document.getElementById("result_div").innerHTML += `
+ <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
+ <div style="border:1px solid black; padding-bottom: 15px;" class="row">
 
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        No of times present
-                                    </td>
-                                    <td id="present_${session}_${term}"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+     <div class="col-md-4">
+         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+             <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
+         </div>
+     </div>
+     <div class="col-md-4">
+         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+             <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
+         </div>
+     </div>
+     <div class="col-md-4">
+         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+             <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
+         </div>
+     </div>
 
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+     <!-- ATTTENDANCE -->
+     <div style="margin-top: 15px;" class="container">
+         <p><b>(A) ATTTENDANCE</b></p>
+         <div class="row">
+             <div class="col-md-12 table-responsive">
+                 <table style="padding: 0%;" class="table table-sm">
+                     <tbody>
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 No of times school
+                                 opened
+                             </td>
+                             <td  id="opened_${session}_${term}"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                </div>
-            </div>
+                         </tr>
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 No of times present
+                             </td>
+                             <td id="present_${session}_${term}"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-            <!-- ACADEMIC PERFORMANCE -->
-            <div style="margin-top: 15px;" class="col-md-12 col-lg-12 col-xl-12">
-                <p><b>(B) ACADEMIC PERFORMANCE</b></p>
-                <div style="margin-top: 0px;">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- SCORE TABLE -->
-                            <div class="table-responsive">
-                                <table style="padding: 0%;" class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th style="font-size: 14px;">S/No</th>
-                                            <th style="font-size: 14px;">Subject</th>
-                                            <th style="font-size: 14px;">1<sup>st</sup> CA</th>
-                                            <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
-                                            <th style="font-size: 14px;">Exam</th>
-                                            <th style="font-size: 14px;">Total</th>
-                                            <th style="font-size: 14px;">Class Average</th>
-                                            <th style="font-size: 14px;">Class Lowest</th>
-                                            <th style="font-size: 14px;">Class Highest</th>
-                                            <th style="font-size: 14px;">Position</th>
-                                            <th style="font-size: 14px;">Grade</th>
-                                            <th style="font-size: 14px;">Remark</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="scores_${session}_${term}">
+                         </tr>
+                     </tbody>
+                 </table>
+             </div>
 
-                                    
-                                    
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- POSITION AND PERCENTAGE -->
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th style="font-size: 13px;font-style: italic;">NO IN CLASS :
-                                                <span id="no_student_${session}_${term}"></span>
-                                            </th>
-                                            <th style="font-size: 13px;font-style: italic;">GRADE POSITION :
-                                                <span id="grade_position_${session}_${term}"></span>
-                                            </th>
-                                            <th style="font-size: 13px;font-style: italic;">PERCENTAGE :
-                                                <span id="percentage_${session}_${term}"></span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody style="font-size: 13px;">
+         </div>
+     </div>
 
-                                        <tr style="font-size: 13px;">
-                                            <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
-                                                colspan="6">
-                                                <span style="font-weight: bold;">Class Teacher's
-                                                    Comment :
-                                                </span>
-                                                <font color="black"><b id="teacher_comment_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
-                                            </td>
-                                        </tr>
+     <!-- ACADEMIC PERFORMANCE -->
+     <div style="margin-top: 15px;" class="col-md-12 col-lg-12 col-xl-12">
+         <p><b>(B) ACADEMIC PERFORMANCE</b></p>
+         <div style="margin-top: 0px;">
+             <div class="card">
+                 <div class="card-body">
+                     <!-- SCORE TABLE -->
+                     <div class="table-responsive">
+                         <table style="padding: 0%;" class="table table-sm">
+                             <thead>
+                                 <tr>
+                                     <th style="font-size: 14px;">S/No</th>
+                                     <th style="font-size: 14px;">Subject</th>
+                                     <th style="font-size: 14px;">1<sup>st</sup> CA</th>
+                                     <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
+                                     <th style="font-size: 14px;">Exam</th>
+                                     <th style="font-size: 14px;">Total</th>
+                                     <th style="font-size: 14px;">Class Average</th>
+                                     <th style="font-size: 14px;">Class Lowest</th>
+                                     <th style="font-size: 14px;">Class Highest</th>
+                                     <th style="font-size: 14px;">Position</th>
+                                     <th style="font-size: 14px;">Grade</th>
+                                     <th style="font-size: 14px;">Remark</th>
+                                 </tr>
+                             </thead>
+                             <tbody id="scores_${session}_${term}">
 
-                                        
+                             
+                             
+                             </tbody>
+                         </table>
+                     </div>
+                     <!-- POSITION AND PERCENTAGE -->
+                     <div class="table-responsive">
+                         <table class="table">
+                             <thead>
+                                 <tr>
+                                     <th style="font-size: 13px;font-style: italic;">NO IN CLASS :
+                                         <span id="no_student_${session}_${term}"></span>
+                                     </th>
+                                     <th style="font-size: 13px;font-style: italic;">GRADE POSITION :
+                                         <span id="grade_position_${session}_${term}"></span>
+                                     </th>
+                                     <th style="font-size: 13px;font-style: italic;">PERCENTAGE :
+                                         <span id="percentage_${session}_${term}"></span>
+                                     </th>
+                                 </tr>
+                             </thead>
+                             <tbody style="font-size: 13px;">
 
-                                    </tbody>
+                                 <tr style="font-size: 13px;">
+                                     <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
+                                         colspan="6">
+                                         <span style="font-weight: bold;">Class Teacher's
+                                             Comment :
+                                         </span>
+                                         <font color="black"><b id="teacher_comment_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
+                                     </td>
+                                 </tr>
 
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                 
 
-            <!-- AFFECTIVE & PSYCHO MOTOR REPORT -->
-            <div style="margin-top: 5px;" class="container">
-                <p><b>(C) AFFECTIVE & PSYCHO MOTOR REPORT</b></p>
-                <div class="row">
-                    <div class="col-md-6 table-responsive">
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Hand Writing
-                                    </td>
-                                    <td id="handwriting_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                             </tbody>
 
-                                </tr>
-                                
-                                <tr>
-                                    <td 
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Games
-                                    </td>
-                                    <td id="games_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
 
-                                </tr>
-                                
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Handing Tools
-                                    </td>
-                                    <td id="handing_tools_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+     <!-- AFFECTIVE & PSYCHO MOTOR REPORT -->
+     <div style="margin-top: 5px;" class="container">
+         <p><b>(C) AFFECTIVE & PSYCHO MOTOR REPORT</b></p>
+         <div class="row">
+             <div class="col-md-6 table-responsive">
+                 <table class="table table-sm">
+                     <tbody>
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Hand Writing
+                             </td>
+                             <td id="handwriting_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Drawing and Painting
-                                    </td>
-                                    <td id="drawing_painting_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                         </tr>
+                         
+                         <tr>
+                             <td 
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Games
+                             </td>
+                             <td id="games_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                                </tr>
-                               
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6 table-responsive">
-                        <table class="table table-sm">
-                            <tbody>
+                         </tr>
+                         
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Handing Tools
+                             </td>
+                             <td id="handing_tools_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Neatness
-                                    </td>
-                                    <td id="neatness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                         </tr>
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Drawing and Painting
+                             </td>
+                             <td id="drawing_painting_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Politeness
-                                    </td>
-                                    <td id="politeness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                         </tr>
+                        
+                     </tbody>
+                 </table>
+             </div>
+             <div class="col-md-6 table-responsive">
+                 <table class="table table-sm">
+                     <tbody>
 
-                                </tr>
-                               
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Co-operation with others
-                                    </td>
-                                    <td id="cooperation_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Neatness
+                             </td>
+                             <td id="neatness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                                </tr>
-                                
-                          
-                                <tr>
-                                    <td
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        Health
-                                    </td>
-                                    <td id="health_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
-                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
-                                        </td>
+                         </tr>
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Politeness
+                             </td>
+                             <td id="politeness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                                </tr>
+                         </tr>
+                        
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Co-operation with others
+                             </td>
+                             <td id="cooperation_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                            </tbody>
-                        </table>
-                    </div>
+                         </tr>
+                         
+                   
+                         <tr>
+                             <td
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 Health
+                             </td>
+                             <td id="health_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
+                                 style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                 </td>
 
-                </div>
-            </div>
-        </div>
+                         </tr>
 
-        </div>
+                     </tbody>
+                 </table>
+             </div>
+
+         </div>
+     </div>
+ </div>
+
+ </div>
 
 `;
-          });
-        });
+              }
+            }
+          }
+        }
+
       } else {
         document.getElementById(
           "result_div"
@@ -2075,18 +2089,8 @@ function getTranscript() {
   <hr style="color: black; border: 1px solid black">`;
       }
 
-      // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
-      result_containers = document.getElementsByClassName("result_container");
-
-      for (i = 0; i < result_containers.length; i++) {
-        container_name = result_containers[i].attributes[0].nodeValue;
-        // ATTENDANCE
-        getAttendanceSummary(container_name);
-        //ACADEMIC PERFORMANCE
-        getResult(container_name);
-        // COMMENTS AND PSYCHO MOTOR REPORTS
-        getCommentsAndPsycho(container_name);
-      }
+      // PROCESS RESULT CONTAINERS
+      processContainers();
 
       main_content = parent.body.innerHTML;
       parent.body.innerHTML = "";
@@ -2094,9 +2098,30 @@ function getTranscript() {
     })
     .catch((err) => console.log(err));
 
-  setTimeout(function () {
-    removeSpinnerModal();
-  }, 10000);
+  // setTimeout(function () {
+  //   removeSpinnerModal();
+  // }, 10000);
+}
+
+
+async function processContainers() {
+  // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
+  result_containers = document.getElementsByClassName("result_container");
+  for (let i = 0; i < result_containers.length; i++) {
+    const containerName = result_containers[i].attributes[0].nodeValue;
+
+    // ATTENDANCE
+    await getAttendanceSummary(containerName);
+
+    // COMMENTS AND PSYCHO MOTOR REPORTS
+    await getCommentsAndPsycho(containerName);
+
+    // ACADEMIC PERFORMANCE
+    await getResult(containerName);
+
+  }
+
+  removeSpinnerModal();
 }
 
 function getResult(value) {
@@ -2205,7 +2230,7 @@ function getResult(value) {
             </tr>`;
 
           c = c + 1;
-        });
+        }); value.split("_")[1]
       } else {
         // DELETE RESULT CONTAINER
         console.log("DELETE THIS VALUE " + value);
@@ -4428,7 +4453,7 @@ function getAllSubjectForTable2() {
               <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
               value="${data[i].id}">
               </td>
-              <td>${c + 1}.</td>
+              <td>${nc}.</td>
               <td>${data[i].subject_name}</td>
               <td>COMPULSORY</td>
               <td>${data[i].teacher.title +
@@ -4463,7 +4488,7 @@ function getAllSubjectForTable2() {
               <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
               value="${data[i].id}">
               </td>
-              <td>${c + 1}.</td>
+              <td>${nc}.</td>
               <td>${data[i].subject_name}</td>
               <td>COMPULSORY</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
@@ -7064,7 +7089,7 @@ function loadCustomSubjectClass() {
 }
 
 // CUSTOM SESSION TERM
- function loadCustomSessionTerm() {
+function loadCustomSessionTerm() {
   term = ["THIRD TERM", "SECOND TERM", "FIRST TERM"];
 
   fetch(ip + "/api/general/all-session/DESC", {

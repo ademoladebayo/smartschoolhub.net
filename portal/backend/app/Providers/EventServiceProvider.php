@@ -6,6 +6,11 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Model\TeacherAttendanceModel;
+use App\Model\StudentAttendanceModel;
+use App\Observer\DuplicateAttendanceObserverForStudentAttendance;
+use App\Observer\DuplicateAttendanceObserverForTeacherAttendance;
+
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -28,7 +33,8 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
+        TeacherAttendanceModel::observe(DuplicateAttendanceObserverForTeacherAttendance::class);
+        StudentAttendanceModel::observe(DuplicateAttendanceObserverForStudentAttendance::class);
         //
     }
 }

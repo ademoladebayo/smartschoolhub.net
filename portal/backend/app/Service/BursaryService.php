@@ -512,6 +512,7 @@ class BursaryService
 
                 $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $student->id)->where('session', $request->session)->where('term', $request->term)->get();
                 $class = "";
+                
                 if (count($paymentHistory) != 0) {
                     // USE CLASS STUDENT WAS IN
                     $class = $paymentHistory[0]->class_id;

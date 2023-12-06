@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="./css/select2.min.css">
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;" onload="">
+<body style="font-family: Poppins; font-weight: bold;" onload="isSchoolSet()">
     <div class="container-fluid">
         <div class="container">
             <div class="col-xl-10 col-lg-11 login-container">
@@ -254,6 +254,7 @@
 
             .then((data) => {
                 removeSpinnerModal();
+                document.getElementById('schools').innerHTML = ``;
                 data.forEach(school => {
                     document.getElementById('schools').innerHTML +=
                         `
@@ -370,12 +371,24 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     }
 
     function changeSchool() {
+        getSchools();
         document.getElementById("school_name").innerHTML = "Welcome !";
         document.getElementById("schools").selectedIndex = 0;
         document.getElementById("sign_in_as").hidden = true;
         document.getElementById("select_school").hidden = false;
+        localStorage.removeItem("school");
     }
+
+    function isSchoolSet() {
+        if ("school" in localStorage) {
+            getSchoolDetails(localStorage["school"]);
+            document.getElementById("select_school").hidden = true;
+            document.getElementById("sign_in_as").hidden = false;
+        }
+    }
+
     window.addEventListener("load", () => {
+        isSchoolSet();
         getSchools();
         //getSchoolDetails();
     }

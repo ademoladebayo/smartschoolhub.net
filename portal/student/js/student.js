@@ -9,6 +9,9 @@ var domain = localStorage["domain"];
 // CBT VARIABLE
 answer = [];
 
+//var
+var session_list = {};
+
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
 );
@@ -313,16 +316,14 @@ function loadDashBoardInformation() {
     student_id +
     `.png?timestamp=${timestamp}`;
 
-  document.getElementById("user_name").innerHTML = `<b>${
-    JSON.parse(localStorage["user_data"]).data.first_name +
+  document.getElementById("user_name").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
-  }</b>`;
-  document.getElementById("user_name1").innerHTML = `<b>${
-    JSON.parse(localStorage["user_data"]).data.first_name +
+    }</b>`;
+  document.getElementById("user_name1").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
-  }</b>`;
+    }</b>`;
 
   document.getElementById("cbt_no").innerHTML = JSON.parse(
     localStorage["user_data"]
@@ -361,11 +362,9 @@ function getProfileData() {
       document.getElementById("profile_data").innerHTML += ` 
           <tr>
                   <td>${data_key[i].toUpperCase().replace("_", " ")}:</td>
-                  <td id="${
-                    data_key[i]
-                  }" name="profile_data" class="font-medium text-dark-medium">${
-        user_data[data_key[i]].class_name
-      }</td>
+                  <td id="${data_key[i]
+        }" name="profile_data" class="font-medium text-dark-medium">${user_data[data_key[i]].class_name
+        }</td>
           </tr>
           
           `;
@@ -373,11 +372,9 @@ function getProfileData() {
       document.getElementById("profile_data").innerHTML += ` 
           <tr>
                   <td>${data_key[i].toUpperCase().replace("_", " ")}:</td>
-                  <td id="${
-                    data_key[i]
-                  }" name="profile_data" class="font-medium text-dark-medium">${
-        user_data[data_key[i]]
-      }</td>
+                  <td id="${data_key[i]
+        }" name="profile_data" class="font-medium text-dark-medium">${user_data[data_key[i]]
+        }</td>
           </tr>
           
           `;
@@ -604,23 +601,21 @@ function getCBTForSubject() {
           <td>
           ${data[i].start_time}</td>
           <td>
-          ${
-            data[i].cbt_status == "OPEN"
+          ${data[i].cbt_status == "OPEN"
               ? `<span class="badge bg-success text-white"><b>${data[i].cbt_status}</b></span>`
               : `<span class="badge bg-danger text-white"><b>${data[i].cbt_status}</b></span>`
-          }</td>
+            }</td>
         
           
   
           <td>
-              <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary"   ${
-                data[i].cbt_status == "OPEN"
-                  ? `onclick="startCBT(${JSON.stringify(data[i])
-                      .replace(/'/g, "")
-                      .replace(/"/g, "'")
-                      .replace(/&#39;/g, "™")})"`
-                  : `onclick="alert('CBT Closed!')"`
-              }
+              <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary"   ${data[i].cbt_status == "OPEN"
+              ? `onclick="startCBT(${JSON.stringify(data[i])
+                .replace(/'/g, "")
+                .replace(/"/g, "'")
+                .replace(/&#39;/g, "™")})"`
+              : `onclick="alert('CBT Closed!')"`
+            }
                  ><i class="fas fa-play"></i> START CBT</button>
               
           </td>
@@ -645,10 +640,10 @@ function startCBT(cbt) {
 
   fetch(
     ip +
-      "/api/student/taken-cbt/" +
-      cbt.id +
-      "/" +
-      JSON.parse(localStorage["user_data"]).data.id,
+    "/api/student/taken-cbt/" +
+    cbt.id +
+    "/" +
+    JSON.parse(localStorage["user_data"]).data.id,
     {
       method: "GET",
       headers: {
@@ -727,9 +722,9 @@ async function getCBTdetails() {
   ) {
     n = Math.floor(
       Math.random() *
-        JSON.parse(localStorage["cbt_detail"]).cbt_questions_number.split(",")
-          .length +
-        0
+      JSON.parse(localStorage["cbt_detail"]).cbt_questions_number.split(",")
+        .length +
+      0
     );
     if (!randomQuestion.includes(n)) {
       randomQuestion.push(n);
@@ -758,82 +753,65 @@ async function getCBTdetails() {
     // carousel-item
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3 ">
    <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
-    <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
-      questions_number[n]
-    }" >${question[questions_number[n]]
-      .replace(/⌑/g, ",")
-      .replace(/™/g, "'")}</span></p>
+    <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${questions_number[n]
+      }" >${question[questions_number[n]]
+        .replace(/⌑/g, ",")
+        .replace(/™/g, "'")}</span></p>
  <div class="pl-2">
-           <div id="optionA${
-             questions_number[n]
-           }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${
-      questions_number[n]
-    }"
-                   id="A${
-                     questions_number[n]
-                   }" value="A"> <label oninput="saveOptions(this.id)" id="${
-      questions_number[n]
-    }" class="form-check-label" for="A${questions_number[n]}" >${options[
-      questions_number[n]
-    ]
-      .split("~")[0]
-      .replace(/⌑/g, ",")
-      .replace(/®/g, "~")
-      .replace(/™/g, "'")}
+           <div id="optionA${questions_number[n]
+      }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${questions_number[n]
+      }"
+                   id="A${questions_number[n]
+      }" value="A"> <label oninput="saveOptions(this.id)" id="${questions_number[n]
+      }" class="form-check-label" for="A${questions_number[n]}" >${options[
+        questions_number[n]
+      ]
+        .split("~")[0]
+        .replace(/⌑/g, ",")
+        .replace(/®/g, "~")
+        .replace(/™/g, "'")}
              </label> </input></div>
 
-             <div id="optionB${
-               questions_number[n]
-             }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${
-      questions_number[n]
-    }"
-                     id="B${
-                       questions_number[n]
-                     }" value="B" > <label oninput="saveOptions(this.id)" id="${
-      questions_number[n]
-    }" class="form-check-label" for="B${questions_number[n]}" >${options[
-      questions_number[n]
-    ]
-      .split("~")[1]
-      .replace(/⌑/g, ",")
-      .replace(/®/g, "~")
-      .replace(/™/g, "'")}
+             <div id="optionB${questions_number[n]
+      }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${questions_number[n]
+      }"
+                     id="B${questions_number[n]
+      }" value="B" > <label oninput="saveOptions(this.id)" id="${questions_number[n]
+      }" class="form-check-label" for="B${questions_number[n]}" >${options[
+        questions_number[n]
+      ]
+        .split("~")[1]
+        .replace(/⌑/g, ",")
+        .replace(/®/g, "~")
+        .replace(/™/g, "'")}
                </label></input> </div>
 
-               <div id="optionC${
-                 questions_number[n]
-               }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
-      questions_number[n]
-    }"
-                       id="C${
-                         questions_number[n]
-                       }" value="C"> <label oninput="saveOptions(this.id)" id="${
-      questions_number[n]
-    }" class="form-check-label" for="C${questions_number[n]}" >${options[
-      questions_number[n]
-    ]
-      .split("~")[2]
-      .replace(/⌑/g, ",")
-      .replace(/®/g, "~")
-      .replace(/™/g, "'")}
+               <div id="optionC${questions_number[n]
+      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
+      }"
+                       id="C${questions_number[n]
+      }" value="C"> <label oninput="saveOptions(this.id)" id="${questions_number[n]
+      }" class="form-check-label" for="C${questions_number[n]}" >${options[
+        questions_number[n]
+      ]
+        .split("~")[2]
+        .replace(/⌑/g, ",")
+        .replace(/®/g, "~")
+        .replace(/™/g, "'")}
                  </label> </input> </div>
 
-                 <div id="optionD${
-                   questions_number[n]
-                 }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
-      questions_number[n]
-    }"
-                         id="D${
-                           questions_number[n]
-                         }" value="D"> <label oninput="saveOptions(this.id)" id="${
-      questions_number[n]
-    }" class="form-check-label" for="D${questions_number[n]}" >${options[
-      questions_number[n]
-    ]
-      .split("~")[3]
-      .replace(/⌑/g, ",")
-      .replace(/®/g, "~")
-      .replace(/™/g, "'")}
+                 <div id="optionD${questions_number[n]
+      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
+      }"
+                         id="D${questions_number[n]
+      }" value="D"> <label oninput="saveOptions(this.id)" id="${questions_number[n]
+      }" class="form-check-label" for="D${questions_number[n]}" >${options[
+        questions_number[n]
+      ]
+        .split("~")[3]
+        .replace(/⌑/g, ",")
+        .replace(/®/g, "~")
+        .replace(/™/g, "'")}
                    </label></input> </div>
             </div>
   </div>
@@ -1082,17 +1060,15 @@ function getAllSubjectForTable() {
                       </td>
         
                       <td>${c}.</td>
-                      <td><i class="fa fa-shapes"></i> ${
-                        data[i].subject_name
-                      }</td>
+                      <td><i class="fa fa-shapes"></i> ${data[i].subject_name
+              }</td>
                       <td>ELECTIVE</td>
-                      <td>${
-                        data[i].teacher.title +
-                        " " +
-                        data[i].teacher.first_name +
-                        " " +
-                        data[i].teacher.last_name
-                      }</td>
+                      <td>${data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
+              }</td>
                       
                       
             
@@ -1124,9 +1100,9 @@ function registerSubject() {
     if (
       confirm(
         "Kindly confirm you would like to register the selected subject for session " +
-          localStorage["current_session"] +
-          " " +
-          localStorage["current_term"]
+        localStorage["current_session"] +
+        " " +
+        localStorage["current_term"]
       )
     ) {
       document.getElementById("register_subject").innerHTML = `<i
@@ -1212,23 +1188,18 @@ function getRegisteredSubjectForTable() {
             <tr>
     
                   <td>${c}.</td>
-                  <td> <small><i class="${
-                    data[i].subject_type == "COMPULSORY"
-                      ? `fa fa-star`
-                      : `fa fa-shapes`
-                  }" aria-hidden="true"></i></small> ${
-          data[i].subject_name
-        }</td>
+                  <td> <small><i class="${data[i].subject_type == "COMPULSORY"
+            ? `fa fa-star`
+            : `fa fa-shapes`
+          }" aria-hidden="true"></i></small> ${data[i].subject_name
+          }</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   <td>
-                  <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${
-                    data[i].subject_id
-                  }'); localStorage.setItem('LH_SUBJECT_CLASS','${
-          data[i].subject_name
-        }'); getLearningHubMaterials('${
-          data[i].subject_id
-        }'); getScheduledClass();" type="button" class="btn btn-primary btn-block"
+                  <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].subject_id
+          }'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name
+          }'); getLearningHubMaterials('${data[i].subject_id
+          }'); getScheduledClass();" type="button" class="btn btn-primary btn-block"
                   data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   Materials
               </a     >
@@ -1293,19 +1264,16 @@ function getRegisteredSubjectForTableCBT() {
             <tr>
     
                   <td>${c}.</td>
-                  <td> <small><i class="${
-                    data[i].subject_type == "COMPULSORY"
-                      ? `fa fa-star`
-                      : `fa fa-shapes`
-                  }" aria-hidden="true"></i></small> ${
-          data[i].subject_name
-        }</td>
+                  <td> <small><i class="${data[i].subject_type == "COMPULSORY"
+            ? `fa fa-star`
+            : `fa fa-shapes`
+          }" aria-hidden="true"></i></small> ${data[i].subject_name
+          }</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   <td>
-                      <button onclick="showCBTList('${data[i].subject_name}',${
-          data[i].subject_id
-        })" type="button" class="btn btn-primary">
+                      <button onclick="showCBTList('${data[i].subject_name}',${data[i].subject_id
+          })" type="button" class="btn btn-primary">
                       <span id="" class="badge bg-white"
                       style="color:blue">${count}</span> CBT AVAILABLE
                       </button>
@@ -1326,6 +1294,7 @@ function getRegisteredSubjectForTableCBT() {
 
 // RESULT
 async function getTranscript() {
+  openSpinnerModal("Transcript");
   await getSchoolDetails();
   user_data = JSON.parse(localStorage["user_data"]);
 
@@ -1389,9 +1358,6 @@ async function getTranscript() {
     return 0;
   }
 
-  var sessions = [];
-  var terms = [];
-
   // CALL API THAT GET ALL SESSION
   fetch(ip + "/api/general/all-session/STD-" + user_data.data.id, {
     method: "GET",
@@ -1413,28 +1379,32 @@ async function getTranscript() {
     })
 
     .then((data) => {
-      // STORE IN SESSIONS ARRAY
+      // STORE IN AN ACCESIBLE LIST
       data.forEach((data) => {
-        if (!sessions.includes(data.session)) {
-          sessions.push(data.session);
-        }
-
-        if (!terms.includes(data.term)) {
-          terms.push(data.term);
+        var term = {};
+        if (session_list[data.session]) {
+          session_list[data.session][data.term] = { "loaded": false };
+        } else {
+          term[data.term] = { "loaded": false };
+          session_list[data.session] = term;
         }
       });
 
       //SORT TERM BEFORE USE
-      terms = sortTerm(terms);
+      //terms = sortTerm(terms);
 
       // CREATE RESULT TEMPLATE
-      if (sessions.length > 0) {
+      if (Object.keys(session_list).length !== 0) {
         document.getElementById("result_div").innerHTML = ``;
+
         // LOOP THROUGH EACH SESSION AND TERM
-        sessions.forEach((session) => {
-          terms.forEach((term) => {
-            // CREATE RESULT TEMPLATE
-            document.getElementById("result_div").innerHTML += `
+        for (const session in session_list) {
+          if (session_list.hasOwnProperty(session)) {
+
+            for (const term in session_list[session]) {
+              if (session_list[session].hasOwnProperty(term)) {
+                // CREATE RESULT TEMPLATE
+                document.getElementById("result_div").innerHTML += `
             <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
             <div style="border:1px solid black; padding-bottom: 15px;" class="row">
 
@@ -1672,8 +1642,11 @@ async function getTranscript() {
             </div>
 
 `;
-          });
-        });
+              }
+            }
+          }
+        }
+
       } else {
         document.getElementById(
           "result_div"
@@ -1682,24 +1655,34 @@ async function getTranscript() {
       <hr style="color: black; border: 1px solid black">`;
       }
 
-      // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
-      result_containers = document.getElementsByClassName("result_container");
-
-      for (i = 0; i < result_containers.length; i++) {
-        container_name = result_containers[i].attributes[0].nodeValue;
-        // ATTENDANCE
-        getAttendanceSummary(container_name);
-        //ACADEMIC PERFORMANCE
-        getResult(container_name);
-        // COMMENTS AND PSYCHO MOTOR REPORTS
-        getCommentsAndPsycho(container_name);
-      }
+      // PROCESS RESULT CONTAINERS
+      processContainers();
 
       main_content = parent.body.innerHTML;
       parent.body.innerHTML = "";
       // parent.body.innerHTML = main_content.trim();
     })
     .catch((err) => console.log(err));
+}
+
+async function processContainers() {
+  // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
+  result_containers = document.getElementsByClassName("result_container");
+  for (let i = 0; i < result_containers.length; i++) {
+    const containerName = result_containers[i].attributes[0].nodeValue;
+
+    // ATTENDANCE
+    await getAttendanceSummary(containerName);
+
+    // COMMENTS AND PSYCHO MOTOR REPORTS
+    await getCommentsAndPsycho(containerName);
+
+    // ACADEMIC PERFORMANCE
+    await getResult(containerName);
+
+  }
+
+  removeSpinnerModal();
 }
 
 function sortTerm(terms) {
@@ -1806,22 +1789,20 @@ function getResult(value) {
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               <b>${result.position}</b>
               </td>
-              <td style="color: ${
-                result.grade.includes("F")
-                  ? "red"
-                  : result.grade.includes("A")
-                  ? "blue"
-                  : "black"
-              } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
+              <td style="color: ${result.grade.includes("F")
+              ? "red"
+              : result.grade.includes("A")
+                ? "blue"
+                : "black"
+            } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
-              <td style="color: ${
-                result.grade.includes("F")
-                  ? "red"
-                  : result.grade.includes("A")
-                  ? "blue"
-                  : "black"
-              } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td style="color: ${result.grade.includes("F")
+              ? "red"
+              : result.grade.includes("A")
+                ? "blue"
+                : "black"
+            } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
             </tr>`;
@@ -2031,13 +2012,12 @@ function getLessonPlan(week) {
       document.getElementById("lesson_plan_for").innerHTML =
         "LESSON PLAN FOR " + localStorage["LESSON-PLAN"].split("-")[1];
 
-      document.getElementById("lp_status").innerHTML = `<span class="badge ${
-        data.status == "APPROVED"
-          ? `bg-success`
-          : data.status == "DISAPPROVED"
+      document.getElementById("lp_status").innerHTML = `<span class="badge ${data.status == "APPROVED"
+        ? `bg-success`
+        : data.status == "DISAPPROVED"
           ? `bg-danger`
           : `bg-warning`
-      }"><b>${data.status}</b></span>`;
+        }"><b>${data.status}</b></span>`;
 
       document.getElementById("week1").innerHTML =
         ` <option value="${data.week}">${data.week}</option>` +
@@ -2145,36 +2125,31 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "uploads-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-        <div onclick="collapseContent('upload_${
-          upload.id
-        }')" class="card-header">
-            <small id="date_time" class="m-0 text-primary">${
-              upload.date
+        <div onclick="collapseContent('upload_${upload.id
+            }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${upload.date
             }</small>
             <br>
             <span class="m-0 text-primary">
-                <a  id="topic" data-toggle="collapse" href="#demo">${
-                  upload.url
-                }</a>
+                <a  id="topic" data-toggle="collapse" href="#demo">${upload.url
+            }</a>
             </span>
         </div>
         <div id="upload_${upload.id}" class="collapse"
             class="card-body text-dark bg-light">
            
- <object data="${
-   domain +
-   "/backend/storage/app/public/fileupload/" +
-   localStorage["school"] +
-   "/learninghub/" +
-   upload.url
- }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
+ <object data="${domain +
+            "/backend/storage/app/public/fileupload/" +
+            localStorage["school"] +
+            "/learninghub/" +
+            upload.url
+            }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
         <embed
-            src="${
-              domain +
-              "/backend/storage/app/public/fileupload/" +
-              localStorage["school"] +
-              "/learninghub/" +
-              upload.url
+            src="${domain +
+            "/backend/storage/app/public/fileupload/" +
+            localStorage["school"] +
+            "/learninghub/" +
+            upload.url
             }"
             type="application/pdf" class="img-fluid">
     </object>
@@ -2234,12 +2209,10 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "assignments-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-              <div onclick="collapseContent('assignment_${
-                assignment.id
-              }')" class="card-header">
-                  <small id="date_time" class="m-0 text-primary">${
-                    assignment.date
-                  }</small>
+              <div onclick="collapseContent('assignment_${assignment.id
+            }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${assignment.date
+            }</small>
 
                  <!--<a  onclick="" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
@@ -2249,16 +2222,14 @@ function getLearningHubMaterials(subject_id) {
                 <div class="">
                         <div class="left">
                               <span class="m-0 text-primary">
-                                  <a  id="topic" data-toggle="collapse" href="#demo">${
-                                    assignment.topic
-                                  } 
+                                  <a  id="topic" data-toggle="collapse" href="#demo">${assignment.topic
+            } 
                                   
                                   <sup> 
-                                  ${
-                                    assignment.status == "OPEN"
-                                      ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
-                                      : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
-                                  }
+                                  ${assignment.status == "OPEN"
+              ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
+              : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
+            }
                                   </sup>
                                   </a>
                               </span>
@@ -2266,11 +2237,9 @@ function getLearningHubMaterials(subject_id) {
 
                         <div class="right">
                           <!--<input type="number" placeholder="score" class="input-field no-arrow" min="0">-->
-                          <button ${
-                            assignment.status == "CLOSE" ? `hidden` : ``
-                          } onclick="takeAssignment('${assignment.topic}','${
-            assignment.mark_obtainable
-          }','${assignment.id}')" class="submit-btn">Take Assignment</button> 
+                          <button ${assignment.status == "CLOSE" ? `hidden` : ``
+            } onclick="takeAssignment('${assignment.topic}','${assignment.mark_obtainable
+            }','${assignment.id}')" class="submit-btn">Take Assignment</button> 
                         </div>
 
                         
@@ -2344,10 +2313,10 @@ function getNote() {
 
   downloadAsPDF(
     localStorage["LH_SUBJECT_CLASS"] +
-      " " +
-      JSON.parse(localStorage["user_data"]).data.class.class_name +
-      "_" +
-      getDate().split("-")[0],
+    " " +
+    JSON.parse(localStorage["user_data"]).data.class.class_name +
+    "_" +
+    getDate().split("-")[0],
     "noteContainer"
   );
 }
@@ -2522,28 +2491,24 @@ function loadFeeBreakdown() {
   data.fee_breakdown.forEach((fee) => {
     document.getElementById("fee_table").innerHTML += `
     <tr>
-         ${
-           fee.type == "COMPULSORY" ||
-           approved_optional_fee.includes(fee.id.toString())
-             ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+         ${fee.type == "COMPULSORY" ||
+        approved_optional_fee.includes(fee.id.toString())
+        ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
          value="${fee.id}" checked  onclick="this.checked = !this.checked">`
-             : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
-             value="${fee.id}"  ${
-                 optional_fee.includes(fee.id.toString()) ? `checked` : ``
-               }>`
-         }
+        : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+             value="${fee.id}"  ${optional_fee.includes(fee.id.toString()) ? `checked` : ``
+        }>`
+      }
          <td>${c}.</td>
          <td>${fee.description}</td>
-         <td>${
-           approved_optional_fee.includes(fee.id.toString())
-             ? `OPTIONAL (Approved)`
-             : fee.type
-         }</td>
-         <td>${
-           fee.class == JSON.parse(localStorage["user_data"]).data.class.id
-             ? JSON.parse(localStorage["user_data"]).data.class.class_name
-             : fee.class
-         }</td>
+         <td>${approved_optional_fee.includes(fee.id.toString())
+        ? `OPTIONAL (Approved)`
+        : fee.type
+      }</td>
+         <td>${fee.class == JSON.parse(localStorage["user_data"]).data.class.id
+        ? JSON.parse(localStorage["user_data"]).data.class.class_name
+        : fee.class
+      }</td>
         <td>₦${formatNumber(fee.amount)}</td>
     </tr>
     `;
@@ -2636,9 +2601,9 @@ function generatePayment() {
     if (
       !confirm(
         "Kindly confirm you would like to add the selected optional fee for " +
-          localStorage["current_session"] +
-          " " +
-          localStorage["current_term"]
+        localStorage["current_session"] +
+        " " +
+        localStorage["current_term"]
       )
     ) {
       return 0;
@@ -2773,11 +2738,10 @@ async function getPaymentSlip(loadPage) {
          <td>${c}.</td>
          <td>${fee.description}</td>
          <td>${fee.type}</td>
-         <td>${
-           fee.class == JSON.parse(localStorage["user_data"]).data.class.id
-             ? JSON.parse(localStorage["user_data"]).data.class.class_name
-             : fee.class
-         }</td>
+         <td>${fee.class == JSON.parse(localStorage["user_data"]).data.class.id
+          ? JSON.parse(localStorage["user_data"]).data.class.class_name
+          : fee.class
+        }</td>
         <td>₦${formatNumber(fee.amount)}</td>
     </tr>
     `;
@@ -3053,12 +3017,12 @@ function getMessage(message_type, user_type) {
 
   fetch(
     ip +
-      "/api/admin/communication/" +
-      id +
-      "/" +
-      message_type +
-      "/" +
-      user_type,
+    "/api/admin/communication/" +
+    id +
+    "/" +
+    message_type +
+    "/" +
+    user_type,
     {
       method: "GET",
       headers: {
@@ -3100,31 +3064,24 @@ function getMessage(message_type, user_type) {
                       <td><b>${data[i].date}</b></td>
                       <td>
   
-                          ${`<span class="badge ${
-                            read ? `bg-success` : `bg-danger`
-                          }"><b>${read ? `READ` : `UNREAD`}</b></span>`}
+                          ${`<span class="badge ${read ? `bg-success` : `bg-danger`
+              }"><b>${read ? `READ` : `UNREAD`}</b></span>`}
   
                           <br>
   
-                          ${`<span class="badge ${
-                            replied ? `bg-success` : `bg-danger`
-                          }"><b>${
-                            replied ? `REPLIED` : `NOT REPLIED`
-                          }</b></span>`}
+                          ${`<span class="badge ${replied ? `bg-success` : `bg-danger`
+              }"><b>${replied ? `REPLIED` : `NOT REPLIED`
+              }</b></span>`}
   
                        </td>
   
                         <td>
-                          <button onclick="saveDataInLocalStorage('communication','${
-                            data[i]
-                          }'); 
-                          editMessage('${data[i].id}','${
-              data[i].sender
-            }','VIEW'); populateViewMessageModal('${data[i].sender_name}','${
-              data[i].sender
-            }','${data[i].receiver_name}','${data[i].message_type}','${
-              data[i].id
-            }'); openModal('viewMessageModal');" type="button" class="btn btn-primary btn-block  btn-sm">
+                          <button onclick="saveDataInLocalStorage('communication','${data[i]
+              }'); 
+                          editMessage('${data[i].id}','${data[i].sender
+              }','VIEW'); populateViewMessageModal('${data[i].sender_name}','${data[i].sender
+              }','${data[i].receiver_name}','${data[i].message_type}','${data[i].id
+              }'); openModal('viewMessageModal');" type="button" class="btn btn-primary btn-block  btn-sm">
                               <i class="fa fa-eye"></i> View Message
                           </button>
                         </td>
@@ -3177,28 +3134,24 @@ function populateViewMessageModal(
     <div class="form-group">
         <label for="message-text" class="col-form-label">Message:</label>
         <textarea style="height:180px" id="view_message" class="form-control" id="message-text"
-            disabled>${
-              JSON.stringify(localStorage["communication"]).message
-            }</textarea>
+            disabled>${JSON.stringify(localStorage["communication"]).message
+    }</textarea>
     </div>
 
     <div class="form-group">
         <label for="message-text" class="col-form-label">Reply:</label>
-        <textarea style="height:180px" id="reply" class="form-control" id="message-text" ${
-          receiver != JSON.parse(localStorage["user_data"]).data.id
-            ? `disabled`
-            : ``
-        }>${
-    reply == "null"
+        <textarea style="height:180px" id="reply" class="form-control" id="message-text" ${receiver != JSON.parse(localStorage["user_data"]).data.id
+      ? `disabled`
+      : ``
+    }>${reply == "null"
       ? `No response yet ... `
       : JSON.stringify(localStorage["communication"]).reply
-  }</textarea>
+    }</textarea>
     </div>
 </form>
 </div>
-<div class="modal-footer" ${
-    receiver != JSON.parse(localStorage["user_data"]).data.id ? `hidden` : ``
-  }>
+<div class="modal-footer" ${receiver != JSON.parse(localStorage["user_data"]).data.id ? `hidden` : ``
+    }>
 <button onclick="editMessage(document.getElementById('communication_id').value,'REPLY')" class="btn btn-primary btn-block  btn-sm">
 
     <i class="fa fa-comments"></i> Reply Message
@@ -3334,17 +3287,14 @@ function loadCustomSessionTerm() {
     })
 
     .then((data) => {
-      document.getElementById("session_term0").innerHTML = `<option value="${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }">${
-        localStorage["current_session"] + "-" + localStorage["current_term"]
-      }</option>`;
+      document.getElementById("session_term0").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
+        }">${localStorage["current_session"] + "-" + localStorage["current_term"]
+        }</option>`;
       if (data.length > 0) {
         data.forEach((sessions) => {
           document.getElementById(
             "session_term0"
-          ).innerHTML += `<option value="${
-            sessions.session + "-" + sessions.term
+          ).innerHTML += `<option value="${sessions.session + "-" + sessions.term
           }">${sessions.session + "-" + sessions.term}</option>`;
         });
       }
@@ -3509,19 +3459,17 @@ function getScheduledClass() {
             document.getElementById("upcoming_class").innerHTML += `
            <tr>
                   <td>${uc}.</td>
-                  <td><small>${LC.topic} ${
-              LC.status == "LIVE"
+                  <td><small>${LC.topic} ${LC.status == "LIVE"
                 ? ` <span class="badge bg-success"
                   style="color: white;"><b> LIVE </b></span>`
                 : ``
-            }</small></td>
+              }</small></td>
                   <td><small>${LC.date}</small></td>
                   <td><small>${LC.time}</small></td>
                   <td>
 
-                      <a onclick="openLiveClass('${LC.topic}')" ${
-              LC.status != "LIVE" ? `hidden` : ``
-            } class="btn btn-sm btn-primary btn-block"><i
+                      <a onclick="openLiveClass('${LC.topic}')" ${LC.status != "LIVE" ? `hidden` : ``
+              } class="btn btn-sm btn-primary btn-block"><i
                                   class="fas fa-video"></i></a>
 
                   </td>
@@ -3608,8 +3556,8 @@ function getContinuousAssessment() {
   openSpinnerModal("Continuous Assessment");
   fetch(
     ip +
-      "/api/student/continuous-assessment/" +
-      JSON.parse(localStorage["user_data"]).data.id,
+    "/api/student/continuous-assessment/" +
+    JSON.parse(localStorage["user_data"]).data.id,
     {
       method: "GET",
       headers: {
@@ -3645,12 +3593,11 @@ function getContinuousAssessment() {
                   <td>${uc}.</td>
                   <td><small>${assignment.subject}</small></td>
                   <td><small>${assignment.date}</small></td>
-                  <td><b><small>${
-                    assignment.graded == "FALSE"
-                      ? ` <span class="badge bg-danger"
+                  <td><b><small>${assignment.graded == "FALSE"
+            ? ` <span class="badge bg-danger"
                   style="color: white;"><b> NOT GRADED </b></span>`
-                      : assignment.score
-                  }</small></b></td>
+            : assignment.score
+          }</small></b></td>
             </tr>
            `;
         uc = uc + 1;

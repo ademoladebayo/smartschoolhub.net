@@ -29,7 +29,11 @@ class GeneralController extends Controller
     {
         if (str_contains($sort, 'STD')) {
             $result_session = DB::select('SELECT distinct session,  term FROM subject_registration where student_id =' . explode("-", $sort)[1]);
-            return  $result_session;
+            return $result_session;
+
+        } else if (str_contains($sort, 'PAY')) {
+            $payment_session = DB::select('SELECT distinct session,  term FROM payment_history where student_id =' . explode("-", $sort)[1]);
+            return $payment_session;
         } else {
             if ($sort == "DESC") {
                 return DB::table('session')->select('session')->orderBy('id', 'DESC')->get();
