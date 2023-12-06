@@ -1578,7 +1578,7 @@ function getAllDebitor() {
                       data.content[i].last_name
                     }</td>  
                     <td>${
-                      data.content[i].graduation != "-"
+                      data.content[i].graduation !== "-"
                         ? data.content[i].graduation_details
                         : data.content[i].class.class_name
                     }</td>
@@ -1613,7 +1613,7 @@ function getAllDebitor() {
             parseInt(data.content[i].total_balance)
           )}</b></td>
 
-                    <td ${data.content[i].graduation != "-" ? `hiddenn` : ``}>
+                    <td ${data.content[i].graduation != "-" ? `not hidden` : ``}>
                           <a onclick="storePDStudentId(${data.content[i].id},${
             data.content[i].class != null ? data.content[i].class.id : ``
           },'${
