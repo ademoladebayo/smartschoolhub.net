@@ -28,14 +28,14 @@ class BursaryService
         $BursaryRepository = new BursaryRepository();
         $bursary = BursaryModel::where('username', $request->id)->get()->first();
         if ($bursary == null) {
-            return  response(['success' => false, 'message' => "Invalid Admin!"]);
+            return response(['success' => false, 'message' => "Invalid Admin!"]);
         } else {
 
             if ($BursaryRepository->getPassword($request->id) == $request->password) {
                 $token = $bursary->createToken('token')->plainTextToken;
-                return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, Bursary', 'data' => $bursary, 'dashboard_information' => ""]);
+                return response(['token' => $token, 'success' => true, 'message' => 'Welcome, Bursary', 'data' => $bursary, 'dashboard_information' => ""]);
             } else {
-                return  response(['success' => false, 'message' => "Invalid Password"]);
+                return response(['success' => false, 'message' => "Invalid Password"]);
             }
         }
     }
@@ -56,8 +56,8 @@ class BursaryService
 
         $payment_history = PaymentHistoryModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
         $expenses = ExpenseModel::select('amount')->where('session', $request->session)->where('term', $request->term)->get();
-        $descriptions =  PaymentHistoryModel::select('payment_description')->where('session', $request->session)->where('term', $request->term)->get();
-        $total_debt =  intval(DebitorModel::sum('amount'));
+        $descriptions = PaymentHistoryModel::select('payment_description')->where('session', $request->session)->where('term', $request->term)->get();
+        $total_debt = intval(DebitorModel::sum('amount'));
 
 
         foreach ($descriptions as $description) {
@@ -85,7 +85,7 @@ class BursaryService
 
         // CHART DATA
         // EXPECTED FEE , TOTAL COLLECTED , SESSION/TERM
-        $active_students = StudentModel::where('profile_status', 'ENABLED')->where('class','!=','GRADUATED')->get();
+        $active_students = StudentModel::where('profile_status', 'ENABLED')->where('class', '!=', 'GRADUATED')->get();
         $session = $request->session;
         $terms = ['FIRST TERM', 'SECOND TERM', 'THIRD TERM'];
 
@@ -137,7 +137,7 @@ class BursaryService
 
 
         sort($expenses_fee);
-        $expense_min =  0;
+        $expense_min = 0;
         foreach ($expenses_fee as $ef) {
             if ($ef != 0) {
                 $expense_min = $ef;
@@ -157,7 +157,7 @@ class BursaryService
 
         $chart_data = ['fee' => ['expected' => $expected, 'collected' => $collected], 'expenses' => $expenses, 'fee_min' => $fee_min, 'expense_min' => $expense_min];
 
-        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'total_manual_payment' => $total_manual_payment, 'total_arrears' => $total_arrears, 'total_bank' => $total_bank, 'total_cash' => $total_cash, 'total_expense' =>  $total_expense,  'total_debt' => $total_debt, 'chart_data' => $chart_data]);
+        return response()->json(['student_no' => $StudentRepository->allStudentCount(), 'teacher_no' => $TeacherRepository->allTeacherCount(), 'total_manual_payment' => $total_manual_payment, 'total_arrears' => $total_arrears, 'total_bank' => $total_bank, 'total_cash' => $total_cash, 'total_expense' => $total_expense, 'total_debt' => $total_debt, 'chart_data' => $chart_data]);
     }
 
     // FEE MANAGEMENT
@@ -194,19 +194,19 @@ class BursaryService
 
     public function getAllOptionalFeeRequest(Request $request)
     {
-        $fee_request =  OptionalFeeRequestModel::where("session", $request->session)->where("term", $request->term)->with("student", "fee")->orderBy('id','DESC')->get();
+        $fee_request = OptionalFeeRequestModel::where("session", $request->session)->where("term", $request->term)->with("student", "fee")->orderBy('id', 'DESC')->get();
 
         foreach ($fee_request as $request) {
             $request->class_name = ClassModel::find(StudentModel::find($request->student_id)->class)->class_name;
         }
 
-        return  $fee_request;
+        return $fee_request;
     }
 
     public function updateOptionalFeeRequest(Request $request)
     {
         $optionalFeeRequest = OptionalFeeRequestModel::find($request->id);
-        $optionalFeeRequest->approved =  $request->status;
+        $optionalFeeRequest->approved = $request->status;
         $optionalFeeRequest->save();
         return response(['success' => true, 'message' => "Action was successful."]);
     }
@@ -343,7 +343,7 @@ class BursaryService
     // DEBITOR MANAGEMENT
     public function syncLastestDebitor(Request $request)
     {
-        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel = ControlPanelModel::find(1);
         // CHECK IF ACTION IS PERMITTED
         if (explode("-", $ControlPanelModel->debitor_list_last_update)[1] == "NO") {
             return response(['success' => false, 'message' => "This action is locked, Contact your admin."]);
@@ -353,9 +353,9 @@ class BursaryService
         $all_student = StudentModel::select("id", "class")->where("profile_status", "ENABLED")->get();
         $c = 0;
         foreach ($all_student as $student) {
-            $total_payable =  $this->getPayableForClass($student->class, $request->session, $request->term);
+            $total_payable = $this->getPayableForClass($student->class, $request->session, $request->term);
             $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
-            $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
+            $total_paid = $this->getTotalPaid($student->id, $request->session, $request->term);
             $balance = ($total_payable + $optional_fee) - $total_paid;
 
             if ($balance > 0) {
@@ -392,10 +392,10 @@ class BursaryService
     }
 
 
-    public function getPayableForClass(String $class_id, String $session, String  $term)
+    public function getPayableForClass(string $class_id, string $session, string $term)
     {
         $class_sector = ClassModel::select('class_sector')->where('id', $class_id)->get()[0]->class_sector;
-        $fees =  FeeModel::orWhere('class', $class_id)->where("type", "COMPULSORY")->where('session', $session)->where('term', $term)
+        $fees = FeeModel::orWhere('class', $class_id)->where("type", "COMPULSORY")->where('session', $session)->where('term', $term)
             ->orWhere('class', $class_sector)->where("type", "COMPULSORY")->where('session', $session)->where('term', $term)
             ->orWhere('class', 'ALL STUDENT')->where("type", "COMPULSORY")->where('session', $session)->where('term', $term)->get();
         $expected_amount = 0;
@@ -406,7 +406,7 @@ class BursaryService
     }
 
 
-    public function getOptionalFeeRequest(String $student_id, String $session, String  $term)
+    public function getOptionalFeeRequest(string $student_id, string $session, string $term)
     {
         $optional_fee = 0;
         $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
@@ -425,7 +425,7 @@ class BursaryService
     }
 
 
-    public function getOptionalFeeId(String $student_id, String $session, String  $term)
+    public function getOptionalFeeId(string $student_id, string $session, string $term)
     {
         $optional_fee = [];
         $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
@@ -441,7 +441,7 @@ class BursaryService
         return $optional_fee;
     }
 
-    public function getApprovedOptionalFeeId(String $student_id, String $session, String  $term)
+    public function getApprovedOptionalFeeId(string $student_id, string $session, string $term)
     {
         $optional_fee = [];
         $OptionalFeeRequest = OptionalFeeRequestModel::select('fee_id')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->where('approved', 1)->get();
@@ -457,7 +457,7 @@ class BursaryService
         return $optional_fee;
     }
 
-    public function getTotalPaid(String $student_id, String $session, String  $term)
+    public function getTotalPaid(string $student_id, string $session, string $term)
     {
         $payment_history = PaymentHistoryModel::select('amount')->where('student_id', $student_id)->where('session', $session)->where('term', $term)->get();
         $total_paid = 0;
@@ -470,7 +470,7 @@ class BursaryService
     // DEBITORS LIST
     public function allDebitor(Request $request)
     {
-        $ControlPanelModel =  ControlPanelModel::find(1);
+        $ControlPanelModel = ControlPanelModel::find(1);
         $last_checked = explode("-", $ControlPanelModel->debitor_list_last_update)[0];
 
         //LOOP THROUGH ALL STUDENT
@@ -491,12 +491,12 @@ class BursaryService
                 Log::alert("IF : " . $student->first_name);
                 if ($student->class == "GRADUATED") {
                     Log::alert("GRADUATION : " . $student->graduation);
-                    $class_before_graduation =  explode("_", $student->graduation)[0];
+                    $class_before_graduation = explode("_", $student->graduation)[0];
                     $session_before_graduation = explode("_", $student->graduation)[1];
                     $term_before_graduation = explode("_", $student->graduation)[2];
                     $student->graduation_details = "GRADUATED (" . $session_before_graduation . "-" . $term_before_graduation . ")";
-                    $student["class"] = null;
-                }else{
+                    $student["class"] = ClassModel::find($class_before_graduation);
+                } else {
                     $student["class"] = ClassModel::find($student->class);
                 }
 
@@ -504,7 +504,7 @@ class BursaryService
                 // $expected_fee = $this->getPayableForClass($class_before_graduation, $session_before_graduation, $term_before_graduation);
                 // $optional_fee = $this->getOptionalFeeRequest($student->id, $session_before_graduation, $term_before_graduation);
                 // $total_paid =  $this->getTotalPaid($student->id, $session_before_graduation, $term_before_graduation);
-                $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
+                $total_paid = $this->getTotalPaid($student->id, $request->session, $request->term);
                 $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
             } else {
                 // SO FOR EACH STUDENT, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
@@ -512,7 +512,7 @@ class BursaryService
 
                 $paymentHistory = PaymentHistoryModel::select('class_id')->where('student_id', $student->id)->where('session', $request->session)->where('term', $request->term)->get();
                 $class = "";
-                
+
                 if (count($paymentHistory) != 0) {
                     // USE CLASS STUDENT WAS IN
                     $class = $paymentHistory[0]->class_id;
@@ -526,7 +526,7 @@ class BursaryService
 
                 $expected_fee = $this->getPayableForClass($class, $request->session, $request->term);
                 $optional_fee = $this->getOptionalFeeRequest($student->id, $request->session, $request->term);
-                $total_paid =  $this->getTotalPaid($student->id, $request->session, $request->term);
+                $total_paid = $this->getTotalPaid($student->id, $request->session, $request->term);
                 $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
             }
 
@@ -563,7 +563,7 @@ class BursaryService
         // SO GET STUDENT'S, GET EXPECTED FEE FOR THE TERM + THEIR REQUESTED OPTIONAL, TOTAL PAID , ARREARS AND TOTAL BALANCE
         $expected_fee = $bursaryService->getPayableForClass($class, $request->session, $request->term);
         $optional_fee = $bursaryService->getOptionalFeeRequest($request->student_id, $request->session, $request->term);
-        $total_paid =  $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
+        $total_paid = $bursaryService->getTotalPaid($request->student_id, $request->session, $request->term);
 
 
         $percentage_paid = ($total_paid / ($expected_fee + $optional_fee)) * 100;
@@ -589,7 +589,7 @@ class BursaryService
             }
         }
 
-        return  $PortalSubscriptionModel;
+        return $PortalSubscriptionModel;
     }
 
     function editPortalSubscription(Request $request)
