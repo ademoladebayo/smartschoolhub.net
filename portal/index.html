@@ -254,7 +254,7 @@
 
             .then((data) => {
                 removeSpinnerModal();
-                document.getElementById('schools').innerHTML = ``;
+                document.getElementById('schools').innerHTML = `<option value="">CLICK TO SELECT YOUR SCHOOL</option>`;
                 data.forEach(school => {
                     document.getElementById('schools').innerHTML +=
                         `
