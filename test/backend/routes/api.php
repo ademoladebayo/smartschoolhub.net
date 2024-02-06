@@ -38,7 +38,7 @@ Route::middleware([ActivityLog::class])->group(function () {
     Route::get('admin/create-lesson-note', 'AdminController@lessonPlan', function () {
     })->middleware(Cors::class);
 
-    Route::middleware('auth:sanctum')->group(function () {
+    // Route::middleware('auth:sanctum')->group(function () {
         // ADMIN {CLASS}
         Route::post('admin/create-class', 'AdminController@createClass', function () {
         })->middleware(Cors::class);
@@ -237,7 +237,7 @@ Route::middleware([ActivityLog::class])->group(function () {
 
 
 
-    Route::middleware('auth:sanctum')->group(function () {
+    // Route::middleware('auth:sanctum')->group(function () {
         // TEACHER {SUBJECT}
         Route::post('teacher/register-subject', 'TeacherController@registerSubject', function () {
         })->middleware(Cors::class);
@@ -339,7 +339,7 @@ Route::middleware([ActivityLog::class])->group(function () {
 
         Route::delete('teacher/live-class/{id}', 'TeacherController@deleteLiveClass', function () {
         })->middleware(Cors::class);
-    });
+    // });
 
     // =============================================================================
     //               END OF TEACHER ROUTE
@@ -354,7 +354,7 @@ Route::middleware([ActivityLog::class])->group(function () {
     })->middleware(Cors::class)->withoutMiddleware([ActivityLog::class]);
 
 
-    Route::middleware('auth:sanctum')->group(function () {
+    // Route::middleware('auth:sanctum')->group(function () {
         // STUDENT {SUBJECT}
         Route::post('student/register-subject', 'StudentController@registerSubject', function () {
         })->middleware(Cors::class);
@@ -403,7 +403,7 @@ Route::middleware([ActivityLog::class])->group(function () {
         //STUDENT {CONTINOUS ASSESSMENT}
         Route::get('student/continuous-assessment/{id}', 'StudentController@getContinuousAssessment', function () {
         })->middleware(Cors::class);
-    });
+    // });
 
     // =============================================================================
     //               END OF STUDENT ROUTE
@@ -424,7 +424,7 @@ Route::middleware([ActivityLog::class])->group(function () {
     Route::get('bursary/portal-subscription', 'BursaryController@getPortalSubscription', function () {
     })->middleware(Cors::class)->withoutMiddleware([ActivityLog::class]);
 
-    Route::middleware('auth:sanctum')->group(function () {
+    // Route::middleware('auth:sanctum')->group(function () {
         // BURSARY {FEE MANAGEMENT}
         Route::post('bursary/create-fee', 'BursaryController@createFee', function () {
         })->middleware(Cors::class);
@@ -504,7 +504,7 @@ Route::middleware([ActivityLog::class])->group(function () {
         Route::delete('bursary/portal-subscription/{id}', 'BursaryController@deletePortalSubscription', function () {
         })->middleware(Cors::class);
         
-    });
+    // });
 
     // =============================================================================
     //               END OF BURSARY ROUTE
@@ -539,4 +539,4 @@ Route::middleware([ActivityLog::class])->group(function () {
     // END OF GENERAL ROUTE
     // ===================================================================
 
-});
+// });

@@ -3,6 +3,7 @@
 namespace App\Observer;
 
 use App\Model\TeacherAttendanceModel;
+use Illuminate\Support\Facades\DB;
 
 class DuplicateAttendanceObserverForTeacherAttendance
 {
