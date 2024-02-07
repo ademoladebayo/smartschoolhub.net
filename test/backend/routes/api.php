@@ -527,14 +527,14 @@ Route::middleware([ActivityLog::class])->group(function () {
 
 
 
-    Route::middleware('auth:sanctum')->group(function () {
+    // Route::middleware('auth:sanctum')->group(function () {
         Route::get('general/all-session/{sort}', 'GeneralController@allSession', function () {
         })->middleware(Cors::class);
 
         // GET STORED CREDENTIALS
         Route::get('general/stored-credential', 'GeneralController@storedCredentials', function () {
         })->middleware(Cors::class);
-    });
+    // });
     // ===================================================================
     // END OF GENERAL ROUTE
     // ===================================================================
