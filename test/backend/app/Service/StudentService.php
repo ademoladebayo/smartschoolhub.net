@@ -44,6 +44,7 @@ class StudentService
         $info = $student;
         if (count($student) > 0) {
             $student = $student[0];
+            $student['class'] = ClassModel::find($student->class);
             $token = "";//$student->createToken('token')->plainTextToken;
             return response(['token' => $token, 'success' => true, 'message' => 'Welcome, ' . $student->first_name, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student), 'info' => $info]);
         } else {
