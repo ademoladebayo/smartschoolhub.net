@@ -446,7 +446,7 @@ function signIn() {
 
           setTimeout(function () {
             console.log(data.info);
-            //window.location.href = "dashboard.html";
+            window.location.href = "dashboard.html";
           }, 1000);
         } else {
           errortoast("<b>" + data.message + "</b>");
