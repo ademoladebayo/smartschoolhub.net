@@ -44,7 +44,7 @@ class StudentService
         $info = $student;
         if (count($student) > 0) {
             $student = $student[0];
-            $token = $student->createToken('token')->plainTextToken;
+            $token = "";//$student->createToken('token')->plainTextToken;
             return response(['token' => $token, 'success' => true, 'message' => 'Welcome, ' . $student->first_name, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student), 'info' => $info]);
         } else {
             return response(['success' => false, 'message' => "Invalid Credential"]);
