@@ -9,10 +9,10 @@ var domain = localStorage["domain"];
 answer = [];
 
 window.addEventListener("online", () =>
-  successtoast("<b>INTERNET CONNECTED</b>")
+    successtoast("<b>INTERNET CONNECTED</b>")
 );
 window.addEventListener("offline", () =>
-  errortoast("<b>INTERNET DISCONNECTED</b>")
+    errortoast("<b>INTERNET DISCONNECTED</b>")
 );
 
 getSchoolDetails();
@@ -21,8 +21,8 @@ loadSchoolColor();
 collapseSidebar();
 
 function loadSideNav(page) {
-  if ("isParent" in localStorage) {
-    document.getElementById("side_nav").innerHTML = `
+    if ("isParent" in localStorage) {
+        document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
         <a  id="dashboard" href="dashboard.html" class="nav-link"><i
@@ -117,8 +117,8 @@ function loadSideNav(page) {
     
     
     `;
-  } else {
-    document.getElementById("side_nav").innerHTML = `
+    } else {
+        document.getElementById("side_nav").innerHTML = `
     <ul class="nav nav-sidebar-menu sidebar-toggle-view">
     <li class="nav-item">
         <a  id="dashboard" href="dashboard.html" class="nav-link"><i
@@ -209,151 +209,151 @@ function loadSideNav(page) {
     
     
     `;
-  }
-  document.getElementById(page).className += " menu-active";
+    }
+    document.getElementById(page).className += " menu-active";
 }
 
 function changeLogo() {
-  document.getElementById("logo").innerHTML =
-    document.getElementById("logo").innerHTML != ""
-      ? ""
-      : `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
+    document.getElementById("logo").innerHTML =
+        document.getElementById("logo").innerHTML != "" ?
+        "" :
+        `<h1 style="font-weight: bold; font-family: Rowdies; color:white;">
         <i style="color: white; " class="fas fa-graduation-cap fa-xs"></i> SSHUB </h1>`;
 }
 
 function getCurrentSession() {
-  fetch(ip + "/api/general/current-session", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-  })
-    .then(function (res) {
-      console.log(res.status);
-      if (res.status == 401) {
-        removeSpinnerModal();
-        openAuthenticationModal();
-        return 0;
-      }
-      return res.json();
-    })
+    fetch(ip + "/api/general/current-session", {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-type": "application/json",
+                Authorization: "Bearer " + localStorage["token"],
+            },
+        })
+        .then(function(res) {
+            console.log(res.status);
+            if (res.status == 401) {
+                removeSpinnerModal();
+                openAuthenticationModal();
+                return 0;
+            }
+            return res.json();
+        })
 
     .then((data) => {
-      if (data.success) {
-        localStorage.setItem("current_session", data["session"].session);
-        localStorage.setItem("current_term", data["session"].term);
-        document.getElementById(
-          "session_term"
-        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            if (data.success) {
+                localStorage.setItem("current_session", data["session"].session);
+                localStorage.setItem("current_term", data["session"].term);
+                document.getElementById(
+                    "session_term"
+                ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >${data["session"].session} - ${data["session"].term}</span></div>`;
-      } else {
-        document.getElementById(
-          "session_term"
-        ).innerHTML = `<div id="" class="item-number"><span class="counter"
+            } else {
+                document.getElementById(
+                    "session_term"
+                ).innerHTML = `<div id="" class="item-number"><span class="counter"
             >Session not set !</span></div>`;
 
-        alert(data.message);
-      }
-    })
-    .catch((err) => console.log(err));
+                alert(data.message);
+            }
+        })
+        .catch((err) => console.log(err));
 }
 
 function allSession() {
-  session = [];
-  fetch(ip + "/api/general/all-session/ASC", {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-  })
-    .then(function (res) {
-      console.log(res.status);
-      if (res.status == 401) {
-        removeSpinnerModal();
-        openAuthenticationModal();
-        return 0;
-      }
-      return res.json();
-    })
+    session = [];
+    fetch(ip + "/api/general/all-session/ASC", {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-type": "application/json",
+                Authorization: "Bearer " + localStorage["token"],
+            },
+        })
+        .then(function(res) {
+            console.log(res.status);
+            if (res.status == 401) {
+                removeSpinnerModal();
+                openAuthenticationModal();
+                return 0;
+            }
+            return res.json();
+        })
 
     .then((data) => {
-      data.forEach((sessions) => {
-        session.push(sessions.session);
-      });
-      return session;
-    })
-    .catch((err) => console.log(err));
+            data.forEach((sessions) => {
+                session.push(sessions.session);
+            });
+            return session;
+        })
+        .catch((err) => console.log(err));
 }
 
 function formatNumber(number) {
-  console.log("NUMBER: " + number);
-  return number.toLocaleString(
-    undefined, // leave undefined to use the visitor's browser
-    // locale or a string like 'en-US' to override it.
-    { minimumFractionDigits: 0 }
-  );
+    console.log("NUMBER: " + number);
+    return number.toLocaleString(
+        undefined, // leave undefined to use the visitor's browser
+        // locale or a string like 'en-US' to override it.
+        { minimumFractionDigits: 0 }
+    );
 }
 
 function loadDashBoardInformation() {
-  student_id = JSON.parse(localStorage["user_data"]).data.student_id;
+    student_id = JSON.parse(localStorage["user_data"]).data.student_id;
 
-  // IMAGE URL
-  url =
-    domain +
-    "/backend/storage/app/public/fileupload/student/" +
-    student_id +
-    ".png";
+    // IMAGE URL
+    url =
+        domain +
+        "/backend/storage/app/public/fileupload/student/" +
+        student_id +
+        ".png";
 
-  document.getElementById("user_name").innerHTML = `<b>${
+    document.getElementById("user_name").innerHTML = `<b>${
     JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
   }</b>`;
-  document.getElementById("user_name1").innerHTML = `<b>${
+    document.getElementById("user_name1").innerHTML = `<b>${
     JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
   }</b>`;
 
-  document.getElementById("cbt_no").innerHTML = JSON.parse(
-    localStorage["user_data"]
-  ).dashboard_information.cbt.cbt_no;
-  document.getElementById("attendance_perc").innerHTML = JSON.parse(
-    localStorage["user_data"]
-  ).dashboard_information.attendance;
+    document.getElementById("cbt_no").innerHTML = JSON.parse(
+        localStorage["user_data"]
+    ).dashboard_information.cbt.cbt_no;
+    document.getElementById("attendance_perc").innerHTML = JSON.parse(
+        localStorage["user_data"]
+    ).dashboard_information.attendance;
 
-  // STUDENT_IMAGE
-  document.getElementById("student_image").src = url;
+    // STUDENT_IMAGE
+    document.getElementById("student_image").src = url;
 }
 
 function getProfileData() {
-  document.getElementById("fullname").innerHTML =
-    JSON.parse(localStorage["user_data"]).data.first_name +
-    " " +
-    JSON.parse(localStorage["user_data"]).data.last_name;
-  data_key = [];
-  user_data = JSON.parse(localStorage["user_data"]).data;
+    document.getElementById("fullname").innerHTML =
+        JSON.parse(localStorage["user_data"]).data.first_name +
+        " " +
+        JSON.parse(localStorage["user_data"]).data.last_name;
+    data_key = [];
+    user_data = JSON.parse(localStorage["user_data"]).data;
 
-  for (i = 0; i < Object.keys(user_data).length; i++) {
-    data_key[i] = Object.keys(user_data)[i];
-  }
-
-  for (i = 0; i < data_key.length; i++) {
-    if (
-      data_key[i] == "id" ||
-      data_key[i] == "assigned_class" ||
-      data_key[i] == "image_url"
-    ) {
-      continue;
+    for (i = 0; i < Object.keys(user_data).length; i++) {
+        data_key[i] = Object.keys(user_data)[i];
     }
 
-    // INTERCEPT OBJECTS
-    if (data_key[i] == "class") {
-      document.getElementById("profile_data").innerHTML += ` 
+    for (i = 0; i < data_key.length; i++) {
+        if (
+            data_key[i] == "id" ||
+            data_key[i] == "assigned_class" ||
+            data_key[i] == "image_url"
+        ) {
+            continue;
+        }
+
+        // INTERCEPT OBJECTS
+        if (data_key[i] == "class") {
+            document.getElementById("profile_data").innerHTML += ` 
           <tr>
                   <td>${data_key[i].toUpperCase().replace("_", " ")}:</td>
                   <td id="${
@@ -364,8 +364,8 @@ function getProfileData() {
           </tr>
           
           `;
-    } else {
-      document.getElementById("profile_data").innerHTML += ` 
+        } else {
+            document.getElementById("profile_data").innerHTML += ` 
           <tr>
                   <td>${data_key[i].toUpperCase().replace("_", " ")}:</td>
                   <td id="${
@@ -376,208 +376,209 @@ function getProfileData() {
           </tr>
           
           `;
+        }
     }
-  }
 }
 
 function reloadBreakdownFrame() {
-  var iframe = document.getElementById("breakdown");
-  temp = iframe.src;
-  iframe.src = "";
-  iframe.src = temp;
+    var iframe = document.getElementById("breakdown");
+    temp = iframe.src;
+    iframe.src = "";
+    iframe.src = temp;
 }
 
 function getTermAndSession() {
-  document.getElementById("term_registration").innerHTML =
-    localStorage["current_session"] +
-    " " +
-    localStorage["current_term"] +
-    document.getElementById("term_registration").innerHTML;
-  document.getElementById("info").innerHTML =
-    document.getElementById("info").innerHTML +
-    JSON.parse(localStorage["user_data"]).data.class.class_name;
+    document.getElementById("term_registration").innerHTML =
+        localStorage["current_session"] +
+        " " +
+        localStorage["current_term"] +
+        document.getElementById("term_registration").innerHTML;
+    document.getElementById("info").innerHTML =
+        document.getElementById("info").innerHTML +
+        JSON.parse(localStorage["user_data"]).data.class.class_name;
 }
 
 function goTo(page) {
-  if (page == "") {
-    localStorage.clear();
-    window.parent.location.assign(domain);
-    return 0;
-  }
-  window.parent.location.assign(domain + "/student/" + page);
+    if (page == "") {
+        localStorage.clear();
+        window.parent.location.assign(domain);
+        return 0;
+    }
+    window.parent.location.assign(domain + "/student/" + page);
 }
 
 function signIn() {
-  var id = document.getElementById("id").value;
-  var password = document.getElementById("password").value;
-  if (id != "" && password != "") {
-    // PUSH TO API
-    document.getElementById("signin").innerHTML = `<i
+    var id = document.getElementById("id").value;
+    var password = document.getElementById("password").value;
+    if (id != "" && password != "") {
+        // PUSH TO API
+        document.getElementById("signin").innerHTML = `<i
         class="fa fa-spinner fa-spin"></i> Processing ...`;
-    fetch(ip + "/api/student/signin", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        password: password,
-      }),
-    })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          openAuthenticationModal();
-        }
-        return res.json();
-      })
+        fetch(ip + "/api/student/signin", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: id,
+                    password: password,
+                }),
+            })
+            .then(function(res) {
+                console.log(res.status);
+                if (res.status == 401) {
+                    openAuthenticationModal();
+                }
+                return res.json();
+            })
 
-      .then((data) => {
-        toastr.remove();
-        if (data.success) {
-          successtoast("<b>" + data.message + "</b>");
-          localStorage.setItem("user_data", JSON.stringify(data));
-          localStorage.setItem("token", data.token);
-          username = JSON.parse(localStorage["user_data"]).data.first_name;
-          localStorage.setItem("username", username);
-          localStorage.setItem(
-            "user_id",
-            JSON.parse(localStorage["user_data"]).data.student_id
-          );
+        .then((data) => {
+                toastr.remove();
+                if (data.success) {
+                    successtoast("<b>" + data.message + "</b>");
+                    localStorage.setItem("user_data", JSON.stringify(data));
+                    localStorage.setItem("token", data.token);
+                    username = JSON.parse(localStorage["user_data"]).data.first_name;
+                    localStorage.setItem("username", username);
+                    localStorage.setItem(
+                        "user_id",
+                        JSON.parse(localStorage["user_data"]).data.student_id
+                    );
 
-          if ("isParent" in data) {
-            localStorage.setItem("isParent", data.isParent);
-          }
+                    if ("isParent" in data) {
+                        localStorage.setItem("isParent", data.isParent);
+                    }
 
-          setTimeout(function () {
-            window.location.href = "dashboard.html";
-          }, 1000);
-        } else {
-          errortoast("<b>" + data.message + "</b>");
-        }
+                    setTimeout(function() {
+                        alert(JSON.stringify(data.info));
+                        window.location.href = "dashboard.html";
+                    }, 1000);
+                } else {
+                    errortoast("<b>" + data.message + "</b>");
+                }
 
-        document.getElementById("signin").innerHTML = `Sign In`;
-      })
-      .catch((err) => console.log(err));
-  } else {
-    warningtoast("<b>Please check that no field is empty.</b>");
-  }
+                document.getElementById("signin").innerHTML = `Sign In`;
+            })
+            .catch((err) => console.log(err));
+    } else {
+        warningtoast("<b>Please check that no field is empty.</b>");
+    }
 }
 
 function reAuth() {
-  var id = localStorage["user_id"];
-  var password = document.getElementById("password").value;
-  if (id != "" && password != "") {
-    // PUSH TO API
-    document.getElementById("signin").innerHTML = `<i
+    var id = localStorage["user_id"];
+    var password = document.getElementById("password").value;
+    if (id != "" && password != "") {
+        // PUSH TO API
+        document.getElementById("signin").innerHTML = `<i
     class="fa fa-spinner fa-spin"></i> Processing ...`;
-    fetch(ip + "/api/student/signin", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        id: id,
-        password: password,
-      }),
-    })
-      .then(function (res) {
-        console.log(res.status);
-        if (res.status == 401) {
-          openAuthenticationModal();
-        }
-        return res.json();
-      })
+        fetch(ip + "/api/student/signin", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: id,
+                    password: password,
+                }),
+            })
+            .then(function(res) {
+                console.log(res.status);
+                if (res.status == 401) {
+                    openAuthenticationModal();
+                }
+                return res.json();
+            })
 
-      .then((data) => {
-        toastr.remove();
-        if (data.success) {
-          successtoast("<b>Welcome back, </b>" + localStorage["username"]);
-          localStorage.setItem("user_data", JSON.stringify(data));
-          localStorage.setItem("token", data.token);
-          //parent.getStoredCredential();
-          username = JSON.parse(localStorage["user_data"]).data.first_name;
-          localStorage.setItem("username", username);
-          localStorage.setItem(
-            "user_id",
-            JSON.parse(localStorage["user_data"]).data.student_id
-          );
-          if ("isParent" in data) {
-            localStorage.setItem("isParent", data.isParent);
-          }
-          setTimeout(function () {
-            parent.$("#authenticationModal").modal("hide");
-            parent.document.getElementById("authenticationModal").remove();
+        .then((data) => {
+                toastr.remove();
+                if (data.success) {
+                    successtoast("<b>Welcome back, </b>" + localStorage["username"]);
+                    localStorage.setItem("user_data", JSON.stringify(data));
+                    localStorage.setItem("token", data.token);
+                    //parent.getStoredCredential();
+                    username = JSON.parse(localStorage["user_data"]).data.first_name;
+                    localStorage.setItem("username", username);
+                    localStorage.setItem(
+                        "user_id",
+                        JSON.parse(localStorage["user_data"]).data.student_id
+                    );
+                    if ("isParent" in data) {
+                        localStorage.setItem("isParent", data.isParent);
+                    }
+                    setTimeout(function() {
+                        parent.$("#authenticationModal").modal("hide");
+                        parent.document.getElementById("authenticationModal").remove();
 
-            if (window.location.href.includes("communication-channel")) {
-              goTo("dashboard.html");
-            }
-          }, 1000);
-        } else {
-          errortoast(data.message);
-        }
-        document.getElementById("signin").innerHTML = `Sign In`;
-      })
-      .catch((err) => console.log(err));
-  } else {
-    warningtoast("<b>Please check that no field is empty.</b>");
-  }
+                        if (window.location.href.includes("communication-channel")) {
+                            goTo("dashboard.html");
+                        }
+                    }, 1000);
+                } else {
+                    errortoast(data.message);
+                }
+                document.getElementById("signin").innerHTML = `Sign In`;
+            })
+            .catch((err) => console.log(err));
+    } else {
+        warningtoast("<b>Please check that no field is empty.</b>");
+    }
 }
 
 // CBT
 
 function showCBTList(subject_name, subject_id) {
-  window.location.href = "./cbt-list.html";
-  localStorage.setItem("cbt_subject_name", subject_name);
-  localStorage.setItem("cbt_subject_id", subject_id);
+    window.location.href = "./cbt-list.html";
+    localStorage.setItem("cbt_subject_name", subject_name);
+    localStorage.setItem("cbt_subject_id", subject_id);
 }
 
 function getCBTForSubject() {
-  document.getElementById("info").innerHTML =
-    document.getElementById("info").innerHTML +
-    localStorage["cbt_subject_name"] +
-    " FOR ";
+    document.getElementById("info").innerHTML =
+        document.getElementById("info").innerHTML +
+        localStorage["cbt_subject_name"] +
+        " FOR ";
 }
 
 function getCBTForSubject() {
-  document.getElementById("infoo").innerHTML =
-    document.getElementById("infoo").innerHTML +
-    localStorage["cbt_subject_name"];
-  // " " +
-  // localStorage["cbt_subject_class"];
+    document.getElementById("infoo").innerHTML =
+        document.getElementById("infoo").innerHTML +
+        localStorage["cbt_subject_name"];
+    // " " +
+    // localStorage["cbt_subject_class"];
 
-  // GET CBT
-  fetch(ip + "/api/teacher/all-cbt", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-    body: JSON.stringify({
-      subject_id: localStorage["cbt_subject_id"],
-      session: localStorage["current_session"],
-      term: localStorage["current_term"],
-    }),
-  })
-    .then(function (res) {
-      console.log(res.status);
-      if (res.status == 401) {
-        removeSpinnerModal();
-        openAuthenticationModal();
-        return 0;
-      }
-      return res.json();
-    })
+    // GET CBT
+    fetch(ip + "/api/teacher/all-cbt", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-type": "application/json",
+                Authorization: "Bearer " + localStorage["token"],
+            },
+            body: JSON.stringify({
+                subject_id: localStorage["cbt_subject_id"],
+                session: localStorage["current_session"],
+                term: localStorage["current_term"],
+            }),
+        })
+        .then(function(res) {
+            console.log(res.status);
+            if (res.status == 401) {
+                removeSpinnerModal();
+                openAuthenticationModal();
+                return 0;
+            }
+            return res.json();
+        })
 
     .then((data) => {
-      c = 1;
-      document.getElementById("cbt_table").innerHTML = ``;
-      if (data.length > 0) {
-        for (i in data) {
-          document.getElementById("cbt_table").innerHTML += `
+                c = 1;
+                document.getElementById("cbt_table").innerHTML = ``;
+                if (data.length > 0) {
+                    for (i in data) {
+                        document.getElementById("cbt_table").innerHTML += `
           <tr>
           <td>
               ${c}.</td>
@@ -3874,5 +3875,7 @@ function errortoast(message, time) {
     showMethod: "fadeIn",
     hideMethod: "fadeOut",
     tapToDismiss: false,
+  });
+}   tapToDismiss: false,
   });
 }
