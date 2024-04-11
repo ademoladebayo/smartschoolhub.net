@@ -445,7 +445,7 @@ function signIn() {
           }
 
           setTimeout(function () {
-            console.log("MY DATA ::: " + data.info);
+            console.log(data.info);
             //window.location.href = "dashboard.html";
           }, 1000);
         } else {
