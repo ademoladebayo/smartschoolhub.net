@@ -38,14 +38,14 @@ class StudentService
         $StudentRepository = new StudentRepository();
         $student = DB::select("select * from student where student_id= '" . $request->id . "' and password= '" . $request->password . "'");
 
-        //$student = DB::select("select name, password from student where student_id = ? and password = ?", [$request->id, $request->password]);
+        //$student = DB::select("select * from student where student_id = ? and password = ?", [$request->id, $request->password]);
 
 
         $info = $student;
         if (count($student) > 0) {
             $student = $student[0];
-            $student['class'] = ClassModel::find($student->class);
-            $token = "";//$student->createToken('token')->plainTextToken;
+            $student->class = ClassModel::find($student->class);
+            $token = ""; //$student->createToken('token')->plainTextToken;
             return response(['token' => $token, 'success' => true, 'message' => 'Welcome, ' . $student->first_name, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student), 'info' => $info]);
         } else {
             return response(['success' => false, 'message' => "Invalid Credential"]);
