@@ -36,7 +36,7 @@ class StudentService
     public function signIn(Request $request)
     {
         $StudentRepository = new StudentRepository();
-        $student = DB::select("select * from student where student_id= " . $request->id . " and password= " . $request->password);
+        $student = DB::select("select * from student where student_id= '" . $request->id . "' and password= '" . $request->password . "'");
 
         //$student = DB::select("select name, password from student where student_id = ? and password = ?", [$request->id, $request->password]);
 
