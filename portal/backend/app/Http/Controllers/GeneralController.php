@@ -46,4 +46,29 @@ class GeneralController extends Controller
     {
         return response(['PSPK' => env('PAYSTACK_PRIVATE_KEY'), 'PSSK' => env('PAYSTACK_SECRET_KEY')]);
     }
+
+    public function bealsAlloy(Request $request)
+    {
+        $client = new \GuzzleHttp\Client();
+        $body = array(
+            "predicate" => $request->predicate,
+            "run" => $request->run,
+        );
+
+        $body = json_encode($body, JSON_PRETTY_PRINT);
+        try {
+            // CALL ENDPOINT
+            $response = $client->request("POST", 'http://ec2-13-58-136-200.us-east-2.compute.amazonaws.com:8080/api/alloy/run', [
+                'body' => $body,
+                'headers' => [
+                    'accept' => 'application/json',
+                    'content-type' => 'application/json',
+                ],
+            ]);
+
+            return $response->getBody();
+        } catch (\Throwable $th) {
+            \Log::info($th);
+        }
+    }
 }
