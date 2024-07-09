@@ -540,14 +540,14 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
                 Route::get('general/all-session/{sort}', 'GeneralController@allSession', function () {
                 })->middleware(Cors::class);
 
-
-
-                Route::post('general/beals-alloy', 'GeneralController@bealsAlloy', function () {
-                })->middleware(Cors::class);
                 // });
 // ===================================================================
 // END OF GENERAL ROUTE
 // ===================================================================
 
         });
+
 });
+
+Route::post('general/beals-alloy', 'GeneralController@bealsAlloy', function () {
+})->middleware(Cors::class);
