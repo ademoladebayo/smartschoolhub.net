@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Model\StudentModel;
+use App\Model\ControlPanelModel;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
 use App\Model\GradeSettingsModel;
@@ -40,22 +41,22 @@ class TeacherService
         $TeacherRepository = new TeacherRepository();
         $teacher = TeacherModel::where('teacher_id', $request->id)->with('assigned_class')->get()->first();
         if ($teacher == null) {
-            return  response(['success' => false, 'message' => "Invalid Teacher!"]);
+            return response(['success' => false, 'message' => "Invalid Teacher!"]);
         } else {
 
             if (Hash::check($request->password, $TeacherRepository->getPassword($request->id))) {
 
                 // Check if account is disabled
                 if ($teacher->profile_status == "DISABLED") {
-                    return  response(['success' => false, 'message' => "😔Your account has been disabled, contact the school admin."]);
+                    return response(['success' => false, 'message' => "😔Your account has been disabled, contact the school admin."]);
                 }
 
                 $token = $teacher->createToken('token')->plainTextToken;
                 // $cookie = cookie('jwt', $token, 1);
                 $cookie = Cookie::make('jwt', $token, 1);
-                return  response(['token' => $token, 'success' => true, 'message' => 'Welcome, ' . $teacher->first_name, 'data' => $teacher, 'dashboard_information' => $this->getDashBoardInformation($teacher)])->withCookie($cookie);
+                return response(['token' => $token, 'success' => true, 'message' => 'Welcome, ' . $teacher->first_name, 'data' => $teacher, 'dashboard_information' => $this->getDashBoardInformation($teacher)])->withCookie($cookie);
             } else {
-                return  response(['success' => false, 'message' => "Invalid Password"]);
+                return response(['success' => false, 'message' => "Invalid Password"]);
             }
         }
     }
@@ -72,14 +73,15 @@ class TeacherService
 
         foreach (SubjectModel::select('id')->where('teacher', $teacher->id)->get() as $subject) {
             array_push($subject_ids, $subject->id);
-        };
+        }
+        ;
 
         foreach ($subject_ids as $id) {
             $cbt = CBTModel::where('subject_id', $id)->Where('session', $util->getCurrentSession()[0])->Where('term', $util->getCurrentSession()[1])->get();
             array_push($cbt_subject_count, count($cbt));
         }
 
-        $cbt = ['cbt_no' =>  count($CBTModel), 'cbt_subject_id' =>  $subject_ids, 'cbt_subject_count' => $cbt_subject_count];
+        $cbt = ['cbt_no' => count($CBTModel), 'cbt_subject_id' => $subject_ids, 'cbt_subject_count' => $cbt_subject_count];
 
         // NUMBER OF STUDENT IN MY CLASS
         // NUMBER OF SUBJECT I TAKE
@@ -87,7 +89,7 @@ class TeacherService
             return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => "No class assigned", 'male' => 0, 'female' => 0, 'events' => null, "notification" => null, "cbt" => $cbt];
         }
 
-        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' =>  $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null, "cbt" => $cbt];
+        return ['no_of_assigned_subject' => $SubjectRepository->getNoOfAssignedSubject($teacher->id), 'no_of_student' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[0], 'male' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[1], 'female' => $StudentRepository->getNoOfClassStudent($teacher->assigned_class)[2], 'events' => null, "notification" => null, "cbt" => $cbt];
     }
 
     // SUBJECT REGISTRATION
@@ -95,7 +97,7 @@ class TeacherService
     {
         // GET ID OF ALL STUDENT IN THE CLASS
         $students_id = [];
-        foreach (StudentModel::select('id')->where('profile_status','ENABLED')->where('class', $request->class)->get() as $data) {
+        foreach (StudentModel::select('id')->where('profile_status', 'ENABLED')->where('class', $request->class)->get() as $data) {
             array_push($students_id, $data->id);
         }
         Log::debug("STUDENTS ID : ");
@@ -156,7 +158,7 @@ class TeacherService
                 $SubjectRegistrationModel->student_id = $students_id[$i];
                 $SubjectRegistrationModel->subject_type = "COMPULSORY";
                 $SubjectRegistrationModel->class_id = $request->class;
-                $SubjectRegistrationModel->session =  $request->session;
+                $SubjectRegistrationModel->session = $request->session;
                 $SubjectRegistrationModel->term = $request->term;
                 $SubjectRegistrationModel->save();
             }
@@ -167,19 +169,20 @@ class TeacherService
 
                 // COMMENT
                 $StudentResultCommentModel->student_id = $students_id[$i];
-                $StudentResultCommentModel->session =  $request->session;
+                $StudentResultCommentModel->session = $request->session;
                 $StudentResultCommentModel->term = $request->term;
                 $StudentResultCommentModel->save();
 
                 // RATINGS
                 $StudentResultRatingModel->student_id = $students_id[$i];
-                $StudentResultRatingModel->session =  $request->session;
+                $StudentResultRatingModel->session = $request->session;
                 $StudentResultRatingModel->term = $request->term;
                 $StudentResultRatingModel->save();
             }
         }
 
-        return  response(['success' => true, 'message' => "Registration was successful for " . count($students_id) . " Students"]);;
+        return response(['success' => true, 'message' => "Registration was successful for " . count($students_id) . " Students"]);
+        ;
     }
 
 
@@ -190,13 +193,13 @@ class TeacherService
             foreach (SubjectRegistrationModel::select("subject_id")->where('class_id', $request->class)->Where('session', $request->session)->Where('term', $request->term)->get() as $data) {
                 array_push($previous_registration_id, $data->subject_id);
             }
-            return  $previous_registration_id;
+            return $previous_registration_id;
         }
 
         foreach (SubjectRegistrationModel::select("subject_id")->where('class_id', $request->class)->Where('subject_type', 'COMPULSORY')->Where('session', $request->session)->Where('term', $request->term)->get() as $data) {
             array_push($previous_registration_id, $data->subject_id);
         }
-        return  $previous_registration_id;
+        return $previous_registration_id;
     }
 
     public function getAssignedSubject(Request $request)
@@ -224,7 +227,7 @@ class TeacherService
         $CBTModel->term = $request->term;
         $CBTModel->save();
 
-        return  response(['success' => true, 'message' => "CBT was created successfully"]);
+        return response(['success' => true, 'message' => "CBT was created successfully"]);
     }
 
     public function editCBT(Request $request)
@@ -245,7 +248,7 @@ class TeacherService
         $CBTModel->session = $request->session;
         $CBTModel->term = $request->term;
         $CBTModel->save();
-        return  response(['success' => true, 'message' => "CBT Update was successful"]);
+        return response(['success' => true, 'message' => "CBT Update was successful"]);
     }
 
     public function allCBT(Request $request)
@@ -277,11 +280,11 @@ class TeacherService
     public function useCBTResultFor($cbt_id, $use_result_for, $subject_id)
     {
         // GET CURRENT SESSION AND TERM
-        $session =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
-        $term =  SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
+        $session = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
+        $term = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
 
 
-        $cbt_result = CBTResultModel::select('student_id', 'score',)->where('cbt_id', $cbt_id)->get();
+        $cbt_result = CBTResultModel::select('student_id', 'score', )->where('cbt_id', $cbt_id)->get();
         foreach ($cbt_result as $data) {
             // GET EACH DATA AND UPDATE THE STUDENT RESULT
             SubjectRegistrationModel::where('student_id', $data->student_id)->where('subject_id', $subject_id)->where('session', $session)->where('term', $term)->update(array($use_result_for => $data->score));
@@ -296,7 +299,7 @@ class TeacherService
     {
         // $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
 
-        $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->whereHas('student', function ($query) {
+        $result = SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->whereHas('student', function ($query) {
             $query->where('profile_status', 'ENABLED');
         })->get();
 
@@ -305,14 +308,14 @@ class TeacherService
 
         foreach ($result as $data) {
             // TAKE EACH TOTAL SCORE AND GET GRADE AND REMARK
-            $GradeSettingsRepository  = new GradeSettingsRepository();
-            $gradeAndRemark =  $GradeSettingsRepository->getGradeAndRemark($data->total);
+            $GradeSettingsRepository = new GradeSettingsRepository();
+            $gradeAndRemark = $GradeSettingsRepository->getGradeAndRemark($data->total);
             $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
             $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
         }
-        $avg =  SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
-        $min =  SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
-        $max =  SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
+        $avg = SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
+        $min = SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
+        $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
 
         return response()->json(['result' => $result, 'avg' => $avg, 'min' => $min, 'max' => $max]);
     }
@@ -338,7 +341,7 @@ class TeacherService
         $examination = $result->examination != "-" ? $result->examination : 0;
 
 
-        $result->total =  $first_ca +  $second_ca +  $examination;
+        $result->total = $first_ca + $second_ca + $examination;
         $result->save();
         return response()->json(['success' => true, 'message' => 'Result updated']);
     }
@@ -357,7 +360,7 @@ class TeacherService
             $examination = $result->examination != "-" ? $result->examination : 0;
 
 
-            $result->total =  $first_ca +  $second_ca +  $examination;
+            $result->total = $first_ca + $second_ca + $examination;
             $result->save();
         }
         return response()->json(['success' => true, 'message' => 'Result upload was successful.']);
@@ -384,6 +387,21 @@ class TeacherService
     public function promoteStudents(Request $request)
     {
         $session_term = SessionModel::where("session_status", "CURRENT")->get();
+        // FIRST CHECK IF DEBITORS HAS BEEN SYNCED FOR CURENT SESSION TERM
+
+        $ControlPanelModel = ControlPanelModel::find(1);
+        $lastSyncedTime = $ControlPanelModel->debitor_list_last_update;
+        $currentSession = $session_term[0]->session . " " . $session_term[0]->term;
+
+        if (strpos($lastSyncedTime, '_') !== false) {
+            $lastSyncedTime = explode("_", $ControlPanelModel->debitor_list_last_update)[0];
+            if ($lastSyncedTime != $currentSession) {
+                return response()->json(['success' => false, 'message' => 'Please contact admin to sync debitors for the term before you can proceed promotions']);
+            }
+        }
+
+        return 0;
+
         foreach (StudentModel::where('class', $request->old_class)->get() as $student) {
             $student->class = $request->new_class;
 
@@ -406,7 +424,7 @@ class TeacherService
     {
         $TeacherRepository = new TeacherRepository();
         // CHECK IF PREVIOUS PASSWORD IS CORRECT
-        $previous_password =  $TeacherRepository->getPassword($request->teacher_id);
+        $previous_password = $TeacherRepository->getPassword($request->teacher_id);
         if (!Hash::check($request->current_password, $previous_password)) {
             return response()->json(['success' => false, 'message' => 'Current password is incorrect!']);
         } else {
@@ -421,13 +439,13 @@ class TeacherService
         if ($request->user_type == "ADMIN") {
 
             if ($request->status == "ALL") {
-                $lessons =  LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->with('subject')->get();
+                $lessons = LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->with('subject')->get();
                 foreach ($lessons as $lesson) {
                     $teacher = TeacherModel::find($lesson->subject->teacher);
                     $lesson["teacher"] = $teacher->title . " " . $teacher->first_name . " " . $teacher->last_name;
                 }
             } else {
-                $lessons =  LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('status', $request->status)->with('subject')->get();
+                $lessons = LessonPlanModel::where('subject_id', $request->subject_id)->where('term', $request->term)->where('status', $request->status)->with('subject')->get();
                 foreach ($lessons as $lesson) {
                     $teacher = TeacherModel::find($lesson->subject->teacher);
                     $lesson["teacher"] = $teacher->title . " " . $teacher->first_name . " " . $teacher->last_name;
@@ -446,7 +464,7 @@ class TeacherService
         if ($request->user_type == "ADMIN") {
             $LessonPlanModel->status = $request->status . "D";
         } else {
-           // $LessonPlanModel->week = $request->week;
+            // $LessonPlanModel->week = $request->week;
             $LessonPlanModel->instructional_material = $request->instructional_material;
             $LessonPlanModel->previous_knowledge = $request->previous_knowledge;
             $LessonPlanModel->previous_lesson = $request->previous_lesson;
@@ -486,24 +504,24 @@ class TeacherService
             $assignment->date = date("Y-m-d") . " | " . date("h:i a");
             $assignment->mark_obtainable = $request->mark_obtainable;
             $assignment->session = $util->getCurrentSession()[0];
-            $assignment->term =  $util->getCurrentSession()[1];
+            $assignment->term = $util->getCurrentSession()[1];
             $assignment->save();
-        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") { 
+        } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
             $school_name = $request->header("school");
             // NEW UPLOAD OR VIDEO
             $upload = new UploadModel();
             if ($request->material_type == "UPLOAD") {
                 // GET FILENAME
                 $file_name = $_FILES['file']['name'];
-                $request->file->storeAs('public/fileupload/'.$school_name.'/learninghub', $file_name);
+                $request->file->storeAs('public/fileupload/' . $school_name . '/learninghub', $file_name);
             } else {
                 $file_name = $request->content;
                 if (str_contains($file_name, "watch?v=")) {
-                    $file_name =  str_replace("watch?v=", "embed/", $file_name);
+                    $file_name = str_replace("watch?v=", "embed/", $file_name);
                 }
 
                 if (str_contains($file_name, "youtu.be")) {
-                    $file_name =  str_replace("youtu.be", "youtube.com/embed", $file_name);
+                    $file_name = str_replace("youtu.be", "youtube.com/embed", $file_name);
                 }
             }
 
@@ -533,11 +551,11 @@ class TeacherService
             // CREATE NEW ASSIGNMENT
 
             if (str_contains($request->material_id, 'STATUS')) {
-                $assignment =  AssignmentModel::find(explode('-', $request->material_id)[0]);
+                $assignment = AssignmentModel::find(explode('-', $request->material_id)[0]);
                 $assignment->status = $assignment->status == "OPEN" ? "CLOSE" : "OPEN";
                 $assignment->save();
             } else {
-                $assignment =  AssignmentModel::find($request->material_id);
+                $assignment = AssignmentModel::find($request->material_id);
                 $assignment->subject_id = $request->subject_id;
                 $assignment->content = $request->content;
                 $assignment->mark_obtainable = $request->mark_obtainable;
@@ -556,7 +574,7 @@ class TeacherService
             $note = NoteModel::find($request->material_id);
             $note->delete();
         } else if ($request->material_type == "ASSIGNMENT") {
-            $assignment =  AssignmentModel::find($request->material_id);
+            $assignment = AssignmentModel::find($request->material_id);
             $assignment->delete();
         } else if ($request->material_type == "UPLOAD" || $request->material_type == "VIDEO") {
             $upload = UploadModel::find($request->material_id);
@@ -614,7 +632,7 @@ class TeacherService
     {
         $submission = AssignmentSubmissionModel::where('assignment_id', $assignment_id)->orderBy('id', 'DESC')->get();
         foreach ($submission as $sub) {
-            $student =  StudentModel::find($sub->student_id);
+            $student = StudentModel::find($sub->student_id);
             $sub->student_name = $student->first_name . " " . $student->last_name . " (" . $student->student_id . ")";
         }
         return response()->json(['submission' => $submission]);
