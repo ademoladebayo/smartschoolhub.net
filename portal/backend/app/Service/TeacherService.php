@@ -400,8 +400,6 @@ class TeacherService
             }
         }
 
-        return 0;
-
         foreach (StudentModel::where('class', $request->old_class)->get() as $student) {
             $student->class = $request->new_class;
 
