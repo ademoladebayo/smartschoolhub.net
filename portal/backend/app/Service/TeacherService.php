@@ -393,12 +393,12 @@ class TeacherService
         $lastSyncedTime = $ControlPanelModel->debitor_list_last_update;
         $currentSession = $session_term[0]->session . " " . $session_term[0]->term;
 
-        // if (strpos($lastSyncedTime, '_') !== false) {
-        //     $lastSyncedTime = explode("_", $ControlPanelModel->debitor_list_last_update)[0];
-        //     if ($lastSyncedTime != $currentSession) {
-        //         return response()->json(['success' => false, 'message' => 'Please contact admin to sync debitors for the term before you can proceed promotions']);
-        //     }
-        // }
+        if (strpos($lastSyncedTime, '_') !== false) {
+            $lastSyncedTime = explode("_", $ControlPanelModel->debitor_list_last_update)[0];
+            if ($lastSyncedTime != $currentSession) {
+                return response()->json(['success' => false, 'message' => 'Please contact admin to sync debitors for the term before you can proceed promotions']);
+            }
+        }
 
         foreach (StudentModel::where('class', $request->old_class)->get() as $student) {
             $student->class = $request->new_class;
