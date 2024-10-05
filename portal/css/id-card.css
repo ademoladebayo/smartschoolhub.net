@@ -65,12 +65,12 @@
   background-color: #e6ebe0 !important;
   border-radius: 10px;
   position: absolute;
-  top: 90px;
+  top: 65px;
   left: 75px;
 }
 .bottom p {
   position: relative;
-  top: 60px;
+  top: 35px;
   text-align: center;
   text-transform: capitalize;
   font-weight: bold;
