@@ -6722,7 +6722,7 @@ async function generateIDCard2() {
         }</p>
 
                       <small>
-                          <p id="gender" style="margin-bottom: 30px; color: black; font-size: 15px;">
+                          <p id="gender" style="margin-bottom: 5px; color: black; font-size: 15px;">
                               ${data[i].gender}</p>
                       </small>
 
@@ -6735,7 +6735,7 @@ async function generateIDCard2() {
                   </div>
 
 
-                  <div style="margin-top: 20px;margin-bottom: 210px;">
+                  <div style="margin-top: 0.5px;margin-bottom: 210px;">
                       <h5 id ="user_type" style="font-family: Poppins
                   ;color: black; text-align: center;">${user_type == "STUDENT" ? "STUDENT" : "STAFF"
         }</h5>
