@@ -258,10 +258,11 @@ class StudentService
         $arrears = 0;
 
         // ASSIGN CLASSNAME TO FEE {IF CLASS NOT IN ALL STUDENT, JUNIOR SECONDARY SCHOOL AND SENIOR SECONDARY SCHOOL}
-        $class_sectors = ['ALL STUDENT', 'PRIMARY SCHOOL', 'JUNIOR SECONDARY SCHOOL', 'SENIOR SECONDARY SCHOOL'];
+        $class_sectors = ['ALL STUDENT', 'NURSERY SCHOOL', 'PRIMARY SCHOOL', 'JUNIOR SECONDARY SCHOOL', 'SENIOR SECONDARY SCHOOL'];
 
         foreach ($fees as $fee) {
             if (!in_array($fee->class, $class_sectors)) {
+
                 $fee->class = ClassModel::find($fee->class)->class_name;
             }
         }
