@@ -2157,79 +2157,84 @@ function getResult(value) {
       c = 1;
       if (data.result.length > 0) {
         data.result.forEach((result) => {
-          // ATTACH CLASS TO THAT RESULT TERM AND SESSION
-          document.getElementById(
-            "class_" + value.split("_")[1] + "_" + value.split("_")[2]
-          ).innerHTML = result.class.class_name;
 
-          // ATTACH NO OF STUDENT , GRADE POSITION AND PERCENTAGE
-          document.getElementById(
-            "no_student_" + value.split("_")[1] + "_" + value.split("_")[2]
-          ).innerHTML = data.no_student;
+          if (result.subject) {
+            // ATTACH CLASS TO THAT RESULT TERM AND SESSION
+            document.getElementById(
+              "class_" + value.split("_")[1] + "_" + value.split("_")[2]
+            ).innerHTML = result.class.class_name;
 
-          document.getElementById(
-            "grade_position_" + value.split("_")[1] + "_" + value.split("_")[2]
-          ).innerHTML = data.grade_position;
+            // ATTACH NO OF STUDENT , GRADE POSITION AND PERCENTAGE
+            document.getElementById(
+              "no_student_" + value.split("_")[1] + "_" + value.split("_")[2]
+            ).innerHTML = data.no_student;
 
-          document.getElementById(
-            "percentage_" + value.split("_")[1] + "_" + value.split("_")[2]
-          ).innerHTML = data.percentage;
+            document.getElementById(
+              "grade_position_" + value.split("_")[1] + "_" + value.split("_")[2]
+            ).innerHTML = data.grade_position;
 
-          // SCORE TABLE
-          document.getElementById(
-            "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
-          ).innerHTML += `
-            <tr>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-                ${c}.
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-                ${result.subject.subject_name}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.first_ca}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.second_ca}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.examination}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.total}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              
-              ${parseFloat(result.class_average).toFixed(0)}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.class_lowest}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.class_highest}
-              </td>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              <b>${result.position}</b>
-              </td>
-              <td style="color: ${result.grade.includes("F")
-              ? "red"
-              : result.grade.includes("A")
-                ? "blue"
-                : "black"
-            } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
-              ${result.grade}
-              </td>
-              <td style="color: ${result.grade.includes("F")
-              ? "red"
-              : result.grade.includes("A")
-                ? "blue"
-                : "black"
-            } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.remark}
-              </td>
-            </tr>`;
+            document.getElementById(
+              "percentage_" + value.split("_")[1] + "_" + value.split("_")[2]
+            ).innerHTML = data.percentage;
 
-          c = c + 1;
+            // SCORE TABLE
+            document.getElementById(
+              "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
+            ).innerHTML += `
+          <tr>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${c}.
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.subject.subject_name}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            ${result.first_ca}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            ${result.second_ca}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            ${result.examination}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            ${result.total}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            
+            ${parseFloat(result.class_average).toFixed(0)}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            ${result.class_lowest}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            ${result.class_highest}
+            </td>
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            <b>${result.position}</b>
+            </td>
+            <td style="color: ${result.grade.includes("F")
+                ? "red"
+                : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
+            ${result.grade}
+            </td>
+            <td style="color: ${result.grade.includes("F")
+                ? "red"
+                : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            ${result.remark}
+            </td>
+          </tr>`;
+
+            c = c + 1;
+          }
+
+
         }); value.split("_")[1]
       } else {
         // DELETE RESULT CONTAINER
