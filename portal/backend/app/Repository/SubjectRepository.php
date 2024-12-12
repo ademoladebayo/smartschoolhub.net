@@ -34,7 +34,7 @@ class SubjectRepository
 
         if ($class_sector == "ALL") {
             // CREATE FPR ALL CLASS
-            $classes =  ClassModel::select('id')->get();
+            $classes = ClassModel::select('id')->get();
             if (count($classes) < 1) {
                 return response()->json(['success' => false, 'message' => 'No class available for subject creation.']);
             }
@@ -42,9 +42,9 @@ class SubjectRepository
             foreach ($classes as $class) {
 
                 $SubjectModel = new SubjectModel();
-                $SubjectModel->subject_name =  $request->subject_name;
-                $SubjectModel->teacher =  $request->teacher;
-                $SubjectModel->class =  $request->class_id;
+                $SubjectModel->subject_name = $request->subject_name;
+                $SubjectModel->teacher = $request->teacher;
+                $SubjectModel->class = $request->class_id;
                 $SubjectModel->class = $class->id;
 
                 if (SubjectModel::where('subject_name', $SubjectModel->subject_name)->where('class', $class_sector)->exists()) {
@@ -61,16 +61,16 @@ class SubjectRepository
         } else if ($class_sector == "NURSERY SCHOOL" || $class_sector == "PRIMARY SCHOOL" || $class_sector == "JUNIOR SECONDARY SCHOOL" || $class_sector == "SENIOR SECONDARY SCHOOL") {
 
             // DO MULTIPLE CREATION
-            $classes =  ClassModel::select('id')->where('class_sector', $class_sector)->get();
+            $classes = ClassModel::select('id')->where('class_sector', $class_sector)->get();
             if (count($classes) < 1) {
                 return response()->json(['success' => false, 'message' => 'No class available for subject creation.']);
             }
 
             foreach ($classes as $class) {
                 $SubjectModel = new SubjectModel();
-                $SubjectModel->subject_name =  $request->subject_name;
-                $SubjectModel->teacher =  $request->teacher;
-                $SubjectModel->class =  $request->class_id;
+                $SubjectModel->subject_name = $request->subject_name;
+                $SubjectModel->teacher = $request->teacher;
+                $SubjectModel->class = $request->class_id;
 
                 $SubjectModel->class = $class->id;
                 if (SubjectModel::where('subject_name', $SubjectModel->subject_name)->where('class', $SubjectModel->class)->exists()) {
@@ -91,13 +91,13 @@ class SubjectRepository
 
     public function getAllSubject()
     {
-        $Subjects =  SubjectModel::with('teacher', 'class')->orderBy('id', 'DESC')->get();
+        $Subjects = SubjectModel::with('teacher', 'class')->orderBy('id', 'DESC')->get();
 
         foreach ($Subjects as $subject) {
             $student_no = $this->getNoSubjectRegistration($subject->id);
             $subject['student_no'] = $student_no;
         }
-        return  $Subjects;
+        return $Subjects;
     }
 
 
@@ -107,17 +107,22 @@ class SubjectRepository
         if (count($session_term) == 0) {
             return 0;
         } else {
-            return  SubjectRegistrationModel::where('subject_id', $subject_id)->where('session', $session_term[0]->session)->where('term', $session_term[0]->term)->count();
+            return SubjectRegistrationModel::where('subject_id', $subject_id)->where('session', $session_term[0]->session)->where('term', $session_term[0]->term)->count();
         }
     }
 
     public function editSubject(Request $request)
     {
         $SubjectModel = SubjectModel::find($request->subject_id);
-        $SubjectModel->subject_name =  $request->subject_name;
-       // $SubjectModel->class =  $request->class_id;
-         $SubjectModel->class =  $request->class_id == "-" ?  $SubjectModel->class : $request->class_id;
-        $SubjectModel->teacher =  $request->teacher;
+
+        if (SubjectModel::where('subject_name', $request->subject_name)->where('class', $request->class_id)->exists()) {
+            return response()->json(['success' => false, 'message' => 'This already exist']);
+        }
+
+        $SubjectModel->subject_name = $request->subject_name;
+        // $SubjectModel->class =  $request->class_id;
+        $SubjectModel->class = $request->class_id == "-" ? $SubjectModel->class : $request->class_id;
+        $SubjectModel->teacher = $request->teacher;
         $SubjectModel->save();
         return response()->json(['success' => true, 'message' => 'Subject updated successfully.']);
     }
@@ -132,7 +137,7 @@ class SubjectRepository
     public function searchSubject($subject_name)
     {
         //     ->orWhere('name', 'like', '%' . Input::get('name') . '%')->get();
-        return  SubjectModel::where('subject_name', 'like', '%' . $subject_name . '%')->with("teacher", "class")->get();
+        return SubjectModel::where('subject_name', 'like', '%' . $subject_name . '%')->with("teacher", "class")->get();
     }
 
     public function getNoOfAssignedSubject($teacher_id)
