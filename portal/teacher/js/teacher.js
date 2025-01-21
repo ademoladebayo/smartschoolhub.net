@@ -3392,10 +3392,10 @@ function getLessonPlan(week) {
         localStorage["LESSON-PLAN"].split("-")[2];
 
       document.getElementById("lp_status").innerHTML = `<span class="badge ${data.status == "APPROVED"
-          ? `bg-success`
-          : data.status == "DISAPPROVED"
-            ? `bg-danger`
-            : `bg-warning`
+        ? `bg-success`
+        : data.status == "DISAPPROVED"
+          ? `bg-danger`
+          : `bg-warning`
         }"><b>${data.status}</b></span>`;
 
       // document.getElementById("week1").value =
@@ -3723,7 +3723,8 @@ function deleteMaterial(material_id, material_type) {
 }
 
 function getLearningHubMaterials(subject_id) {
-  openSpinnerModal("Loading materials");
+  openSpinnerModal("Loading Material(s)");
+
   document.getElementById("subject").innerHTML =
     "LEARNING HUB FOR " + localStorage["LH_SUBJECT_CLASS"];
   fetch(ip + "/api/teacher/subject-material/" + subject_id, {
@@ -3744,7 +3745,7 @@ function getLearningHubMaterials(subject_id) {
     })
 
     .then((data) => {
-      removeSpinnerModal();
+
       //POPULATE COUNTS
       document.getElementById("note-count").innerHTML = data.note.length;
       document.getElementById("upload-count").innerHTML = data.upload.length;
@@ -3756,7 +3757,6 @@ function getLearningHubMaterials(subject_id) {
       if (data.note.length > 0) {
         document.getElementById("notes-content-main").innerHTML = ``;
         data.note.forEach((note) => {
-          console.log(note);
           document.getElementById(
             "notes-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
@@ -3959,6 +3959,8 @@ function getLearningHubMaterials(subject_id) {
                                                     style="justify-content:center; display:flex">No Assignment Here</div>
                                                 </div>`;
       }
+
+      removeSpinnerModal();
     })
     .catch((err) => console.log(err));
 }
@@ -4523,7 +4525,7 @@ function loadCustomSessionTerm() {
           document.getElementById(
             "session_term0"
           ).innerHTML += `<option value="${sessions.session + "-" + term}">${sessions.session + "-" + term
-            }</option>`;
+          }</option>`;
         });
       });
     })

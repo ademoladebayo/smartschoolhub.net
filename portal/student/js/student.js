@@ -2046,6 +2046,10 @@ function loadLessonPage(value) {
 }
 
 function getLearningHubMaterials(subject_id) {
+
+  openSpinnerModal('Load Material(s)');
+
+
   document.getElementById("subject").innerHTML =
     "LEARNING HUB FOR " + localStorage["LH_SUBJECT_CLASS"];
   fetch(ip + "/api/teacher/subject-material/" + subject_id, {
@@ -2080,7 +2084,7 @@ function getLearningHubMaterials(subject_id) {
         document.getElementById("download_note").hidden = false;
 
         // SAVE NOTE TO LOCAL STORAGE
-        localStorage.setItem("NOTES", JSON.stringify(data.note));
+        localStorage.setItem("NOTES", LZString.compress(JSON.stringify(data.note)));
 
         document.getElementById("notes-content-main").innerHTML = ``;
         data.note.forEach((note) => {
@@ -2104,6 +2108,7 @@ function getLearningHubMaterials(subject_id) {
               </div>
               </div>`;
         });
+
       } else {
         document.getElementById("download_note").hidden = true;
 
@@ -2265,6 +2270,8 @@ function getLearningHubMaterials(subject_id) {
                                                     style="justify-content:center; display:flex">No Assignment Here</div>
                                                 </div>`;
       }
+
+      removeSpinnerModal();
     })
     .catch((err) => console.log(err));
 }
@@ -2284,7 +2291,8 @@ function getNote() {
     JSON.parse(localStorage["user_data"]).data.class.class_name;
 
   // LOAD NOTE
-  notes = JSON.parse(localStorage["NOTES"]);
+  notes = JSON.parse(LZString.decompress(localStorage["NOTES"]));
+  
   document.getElementById("note_view").innerHTML = ``;
 
   for (i = notes.length - 1; i >= 0; i--) {
