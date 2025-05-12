@@ -293,7 +293,7 @@ class CreateAllTables extends Migration
                 $table->text('abilities')->nullable();
                 $table->timestamp('last_used_at')->nullable();
                 $table->timestamps();
-                
+
                 $table->index(['tokenable_type', 'tokenable_id']);
             });
         }
@@ -414,18 +414,6 @@ class CreateAllTables extends Migration
             });
         }
 
-        // subject
-        if (!Schema::hasTable('subject')) {
-            Schema::create('subject', function (Blueprint $table) {
-                $table->id();
-                $table->string('subject_name', 512);
-                $table->string('class', 512);
-                $table->unsignedBigInteger('teacher');
-                
-                $table->foreign('teacher')->references('id')->on('teacher');
-            });
-        }
-
         // subject_registration
         if (!Schema::hasTable('subject_registration')) {
             Schema::create('subject_registration', function (Blueprint $table) {
@@ -467,6 +455,18 @@ class CreateAllTables extends Migration
                 $table->string('profile_status', 45);
                 $table->string('password', 500);
                 $table->string('device_token', 255)->nullable();
+            });
+        }
+
+        // subject
+        if (!Schema::hasTable('subject')) {
+            Schema::create('subject', function (Blueprint $table) {
+                $table->id();
+                $table->string('subject_name', 512);
+                $table->string('class', 512);
+                $table->unsignedBigInteger('teacher');
+
+                $table->foreign('teacher')->references('id')->on('teacher');
             });
         }
 
