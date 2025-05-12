@@ -77,8 +77,8 @@ class GeneralController extends Controller
     public function runMigration(Request $request)
     {
         $client = new \GuzzleHttp\Client();
-        //  $route = "https://smartschoolhub.net/backend/website/api/schools";
-        $route = "http://localhost:8001/api/schools";
+          $route = "https://smartschoolhub.net/backend/website/api/schools";
+        //$route = "http://localhost:8001/api/schools";
         try {
             // CALL ENDPOINT
             $response = $client->request("GET", $route, [
