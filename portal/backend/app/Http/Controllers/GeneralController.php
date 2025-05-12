@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repository\SessionRepository;
 use App\Service\TeacherService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -69,6 +70,43 @@ class GeneralController extends Controller
             return $response->getBody();
         } catch (\Throwable $th) {
             \Log::info($th);
+        }
+    }
+
+
+    public function runMigration(Request $request)
+    {
+        $client = new \GuzzleHttp\Client();
+        //  $route = "https://smartschoolhub.net/backend/website/api/schools";
+        $route = "http://localhost:8001/api/schools";
+        try {
+            // CALL ENDPOINT
+            $response = $client->request("GET", $route, [
+                'headers' => [
+                    'accept' => 'application/json',
+                    'content-type' => 'application/json',
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+
+            foreach ($data as $school) {
+                //$school = $data[0];
+
+                try {
+                    \Log::info("Running migration for ... " . $school['alias']);
+                    config(['database.default' => $school['alias']]);
+                    Artisan::call('migrate');
+                } catch (\Throwable $th) {
+                    \Log::info("Error running migration for ... " . $school['alias']);
+                    \Log::info($th->getMessage());
+                }
+
+            }
+
+            return "Migration completed successfully for all schools";
+        } catch (\Throwable $th) {
+            \Log::info($th->getMessage());
         }
     }
 }

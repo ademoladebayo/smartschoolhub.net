@@ -551,3 +551,7 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
 
 Route::post('general/beals-alloy', 'GeneralController@bealsAlloy', function () {
 })->middleware(Cors::class);
+
+
+Route::get('general/run-migration', 'GeneralController@runMigration', function () {
+})->middleware(Cors::class);
