@@ -391,7 +391,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
     function isSchoolSet() {
         if ("school" in localStorage) {
-            getSchoolDetails(localStorage["school"]);
+            getSchoolDetails(localStorage["school"] + "~" + localStorage.getItem('school_logo'));
             document.getElementById("banner_img").src = localStorage.getItem('school_logo');
             document.getElementById("select_school").hidden = true;
             document.getElementById("sign_in_as").hidden = false;
