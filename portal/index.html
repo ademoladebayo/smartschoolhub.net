@@ -382,6 +382,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
     function changeSchool() {
         getSchools();
+        document.getElementById("banner_img").src = "asset/images/login-banner.png";
         document.getElementById("school_name").innerHTML = "Welcome !";
         document.getElementById("schools").selectedIndex = 0;
         document.getElementById("sign_in_as").hidden = true;

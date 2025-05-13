@@ -394,8 +394,12 @@ function getTermAndSession() {
 function goTo(page) {
   if (page == "") {
     school = localStorage["school"];
+    school_logo = localStorage["school_logo"];
+
     localStorage.clear();
     localStorage.setItem("school", school);
+    localStorage.setItem("school_logo", school_logo);
+
     window.parent.location.assign(domain);
     return 0;
   }
