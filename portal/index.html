@@ -40,7 +40,7 @@
             <div class="col-xl-10 col-lg-11 login-container">
                 <div class="row">
                     <div class="col-lg-7 img-box">
-                        <img src="asset/images/login-banner.png" alt="">
+                        <img id="banner_img" src="asset/images/login-banner.png" alt="">
                     </div>
                     <div class="col-lg-5 no-padding">
                         <div class="login-box">
@@ -240,7 +240,7 @@
 <script>
     function getSchools() {
         var route = "https://smartschoolhub.net/backend/website/api/schools";
-        // var route = "http://localhost:8001/api/schools"
+        //var route = "http://localhost:8001/api/schools"
         openSpinnerModal("Loading schools ...");
         var ip = localStorage["ip"];
         fetch(route, {
@@ -261,7 +261,7 @@
                 data.forEach(school => {
                     document.getElementById('schools').innerHTML +=
                         `
-                    <option style="text-align:center; padding-left:50px" value="${school.alias}">${school.name}</option>
+                    <option style="text-align:center; padding-left:50px" value="${school.alias}-${school.logo}">${school.name}</option>
                 `;
                 });
             })
@@ -275,6 +275,10 @@
         if (school == "") {
             return 0;
         }
+
+        school = school.split("-")[0];
+        logo = school.split("-")[1];
+
         openSpinnerModal("School Details");
         var ip = localStorage["ip"];
         fetch(ip + "/api/general/school-details", {
@@ -295,6 +299,9 @@
                 document.getElementById("school_name").innerHTML = "Welcome , <br>" + localStorage['SCHOOL_NAME'];
                 document.getElementById("title").innerHTML = "SMARTSCHOOLHUB.NET | " + localStorage['SCHOOL_NAME'];
 
+
+                localStorage.setItem('school_logo', logo);
+                document.getElementById("banner_img").src = logo;
 
                 document.getElementById("sign_in_as").hidden = false;
                 document.getElementById("select_school").hidden = true;

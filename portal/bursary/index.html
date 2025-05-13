@@ -25,7 +25,7 @@
             <div class="col-xl-10 col-lg-11 login-container">
                 <div class="row">
                     <div class="col-lg-7 img-box">
-                        <img src="../asset/images/login-banner.png" alt="">
+                        <img id="banner_img" src="../asset/images/login-banner.png" alt="">
                     </div>
                     <div class="col-lg-5 no-padding">
                         <div class="login-box">
@@ -103,6 +103,7 @@
 
     ip = localStorage["ip"];
     domain = localStorage["domain"];
+    document.getElementById("banner_img").src = localStorage.getItem('school_logo');
 
     const firebaseConfig = {
         apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
