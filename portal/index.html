@@ -261,7 +261,7 @@
                 data.forEach(school => {
                     document.getElementById('schools').innerHTML +=
                         `
-                    <option style="text-align:center; padding-left:50px" value="${school.alias}-${school.logo}">${school.name}</option>
+                    <option style="text-align:center; padding-left:50px" value="${school.alias}~${school.logo}">${school.name}</option>
                 `;
                 });
             })
@@ -276,8 +276,8 @@
             return 0;
         }
 
-        school = school_logo.split("-")[0];
-        logo = school_logo.split("-")[1];
+        school = school_logo.split("~")[0];
+        logo = school_logo.split("~")[1];
 
         openSpinnerModal("School Details");
         var ip = localStorage["ip"];
@@ -392,6 +392,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     function isSchoolSet() {
         if ("school" in localStorage) {
             getSchoolDetails(localStorage["school"]);
+            document.getElementById("banner_img").src = localStorage.getItem('school_logo');
             document.getElementById("select_school").hidden = true;
             document.getElementById("sign_in_as").hidden = false;
         }
