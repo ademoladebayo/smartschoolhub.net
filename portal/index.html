@@ -137,7 +137,7 @@
                         <footer class="footer">
                             <div style="display: flex;
                             justify-content: center; font-family: Poppins;" class="copyright"><a
-                                    style="color: #051f3e;" href="#"><b><small> © 2023
+                                    style="color: #051f3e;" href="#"><b><small> © 2025
                                             Dextroux Technologies</small></b></a></div>
                         </footer>
                     </div>
@@ -271,13 +271,13 @@
             });
     }
 
-    function getSchoolDetails(school) {
-        if (school == "") {
+    function getSchoolDetails(school_logo) {
+        if (school_logo == "") {
             return 0;
         }
 
-        school = school.split("-")[0];
-        logo = school.split("-")[1];
+        school = school_logo.split("-")[0];
+        logo = school_logo.split("-")[1];
 
         openSpinnerModal("School Details");
         var ip = localStorage["ip"];
