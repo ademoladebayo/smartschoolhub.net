@@ -1,4 +1,4 @@
-const afidem_cache = `smartschoolhub-cache`;
+const smartschoolhub_cache = `smartschoolhub-cache`;
 const URLToIgnore = ["/api/admin/upload-image"];
 
 const assets = ["/"];
@@ -7,7 +7,7 @@ const assets = ["/"];
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
-      .open(afidem_cache)
+      .open(smartschoolhub_cache)
       .then((cache) => {
         return cache.addAll(assets);
       })
@@ -23,7 +23,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       convertPostRequestToGet(cloneReq).then((req) => {
         if (!navigator.onLine) {
-          return caches.open(afidem_cache).then(async (cache) => {
+          return caches.open(smartschoolhub_cache).then(async (cache) => {
             const response = await cache.match(req);
             if (response) {
               console.table("response used cache ... ");
@@ -39,7 +39,7 @@ self.addEventListener("fetch", (event) => {
         } else {
           return fetch(event.request).then((fetchResponse) => {
             const cloneResponse = fetchResponse.clone();
-            caches.open(afidem_cache).then((cache) => {
+            caches.open(smartschoolhub_cache).then((cache) => {
               cache.put(req, cloneResponse);
             });
             console.table("response used network ... ");
@@ -51,7 +51,7 @@ self.addEventListener("fetch", (event) => {
   } else {
     if (!navigator.onLine) {
       event.respondWith(
-        caches.open(afidem_cache).then(async (cache) => {
+        caches.open(smartschoolhub_cache).then(async (cache) => {
           const response = await cache.match(event.request);
           if (response) {
             console.table("response used cache ... ");
@@ -73,7 +73,7 @@ self.addEventListener("fetch", (event) => {
           const cloneResponse = fetchResponse.clone();
 
           // Cache the fetched response
-          caches.open(afidem_cache).then((cache) => {
+          caches.open(smartschoolhub_cache).then((cache) => {
             cache.put(event.request, cloneResponse);
           });
 
@@ -130,3 +130,29 @@ const sendMessage = async (msg, clientId) => {
     })
   );
 };
+
+
+// Listen for Pusher events via the Push API
+self.addEventListener('push', event => {
+  const payload = event.data?.json() || { title: 'New Notification', body: 'You have a new message!' };
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title, {
+      body: payload.body,
+      icon: './icons/120.png',
+      badge: '/badge.png',
+      vibrate: [200, 100, 200],
+    })
+  );
+});
+
+// Handle notification click (optional)
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('https://portal.smartschoolhub.net') // Open a URL when clicked
+  );
+});
+
+
+

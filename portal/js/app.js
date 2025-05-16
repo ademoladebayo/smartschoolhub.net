@@ -1,4 +1,10 @@
-const version = "1.0.3"; // Change this to a new value whenever you update the service worker
+
+
+
+
+
+
+const version = "1.0.9"; // Change this to a new value whenever you update the service worker
 const installButton = document.getElementById('install-pwa-button');
 let deferredPrompt;
 if ("serviceWorker" in navigator) {
@@ -11,7 +17,7 @@ if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", function () {
     navigator.serviceWorker
-      .register(`./serviceWorker.js?v=${version}`)
+     .register(`./serviceWorker.js?v=${version}`)
       .then((res) => console.log("service worker registered v" + version))
       .catch((err) => console.log("service worker not registered", err));
   });
@@ -26,7 +32,7 @@ if ("serviceWorker" in navigator) {
 
     // Show your custom install button
     //if (!localStorage["sshub_app_installed"]) {
-      openInstallModal();
+    openInstallModal();
     //}
   });
 
@@ -146,4 +152,43 @@ function openInstallModal() {
 function closeInstallModal() {
   parent.$("#installModal").modal("hide");
   parent.document.getElementById("installModal").remove();
+}
+
+
+
+async function initFirebaseMessagingRegistration() {
+  try {
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
+      authDomain: "dextroux-technologies.firebaseapp.com",
+      projectId: "dextroux-technologies",
+      storageBucket: "dextroux-technologies.appspot.com",
+      messagingSenderId: "1099192792266",
+      appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
+      measurementId: "G-QWNY4DPSNH",
+    };
+    const app = firebase.initializeApp(firebaseConfig)
+    const messaging = firebase.messaging();
+
+    const fcmSwRegistration = await navigator.serviceWorker.register(
+      '/firebase-messaging-sw.js',
+      { scope: '/firebase-cloud-messaging-push-scope/' } // Custom scope to avoid conflicts
+    );
+
+    // Get FCM token
+    const token = await messaging.getToken();
+    console.log('FCM Token:', token);
+
+    // Send token to your server for later use
+    //await saveTokenToServer(token);
+
+    // Listen for incoming messages (when app is in foreground)
+    messaging.onMessage((payload) => {
+      console.log('Foreground message:', payload);
+      showNotification(payload.notification);
+    });
+  } catch (err) {
+    console.log('eFCM initialization failed:', err);
+  }
 }

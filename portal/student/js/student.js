@@ -410,7 +410,7 @@ function goTo(page) {
     localStorage.clear();
     localStorage.setItem("school", school);
      localStorage.setItem("school_logo", school_logo);
-     
+
     window.parent.location.assign(domain);
     return 0;
   }

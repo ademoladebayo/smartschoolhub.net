@@ -165,6 +165,11 @@
 <!-- Select 2 Js -->
 <script src="./js/select2.min.js"></script>
 <script src="js/app.js?v=1"></script>
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+<!-- FIREBASE CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script>
 
 <style>
     .card {
@@ -229,6 +234,96 @@
         background-color: #999;
     }
 </style>
+
+<script>
+
+    // Request notification permission
+    // if ('Notification' in window) {
+    //     Notification.requestPermission().then(permission => {
+    //         if (permission === 'granted') {
+    //             console.log('Notification permission granted');
+    //         }
+    //     });
+    // }
+
+
+    // // Register Service Worker (for background push notifications)
+    // if ('serviceWorker' in navigator) {
+    //     navigator.serviceWorker.register('./serviceWorker.js')
+    //         .then(() => console.log('Service Worker registered!'))
+    //         .catch(err => console.error('SW registration failed:', err));
+    // }
+
+
+    // var pusher = new Pusher('5f279fb9cc121f52d778', {
+    //     cluster: 'eu'
+    // });
+
+    // var channel = pusher.subscribe('school');
+    // channel.bind('student', function (data) {
+    //     // document.getElementById('notification-sound').play();
+    //     // iziToast.success({
+    //     //     timeout: 25000,
+    //     //     position: 'topRight',
+    //     //     title: '<a href="https://app.dantownms.com/admin/rates" target="_blank">Show Rates </a>',
+    //     //     message: data.info
+    //     // });
+
+
+    //     if ('serviceWorker' in navigator) {
+    //         navigator.serviceWorker.ready.then(registration => {
+    //             registration.showNotification(data.title || 'New Notification', {
+    //                 body: data,
+    //                 icon: './icons/120.png',
+    //                 vibrate: [200, 100, 200],
+    //             });
+    //         });
+    //     } else {
+
+    //         alert(data);
+
+    //     }
+    // });
+
+
+    // const firebaseConfig = {
+    //     apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
+    //     authDomain: "dextroux-technologies.firebaseapp.com",
+    //     projectId: "dextroux-technologies",
+    //     storageBucket: "dextroux-technologies.appspot.com",
+    //     messagingSenderId: "1099192792266",
+    //     appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
+    //     measurementId: "G-QWNY4DPSNH",
+    // };
+    // const app = firebase.initializeApp(firebaseConfig)
+    // const messaging = firebase.messaging();
+
+
+    // try {
+    //     const fcmSwRegistration = navigator.serviceWorker.register(
+    //         '/firebase-messaging-sw.js',
+    //         { scope: '/firebase-cloud-messaging-push-scope/' } // Custom scope to avoid conflicts
+    //     );
+
+    //     // Get FCM token
+    //     const token = messaging.getToken();
+    //     console.log('FCM Token:', token);
+
+    //     // Send token to your server for later use
+    //     //await saveTokenToServer(token);
+
+    //     // Listen for incoming messages (when app is in foreground)
+    //     messaging.onMessage((payload) => {
+    //         console.log('Foreground message:', payload);
+    //         showNotification(payload.notification);
+    //     });
+    // } catch (err) {
+    //     console.error('FCM initialization failed:', err);
+    // }
+
+
+    initFirebaseMessagingRegistration();
+</script>
 
 <script type="module">
     import Config from './utils/js/config.js';

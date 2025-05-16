@@ -93,7 +93,7 @@
 <script src="../assets/js/lib/toastr/toastr.init.js"></script>
 <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
 <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
-<script src="../js/app.js"></script>
+<!-- <script src="../js/app.js"></script> -->
 
 <!-- FIREBASE CDN -->
 <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
@@ -117,39 +117,67 @@
     const app = firebase.initializeApp(firebaseConfig)
     const messaging = firebase.messaging();
 
-    function initFirebaseMessagingRegistration() {
-        return messaging.getToken({ vapidKey: 'BCaDCU0B1hVyl5wJLgYeqoEK_H884I0EB1foOClfC-b-bg_WFFE9XQVOiiYfUl0OTvojVK9am5vQ0AlAbw_hQtc' }).then((currentToken) => {
-            // app token used for sending notifications
-            if (currentToken) {
-                console.log(currentToken);
-                return currentToken;
-            } else {
-                return null;
-            }
-        }).catch((err) => {
-            // notifications are manually blocked, you can ask for unblock here
-            console.log('An error occurred while retrieving token. ', err);
-            return null;
-        });
+    // function initFirebaseMessagingRegistration() {
+    //     return messaging.getToken({ vapidKey: 'BCaDCU0B1hVyl5wJLgYeqoEK_H884I0EB1foOClfC-b-bg_WFFE9XQVOiiYfUl0OTvojVK9am5vQ0AlAbw_hQtc' }).then((currentToken) => {
+    //         // app token used for sending notifications
+    //         if (currentToken) {
+    //             console.log(currentToken);
+    //             return currentToken;
+    //         } else {
+    //             return null;
+    //         }
+    //     }).catch((err) => {
+    //         // notifications are manually blocked, you can ask for unblock here
+    //         console.log('An error occurred while retrieving token. ', err);
+    //         return null;
+    //     });
 
 
-    }
+    // }
 
 
-    messaging.onMessage((payload) => {
-        // notification data receive here, use it however you want
-        // keep in mind if message receive here, it will not notify in background
-        alert(payload.data.body)
-        console.log('in app notify ', payload);
-        const notificationTitle = payload.data.title;
-        const notificationOptions = {
-            body: payload.data.body,
-            icon: payload.data.icon,
-        };
-        var notification = new Notification(notificationTitle, notificationOptions);
-        console.log('Notification created:', notification)
+    // messaging.onMessage((payload) => {
+    //     // notification data receive here, use it however you want
+    //     // keep in mind if message receive here, it will not notify in background
+    //     alert(payload.data.body)
+    //     console.log('in app notify ', payload);
+    //     const notificationTitle = payload.data.title;
+    //     const notificationOptions = {
+    //         body: payload.data.body,
+    //         icon: payload.data.icon,
+    //     };
+    //     var notification = new Notification(notificationTitle, notificationOptions);
+    //     console.log('Notification created:', notification)
 
-    });
+    // });
+
+
+    // async function initFirebaseMessagingRegistration() {
+    //     try {
+    //         const fcmSwRegistration = await navigator.serviceWorker.register(
+    //             '/firebase-messaging-sw.js',
+    //             { scope: '/firebase-cloud-messaging-push-scope/' } // Custom scope to avoid conflicts
+    //         );
+
+    //         // Get FCM token
+    //         const token = await messaging.getToken();
+    //         console.log('FCM Token:', token);
+
+    //         // Send token to your server for later use
+    //         //await saveTokenToServer(token);
+
+    //         // Listen for incoming messages (when app is in foreground)
+    //         messaging.onMessage((payload) => {
+    //             console.log('Foreground message:', payload);
+    //             showNotification(payload.notification);
+    //         });
+    //     } catch (err) {
+    //         console.error('FCM initialization failed:', err);
+    //     }
+    // }
+
+     
+
 
 
 </script>
