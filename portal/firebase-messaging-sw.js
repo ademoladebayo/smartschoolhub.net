@@ -33,7 +33,8 @@ messaging.setBackgroundMessageHandler(function (payload) {
  const notificationTitle = payload.data.title;
   const notificationOptions = {
     body: payload.data.body,
-    icon: payload.data.icon,
+    icon: "https://portal.smartschoolhub.net/icons/120.png",
+     sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
   };
 
   return self.registration.showNotification(
@@ -41,42 +42,3 @@ messaging.setBackgroundMessageHandler(function (payload) {
     notificationOptions
   );
 });
-// --------------------------------------------------------------------------------------------------
-// importScripts(
-//   "https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"
-// );
-// importScripts(
-//   "https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"
-// );
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
-//   authDomain: "dextroux-technologies.firebaseapp.com",
-//   projectId: "dextroux-technologies",
-//   storageBucket: "dextroux-technologies.appspot.com",
-//   messagingSenderId: "1099192792266",
-//   appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
-//   measurementId: "G-QWNY4DPSNH",
-// };
-
-// // Initialize Firebase
-// const app = firebase.initializeApp(firebaseConfig);
-// const messaging = firebase.messaging();
-// messaging.onBackgroundMessage(function (payload) {
-//   console.log('out app notify ', payload);
-
-//   // Customize notification here
-//   const notificationTitle = payload.data.title;
-//   const notificationOptions = {
-//     body: payload.data.body,
-//     icon: payload.data.icon,
-//     image: payload.data.image,
-//   };
-
-//   self.registration.showNotification(notificationTitle, notificationOptions);
-//   self.addEventListener("notificationclick", function (event) {
-//     const clickedNotification = event.notification;
-//     clickedNotification.close();
-//     event.waitUntil(clients.openWindow(payload.data.click_action));
-//   });
-// });

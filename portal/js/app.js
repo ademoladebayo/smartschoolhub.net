@@ -1,10 +1,4 @@
-
-
-
-
-
-
-const version = "1.0.9"; // Change this to a new value whenever you update the service worker
+const version = "1.1.2"; // Change this to a new value whenever you update the service worker
 const installButton = document.getElementById('install-pwa-button');
 let deferredPrompt;
 if ("serviceWorker" in navigator) {
@@ -17,8 +11,14 @@ if ("serviceWorker" in navigator) {
 
   window.addEventListener("load", function () {
     navigator.serviceWorker
-     .register(`./serviceWorker.js?v=${version}`)
-      .then((res) => console.log("service worker registered v" + version))
+      .register(`./serviceWorker.js?v=${version}`)
+      .then((res) => {
+        console.log("service worker registered v" + version)
+        setTimeout(() => {
+          initFirebaseMessagingRegistration();
+        }
+          , 5000);
+      })
       .catch((err) => console.log("service worker not registered", err));
   });
 
@@ -178,15 +178,24 @@ async function initFirebaseMessagingRegistration() {
 
     // Get FCM token
     const token = await messaging.getToken();
+    localStorage.setItem("sshub_fcm_token", token);
     console.log('FCM Token:', token);
-
-    // Send token to your server for later use
-    //await saveTokenToServer(token);
 
     // Listen for incoming messages (when app is in foreground)
     messaging.onMessage((payload) => {
-      console.log('Foreground message:', payload);
-      showNotification(payload.notification);
+      // notification data receive here, use it however you want
+      // keep in mind if message receive here, it will not notify in background
+
+      console.log('in app notify ', payload);
+      const notificationTitle = payload.notification.title;
+      const notificationOptions = {
+        body: payload.notification.body,
+        icon: "https://portal.smartschoolhub.net/icons/120.png",
+        sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
+      };
+      var notification = new Notification(notificationTitle, notificationOptions);
+      console.log('Notification created:', notification)
+
     });
   } catch (err) {
     console.log('eFCM initialization failed:', err);

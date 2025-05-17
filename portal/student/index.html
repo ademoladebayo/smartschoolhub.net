@@ -105,35 +105,17 @@
 
     document.getElementById("banner_img").src = localStorage.getItem('school_logo');
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
-        authDomain: "dextroux-technologies.firebaseapp.com",
-        projectId: "dextroux-technologies",
-        storageBucket: "dextroux-technologies.appspot.com",
-        messagingSenderId: "1099192792266",
-        appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
-        measurementId: "G-QWNY4DPSNH",
-    };
-    const app = firebase.initializeApp(firebaseConfig)
-    const messaging = firebase.messaging();
-
-    // function initFirebaseMessagingRegistration() {
-    //     return messaging.getToken({ vapidKey: 'BCaDCU0B1hVyl5wJLgYeqoEK_H884I0EB1foOClfC-b-bg_WFFE9XQVOiiYfUl0OTvojVK9am5vQ0AlAbw_hQtc' }).then((currentToken) => {
-    //         // app token used for sending notifications
-    //         if (currentToken) {
-    //             console.log(currentToken);
-    //             return currentToken;
-    //         } else {
-    //             return null;
-    //         }
-    //     }).catch((err) => {
-    //         // notifications are manually blocked, you can ask for unblock here
-    //         console.log('An error occurred while retrieving token. ', err);
-    //         return null;
-    //     });
-
-
-    // }
+    // const firebaseConfig = {
+    //     apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
+    //     authDomain: "dextroux-technologies.firebaseapp.com",
+    //     projectId: "dextroux-technologies",
+    //     storageBucket: "dextroux-technologies.appspot.com",
+    //     messagingSenderId: "1099192792266",
+    //     appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
+    //     measurementId: "G-QWNY4DPSNH",
+    // };
+    // const app = firebase.initializeApp(firebaseConfig)
+    // const messaging = firebase.messaging();
 
 
     // messaging.onMessage((payload) => {
@@ -150,35 +132,6 @@
     //     console.log('Notification created:', notification)
 
     // });
-
-
-    // async function initFirebaseMessagingRegistration() {
-    //     try {
-    //         const fcmSwRegistration = await navigator.serviceWorker.register(
-    //             '/firebase-messaging-sw.js',
-    //             { scope: '/firebase-cloud-messaging-push-scope/' } // Custom scope to avoid conflicts
-    //         );
-
-    //         // Get FCM token
-    //         const token = await messaging.getToken();
-    //         console.log('FCM Token:', token);
-
-    //         // Send token to your server for later use
-    //         //await saveTokenToServer(token);
-
-    //         // Listen for incoming messages (when app is in foreground)
-    //         messaging.onMessage((payload) => {
-    //             console.log('Foreground message:', payload);
-    //             showNotification(payload.notification);
-    //         });
-    //     } catch (err) {
-    //         console.error('FCM initialization failed:', err);
-    //     }
-    // }
-
-     
-
-
 
 </script>
 

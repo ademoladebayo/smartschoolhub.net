@@ -76,37 +76,40 @@ class GeneralController extends Controller
 
     public function runMigration(Request $request)
     {
-        $client = new \GuzzleHttp\Client();
-          $route = "https://smartschoolhub.net/backend/website/api/schools";
-        //$route = "http://localhost:8001/api/schools";
-        try {
-            // CALL ENDPOINT
-            $response = $client->request("GET", $route, [
-                'headers' => [
-                    'accept' => 'application/json',
-                    'content-type' => 'application/json',
-                ],
-            ]);
 
-            $data = json_decode($response->getBody(), true);
+        return NotificationController::createNotification('ENV', 'Migration', 'cU5ZocSx9J7-TITjzvOLeh:APA91bGQGO8jYF-MVPGKqkeRNAjrXMRFrOxHBD9heUKv_K-BXh_nWDPXdrHA1KOOGi16rv88w9bm-9FYgQ3L1q1V6NT63AzXClv6-vNmdQ1gb__XoP57YW4');
 
-            foreach ($data as $school) {
-                //$school = $data[0];
+        // $client = new \GuzzleHttp\Client();
+        // //  $route = "https://smartschoolhub.net/backend/website/api/schools";
+        // $route = "http://localhost:8001/api/schools";
+        // try {
+        //     // CALL ENDPOINT
+        //     $response = $client->request("GET", $route, [
+        //         'headers' => [
+        //             'accept' => 'application/json',
+        //             'content-type' => 'application/json',
+        //         ],
+        //     ]);
 
-                try {
-                    \Log::info("Running migration for ... " . $school['alias']);
-                    config(['database.default' => $school['alias']]);
-                    Artisan::call('migrate');
-                } catch (\Throwable $th) {
-                    \Log::info("Error running migration for ... " . $school['alias']);
-                    \Log::info($th->getMessage());
-                }
+        //     $data = json_decode($response->getBody(), true);
 
-            }
+        //     foreach ($data as $school) {
+        //         //$school = $data[0];
 
-            return "Migration completed successfully for all schools";
-        } catch (\Throwable $th) {
-            \Log::info($th->getMessage());
-        }
+        //         try {
+        //             \Log::info("Running migration for ... " . $school['alias']);
+        //             config(['database.default' => $school['alias']]);
+        //             Artisan::call('migrate');
+        //         } catch (\Throwable $th) {
+        //             \Log::info("Error running migration for ... " . $school['alias']);
+        //             \Log::info($th->getMessage());
+        //         }
+
+        //     }
+
+        //     return "Migration completed successfully for all schools";
+        // } catch (\Throwable $th) {
+        //     \Log::info($th->getMessage());
+        // }
     }
 }

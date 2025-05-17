@@ -2,6 +2,40 @@ var ip = localStorage["ip"];
 var domain = localStorage["domain"];
 const timestamp = new Date().getTime();
 
+try {
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
+    authDomain: "dextroux-technologies.firebaseapp.com",
+    projectId: "dextroux-technologies",
+    storageBucket: "dextroux-technologies.appspot.com",
+    messagingSenderId: "1099192792266",
+    appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
+    measurementId: "G-QWNY4DPSNH",
+  };
+  const app = firebase.initializeApp(firebaseConfig)
+  const messaging = firebase.messaging();
+
+  // Listen for incoming messages (when app is in foreground)
+  messaging.onMessage((payload) => {
+    // notification data receive here, use it however you want
+    // keep in mind if message receive here, it will not notify in background
+
+    console.log('in app notify ', payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+      icon: "https://portal.smartschoolhub.net/icons/120.png",
+      sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
+    };
+    var notification = new Notification(notificationTitle, notificationOptions);
+    console.log('Notification created:', notification)
+
+  });
+} catch (err) {
+  console.log('eFCM initialization failed:', err);
+}
+
 getSchoolDetails();
 collapseSidebar();
 
@@ -11,6 +45,44 @@ window.addEventListener("online", () =>
 window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
+window.addEventListener('load', function () {
+  setTimeout(() => {
+    try {
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
+        authDomain: "dextroux-technologies.firebaseapp.com",
+        projectId: "dextroux-technologies",
+        storageBucket: "dextroux-technologies.appspot.com",
+        messagingSenderId: "1099192792266",
+        appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
+        measurementId: "G-QWNY4DPSNH",
+      };
+      const app = firebase.initializeApp(firebaseConfig)
+      const messaging = firebase.messaging();
+
+      // Listen for incoming messages (when app is in foreground)
+      messaging.onMessage((payload) => {
+        // notification data receive here, use it however you want
+        // keep in mind if message receive here, it will not notify in background
+
+        console.log('in app notify ', payload);
+        const notificationTitle = payload.notification.title;
+        const notificationOptions = {
+          body: payload.notification.body,
+          icon: "https://portal.smartschoolhub.net/icons/120.png",
+          sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
+        };
+        var notification = new Notification(notificationTitle, notificationOptions);
+        console.log('Notification created:', notification)
+
+      });
+    } catch (err) {
+      console.log('eFCM initialization failed:', err);
+    }
+
+  }, 5000); // Adjust delay if needed
+})
 
 // getCurrentSession();
 if (
@@ -152,7 +224,8 @@ async function signIn() {
           getStoredCredential();
 
           //REGISTER USER DEVICE
-          deviceToken = await initFirebaseMessagingRegistration();
+          //deviceToken = await initFirebaseMessagingRegistration();
+          deviceToken = localStorage['sshub_fcm_token'];
           await sendTokenToServer(deviceToken, "BURSARY", data.data.id);
 
           setTimeout(function () {
@@ -334,7 +407,7 @@ function goTo(page) {
     localStorage.clear();
     localStorage.setItem("school", school);
     localStorage.setItem("school_logo", school_logo);
-    
+
     window.parent.location.assign(domain);
     return 0;
   }
@@ -810,13 +883,13 @@ async function getReceipt() {
         // IMAGE URL
         url =
           domain +
-          "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/student/" +
+          "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
           user_data.data.student_id +
           `.png?timestamp=${timestamp}`;
 
         // SCHOOL LOGO URL
         school_logo_url =
-          domain + "/backend/storage/app/public/fileupload/"+localStorage["school"]+"/school_logo.png";
+          domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
 
         // SCHOOL_LOGO
         document.getElementById("school_logo").src = school_logo_url;
@@ -2347,7 +2420,7 @@ async function loadCustomSessionTerm() {
           document.getElementById(
             "session_term"
           ).innerHTML += `<option value="${session_term[i].session + "-" + session_term[i].term
-            }">${session_term[i].session + " - " + session_term[i].term
+          }">${session_term[i].session + " - " + session_term[i].term
             }</option>`;
         }
 
@@ -2390,7 +2463,7 @@ function loadCustomSessionTermForDashboard() {
           document.getElementById(
             "session_term"
           ).innerHTML += `<option value="${sessions.session + "-" + term}">${sessions.session + "-" + term
-            }</option>`;
+          }</option>`;
         });
       });
     })
