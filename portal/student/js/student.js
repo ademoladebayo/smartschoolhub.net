@@ -1,3 +1,8 @@
+importScripts("https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js");
+importScripts(
+  "https://www.gstatic.com/firebasejs/7.23.0/firebase-messaging.js"
+);
+
 // SOUND VARIABLES
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
@@ -446,10 +451,14 @@ function goTo(page) {
   if (page == "") {
     school = localStorage["school"];
     school_logo = localStorage["school_logo"];
+    device_token = localStorage["sshub_fcm_token"];
+    register_device = localStorage["register_device"];
 
     localStorage.clear();
     localStorage.setItem("school", school);
     localStorage.setItem("school_logo", school_logo);
+    localStorage.setItem("sshub_fcm_token", device_token);
+    localStorage.setItem("register_device", register_device);
 
     window.parent.location.assign(domain);
     return 0;
@@ -499,12 +508,29 @@ function signIn() {
 
           //REGISTER USER DEVICE
           //deviceToken = await initFirebaseMessagingRegistration();
-          deviceToken = localStorage['sshub_fcm_token'];
-          if ("isParent" in data) {
-            localStorage.setItem("isParent", data.isParent);
-            await sendTokenToServer(deviceToken, "PARENT", data.data.id);
-          } else {
-            await sendTokenToServer(deviceToken, "STUDENT", data.data.id);
+
+          // Get or initialize device token
+          const deviceToken = localStorage.getItem('sshub_fcm_token') || null;
+          const needsRegistration = localStorage.getItem('register_device') == '1';
+
+          // Register new/changed token
+          if (!deviceToken || data.data.device_token != deviceToken) {
+            if (!needsRegistration) {
+              localStorage.setItem('register_device', '1');
+            }
+          }
+
+          // Send token to server if registered
+          if (deviceToken && needsRegistration) {
+            try {
+              const userType = data.isParent ? "PARENT" : "STUDENT";
+              await sendTokenToServer(deviceToken, userType, data.data.id);
+              localStorage.setItem('isParent', data.isParent);
+              localStorage.setItem('register_device', '0'); // Mark as completed
+            } catch (error) {
+              console.error('Failed to register token:', error);
+              // Consider keeping register_device=1 to retry later
+            }
           }
 
           setTimeout(function () {

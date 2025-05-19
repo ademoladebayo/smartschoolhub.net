@@ -486,6 +486,10 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     }
 
     function isSchoolSet() {
+        if (localStorage.getItem('register_device') === '1') {
+            localStoragelocalStorage.removeItem('school');
+        }
+
         if ("school" in localStorage) {
             getSchoolDetails(localStorage["school"] + "~" + localStorage.getItem('school_logo'));
             document.getElementById("banner_img").src = localStorage.getItem('school_logo');
@@ -496,7 +500,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
 
     window.addEventListener("load", () => {
         isSchoolSet();
-        getSchools();
+        //getSchools();
         //getSchoolDetails();
 
 

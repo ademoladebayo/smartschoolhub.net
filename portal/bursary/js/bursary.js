@@ -225,8 +225,30 @@ async function signIn() {
 
           //REGISTER USER DEVICE
           //deviceToken = await initFirebaseMessagingRegistration();
-          deviceToken = localStorage['sshub_fcm_token'];
-          await sendTokenToServer(deviceToken, "BURSARY", data.data.id);
+
+          // Get or initialize device token
+          const deviceToken = localStorage.getItem('sshub_fcm_token') || null;
+          const needsRegistration = localStorage.getItem('register_device') == '1';
+
+          // Register new/changed token
+          if (!deviceToken || data.data.device_token != deviceToken) {
+            if (!needsRegistration) {
+              localStorage.setItem('register_device', '1');
+            }
+          }
+
+          // Send token to server if registered
+          if (deviceToken && needsRegistration) {
+            try {
+              const userType = "BURSARY";
+              await sendTokenToServer(deviceToken, userType, data.data.id);
+              localStorage.setItem('register_device', '0'); // Mark as completed
+            } catch (error) {
+              console.error('Failed to register token:', error);
+              // Consider keeping register_device=1 to retry later
+            }
+          }
+
 
           setTimeout(function () {
             window.location.href = "dashboard.html";
@@ -403,10 +425,14 @@ function goTo(page) {
   if (page == "") {
     school = localStorage["school"];
     school_logo = localStorage["school_logo"];
+    device_token = localStorage["sshub_fcm_token"];
+    register_device = localStorage["register_device"];
 
     localStorage.clear();
     localStorage.setItem("school", school);
     localStorage.setItem("school_logo", school_logo);
+    localStorage.setItem("sshub_fcm_token", device_token);
+    localStorage.setItem("register_device", register_device);
 
     window.parent.location.assign(domain);
     return 0;

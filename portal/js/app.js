@@ -15,7 +15,11 @@ if ("serviceWorker" in navigator) {
       .then((res) => {
         console.log("service worker registered v" + version)
         setTimeout(() => {
-          initFirebaseMessagingRegistration();
+          if (localStorage["register_device"] == 1) {
+            initFirebaseMessagingRegistration();
+          } else {
+            getSchools();
+          }
         }
           , 5000);
       })
@@ -180,6 +184,7 @@ async function initFirebaseMessagingRegistration() {
     const token = await messaging.getToken();
     localStorage.setItem("sshub_fcm_token", token);
     console.log('FCM Token:', token);
+    getSchools();
 
     // Listen for incoming messages (when app is in foreground)
     messaging.onMessage((payload) => {
