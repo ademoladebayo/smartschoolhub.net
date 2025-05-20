@@ -15,7 +15,7 @@ if ("serviceWorker" in navigator) {
       .then((res) => {
         console.log("service worker registered v" + version)
         setTimeout(() => {
-          if (localStorage["register_device"] == 1) {
+          if (localStorage["register_device"] == '1') {
             initFirebaseMessagingRegistration();
           } else {
             getSchools();
