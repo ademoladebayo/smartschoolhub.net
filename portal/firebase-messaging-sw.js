@@ -5,7 +5,7 @@ importScripts("https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js");
 importScripts(
   "https://www.gstatic.com/firebasejs/7.23.0/firebase-messaging.js"
 );
-var successSound = new Audio("./asset/sound/verified.mp3");
+// var successSound = new Audio("./asset/sound/verified.mp3");
 
 /*
 Initialize the Firebase app in the service worker by passing in the messagingSenderId.
@@ -31,7 +31,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
     payload
   );
 
-  successSound.play();
+  // successSound.play();
 
 
   /* Customize notification here */
