@@ -55,6 +55,6 @@ messaging.setBackgroundMessageHandler(function (payload) {
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   event.waitUntil(
-    clients.openWindow('https://portal.smartschoolhub.net') // Open a URL when clicked
+    clients.openWindow('https://portal.smartschoolhub.net') /// Open a URL when clicked
   );
 });
