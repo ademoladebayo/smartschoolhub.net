@@ -5,6 +5,7 @@ importScripts("https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js");
 importScripts(
   "https://www.gstatic.com/firebasejs/7.23.0/firebase-messaging.js"
 );
+var successSound = new Audio("./asset/sound/verified.mp3");
 
 /*
 Initialize the Firebase app in the service worker by passing in the messagingSenderId.
@@ -29,16 +30,31 @@ messaging.setBackgroundMessageHandler(function (payload) {
     "[firebase-sw.js] Received background message ",
     payload
   );
+
+  successSound.play();
+
+
   /* Customize notification here */
- const notificationTitle = payload.data.title;
+  const notificationTitle = payload.data.title;
   const notificationOptions = {
     body: payload.data.body,
-    icon: "https://portal.smartschoolhub.net/icons/120.png",
-     sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
+    icon: "https://portal.smartschoolhub.net/icons/72.png",
+    sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
   };
 
   return self.registration.showNotification(
     notificationTitle,
     notificationOptions
+  );
+});
+
+
+
+
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('https://portal.smartschoolhub.net') // Open a URL when clicked
   );
 });

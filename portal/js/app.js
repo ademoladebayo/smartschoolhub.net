@@ -1,4 +1,4 @@
-const version = "1.1.2"; // Change this to a new value whenever you update the service worker
+const version = "1.1.8"; // Change this to a new value whenever you update the service worker
 const installButton = document.getElementById('install-pwa-button');
 let deferredPrompt;
 if ("serviceWorker" in navigator) {

@@ -45,6 +45,7 @@ window.addEventListener("online", () =>
 window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
+
 window.addEventListener('load', function () {
   setTimeout(() => {
     try {

@@ -55,7 +55,7 @@ class NotificationController extends Controller
     {
         $AccessToken = self::generateFcmAccessToken(public_path('firebase-service-account.json'));
 
-        $logo = asset("admin_assets/img/logo.svg");
+        $logo = "https://portal.smartschoolhub.net/icons/120.png";
 
         $receiverString = $reciever;//implode(', ', $reciever); 
 
@@ -69,8 +69,8 @@ class NotificationController extends Controller
                 'data' => array("title" => $title, "message" => $message, "image" => $logo, "type" => "none", "click_action" => "FLUTTER_NOTIFICATION_CLICK"),
             ),
         );
-       
-       
+
+
         $ch = curl_init();
         $projectID = 'dextroux-technologies';
         $headers = array('https://fcm.googleapis.com/v1/projects/' . $projectID . '/messages:send', 'Content-Type: application/json', 'Authorization: Bearer ' . $AccessToken);

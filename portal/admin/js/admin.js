@@ -27,7 +27,9 @@ window.addEventListener("online", () =>
 window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
+
 window.addEventListener('load', function () {
+
   setTimeout(() => {
     try {
 
@@ -57,6 +59,10 @@ window.addEventListener('load', function () {
         };
         var notification = new Notification(notificationTitle, notificationOptions);
         console.log('Notification created:', notification)
+
+
+        notificationDialog(payload.notification.title, payload.notification.body);
+        successSound.play();
 
       });
     } catch (err) {
@@ -7659,3 +7665,131 @@ if ("serviceWorker" in navigator) {
 
 // // Start observing the <body> element for changes
 // observer.observe(body, observerConfig);
+//
+
+
+
+
+
+
+//NOTIFICATION DIALOG	
+
+
+function notificationDialog(title, message) {
+  // Create the modal HTML
+  const modalHTML = `
+    <div class="notification-modal" id="notificationModal">
+        <div class="notification-header">
+            <i class="fas fa-comment-dots notification-icon"></i>
+            <span class="notification-title">${title}</span>
+            <button class="close-btn" onclick="closeNotification()">&times;</button>
+        </div>
+        <div class="notification-body">
+            <p>${message}</p>
+        </div>
+        <div class="notification-footer">
+            <button class="action-btn" onclick="handleAction()">View Messages</button>
+        </div>
+    </div>
+    `;
+
+  // Append to body
+  $("body").append(modalHTML);
+
+  // Show the modal
+  $("#notificationModal").fadeIn(300);
+
+  // Auto-close after 10 seconds
+  setTimeout(() => {
+    if ($("#notificationModal").is(":visible")) {
+      closeNotification();
+    }
+  }, 20000);
+}
+
+// Close function
+function closeNotification() {
+  $("#notificationModal").fadeOut(300, function () {
+    $(this).remove();
+  });
+}
+
+// Action handler
+function handleAction() {
+  alert('Redirecting to messages...');
+  closeNotification();
+  // Add your actual action here
+}
+
+// CSS (should be in your stylesheet or head section)
+function addNotificationStyles() {
+  const style = `
+    <style>
+        .notification-modal {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+        .notification-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: #051f3e;
+            color: white;
+        }
+        .notification-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .notification-title {
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .notification-body {
+            padding: 15px;
+            color: #333;
+        }
+        .notification-footer {
+            padding: 10px 15px;
+            text-align: right;
+            border-top: 1px solid #eee;
+        }
+        .action-btn {
+            background-color: #051f3e;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+    `;
+  $("head").append(style);
+}
+
+// Initialize when needed
+$(document).ready(function () {
+  addNotificationStyles()
+  // Add styles if not already present
+  if (!$(".notification-modal").length) {
+    addNotificationStyles();
+  }
+
+  // Example usage:
+  // notificationDialog();
+});
