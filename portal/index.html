@@ -488,7 +488,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     function isSchoolSet() {
         if (localStorage.getItem('register_device') == '1') {
             localStorage.removeItem('school');
-            // alert("Removed School");
+             alert("Removed School");
         } else {
 
             // if ("school" in localStorage) {
@@ -496,7 +496,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
             document.getElementById("banner_img").src = localStorage.getItem('school_logo');
             document.getElementById("select_school").hidden = true;
             document.getElementById("sign_in_as").hidden = false;
-            // alert("Did not remove School");
+             alert("Did not remove School");
         }
     }
 
