@@ -1,4 +1,4 @@
-const version = "1.1.8"; // Change this to a new value whenever you update the service worker
+const version = "1.1.9"; // Change this to a new value whenever you update the service worker
 const installButton = document.getElementById('install-pwa-button');
 let deferredPrompt;
 if ("serviceWorker" in navigator) {
@@ -16,9 +16,9 @@ if ("serviceWorker" in navigator) {
         console.log("service worker registered v" + version)
         setTimeout(() => {
           alert("App js onload");
-          localStorage.setItem('register_device', '1');
-          //if (localStorage["register_device"] == '1') {
-          if (true) {
+          // localStorage.setItem('register_device', '1');
+          if (localStorage["register_device"] == '1') {
+            // if (true) {
             initFirebaseMessagingRegistration();
           } else {
             getSchools();
