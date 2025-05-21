@@ -402,6 +402,7 @@
                 document.getElementById("select_school").hidden = true;
                 localStorage.setItem('school', school);
 
+                alert("School set successfully" + localStorage["school"] + " " + localStorage.getItem("school_logo"));
             })
             .catch((err) => {
                 removeSpinnerModal();
@@ -486,23 +487,23 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     }
 
     function isSchoolSet() {
-        if (localStorage.getItem('register_device') == '1') {
+        if (localStorage["register_device"] == '1') {
             localStorage.removeItem('school');
             alert("Removed School");
         } else {
 
             // if ("school" in localStorage) {
-            getSchoolDetails(localStorage["school"] + "~" + localStorage.getItem('school_logo'));
-            document.getElementById("banner_img").src = localStorage.getItem('school_logo');
+            getSchoolDetails(localStorage["school"] + "~" + localStorage["school_logo"])
+            document.getElementById("banner_img").src = localStorage["school_logo"]
             document.getElementById("select_school").hidden = true;
             document.getElementById("sign_in_as").hidden = false;
-            alert("Did not remove School" + localStorage.getItem('register_device'));
+            alert("Did not remove School" + localStorage["register_device"]);
         }
     }
 
     window.addEventListener("load", () => {
         // alert("Reach onload");
-        isSchoolSet();
+        //isSchoolSet();
         //getSchools();
         //getSchoolDetails();
 
@@ -510,6 +511,10 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
         // if (localStorage['sshub_app_installed'] == false) {
         //     document.getElementById('download_app').hidden = false;
         // }
+
+        setTimeout(() => {
+            isSchoolSet();
+        }, 500);
     }
     );
 
