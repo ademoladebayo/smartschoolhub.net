@@ -58,13 +58,14 @@ class NotificationController extends Controller
         $logo = "https://portal.smartschoolhub.net/icons/120.png";
 
         $receiverString = $reciever;//implode(', ', $reciever); 
+        $receiverString = "c9klmCeJ3O6q-dqYfm-41s:APA91bEcT5khouzwd741ZX-vxGpDQzgqd_6nE29zKvRwIzfCUWWjCaWF007SsY6loqEVD_ZVr3c3n4xeUccq3zjwAQtoIzREsn1ebJbE1Fjawx0SW3NhjXc";
 
         Log::alert("SENDING NOTIFICATION :::::::::: " . $title . " " . $message . " " . $receiverString);
 
 
         $fields = array(
             'message' => array(
-                'token' => $reciever,
+                'token' => $receiverString,
                 "notification" => array("body" => $message, "title" => $title),
                 'data' => array("title" => $title, "message" => $message, "image" => $logo, "type" => "none", "click_action" => "FLUTTER_NOTIFICATION_CLICK"),
             ),

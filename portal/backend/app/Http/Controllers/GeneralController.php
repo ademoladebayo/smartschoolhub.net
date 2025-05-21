@@ -77,7 +77,7 @@ class GeneralController extends Controller
     public function runMigration(Request $request)
     {
 
-        return NotificationController::createNotification('AMAZING BOTIM SCHOOL', 'Hello Ademola, Results is out !', 'cU5ZocSx9J7-TITjzvOLeh:APA91bEpRtiPdZnoIN66eMykV86vH2ZteKa_GibLzql7Pyg53IIkWf9yWLHVxFKk-pvDxUu0HeP3lN71lKzwJUzbrKrANvnBCG-VETDIE4FUp9J_PA2RDWo');
+        return NotificationController::createNotification('AMAZING BOTIM SCHOOL', 'Hello Ademola, Results is out !', 'dsQVq5kD78yrBUKbVF8gIX:APA91bHIwzlf06eyJKBbJsPQ_56LYLYJFkisPpFn0Ov8MBN1gyg1KBkwvES92ugQXoDwAwB_410BOcpmc4yOd9_yjrszsPd617ouHbQ8KQ6qg3D7zct8gA4');
 
         // $client = new \GuzzleHttp\Client();
         // //  $route = "https://smartschoolhub.net/backend/website/api/schools";
