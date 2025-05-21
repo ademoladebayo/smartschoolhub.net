@@ -165,13 +165,13 @@ async function signIn() {
               localStorage.setItem('register_device', '1');
               errortoast("Device not registered.");
 
-              alert("Flagged to register Device token: " + deviceToken + " --- " + data.data.device_token + " ---" + needsRegistration);
+              // alert("Flagged to register Device token: " + deviceToken + " --- " + data.data.device_token + " ---" + needsRegistration);
             }
           }
 
           // Send token to server if registered
           if (deviceToken && needsRegistration) {
-            alert("About to register Device token: " + deviceToken + " --- " + data.data.device_token + " ---" + needsRegistration);
+            // alert("About to register Device token: " + deviceToken + " --- " + data.data.device_token + " ---" + needsRegistration);
             try {
               const userType = "ADMIN";
               await sendTokenToServer(deviceToken, userType, data.data.id);

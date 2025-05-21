@@ -402,7 +402,7 @@
                 document.getElementById("select_school").hidden = true;
                 localStorage.setItem('school', school);
 
-                alert("School set successfully" + localStorage["school"] + " " + localStorage.getItem("school_logo"));
+                // alert("School set successfully" + localStorage["school"] + " " + localStorage.getItem("school_logo"));
             })
             .catch((err) => {
                 removeSpinnerModal();
@@ -489,7 +489,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
     function isSchoolSet() {
         if (localStorage["register_device"] == '1') {
             localStorage.removeItem('school');
-            alert("Removed School");
+            // alert("Removed School");
         } else {
 
             // if ("school" in localStorage) {
@@ -497,7 +497,7 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
             document.getElementById("banner_img").src = localStorage["school_logo"]
             document.getElementById("select_school").hidden = true;
             document.getElementById("sign_in_as").hidden = false;
-            alert("Did not remove School" + localStorage["register_device"]);
+            // alert("Did not remove School" + localStorage["register_device"]);
         }
     }
 
