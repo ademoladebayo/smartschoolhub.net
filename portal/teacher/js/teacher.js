@@ -352,6 +352,7 @@ async function signIn() {
           if (!deviceToken || data.data.device_token != deviceToken) {
             if (!needsRegistration) {
               localStorage.setItem('register_device', '1');
+               errortoast("Device not registered.");
             }
           }
 
@@ -5008,6 +5009,7 @@ async function sendTokenToServer(deviceToken, user_type, id) {
 
     .then((data) => {
       console.log(data);
+      successtoast("Device registered successfully");
     })
     .catch((err) => console.log(err));
 }

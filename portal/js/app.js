@@ -15,7 +15,7 @@ if ("serviceWorker" in navigator) {
       .then((res) => {
         console.log("service worker registered v" + version)
         setTimeout(() => {
-          alert("App js onload");
+          //alert("App js onload");
           // localStorage.setItem('register_device', '1');
           if (localStorage["register_device"] == '1') {
             // if (true) {
@@ -165,7 +165,7 @@ function closeInstallModal() {
 
 async function initFirebaseMessagingRegistration() {
   try {
-    alert("App js initFirebaseMessagingRegistration");
+    //alert("App js initFirebaseMessagingRegistration");
 
     const firebaseConfig = {
       apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
@@ -188,7 +188,7 @@ async function initFirebaseMessagingRegistration() {
     const token = await messaging.getToken();
     localStorage.setItem("sshub_fcm_token", token);
     console.log('FCM Token:', token);
-    alert("FCM Token: " + token);
+    //alert("FCM Token: " + token);
     getSchools();
 
     // Listen for incoming messages (when app is in foreground)

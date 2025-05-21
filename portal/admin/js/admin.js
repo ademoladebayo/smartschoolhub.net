@@ -163,6 +163,7 @@ async function signIn() {
               console.log('sshub_fcm_token', deviceToken);
 
               localStorage.setItem('register_device', '1');
+              errortoast("Device not registered.");
             }
           }
 
@@ -7338,6 +7339,7 @@ async function sendTokenToServer(deviceToken, user_type, id) {
 
     .then((data) => {
       console.log(data);
+      successtoast("Device registered successfully");
     })
     .catch((err) => console.log(err));
 }
