@@ -2942,7 +2942,7 @@ function searchStudent(search_data) {
 
 function viewStudentIDCard(data) {
   localStorage.setItem("student_id_card", JSON.stringify(data));
-  window.parent.location.assign(domain + "/admin/student-id-card.html");
+  window.parent.location.assign(domain + "/admin/student-id-card2.html");
 }
 
 function viewStaffIDCard(data) {
