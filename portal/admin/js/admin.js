@@ -1,7 +1,3 @@
-// importScripts("https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js");
-// importScripts(
-//   "https://www.gstatic.com/firebasejs/7.23.0/firebase-messaging.js"
-// );
 
 // import Config from '../../utils/js/config.js';
 
