@@ -53,8 +53,15 @@ window.addEventListener('load', function () {
           icon: "https://portal.smartschoolhub.net/icons/120.png",
           sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
         };
-        var notification = new Notification(notificationTitle, notificationOptions);
-        console.log('Notification created:', notification)
+
+        //var notification = new Notification(notificationTitle, notificationOptions);
+        //console.log('Notification created:', notification)
+
+        // Notification.requestPermission().then(permission => {
+        //   if (permission === "granted") {
+        //     new Notification(payload.notification.title, { body: payload.notification.body });
+        //   }
+        // });
 
 
         notificationDialog(payload.notification.title, payload.notification.body);
