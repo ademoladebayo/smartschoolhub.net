@@ -7793,11 +7793,7 @@ function addNotificationStyles() {
 // Initialize when needed
 $(document).ready(function () {
   addNotificationStyles()
-  // Add styles if not already present
   if (!$(".notification-modal").length) {
     addNotificationStyles();
   }
-
-  // Example usage:
-  // notificationDialog();
 });
