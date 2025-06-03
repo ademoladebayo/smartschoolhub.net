@@ -17,7 +17,7 @@ if ("serviceWorker" in navigator) {
         setTimeout(() => {
           //alert("App js onload");
           // localStorage.setItem('register_device', '1');
-          if (localStorage["register_device"] == '1') {
+          if (localStorage["register_device"] == '1' || localStorage["register_device"] == undefined || localStorage["register_device"] == null) {
             // if (true) {
             initFirebaseMessagingRegistration();
           } else {
