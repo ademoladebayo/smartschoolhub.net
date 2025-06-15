@@ -508,59 +508,59 @@ class CreateAllTables extends Migration
         }
 
 
-        // $after = 'second_ca';
-        // foreach ($this->subject_registration_colunms as $colunm) {
+        $after = 'second_ca';
+        foreach ($this->subject_registration_colunms as $colunm) {
 
-        //     if (!Schema::hasColumn('subject_registration', $colunm)) {
-        //         Schema::table('subject_registration', function (Blueprint $table) use ($colunm, $after) {
-        //             $table->string($colunm)->default('-')->after($after);
-        //         });
-        //         $after = $colunm;
-        //     }
-        // }
-
-        // $tables = DB::select('SHOW TABLES');
-
-        // foreach ($tables as $table) {
-        //     $tableName = reset($table);
-
-        //     // Skip migrations table
-        //     if ($tableName === 'migrations') {
-        //         continue;
-        //     }
-
-        //     Schema::table($tableName, function (Blueprint $table) {
-        //         if (!Schema::hasColumn($table->getTable(), 'created_at')) {
-        //             $table->timestamp('created_at')->nullable();
-        //         }
-
-        //         if (!Schema::hasColumn($table->getTable(), 'updated_at')) {
-        //             $table->timestamp('updated_at')->nullable();
-        //         }
-
-        //         if (!Schema::hasColumn($table->getTable(), 'deleted_at')) {
-        //             $table->timestamp('deleted_at')->nullable();
-        //         }
-        //     });
-
-        //     // Update existing records with current timestamps
-        //     if (Schema::hasColumn($tableName, 'created_at')) {
-        //         DB::table($tableName)->whereNull('created_at')->update(['created_at' => now()]);
-        //     }
-
-        //     if (Schema::hasColumn($tableName, 'updated_at')) {
-        //         DB::table($tableName)->whereNull('updated_at')->update(['updated_at' => now()]);
-        //     }
-        // }
-
-        foreach ($this->tables_with_password as $table) {
-            // Schema::table($table, function (Blueprint $table) {
-            //     $table->string('password', 255)->change();
-            // });
-
-            DB::statement("ALTER TABLE `{$table}` MODIFY `password` VARCHAR(255)");
-
+            if (!Schema::hasColumn('subject_registration', $colunm)) {
+                Schema::table('subject_registration', function (Blueprint $table) use ($colunm, $after) {
+                    $table->string($colunm)->default('-')->after($after);
+                });
+                $after = $colunm;
+            }
         }
+
+        $tables = DB::select('SHOW TABLES');
+
+        foreach ($tables as $table) {
+            $tableName = reset($table);
+
+            // Skip migrations table
+            if ($tableName === 'migrations') {
+                continue;
+            }
+
+            Schema::table($tableName, function (Blueprint $table) {
+                if (!Schema::hasColumn($table->getTable(), 'created_at')) {
+                    $table->timestamp('created_at')->nullable();
+                }
+
+                if (!Schema::hasColumn($table->getTable(), 'updated_at')) {
+                    $table->timestamp('updated_at')->nullable();
+                }
+
+                if (!Schema::hasColumn($table->getTable(), 'deleted_at')) {
+                    $table->timestamp('deleted_at')->nullable();
+                }
+            });
+
+            // Update existing records with current timestamps
+            if (Schema::hasColumn($tableName, 'created_at')) {
+                DB::table($tableName)->whereNull('created_at')->update(['created_at' => now()]);
+            }
+
+            if (Schema::hasColumn($tableName, 'updated_at')) {
+                DB::table($tableName)->whereNull('updated_at')->update(['updated_at' => now()]);
+            }
+        }
+
+        // foreach ($this->tables_with_password as $table) {
+        //     // Schema::table($table, function (Blueprint $table) {
+        //     //     $table->string('password', 255)->change();
+        //     // });
+
+        //     DB::statement("ALTER TABLE `{$table}` MODIFY `password` VARCHAR(255)");
+
+        // }
     }
 
     /**

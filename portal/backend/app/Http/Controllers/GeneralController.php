@@ -107,6 +107,10 @@ class GeneralController extends Controller
 
                 foreach ($data as $school) {
                     //$school = $data[0];
+                    
+                    if (in_array($school['alias'], ['mss'])) {
+                        continue;
+                    }
 
                     try {
                         \Log::info("Running migration for ... " . $school['alias']);
