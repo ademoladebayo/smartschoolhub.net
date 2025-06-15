@@ -510,7 +510,7 @@ class CreateAllTables extends Migration
         foreach ($this->subject_registration_colunms as $colunm) {
 
             if (!Schema::hasColumn('subject_registration', $colunm)) {
-                Schema::table('subject_registration', function (Blueprint $table, $colunm, $after) {
+                Schema::table('subject_registration', function (Blueprint $table) use ($colunm, $after) {
                     $table->string($colunm)->default('-')->after($after);
                 });
                 $after = $colunm;
@@ -560,52 +560,55 @@ class CreateAllTables extends Migration
     public function down()
     {
         // Drop tables in reverse order to respect foreign key constraints
-        Schema::dropIfExists('uploads');
-        Schema::dropIfExists('teacher_attendance');
-        Schema::dropIfExists('subject_registration');
-        Schema::dropIfExists('subject');
-        Schema::dropIfExists('teacher');
-        Schema::dropIfExists('student_result_rating');
-        Schema::dropIfExists('student_result_comment');
-        Schema::dropIfExists('student_attendance');
-        Schema::dropIfExists('student');
-        Schema::dropIfExists('session');
-        Schema::dropIfExists('school_details');
-        Schema::dropIfExists('portal_subscription');
-        Schema::dropIfExists('personal_access_tokens');
-        Schema::dropIfExists('payment_history');
-        Schema::dropIfExists('optional_fee_request');
-        Schema::dropIfExists('online_payment');
-        Schema::dropIfExists('notes');
-        Schema::dropIfExists('live_class');
-        Schema::dropIfExists('lesson_plan');
-        Schema::dropIfExists('inventory');
-        Schema::dropIfExists('grade_settings');
-        Schema::dropIfExists('fee');
-        Schema::dropIfExists('expense');
-        Schema::dropIfExists('debitors');
-        Schema::dropIfExists('control_panel');
-        Schema::dropIfExists('class');
-        Schema::dropIfExists('cbt_result');
-        Schema::dropIfExists('cbt');
-        Schema::dropIfExists('bursary');
-        Schema::dropIfExists('assignment_submission');
-        Schema::dropIfExists('assignment');
-        Schema::dropIfExists('admin');
-        Schema::dropIfExists('activity_log');
+    //     Schema::dropIfExists('uploads');
+    //     Schema::dropIfExists('teacher_attendance');
+    //     Schema::dropIfExists('subject_registration');
+    //     Schema::dropIfExists('subject');
+    //     Schema::dropIfExists('teacher');
+    //     Schema::dropIfExists('student_result_rating');
+    //     Schema::dropIfExists('student_result_comment');
+    //     Schema::dropIfExists('student_attendance');
+    //     Schema::dropIfExists('student');
+    //     Schema::dropIfExists('session');
+    //     Schema::dropIfExists('school_details');
+    //     Schema::dropIfExists('portal_subscription');
+    //     Schema::dropIfExists('personal_access_tokens');
+    //     Schema::dropIfExists('payment_history');
+    //     Schema::dropIfExists('optional_fee_request');
+    //     Schema::dropIfExists('online_payment');
+    //     Schema::dropIfExists('notes');
+    //     Schema::dropIfExists('live_class');
+    //     Schema::dropIfExists('lesson_plan');
+    //     Schema::dropIfExists('inventory');
+    //     Schema::dropIfExists('grade_settings');
+    //     Schema::dropIfExists('fee');
+    //     Schema::dropIfExists('expense');
+    //     Schema::dropIfExists('debitors');
+    //     Schema::dropIfExists('control_panel');
+    //     Schema::dropIfExists('class');
+    //     Schema::dropIfExists('cbt_result');
+    //     Schema::dropIfExists('cbt');
+    //     Schema::dropIfExists('bursary');
+    //     Schema::dropIfExists('assignment_submission');
+    //     Schema::dropIfExists('assignment');
+    //     Schema::dropIfExists('admin');
+    //     Schema::dropIfExists('activity_log');
 
-        if (Schema::hasColumn('teacher', 'qualification')) {
-            Schema::table('teacher', function (Blueprint $table, $colunm) {
-                $table->dropColumn('qualification');
-            });
-        }
+    //     if (Schema::hasColumn('teacher', 'qualification')) {
+    //         Schema::table('teacher', function (Blueprint $table) {
+    //             $table->dropColumn('qualification');
+    //         });
+    //     }
 
-        foreach ($this->subject_registration_colunms as $colunm) {
-            if (Schema::hasColumn($colunm, 'subject_registration')) {
-                Schema::table('subject_registration', function (Blueprint $table, $colunm) {
-                    $table->dropColumn($colunm);
-                });
-            }
-        }
+    //     foreach ($this->subject_registration_colunms as $colunm) {
+    //         if (Schema::hasColumn($colunm, 'subject_registration')) {
+    //             Schema::table('subject_registration', function (Blueprint $table) use ($colunm) {
+    //                 $table->dropColumn($colunm);
+    //             });
+    //         }
+    //     }
+    // }
+        // Note: The down method is intentionally left empty to prevent accidental data loss.
+        // In a production environment, you should implement a proper rollback strategy.
     }
 }
