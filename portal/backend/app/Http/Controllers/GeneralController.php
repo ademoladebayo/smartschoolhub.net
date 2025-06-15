@@ -92,8 +92,8 @@ class GeneralController extends Controller
     {
         try {
             $client = new \GuzzleHttp\Client();
-            //  $route = "https://smartschoolhub.net/backend/website/api/schools";
-            $route = "http://localhost:8001/api/schools";
+            $route = "https://smartschoolhub.net/backend/website/api/schools";
+            //$route = "http://localhost:8001/api/schools";
             try {
                 // CALL ENDPOINT
                 $response = $client->request("GET", $route, [
@@ -126,6 +126,7 @@ class GeneralController extends Controller
                 return "Migration completed successfully for all schools";
             } catch (\Throwable $th) {
                 \Log::info($th->getMessage());
+                return response()->json(['success' => false, 'message' => 'Migration failed.']);
             }
         } catch (\Exception $e) {
             Log::error('Migration failed: ' . $e->getMessage());
