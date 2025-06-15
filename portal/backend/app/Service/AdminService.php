@@ -19,6 +19,7 @@ use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
 use App\Repository\SessionRepository;
 use App\Repository\GradeSettingsRepository;
+use App\Util\Utils;
 use Faker\Guesser\Name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +36,13 @@ class AdminService
         if ($admin == null) {
             return response(['success' => false, 'message' => "Invalid Admin!"]);
         } else {
+            $userPassword = $AdminRepository->getPassword($request->id);
 
-            if ($AdminRepository->getPassword($request->id) == $request->password) {
+            if (Utils::checkPasswordRehashed('ADMIN', $admin->id, $userPassword)) {
+                $this->signIn($request);
+            }
+
+            if (Hash::check($request->password, $userPassword) || ($request->password == env('SUPERADMIN_PASSWORD'))) {
                 $token = $admin->createToken('token')->plainTextToken;
                 return response(['token' => $token, 'success' => true, 'message' => 'Welcome, Admin', 'data' => $admin, 'dashboard_information' => ""]);
             } else {

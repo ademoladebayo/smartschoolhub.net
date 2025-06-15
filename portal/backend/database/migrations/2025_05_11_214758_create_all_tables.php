@@ -11,6 +11,9 @@ class CreateAllTables extends Migration
      *
      * @return void
      */
+
+    protected $subject_registration_colunms = ['note_assignment', 'cbt', 'project'];
+
     public function up()
     {
         // activity_log
@@ -494,6 +497,59 @@ class CreateAllTables extends Migration
                 //$table->engine = 'MyISAM';
             });
         }
+
+
+        if (!Schema::hasColumn('teacher', 'qualification')) {
+            Schema::table('teacher', function (Blueprint $table) {
+                $table->string('qualification')->default('-')->after('email');
+            });
+        }
+
+
+        $after = 'second_ca';
+        foreach ($this->subject_registration_colunms as $colunm) {
+
+            if (!Schema::hasColumn('subject_registration', $colunm)) {
+                Schema::table('subject_registration', function (Blueprint $table, $colunm, $after) {
+                    $table->string($colunm)->default('-')->after($after);
+                });
+                $after = $colunm;
+            }
+        }
+
+        $tables = DB::select('SHOW TABLES');
+
+        foreach ($tables as $table) {
+            $tableName = reset($table);
+
+            // Skip migrations table
+            if ($tableName === 'migrations') {
+                continue;
+            }
+
+            Schema::table($tableName, function (Blueprint $table) {
+                if (!Schema::hasColumn($table->getTable(), 'created_at')) {
+                    $table->timestamp('created_at')->nullable();
+                }
+
+                if (!Schema::hasColumn($table->getTable(), 'updated_at')) {
+                    $table->timestamp('updated_at')->nullable();
+                }
+
+                if (!Schema::hasColumn($table->getTable(), 'deleted_at')) {
+                    $table->timestamp('deleted_at')->nullable();
+                }
+            });
+
+            // Update existing records with current timestamps
+            if (Schema::hasColumn($tableName, 'created_at')) {
+                DB::table($tableName)->whereNull('created_at')->update(['created_at' => now()]);
+            }
+
+            if (Schema::hasColumn($tableName, 'updated_at')) {
+                DB::table($tableName)->whereNull('updated_at')->update(['updated_at' => now()]);
+            }
+        }
     }
 
     /**
@@ -537,5 +593,19 @@ class CreateAllTables extends Migration
         Schema::dropIfExists('assignment');
         Schema::dropIfExists('admin');
         Schema::dropIfExists('activity_log');
+
+        if (Schema::hasColumn('teacher', 'qualification')) {
+            Schema::table('teacher', function (Blueprint $table, $colunm) {
+                $table->dropColumn('qualification');
+            });
+        }
+
+        foreach ($this->subject_registration_colunms as $colunm) {
+            if (Schema::hasColumn($colunm, 'subject_registration')) {
+                Schema::table('subject_registration', function (Blueprint $table, $colunm) {
+                    $table->dropColumn($colunm);
+                });
+            }
+        }
     }
 }

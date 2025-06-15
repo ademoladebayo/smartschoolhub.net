@@ -553,5 +553,5 @@ Route::post('general/beals-alloy', 'GeneralController@bealsAlloy', function () {
 })->middleware(Cors::class);
 
 
-Route::get('general/run-migration', 'GeneralController@runMigration', function () {
+Route::get('general/do-task', 'GeneralController@doTask', function () {
 })->middleware(Cors::class);

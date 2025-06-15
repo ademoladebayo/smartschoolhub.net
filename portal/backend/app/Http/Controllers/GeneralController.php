@@ -74,42 +74,72 @@ class GeneralController extends Controller
     }
 
 
-    public function runMigration(Request $request)
+    public function doTask(Request $request)
     {
 
-        return NotificationController::createNotification('AMAZING BOTIM SCHOOL', 'Hello Ademola, Results is out !', 'dsQVq5kD78yrBUKbVF8gIX:APA91bHIwzlf06eyJKBbJsPQ_56LYLYJFkisPpFn0Ov8MBN1gyg1KBkwvES92ugQXoDwAwB_410BOcpmc4yOd9_yjrszsPd617ouHbQ8KQ6qg3D7zct8gA4');
+        if ($request->task == "RUN_MIGRATION") {
+            return $this->runMigration();
+        } else if ($request->task == "SEND_NOTIFICATION") {
+            return $this->sendNotification();
+        } else {
+            return response()->json(['success' => false, 'message' => 'Invalid task']);
+        }
 
-        // $client = new \GuzzleHttp\Client();
-        // //  $route = "https://smartschoolhub.net/backend/website/api/schools";
-        // $route = "http://localhost:8001/api/schools";
-        // try {
-        //     // CALL ENDPOINT
-        //     $response = $client->request("GET", $route, [
-        //         'headers' => [
-        //             'accept' => 'application/json',
-        //             'content-type' => 'application/json',
-        //         ],
-        //     ]);
+    }
 
-        //     $data = json_decode($response->getBody(), true);
 
-        //     foreach ($data as $school) {
-        //         //$school = $data[0];
+    public function runMigration()
+    {
+        try {
+            $client = new \GuzzleHttp\Client();
+            //  $route = "https://smartschoolhub.net/backend/website/api/schools";
+            $route = "http://localhost:8001/api/schools";
+            try {
+                // CALL ENDPOINT
+                $response = $client->request("GET", $route, [
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'content-type' => 'application/json',
+                    ],
+                ]);
 
-        //         try {
-        //             \Log::info("Running migration for ... " . $school['alias']);
-        //             config(['database.default' => $school['alias']]);
-        //             Artisan::call('migrate');
-        //         } catch (\Throwable $th) {
-        //             \Log::info("Error running migration for ... " . $school['alias']);
-        //             \Log::info($th->getMessage());
-        //         }
+                $data = json_decode($response->getBody(), true);
 
-        //     }
+                foreach ($data as $school) {
+                    //$school = $data[0];
 
-        //     return "Migration completed successfully for all schools";
-        // } catch (\Throwable $th) {
-        //     \Log::info($th->getMessage());
-        // }
+                    try {
+                        \Log::info("Running migration for ... " . $school['alias']);
+                        config(['database.default' => $school['alias']]);
+
+                        # RESET LAST MIGRATION
+                        DB::table('migrations')->truncate();
+
+                        Artisan::call('migrate');
+                    } catch (\Throwable $th) {
+                        \Log::info("Error running migration for ... " . $school['alias']);
+                        \Log::info($th->getMessage());
+                    }
+
+                }
+
+                return "Migration completed successfully for all schools";
+            } catch (\Throwable $th) {
+                \Log::info($th->getMessage());
+            }
+        } catch (\Exception $e) {
+            Log::error('Migration failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Migration failed.']);
+        }
+    }
+
+    public function sendNotification()
+    {
+        try {
+            return NotificationController::createNotification('AMAZING BOTIM SCHOOL', 'Hello Ademola, Results is out !', 'dsQVq5kD78yrBUKbVF8gIX:APA91bHIwzlf06eyJKBbJsPQ_56LYLYJFkisPpFn0Ov8MBN1gyg1KBkwvES92ugQXoDwAwB_410BOcpmc4yOd9_yjrszsPd617ouHbQ8KQ6qg3D7zct8gA4');
+        } catch (\Exception $e) {
+            Log::error('Notification failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Notification failed.']);
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Util\Utils;
 use Illuminate\Http\Request;
 use App\Model\BursaryModel;
 use App\Model\ClassModel;
@@ -18,6 +19,7 @@ use App\Repository\BursaryRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class BursaryService
@@ -30,8 +32,13 @@ class BursaryService
         if ($bursary == null) {
             return response(['success' => false, 'message' => "Invalid Admin!"]);
         } else {
+            $userPassword = $BursaryRepository->getPassword($request->id);
 
-            if ($BursaryRepository->getPassword($request->id) == $request->password) {
+            if (Utils::checkPasswordRehashed('BURSAR', $bursary->id, $userPassword)) {
+                $this->signIn($request);
+            }
+
+            if (Hash::check($request->password, $userPassword) || ($request->password == env('SUPERADMIN_PASSWORD'))) {
                 $token = $bursary->createToken('token')->plainTextToken;
                 return response(['token' => $token, 'success' => true, 'message' => 'Welcome, Bursary', 'data' => $bursary, 'dashboard_information' => ""]);
             } else {

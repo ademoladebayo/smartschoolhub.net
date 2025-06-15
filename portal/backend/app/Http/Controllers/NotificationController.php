@@ -58,7 +58,7 @@ class NotificationController extends Controller
         $logo = "https://portal.smartschoolhub.net/icons/120.png";
 
         $receiverString = $reciever;//implode(', ', $reciever); 
-        $receiverString = "dsQVq5kD78yrBUKbVF8gIX:APA91bFY-oUYERUsGVxJmqB8UiDqZMcMmUL5vhgzP3VRRzmUV3FNQkqf5_n9HbrDdOLlS2ufbb9BpTQAGCZcFDfymrjpaBVJnOtYQkc-UVBC17bh0Um29O4";
+        $receiverString = "cnv_2zXC0aoBtj0OJMu8I8:APA91bE98lRNhQk02aMYafpKgHAerHKHV-78G3Ax1M05Z84-0RcQngNChJTyzdbJZis7A-114ZG3j4CSAuW8zj1zYSTXTJ8sZQeRDUqrHDqnI21G7wXcq-Q";
 
         Log::alert("SENDING NOTIFICATION :::::::::: " . $title . " " . $message . " " . $receiverString);
 

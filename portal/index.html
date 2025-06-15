@@ -164,7 +164,7 @@
 <script src="assets/js/lib/sweetalert/sweetalert.init.js"></script>
 <!-- Select 2 Js -->
 <script src="./js/select2.min.js"></script>
-<script src="js/app.js?v=2.3"></script>
+<script src="js/app.js?v=2.4"></script>
 <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 
 <!-- FIREBASE CDN -->
@@ -492,11 +492,12 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
             // alert("Removed School");
         } else {
 
-            // if ("school" in localStorage) {
-            getSchoolDetails(localStorage["school"] + "~" + localStorage["school_logo"])
-            document.getElementById("banner_img").src = localStorage["school_logo"]
-            document.getElementById("select_school").hidden = true;
-            document.getElementById("sign_in_as").hidden = false;
+            if ("school" in localStorage) {
+                getSchoolDetails(localStorage["school"] + "~" + localStorage["school_logo"])
+                document.getElementById("banner_img").src = localStorage["school_logo"]
+                document.getElementById("select_school").hidden = true;
+                document.getElementById("sign_in_as").hidden = false;
+            }
             // alert("Did not remove School" + localStorage["register_device"]);
         }
     }

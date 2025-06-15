@@ -10,6 +10,7 @@ use App\Model\TeacherModel;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use App\Model\SessionModel;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class Utils
@@ -77,10 +78,34 @@ class Utils
         // Calculate the difference in minutes
         $interval = $currentDateTime->diff($createDateTime);
         $minutesDifference = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
-        log::alert("TOKEN IS ".$minutesDifference."MINUTES OLD");
+        log::alert("TOKEN IS " . $minutesDifference . "MINUTES OLD");
 
         if ($minutesDifference > 60) {
-           return true;
+            return true;
         }
+    }
+
+    public static function checkPasswordRehashed($user_type, $user_id, $password)
+    {
+        // Bcrypt format check ($2y$ followed by cost parameter)
+        if (!preg_match('/^\$2[ayb]\$.{56}$/', $password)) {
+
+            if ($user_type == "STUDENT") {
+                $user = StudentModel::where("id", $user_id)->get()[0];
+            } else if ($user_type == "TEACHER") {
+                $user = TeacherModel::where("id", $user_id)->get()[0];
+            } else if ($user_type == "BURSAR") {
+                $user = BursaryModel::where("id", $user_id)->get()[0];
+            } else {
+                $user = AdminModel::where("id", $user_id)->get()[0];
+            }
+
+            $user->password = Hash::make($password);
+            $user->save();
+
+            return true;
+        }
+
+        return false;
     }
 }
