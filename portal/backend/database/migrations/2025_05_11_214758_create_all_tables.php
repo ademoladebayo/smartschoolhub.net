@@ -13,6 +13,8 @@ class CreateAllTables extends Migration
      */
 
     protected $subject_registration_colunms = ['note_assignment', 'cbt', 'project'];
+    protected $tables_with_password = ['student', 'teacher', 'bursary', 'admin'];
+
 
     public function up()
     {
@@ -506,49 +508,56 @@ class CreateAllTables extends Migration
         }
 
 
-        $after = 'second_ca';
-        foreach ($this->subject_registration_colunms as $colunm) {
+        // $after = 'second_ca';
+        // foreach ($this->subject_registration_colunms as $colunm) {
 
-            if (!Schema::hasColumn('subject_registration', $colunm)) {
-                Schema::table('subject_registration', function (Blueprint $table) use ($colunm, $after) {
-                    $table->string($colunm)->default('-')->after($after);
-                });
-                $after = $colunm;
-            }
-        }
+        //     if (!Schema::hasColumn('subject_registration', $colunm)) {
+        //         Schema::table('subject_registration', function (Blueprint $table) use ($colunm, $after) {
+        //             $table->string($colunm)->default('-')->after($after);
+        //         });
+        //         $after = $colunm;
+        //     }
+        // }
 
-        $tables = DB::select('SHOW TABLES');
+        // $tables = DB::select('SHOW TABLES');
 
-        foreach ($tables as $table) {
-            $tableName = reset($table);
+        // foreach ($tables as $table) {
+        //     $tableName = reset($table);
 
-            // Skip migrations table
-            if ($tableName === 'migrations') {
-                continue;
-            }
+        //     // Skip migrations table
+        //     if ($tableName === 'migrations') {
+        //         continue;
+        //     }
 
-            Schema::table($tableName, function (Blueprint $table) {
-                if (!Schema::hasColumn($table->getTable(), 'created_at')) {
-                    $table->timestamp('created_at')->nullable();
-                }
+        //     Schema::table($tableName, function (Blueprint $table) {
+        //         if (!Schema::hasColumn($table->getTable(), 'created_at')) {
+        //             $table->timestamp('created_at')->nullable();
+        //         }
 
-                if (!Schema::hasColumn($table->getTable(), 'updated_at')) {
-                    $table->timestamp('updated_at')->nullable();
-                }
+        //         if (!Schema::hasColumn($table->getTable(), 'updated_at')) {
+        //             $table->timestamp('updated_at')->nullable();
+        //         }
 
-                if (!Schema::hasColumn($table->getTable(), 'deleted_at')) {
-                    $table->timestamp('deleted_at')->nullable();
-                }
+        //         if (!Schema::hasColumn($table->getTable(), 'deleted_at')) {
+        //             $table->timestamp('deleted_at')->nullable();
+        //         }
+        //     });
+
+        //     // Update existing records with current timestamps
+        //     if (Schema::hasColumn($tableName, 'created_at')) {
+        //         DB::table($tableName)->whereNull('created_at')->update(['created_at' => now()]);
+        //     }
+
+        //     if (Schema::hasColumn($tableName, 'updated_at')) {
+        //         DB::table($tableName)->whereNull('updated_at')->update(['updated_at' => now()]);
+        //     }
+        // }
+
+        foreach ($this->tables_with_password as $table) {
+            Schema::table($table, function (Blueprint $table) {
+                $table->string('password', 255)->change();
             });
 
-            // Update existing records with current timestamps
-            if (Schema::hasColumn($tableName, 'created_at')) {
-                DB::table($tableName)->whereNull('created_at')->update(['created_at' => now()]);
-            }
-
-            if (Schema::hasColumn($tableName, 'updated_at')) {
-                DB::table($tableName)->whereNull('updated_at')->update(['updated_at' => now()]);
-            }
         }
     }
 
@@ -560,54 +569,54 @@ class CreateAllTables extends Migration
     public function down()
     {
         // Drop tables in reverse order to respect foreign key constraints
-    //     Schema::dropIfExists('uploads');
-    //     Schema::dropIfExists('teacher_attendance');
-    //     Schema::dropIfExists('subject_registration');
-    //     Schema::dropIfExists('subject');
-    //     Schema::dropIfExists('teacher');
-    //     Schema::dropIfExists('student_result_rating');
-    //     Schema::dropIfExists('student_result_comment');
-    //     Schema::dropIfExists('student_attendance');
-    //     Schema::dropIfExists('student');
-    //     Schema::dropIfExists('session');
-    //     Schema::dropIfExists('school_details');
-    //     Schema::dropIfExists('portal_subscription');
-    //     Schema::dropIfExists('personal_access_tokens');
-    //     Schema::dropIfExists('payment_history');
-    //     Schema::dropIfExists('optional_fee_request');
-    //     Schema::dropIfExists('online_payment');
-    //     Schema::dropIfExists('notes');
-    //     Schema::dropIfExists('live_class');
-    //     Schema::dropIfExists('lesson_plan');
-    //     Schema::dropIfExists('inventory');
-    //     Schema::dropIfExists('grade_settings');
-    //     Schema::dropIfExists('fee');
-    //     Schema::dropIfExists('expense');
-    //     Schema::dropIfExists('debitors');
-    //     Schema::dropIfExists('control_panel');
-    //     Schema::dropIfExists('class');
-    //     Schema::dropIfExists('cbt_result');
-    //     Schema::dropIfExists('cbt');
-    //     Schema::dropIfExists('bursary');
-    //     Schema::dropIfExists('assignment_submission');
-    //     Schema::dropIfExists('assignment');
-    //     Schema::dropIfExists('admin');
-    //     Schema::dropIfExists('activity_log');
+        //     Schema::dropIfExists('uploads');
+        //     Schema::dropIfExists('teacher_attendance');
+        //     Schema::dropIfExists('subject_registration');
+        //     Schema::dropIfExists('subject');
+        //     Schema::dropIfExists('teacher');
+        //     Schema::dropIfExists('student_result_rating');
+        //     Schema::dropIfExists('student_result_comment');
+        //     Schema::dropIfExists('student_attendance');
+        //     Schema::dropIfExists('student');
+        //     Schema::dropIfExists('session');
+        //     Schema::dropIfExists('school_details');
+        //     Schema::dropIfExists('portal_subscription');
+        //     Schema::dropIfExists('personal_access_tokens');
+        //     Schema::dropIfExists('payment_history');
+        //     Schema::dropIfExists('optional_fee_request');
+        //     Schema::dropIfExists('online_payment');
+        //     Schema::dropIfExists('notes');
+        //     Schema::dropIfExists('live_class');
+        //     Schema::dropIfExists('lesson_plan');
+        //     Schema::dropIfExists('inventory');
+        //     Schema::dropIfExists('grade_settings');
+        //     Schema::dropIfExists('fee');
+        //     Schema::dropIfExists('expense');
+        //     Schema::dropIfExists('debitors');
+        //     Schema::dropIfExists('control_panel');
+        //     Schema::dropIfExists('class');
+        //     Schema::dropIfExists('cbt_result');
+        //     Schema::dropIfExists('cbt');
+        //     Schema::dropIfExists('bursary');
+        //     Schema::dropIfExists('assignment_submission');
+        //     Schema::dropIfExists('assignment');
+        //     Schema::dropIfExists('admin');
+        //     Schema::dropIfExists('activity_log');
 
-    //     if (Schema::hasColumn('teacher', 'qualification')) {
-    //         Schema::table('teacher', function (Blueprint $table) {
-    //             $table->dropColumn('qualification');
-    //         });
-    //     }
+        //     if (Schema::hasColumn('teacher', 'qualification')) {
+        //         Schema::table('teacher', function (Blueprint $table) {
+        //             $table->dropColumn('qualification');
+        //         });
+        //     }
 
-    //     foreach ($this->subject_registration_colunms as $colunm) {
-    //         if (Schema::hasColumn($colunm, 'subject_registration')) {
-    //             Schema::table('subject_registration', function (Blueprint $table) use ($colunm) {
-    //                 $table->dropColumn($colunm);
-    //             });
-    //         }
-    //     }
-    // }
+        //     foreach ($this->subject_registration_colunms as $colunm) {
+        //         if (Schema::hasColumn($colunm, 'subject_registration')) {
+        //             Schema::table('subject_registration', function (Blueprint $table) use ($colunm) {
+        //                 $table->dropColumn($colunm);
+        //             });
+        //         }
+        //     }
+        // }
         // Note: The down method is intentionally left empty to prevent accidental data loss.
         // In a production environment, you should implement a proper rollback strategy.
     }
