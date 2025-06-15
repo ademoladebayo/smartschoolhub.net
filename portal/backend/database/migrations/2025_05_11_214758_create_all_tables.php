@@ -554,9 +554,11 @@ class CreateAllTables extends Migration
         // }
 
         foreach ($this->tables_with_password as $table) {
-            Schema::table($table, function (Blueprint $table) {
-                $table->string('password', 255)->change();
-            });
+            // Schema::table($table, function (Blueprint $table) {
+            //     $table->string('password', 255)->change();
+            // });
+
+            DB::statement("ALTER TABLE `{$table}` MODIFY `password` VARCHAR(255)");
 
         }
     }
