@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SessionModel extends Model
 {
 
- use SoftDeletes;
+ // use SoftDeletes;
     protected $table = 'session';
     protected $primaryKey = 'id';
     public $timestamps = false;

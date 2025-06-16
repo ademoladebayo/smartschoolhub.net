@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class UploadModel extends Model
 {
 
- use SoftDeletes;
+ // use SoftDeletes;
     protected $table = 'uploads';
     protected $primaryKey = 'id';
     public $timestamps = false;

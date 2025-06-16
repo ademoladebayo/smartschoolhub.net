@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CBTResultModel extends Model
 {
 
- use SoftDeletes;
+ // use SoftDeletes;
     protected $table = 'cbt_result';
     protected $primaryKey = 'id';
     public $timestamps = false;

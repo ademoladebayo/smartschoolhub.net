@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class StudentAttendanceModel extends Model
 {
 
- use SoftDeletes;
+ // use SoftDeletes;
     protected $table = 'student_attendance';
     protected $primaryKey = 'id';
     public $timestamps = false;

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SubjectRegistrationModel extends Model
 {
 
- use SoftDeletes;
+ // use SoftDeletes;
     protected $table = 'subject_registration';
     protected $primaryKey = 'id';
     public $timestamps = false;
