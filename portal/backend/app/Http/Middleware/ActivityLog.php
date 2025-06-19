@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\IdempotencyKey;
+use App\Model\IdempotencyKey;
 use App\Model\ActivityLogModel;
 use App\Util\Utils;
 use Illuminate\Support\Facades\Log;

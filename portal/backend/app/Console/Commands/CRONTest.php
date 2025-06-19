@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\IdempotencyKey;
+use App\Model\IdempotencyKey;
 use App\Model\ActivityLogModel;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
