@@ -531,6 +531,11 @@ class CreateAllTables extends Migration
             });
         }
 
+        if (!Schema::hasColumn('idempotency_keys', 'expires_at')) {
+         Schema::table('idempotency_keys', function (Blueprint $table) {
+            $table->timestamp('expires_at')->after('key')->nullable();
+        });
+    }
 
 
 
@@ -624,6 +629,12 @@ class CreateAllTables extends Migration
         //     if (Schema::hasColumn('teacher', 'qualification')) {
         //         Schema::table('teacher', function (Blueprint $table) {
         //             $table->dropColumn('qualification');
+        //         });
+        //     }
+
+        //if (Schema::hasColumn('idempotency_keys', 'expires_at')) {
+        //         Schema::table('idempotency_keys', function (Blueprint $table) {
+        //             $table->dropColumn('expires_at');
         //         });
         //     }
 

@@ -77,6 +77,8 @@ class ActivityLog
         dispatch(function () use ($response_status) {
             $this->doTasksBeforeResponse();
         });
+        
+        Artisan::call('queue:work');
     }
 
     public function doTasksBeforeResponse()
@@ -86,6 +88,7 @@ class ActivityLog
 
         ActivityLogModel::where('created_at', '<=', now()->subMonths(3))->forceDelete();
 
+        
     }
 }
 
