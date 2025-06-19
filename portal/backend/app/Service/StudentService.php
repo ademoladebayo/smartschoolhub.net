@@ -562,11 +562,11 @@ class StudentService
         // CHECK IF PREVIOUS PASSWORD IS CORRECT
         $previous_password = $StudentRepository->getPassword($request->student_id);
         //  if (!Hash::check($request->current_password, $previous_password)) {
-        if ($request->current_password != $previous_password) {
+        if (!Hash::check($request->current_password, $previous_password)) {
             return response()->json(['success' => false, 'message' => 'Current password is incorrect!']);
         } else {
             //  $StudentRepository->updatePassword($request->student_id, Hash::make($request->new_password));
-            $StudentRepository->updatePassword($request->student_id, $request->new_password);
+            $StudentRepository->updatePassword($request->student_id, Hash::make($request->new_password));
             return response()->json(['success' => true, 'message' => 'Password has been changed successfully.']);
         }
     }

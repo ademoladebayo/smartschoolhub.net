@@ -542,7 +542,7 @@ class AdminService
         $StudentRepository = new StudentRepository();
         $TeacherRepository = new TeacherRepository();
         if ($request->user_type == "STUDENT") {
-            $StudentRepository->updatePassword($request->id, env("DEFAULT_PASSWORD"));
+            $StudentRepository->updatePassword($request->id, Hash::make(("DEFAULT_PASSWORD")));
         } else if ($request->user_type == "STAFF") {
             $TeacherRepository->updatePassword($request->id, Hash::make(env("DEFAULT_PASSWORD")));
         }

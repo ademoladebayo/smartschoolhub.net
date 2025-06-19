@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Model\ActivityLogModel;
 use App\Util\Utils;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use Closure;
 
@@ -19,6 +20,9 @@ class ActivityLog
      */
     public function handle($request, Closure $next)
     {
+        $this->doTasksBeforeResponse($request);
+
+
         $token = $request->header("Authorization");
         $utils = new Utils();
         if ($utils->tokenExpired($token)) {
@@ -72,4 +76,21 @@ class ActivityLog
         $activityLog->response = $response_status . " :::: " . $response;
         $utils->logUserActivity($token, $activityLog);
     }
+
+    public function doTasksBeforeResponse($request)
+    {
+        dispatch(function () use ($request) {
+            DB::table('idempotency_keys')
+                ->where('expires_at', '<', now())
+                ->forceDelete();
+
+            DB::table('activity_log')
+                ->where('created_at', '<=', now()->subMonths(3))
+                ->forceDelete();
+        });
+
+
+    }
 }
+
+

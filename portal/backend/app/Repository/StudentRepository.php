@@ -19,7 +19,7 @@ class StudentRepository
 
         $studentModel->profile_status = 'ENABLED';
         // hash::make(strtolower($studentModel->last_name));
-        $studentModel->password = env("DEFAULT_PASSWORD");
+        $studentModel->password = Hash::make(env("DEFAULT_PASSWORD"));
 
         $last_student_id = StudentModel::orderBy('id', 'DESC')->get();
 

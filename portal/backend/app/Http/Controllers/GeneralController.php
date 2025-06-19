@@ -107,10 +107,10 @@ class GeneralController extends Controller
 
                 foreach ($data as $school) {
                     //$school = $data[0];
-                    
-                    if (in_array($school['alias'], ['mss'])) {
-                        continue;
-                    }
+
+                    // if (in_array($school['alias'], ['mss'])) {
+                    //     continue;
+                    // }
 
                     try {
                         \Log::info("Running migration for ... " . $school['alias']);
@@ -140,6 +140,10 @@ class GeneralController extends Controller
 
     public function sendNotification()
     {
+        Log::info('1 Sending notification...');
+        Log::debug(' 2Sending notification...');
+        Log::error(' 3Sending notification...');
+        Log::alert('4 Sending notification...');
         try {
             return NotificationController::createNotification('AMAZING BOTIM SCHOOL', 'Hello Ademola, Results is out !', 'dsQVq5kD78yrBUKbVF8gIX:APA91bHIwzlf06eyJKBbJsPQ_56LYLYJFkisPpFn0Ov8MBN1gyg1KBkwvES92ugQXoDwAwB_410BOcpmc4yOd9_yjrszsPd617ouHbQ8KQ6qg3D7zct8gA4');
         } catch (\Exception $e) {
