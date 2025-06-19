@@ -20,9 +20,6 @@ class ActivityLog
      */
     public function handle($request, Closure $next)
     {
-        $this->doTasksBeforeResponse($request);
-
-
         $token = $request->header("Authorization");
         $utils = new Utils();
         if ($utils->tokenExpired($token)) {
@@ -75,20 +72,21 @@ class ActivityLog
         $activityLog->request = $req;
         $activityLog->response = $response_status . " :::: " . $response;
         $utils->logUserActivity($token, $activityLog);
+
+        dispatch(function () use ($request) {
+            $this->doTasksBeforeResponse($request);
+        });
     }
 
     public function doTasksBeforeResponse($request)
     {
-        dispatch(function () use ($request) {
-            DB::table('idempotency_keys')
-                ->where('expires_at', '<', now())
-                ->forceDelete();
+        DB::table('idempotency_keys')
+            ->where('expires_at', '<', now())
+            ->forceDelete();
 
-            DB::table('activity_log')
-                ->where('created_at', '<=', now()->subMonths(3))
-                ->forceDelete();
-        });
-
+        DB::table('activity_log')
+            ->where('created_at', '<=', now()->subMonths(3))
+            ->forceDelete();
 
     }
 }
