@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\IdempotencyKey;
+use App\Model\ActivityLogModel;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -40,13 +42,10 @@ class CRONTest extends Command
      */
     public function handle()
     {
-        DB::table('idempotency_keys')
-            ->where('expires_at', '<', now())
+        IdempotencyKey::where('expires_at', '<', now())
             ->forceDelete();
 
-        DB::table('activity_log')
-            ->where('created_at', '<=', now()->subMonths(3))
-            ->forceDelete();
+        ActivityLogModel::where('created_at', '<=', now()->subMonths(3))->forceDelete();
         \Log::info('CRON TEST RAN NOW ...' . Carbon::now()->toDateTimeString());
 
     }

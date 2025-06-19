@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\IdempotencyKey;
 use App\Model\ActivityLogModel;
 use App\Util\Utils;
 use Illuminate\Support\Facades\Log;
@@ -80,13 +81,10 @@ class ActivityLog
 
     public function doTasksBeforeResponse()
     {
-        DB::table('idempotency_keys')
-            ->where('expires_at', '<', now())
+        IdempotencyKey::where('expires_at', '<', now())
             ->forceDelete();
 
-        DB::table('activity_log')
-            ->where('created_at', '<=', now()->subMonths(3))
-            ->forceDelete();
+        ActivityLogModel::where('created_at', '<=', now()->subMonths(3))->forceDelete();
 
     }
 }
