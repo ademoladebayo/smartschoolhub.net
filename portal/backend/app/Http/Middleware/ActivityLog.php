@@ -74,11 +74,11 @@ class ActivityLog
         $activityLog->response = $response_status . " :::: " . $response;
         $utils->logUserActivity($token, $activityLog);
 
-        dispatch(function () use ($response_status) {
+        // dispatch(function () use ($response_status) {
             $this->doTasksBeforeResponse();
-        });
+        // });
 
-        Artisan::call('queue:work');
+        // Artisan::call('queue:work');
     }
 
     public function doTasksBeforeResponse()
