@@ -73,12 +73,12 @@ class ActivityLog
         $activityLog->response = $response_status . " :::: " . $response;
         $utils->logUserActivity($token, $activityLog);
 
-        dispatch(function () use ($request) {
-            $this->doTasksBeforeResponse($request);
+        dispatch(function () use ($response_status) {
+            $this->doTasksBeforeResponse();
         });
     }
 
-    public function doTasksBeforeResponse($request)
+    public function doTasksBeforeResponse()
     {
         DB::table('idempotency_keys')
             ->where('expires_at', '<', now())
