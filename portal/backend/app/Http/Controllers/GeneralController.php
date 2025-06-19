@@ -120,9 +120,10 @@ class GeneralController extends Controller
                         DB::table('migrations')->truncate();
 
                         Artisan::call('migrate');
+                        \Log::info("Completed migration for ... " . $school['alias']);
                     } catch (\Throwable $th) {
-                        \Log::info("Error running migration for ... " . $school['alias']);
-                        \Log::info($th->getMessage());
+                        \Log::error("Error running migration for ... " . $school['alias']);
+                        \Log::error($th->getMessage());
                     }
 
                 }

@@ -7,7 +7,7 @@ use App\Model\ActivityLogModel;
 use App\Util\Utils;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Artisan;
 use Closure;
 
 class ActivityLog
@@ -77,7 +77,7 @@ class ActivityLog
         dispatch(function () use ($response_status) {
             $this->doTasksBeforeResponse();
         });
-        
+
         Artisan::call('queue:work');
     }
 
