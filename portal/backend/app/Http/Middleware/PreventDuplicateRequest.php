@@ -20,7 +20,7 @@ class PreventDuplicateRequest
      */
 
     protected $pathToIgnore = [
-        '',
+        'backend/portal/api/admin/signin',
     ];
 
 
@@ -28,7 +28,7 @@ class PreventDuplicateRequest
     {
         $school = $request->header("school");
         config(['database.default' => $school]);
-        
+
 
         //Log::debug('PreventDuplicateRequest middleware triggered for path: ' . $request);
         $user = true; //$request->user();

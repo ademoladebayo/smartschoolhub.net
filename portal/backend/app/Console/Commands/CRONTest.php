@@ -45,7 +45,7 @@ class CRONTest extends Command
     public function handle()
     {
 
-       try {
+        try {
             $data = GeneralController::getSchools();
 
             foreach ($data as $school) {
@@ -62,15 +62,17 @@ class CRONTest extends Command
 
 
 
-                    \Log::info('CRON TEST RAN NOW ...' . Carbon::now()->toDateTimeString());
+                    //\Log::info('CRON TEST RAN NOW ...' . Carbon::now()->toDateTimeString());
                     //\Log::info("Completed migration for ... " . $school['alias']);
                 } catch (\Throwable $th) {
-                    \Log::error("Error running CRON for ... " . $school['alias']);
-                    \Log::error($th->getMessage());
+                    // \Log::error("Error running CRON for ... " . $school['alias']);
+                    // \Log::error($th->getMessage());
                 }
 
             }
-           
+
+            \Log::info('CRON tasks executed successfully at ' . now());
+
         } catch (\Exception $e) {
             Log::error('CRON failed: ' . $e->getMessage());
         }
