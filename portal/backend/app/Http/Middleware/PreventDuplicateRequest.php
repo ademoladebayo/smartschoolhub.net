@@ -20,10 +20,10 @@ class PreventDuplicateRequest
      */
 
     protected $pathToIgnore = [
-        '/api/admin/signin',
-        '/api/student/signin',
-        '/api/teacher/signin',
-        '/api/bursary/signin',
+        'api/admin/signin',
+        'api/student/signin',
+        'api/teacher/signin',
+        'api/bursary/signin',
     ];
 
 
