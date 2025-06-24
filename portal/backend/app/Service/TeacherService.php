@@ -704,7 +704,7 @@ class TeacherService
 
         if ($assigned_class) {
             $AdminService = new AdminService();
-            $AdminService->updateTeacherClass($teacher_id, $assigned_class->class_id);
+            $AdminService->updateTeacherClass($teacher_id, $assigned_class->id);
         }
     }
 }
