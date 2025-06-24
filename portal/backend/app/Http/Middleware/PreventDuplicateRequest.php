@@ -26,7 +26,9 @@ class PreventDuplicateRequest
 
     public function handle($request, Closure $next)
     {
-         return $next($request);
+        Log::info($request->path());
+        return $next($request);
+        
         $school = $request->header("school");
         config(['database.default' => $school]);
 
