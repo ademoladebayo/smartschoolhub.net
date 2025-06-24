@@ -91,48 +91,34 @@ class GeneralController extends Controller
     public function runMigration()
     {
         try {
-            $client = new \GuzzleHttp\Client();
-            $route = "https://smartschoolhub.net/backend/website/api/schools";
-            //$route = "http://localhost:8001/api/schools";
-            try {
-                // CALL ENDPOINT
-                $response = $client->request("GET", $route, [
-                    'headers' => [
-                        'accept' => 'application/json',
-                        'content-type' => 'application/json',
-                    ],
-                ]);
+            $data = self::getSchools();
 
-                $data = json_decode($response->getBody(), true);
+            foreach ($data as $school) {
+                //$school = $data[0];
 
-                foreach ($data as $school) {
-                    //$school = $data[0];
+                // if (in_array($school['alias'], ['mss'])) {
+                //     continue;
+                // }
 
-                    // if (in_array($school['alias'], ['mss'])) {
-                    //     continue;
-                    // }
+                try {
+                    \Log::info("Running migration for ... " . $school['alias']);
+                    config(['database.default' => $school['alias']]);
 
-                    try {
-                        \Log::info("Running migration for ... " . $school['alias']);
-                        config(['database.default' => $school['alias']]);
+                    # RESET LAST MIGRATION
+                    DB::table('migrations')->truncate();
 
-                        # RESET LAST MIGRATION
-                        DB::table('migrations')->truncate();
-
-                        Artisan::call('migrate');
-                        \Log::info("Completed migration for ... " . $school['alias']);
-                    } catch (\Throwable $th) {
-                        \Log::error("Error running migration for ... " . $school['alias']);
-                        \Log::error($th->getMessage());
-                    }
-
+                    Artisan::call('queue:table');
+                    Artisan::call('migrate');
+                    \Log::info("Completed migration for ... " . $school['alias']);
+                } catch (\Throwable $th) {
+                    \Log::error("Error running migration for ... " . $school['alias']);
+                    \Log::error($th->getMessage());
                 }
 
-                return "Migration completed successfully for all schools";
-            } catch (\Throwable $th) {
-                \Log::info($th->getMessage());
-                return response()->json(['success' => false, 'message' => 'Migration failed.']);
             }
+
+            return "Migration completed successfully for all schools";
+
         } catch (\Exception $e) {
             Log::error('Migration failed: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Migration failed.']);
@@ -151,5 +137,30 @@ class GeneralController extends Controller
             Log::error('Notification failed: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Notification failed.']);
         }
+    }
+
+
+
+    public static function getSchools()
+    {
+        // CALL ENDPOINT
+        $client = new \GuzzleHttp\Client();
+        $route = "https://smartschoolhub.net/backend/website/api/schools";
+        //$route = "http://localhost:8001/api/schools";
+        try {
+            $response = $client->request("GET", $route, [
+                'headers' => [
+                    'accept' => 'application/json',
+                    'content-type' => 'application/json',
+                ],
+            ]);
+
+            return json_decode($response->getBody(), true);
+
+        } catch (\Throwable $th) {
+            \Log::info($th->getMessage());
+            return [];
+        }
+
     }
 }

@@ -495,9 +495,9 @@ class BursaryService
             $total_balance = 0;
 
             if ($student->class == "GRADUATED" || $student->profile_status == "DISABLED") {
-                Log::alert("IF : " . $student->first_name);
+                //Log::alert("IF : " . $student->first_name);
                 if ($student->class == "GRADUATED") {
-                    Log::alert("GRADUATION : " . $student->graduation);
+                    //Log::alert("GRADUATION : " . $student->graduation);
                     $class_before_graduation = explode("_", $student->graduation)[0];
                     $session_before_graduation = explode("_", $student->graduation)[1];
                     $term_before_graduation = explode("_", $student->graduation)[2];
@@ -537,7 +537,7 @@ class BursaryService
                 $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $student->id)->get();
             }
 
-            Log::alert("ARREARS : " . $arrears);
+            //Log::alert("ARREARS : " . $arrears);
 
             if (count($arrears) > 0) {
                 $arrears = $arrears[0]->amount;

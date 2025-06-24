@@ -519,28 +519,26 @@ class CreateAllTables extends Migration
         //     }
         // }
 
-        if (!Schema::hasTable('idempotency_keys')) {
-            Schema::create('idempotency_keys', function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->unsignedBigInteger('user_id')->nullable();
-                $table->string('key');
-                $table->timestamps();
-                $table->softDeletes();
+        // if (!Schema::hasTable('idempotency_keys')) {
+        //         Schema::create('idempotency_keys', function (Blueprint $table) {
+        //             $table->bigIncrements('id');
+        //             $table->unsignedBigInteger('user_id')->nullable();
+        //             $table->string('key');
+        //             $table->timestamps();
+        //             $table->softDeletes();
 
-                $table->unique(['key']);
-            });
-        }
+        //             $table->unique(['key']);
+        //         });
+        // }
 
-        if (!Schema::hasColumn('idempotency_keys', 'expires_at')) {
-         Schema::table('idempotency_keys', function (Blueprint $table) {
-            $table->timestamp('expires_at')->after('key')->nullable();
-        });
-    }
-
+        //if (!Schema::hasColumn('idempotency_keys', 'expires_at')) {
+        //      Schema::table('idempotency_keys', function (Blueprint $table) {
+        //         $table->timestamp('expires_at')->after('key')->nullable();
+        //     });
+        // }
 
 
         // $tables = DB::select('SHOW TABLES');
-
         // foreach ($tables as $table) {
         //     $tableName = reset($table);
 
@@ -574,14 +572,63 @@ class CreateAllTables extends Migration
         // }
 
         // foreach ($this->tables_with_password as $table) {
-        //     // Schema::table($table, function (Blueprint $table) {
-        //     //     $table->string('password', 255)->change();
-        //     // });
-
         //     DB::statement("ALTER TABLE `{$table}` MODIFY `password` VARCHAR(255)");
-
         // }
+        
+
+        $tables = DB::select('SHOW TABLES');
+        foreach ($tables as $table) {
+            $tableName = reset($table);
+
+            // Skip migrations table
+            if ($tableName === 'migrations') {
+                continue;
+            }
+
+            DB::statement("ALTER TABLE $tableName MODIFY created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+
+            DB::statement("ALTER TABLE $tableName MODIFY updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+
+            // Update existing records with current timestamps
+            if (Schema::hasColumn($tableName, 'created_at')) {
+                DB::table($tableName)->whereNull('created_at')->update(['created_at' => now()]);
+            }
+
+            if (Schema::hasColumn($tableName, 'updated_at')) {
+                DB::table($tableName)->whereNull('updated_at')->update(['updated_at' => now()]);
+            }
+        }
+
+
+        # ATTENDANCE SUMMARY TABLE
+        if (!Schema::hasTable('attendance_summary')) {
+            Schema::create('attendance_summary', function (Blueprint $table) {
+                $table->id();
+                $table->string('student_id', 45);
+                $table->integer('m_school_opened')->default(0);  // manual input opened
+                $table->integer('m_present')->default(0);
+                $table->integer('a_school_opened')->default(0); // automatic input opened
+                $table->integer('a_present')->default(0);
+                $table->string('session', 45);
+                $table->string('term', 45);
+                $table->timestamps();
+                $table->softDeletes();
+            });     
+        }
+        
+
+        # SETTINGS TABLE
+        if (!Schema::hasTable('settings')) {
+            Schema::create('settings', function (Blueprint $table) {
+                $table->id();
+                $table->string('key', 255)->unique();
+                $table->string('value', 255)->nullable();
+                $table->timestamps();
+                $table->softDeletes();
+            });                                         
+        }
     }
+
 
     /**
      * Reverse the migrations.
@@ -646,6 +693,15 @@ class CreateAllTables extends Migration
         //         }
         //     }
         // }
+
+        // if (Schema::hasTable('attendance_summary')) {
+        //     Schema::dropIfExists('attendance_summary');
+        // }
+
+        // if (Schema::hasTable('settings')) {
+        //     Schema::dropIfExists('settings');
+        // }
+
         // Note: The down method is intentionally left empty to prevent accidental data loss.
         // In a production environment, you should implement a proper rollback strategy.
     }

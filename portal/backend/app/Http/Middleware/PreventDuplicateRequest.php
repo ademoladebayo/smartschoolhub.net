@@ -26,7 +26,8 @@ class PreventDuplicateRequest
 
     public function handle($request, Closure $next)
     {
-        $user = $request->user();
+        Log::debug('PreventDuplicateRequest middleware triggered for path: ' . $request);
+        $user = true; //$request->user();
         if (!$user || in_array($request->path(), $this->pathToIgnore)) {
             return $next($request);
         }

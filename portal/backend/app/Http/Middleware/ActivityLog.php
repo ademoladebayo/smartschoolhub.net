@@ -7,6 +7,7 @@ use App\Model\ActivityLogModel;
 use App\Util\Utils;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
 use Closure;
 
@@ -74,21 +75,25 @@ class ActivityLog
         $activityLog->response = $response_status . " :::: " . $response;
         $utils->logUserActivity($token, $activityLog);
 
-        // dispatch(function () use ($response_status) {
+        //  dispatch(function () use ($response_status) {
             $this->doTasksBeforeResponse();
-        // });
-
-        // Artisan::call('queue:work');
+        //  });
     }
 
     public function doTasksBeforeResponse()
     {
-        IdempotencyKey::where('expires_at', '<', now())
-            ->forceDelete();
+        $last_cron_check = Cache::get('cron_check');
 
-        ActivityLogModel::where('created_at', '<=', now()->subMonths(3))->forceDelete();
+        if (!$last_cron_check) {
+            $last_cron_check = Cache::forever('cron_check', now());
+        }
 
-        
+
+        if ($last_cron_check && $last_cron_check->diffInMinutes(now()) > 1) {
+              Artisan::call('schedule:run');
+              Cache::forever('cron_check', now());
+            \Log::info('CRON tasks executed successfully at ' . now());
+        }
     }
 }
 
