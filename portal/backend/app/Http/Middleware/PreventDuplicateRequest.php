@@ -29,7 +29,7 @@ class PreventDuplicateRequest
 
     public function handle($request, Closure $next)
     {
-        //Log::info($request->path());
+        Log::info($request->path());
         //return $next($request);
 
         $school = $request->header("school");
