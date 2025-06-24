@@ -574,7 +574,7 @@ class CreateAllTables extends Migration
         // foreach ($this->tables_with_password as $table) {
         //     DB::statement("ALTER TABLE `{$table}` MODIFY `password` VARCHAR(255)");
         // }
-        
+
 
         $tables = DB::select('SHOW TABLES');
         foreach ($tables as $table) {
@@ -585,9 +585,6 @@ class CreateAllTables extends Migration
                 continue;
             }
 
-            DB::statement("ALTER TABLE $tableName MODIFY created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
-
-            DB::statement("ALTER TABLE $tableName MODIFY updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
 
             // Update existing records with current timestamps
             if (Schema::hasColumn($tableName, 'created_at')) {
@@ -597,6 +594,10 @@ class CreateAllTables extends Migration
             if (Schema::hasColumn($tableName, 'updated_at')) {
                 DB::table($tableName)->whereNull('updated_at')->update(['updated_at' => now()]);
             }
+
+            DB::statement("ALTER TABLE $tableName MODIFY created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+
+            DB::statement("ALTER TABLE $tableName MODIFY updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         }
 
 
@@ -613,9 +614,9 @@ class CreateAllTables extends Migration
                 $table->string('term', 45);
                 $table->timestamps();
                 $table->softDeletes();
-            });     
+            });
         }
-        
+
 
         # SETTINGS TABLE
         if (!Schema::hasTable('settings')) {
@@ -625,7 +626,7 @@ class CreateAllTables extends Migration
                 $table->string('value', 255)->nullable();
                 $table->timestamps();
                 $table->softDeletes();
-            });                                         
+            });
         }
     }
 

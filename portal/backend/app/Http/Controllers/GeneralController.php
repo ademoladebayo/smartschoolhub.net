@@ -107,7 +107,7 @@ class GeneralController extends Controller
                     # RESET LAST MIGRATION
                     DB::table('migrations')->truncate();
 
-                    Artisan::call('queue:table');
+                    //Artisan::call('queue:table');
                     Artisan::call('migrate');
                     \Log::info("Completed migration for ... " . $school['alias']);
                 } catch (\Throwable $th) {
