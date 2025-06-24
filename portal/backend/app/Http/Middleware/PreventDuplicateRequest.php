@@ -26,6 +26,10 @@ class PreventDuplicateRequest
 
     public function handle($request, Closure $next)
     {
+        $school = $request->header("school");
+        config(['database.default' => $school]);
+        
+
         //Log::debug('PreventDuplicateRequest middleware triggered for path: ' . $request);
         $user = true; //$request->user();
         if (!$user || in_array($request->path(), $this->pathToIgnore)) {
