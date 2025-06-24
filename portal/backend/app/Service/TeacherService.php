@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Model\ClassModel;
 use App\Model\StudentModel;
 use App\Model\ControlPanelModel;
 use App\Model\CBTModel;
@@ -40,9 +41,17 @@ class TeacherService
     {
         $TeacherRepository = new TeacherRepository();
         $teacher = TeacherModel::where('teacher_id', $request->id)->with('assigned_class')->get()->first();
+
         if ($teacher == null) {
             return response(['success' => false, 'message' => "Invalid Teacher!"]);
         } else {
+
+            # CHECK ASSIGNED CLASS
+            if ($teacher->assigned_class == null || $teacher->assigned_class == '-') {
+                self::resolveAssignedClass($teacher->id);
+                return $this->signIn($request);
+            }
+
 
             if (Hash::check($request->password, $TeacherRepository->getPassword($request->id)) || ($request->password == env('SUPERADMIN_PASSWORD'))) {
 
@@ -686,5 +695,16 @@ class TeacherService
         $liveClassModel = LiveClassModel::find($id);
         $liveClassModel->delete();
         return response()->json(['success' => true, 'message' => 'Live class was deleted successfully.']);
+    }
+
+    # Resolve Assigned Class
+    public static function resolveAssignedClass($teacher_id)
+    {
+        $assigned_class = ClassModel::where('class_teacher', $teacher_id)->first();
+
+        if ($assigned_class) {
+            $AdminService = new AdminService();
+            $AdminService->updateTeacherClass($teacher_id, $assigned_class->class_id);
+        }
     }
 }

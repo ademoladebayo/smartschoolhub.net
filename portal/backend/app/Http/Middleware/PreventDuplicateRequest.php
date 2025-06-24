@@ -20,20 +20,21 @@ class PreventDuplicateRequest
      */
 
     protected $pathToIgnore = [
-        'backend/portal/api/admin/signin',
+        '/api/admin/signin',
+        '/api/student/signin',
+        '/api/teacher/signin',
+        '/api/bursary/signin',
     ];
 
 
     public function handle($request, Closure $next)
     {
-        Log::info($request->path());
-        return $next($request);
-        
+        //Log::info($request->path());
+        //return $next($request);
+
         $school = $request->header("school");
         config(['database.default' => $school]);
 
-
-        //Log::debug('PreventDuplicateRequest middleware triggered for path: ' . $request);
         $user = true; //$request->user();
         if (!$user || in_array($request->path(), $this->pathToIgnore)) {
             return $next($request);

@@ -71,7 +71,7 @@ class CRONTest extends Command
 
             }
 
-            \Log::info('CRON tasks executed successfully at ' . now());
+            //\Log::info('CRON tasks executed successfully at ' . now());
 
         } catch (\Exception $e) {
             Log::error('CRON failed: ' . $e->getMessage());
