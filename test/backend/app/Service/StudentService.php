@@ -386,8 +386,6 @@ class StudentService
         // GET CURRENT SESSION AND TERM
         $session = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
         $term = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
-
-
         // CHECK CONTROL BEFORE FETCHING RESULT
         $SessionRepository = new SessionRepository();
         $response = json_decode($SessionRepository->getCurrentSession(), true);
@@ -402,7 +400,7 @@ class StudentService
 
                 $StudentModel = StudentModel::find($request->student_id);
                 // if ($StudentModel->can_access_transcript == "NO") {
-                //     return response(['success' => false, 'message' => "ACCESS TO " . $request->session . " " . $request->term . " RESULT DENIED, PLEASE CONTACT YOUR SCHOOL ADMIN."]);
+                //     return  response(['success' => false, 'message' => "ACCESS TO " . $request->session . " " . $request->term . " RESULT DENIED, PLEASE CONTACT YOUR SCHOOL ADMIN."]);
                 // }
             }
         }
@@ -417,9 +415,8 @@ class StudentService
 
 
 
-        $result = SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class', 'subject')->get();
+        $result = SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class', 'subject')->get();
 
-        # NO OF STUDENT WHO REGISTERED SUBJECT FOR THE CLASS, SESSION AND TERM
         if (count($result) > 0) {
             $no_student = DB::select('select count(distinct sr.student_id) as no_student from subject_registration sr join student s on sr.student_id = s.id where s.profile_status ="ENABLED" and   class_id ="' . $result[0]->class->id . '" and session ="' . $request->session . '" and term ="' . $request->term . '"')[0]->no_student;
         }
@@ -431,99 +428,32 @@ class StudentService
 
             // TAKE EACH TOTAL SCORE AND GET GRADE , REMARK , AVG , MIN ,MAX AND POSITION
             $avg = SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
-
             $min = SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
-
             $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
-
-
-            if ($request->term == "THIRD TERM") {
-                $scores = DB::table('subject_registration as sr')
-                    ->select([
-                        's.student_id',
-                        's.first_name',
-                        'sub.subject_name',
-                        'cl.class_name',
-                        DB::raw('SUM(sr.first_ca + sr.second_ca + sr.note_assignment + sr.cbt + sr.project + sr.examination) as total'),
-                        DB::raw('ROUND(SUM(sr.first_ca + sr.second_ca + sr.note_assignment + sr.cbt + sr.project + sr.examination) / 
-               (COUNT(DISTINCT sr.term)), 2) as mean_score')
-                    ])
-                    ->join('student as s', 'sr.student_id', '=', 's.id')
-                    ->join('subject as sub', 'sr.subject_id', '=', 'sub.id')
-                    ->join('class as cl', 'sub.class', '=', 'cl.id')
-                    ->where('sub.id', $data->subject_id)
-                    ->where('cl.id', $data->class_id)
-                    ->where('sr.session', $request->session)
-                    // ->where('sr.term', 'FIRST TERM') // commented out to include all terms
-                    ->groupBy([
-                        's.student_id',
-                        's.first_name',
-                        'sub.subject_name',
-                        'cl.class_name'
-                    ])
-                    ->orderBy('mean_score', 'DESC')
-                    ->get();
+            $scores = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->get();
 
 
 
-            } else {
-                $scores = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->orderBy('total', 'DESC')->get();
-            }
 
             // PUSH ALL SCORE TO ARRAY TO GET POSITION
-            $sum_mean_score = 0;
-            $sum_mean_count = 0;
             foreach ($scores as $score) {
-                $value = isset($score->mean_score) ? $score->mean_score : $score->total;
-                array_push($all_score, intval($value));
-                
-                if ($request->term == "THIRD TERM") {
-                    $sum_mean_score += intval($value);
-                    $sum_mean_count++;
-                }
+                array_push($all_score, intval($score->total));
             }
-
-            if ($request->term == "THIRD TERM") {
-                $avg = $sum_mean_count > 0 ? round($sum_mean_score / $sum_mean_count, 2) : 0;
-                $min = min($all_score);
-                $max = max($all_score);
-            }
-
-
 
             // SORT SCORE FROM H - L
             rsort($all_score);
 
-            // Log::alert($all_score);
+            Log::alert($all_score);
 
             $GradeSettingsRepository = new GradeSettingsRepository();
             $util = new Utils();
 
-            # IF TERM IS THIRD TERM, TOTAL WILL BE DIVIDED BY THE 3 TERM
 
-            $first_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "FIRST TERM")->first()->total;
-
-            $second_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "SECOND TERM")->first()->total;
-
-            $third_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "THIRD TERM")->first()->total;
-
-
-
-            if ($request->term == "THIRD TERM") {
-                $data['first_term'] = $first_term;
-                $data['second_term'] = $second_term;
-                $data['third_term'] = $third_term;
-                $data['mean_score'] = round(($first_term + $second_term + $third_term) / 3, 2);
-            }
-
-
-            if ($data->total > 0 || (isset($data['mean_score']) && $data['mean_score'] > 0)) {
-                $value = isset($data['mean_score']) ? $data['mean_score'] : $data->total;
-
-                $gradeAndRemark = $GradeSettingsRepository->getGradeAndRemark($value);
+            if ($data->total > 0) {
+                $gradeAndRemark = $GradeSettingsRepository->getGradeAndRemark($data->total);
                 $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
                 $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
-                $data['position'] = $util->getPosition(array_search(intval($value), $all_score) + 1);
+                $data['position'] = $util->getPosition(array_search(intval($data->total), $all_score) + 1);
             } else {
                 $data['grade'] = '--';
                 $data['remark'] = '--';
@@ -536,11 +466,9 @@ class StudentService
 
 
             // GET SCORE TOTAL
-            $score_accumulator += intval($value);
+            $score_accumulator += intval($data->total);
             $no_subject++;
         }
-
-
         $GradeSettingsRepository = new GradeSettingsRepository();
 
         $percentage = $no_subject != 0 ? $score_accumulator / $no_subject : 0;

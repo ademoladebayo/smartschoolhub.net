@@ -2000,7 +2000,7 @@ function getTranscript() {
                                      <th style="font-size: 14px; text-align:center">SUBJECT</th>
                                      <th class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
                                      <th class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">NOTE/ASSIGNMENT</th>
+                                     <th class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
                                      <th class="vertical-header" style="font-size: 14px;">CBT</th>
                                      <th class="vertical-header" style="font-size: 14px;">PROJECT</th>
                                      <th class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
