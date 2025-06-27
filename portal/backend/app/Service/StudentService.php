@@ -538,16 +538,22 @@ class StudentService
                 if ($first_term == '-') {
                     $first_termm = 0;
                     $term_count--;
+                } else {
+                    $first_termm = intval($first_term);
                 }
 
                 if ($second_term == '-') {
                     $second_termm = 0;
                     $term_count--;
+                } else {
+                    $second_termm = intval($second_term);
                 }
 
                 if ($third_term == '-') {
                     $third_termm = 0;
                     $term_count--;
+                } else {
+                    $third_termm = intval($third_term);
                 }
 
                 // MEAN SCORE FOR THIRD TERM
