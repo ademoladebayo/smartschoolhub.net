@@ -2007,16 +2007,16 @@ function getTranscript() {
                                      <th class="vertical-header" style="font-size: 14px;">TOTAL</th>
 
                                      ${term == "THIRD TERM" ?
-                                        `
-                                          <th class="vertical-header" style="font-size: 14px;">FIRST TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px;">SECOND TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px;">THIRD TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px;">MEAN SCORE</th>
+                    `
+                                          <th class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
+                                          <th class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
+                                          <th class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
+                                          <th class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
                                         
                                         `
-                                        :
-                                        ``
-                                      }
+                    :
+                    ``
+                  }
 
 
 
@@ -2335,15 +2335,30 @@ function getResult(value) {
 
             ${term == "THIRD TERM" ?
                 `
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                    ? "blue"
+                    : "black"
+                } ;">
                 ${result.first_term}
               </td>
               
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                    ? "blue"
+                    : "black"
+                } ;">
                 ${result.second_term}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
+                    ? "blue"
+                    : "black"
+                } ;">
                 ${result.third_term}
               </td>
               

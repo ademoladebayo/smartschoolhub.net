@@ -534,11 +534,29 @@ class StudentService
                 $data['second_term'] = $second_term;
                 $data['third_term'] = $third_term;
 
-                $first_termm = $first_term != '-' ? $first_term : 0;
-                $second_termm = $second_term != '-' ? $second_term : 0;
-                $third_termm = $third_term != '-' ? $third_term : 0;
+                $term_count = 3;
+                if ($first_term == '-') {
+                    $first_termm = 0;
+                    $term_count--;
+                }
 
-                $data['mean_score'] = round(($first_termm + $second_termm + $third_termm) / 3, 2);
+                if ($second_term == '-') {
+                    $second_termm = 0;
+                    $term_count--;
+                }
+
+                if ($third_term == '-') {
+                    $third_termm = 0;
+                    $term_count--;
+                }
+
+                // MEAN SCORE FOR THIRD TERM
+                if ($term_count == 0) {
+                    $data['mean_score'] = 0;
+                } else {
+                    $data['mean_score'] = round(($first_termm + $second_termm + $third_termm) / $term_count, 2);
+                }
+
             }
 
 
