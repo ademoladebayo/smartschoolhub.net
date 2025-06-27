@@ -20,10 +20,7 @@ class PreventDuplicateRequest
      */
 
     protected $pathToIgnore = [
-        'api/admin/signin',
-        'api/student/signin',
-        'api/teacher/signin',
-        'api/bursary/signin',
+        'api/...',
     ];
 
 
@@ -36,7 +33,7 @@ class PreventDuplicateRequest
         config(['database.default' => $school]);
 
         $user = true; //$request->user();
-        if (!$user || in_array($request->path(), $this->pathToIgnore)) {
+        if (!$user || !in_array($request->path(), $this->pathToIgnore)) {
             return $next($request);
         }
 
