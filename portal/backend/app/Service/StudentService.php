@@ -525,6 +525,10 @@ class StudentService
 
             $third_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "THIRD TERM")->first();
 
+            Log::debug("FIRST TERM : " . $first_term);
+            Log::debug("SECOND TERM : " . $second_term);
+            Log::debug("THIRD TERM : " . $third_term);
+
             $first_term = $first_term ? intval($first_term->total) : '-';
             $second_term = $second_term ? intval($second_term->total) : '-';
             $third_term = $third_term ? intval($third_term->total) : '-';
