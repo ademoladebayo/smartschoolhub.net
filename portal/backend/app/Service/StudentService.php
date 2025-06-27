@@ -533,7 +533,12 @@ class StudentService
                 $data['first_term'] = $first_term;
                 $data['second_term'] = $second_term;
                 $data['third_term'] = $third_term;
-                $data['mean_score'] = round(($first_term + $second_term + $third_term) / 3, 2);
+
+                $first_termm = $first_term != '-' ? $first_term : 0;
+                $second_termm = $second_term != '-' ? $second_term : 0;
+                $third_termm = $third_term != '-' ? $third_term : 0;
+
+                $data['mean_score'] = round(($first_termm + $second_termm + $third_termm) / 3, 2);
             }
 
 
