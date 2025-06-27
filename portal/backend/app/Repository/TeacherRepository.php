@@ -47,15 +47,15 @@ class TeacherRepository
             $TeacherModel->teacher_id = date("Y") . "-STF-" . "001";
         }
 
-        $teacher_id =  $TeacherModel->teacher_id;
+        $teacher_id = $TeacherModel->teacher_id;
         $TeacherModel->save();
         return response()->json(['success' => true, 'message' => 'Staff ' . $teacher_id . ' was created successfully.']);
     }
 
     public function getAllTeacher()
     {
-        $TeacherModel =  new TeacherModel();
-        return  $TeacherModel->with('assigned_class')->orderBy('id', 'DESC')->get();
+        $TeacherModel = new TeacherModel();
+        return $TeacherModel->with('assigned_class')->orderBy('id', 'DESC')->get();
     }
     public function updateTeacherClass($teacher_id, $class_id)
     {
@@ -65,7 +65,7 @@ class TeacherRepository
     }
     public function removeClassFromTeacher($class_id)
     {
-        $TeacherModel =  TeacherModel::where('assigned_class', $class_id)->first();
+        $TeacherModel = TeacherModel::where('assigned_class', $class_id)->first();
         if ($TeacherModel != "") {
             log::debug($TeacherModel);
             $TeacherModel->assigned_class = "-";
@@ -76,18 +76,19 @@ class TeacherRepository
     public function editTeacher(Request $request)
     {
         $TeacherModel = TeacherModel::find($request->teacher_id);
-        $TeacherModel->title =  $request->title;
-        $TeacherModel->first_name =  $request->first_name;
-        $TeacherModel->last_name =  $request->last_name;
+        $TeacherModel->title = $request->title;
+        $TeacherModel->first_name = $request->first_name;
+        $TeacherModel->last_name = $request->last_name;
         $TeacherModel->middle_name = $request->middle_name == "" ? "" : $request->middle_name;
-        $TeacherModel->gender =  $request->gender;
-        $TeacherModel->phone =  $request->teacher_phone;
-        $TeacherModel->email =  $request->teacher_email == "" ? "" : $request->teacher_email;
-        $TeacherModel->dob =  $request->dob;
-        $TeacherModel->religion =  $request->religion;
-        $TeacherModel->joining_date =  $request->joining_date == "" ? "" : $request->joining_date;
-        $TeacherModel->home_address =  $request->home_address;
-        $TeacherModel->state =  $request->state;
+        $TeacherModel->gender = $request->gender;
+        $TeacherModel->phone = $request->teacher_phone;
+        $TeacherModel->email = $request->teacher_email == "" ? "" : $request->teacher_email;
+        $TeacherModel->dob = $request->dob;
+        $TeacherModel->religion = $request->religion;
+        $TeacherModel->joining_date = $request->joining_date == "" ? "" : $request->joining_date;
+        $TeacherModel->home_address = $request->home_address;
+        $TeacherModel->state = $request->state;
+        $TeacherModel->qualification = $request->qualification;
 
         $TeacherModel->save();
 
@@ -102,13 +103,13 @@ class TeacherRepository
 
     public function searchTeacher($search_data)
     {
-        return  TeacherModel::where('teacher_id', 'like', '%' . $search_data . '%')->orWhere('first_name', 'like', '%' . $search_data . '%')->orWhere('last_name', 'like', '%' . $search_data . '%')->with("assigned_class")->get();
+        return TeacherModel::where('teacher_id', 'like', '%' . $search_data . '%')->orWhere('first_name', 'like', '%' . $search_data . '%')->orWhere('last_name', 'like', '%' . $search_data . '%')->with("assigned_class")->get();
     }
 
     public function updateTeacherProfileStatus($id)
     {
-        $TeacherModel =  TeacherModel::find($id);
-        $TeacherModel->profile_status =  $TeacherModel->profile_status == 'ENABLED' ? 'DISABLE' : 'ENABLED';
+        $TeacherModel = TeacherModel::find($id);
+        $TeacherModel->profile_status = $TeacherModel->profile_status == 'ENABLED' ? 'DISABLE' : 'ENABLED';
         $TeacherModel->save();
         return response()->json(['success' => true, 'message' => 'Profile updated successfully.']);
     }

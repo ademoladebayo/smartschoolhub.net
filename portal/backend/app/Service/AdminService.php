@@ -203,6 +203,7 @@ class AdminService
         $TeacherModel->joining_date = $request->joining_date == "" ? "" : $request->joining_date;
         $TeacherModel->home_address = $request->home_address;
         $TeacherModel->state = $request->state;
+        $TeacherModel->qualification = $request->qualification;
 
         return $TeacherRepository->createTeacher($TeacherModel);
     }

@@ -824,6 +824,7 @@ function viewTeacher(json) {
       : "NO CLASS ASSIGNED";
   document.getElementById("home_address").value = json.home_address;
   document.getElementById("state").value = json.state;
+  document.getElementById("qualification").value = json.qualification;
 }
 
 function getTeacherDetails() {
@@ -866,6 +867,8 @@ function getTeacherDetails() {
   document.getElementById("state").innerHTML =
     `<option value="${json.state}">${json.state}</option>` +
     document.getElementById("state").innerHTML;
+
+  document.getElementById("qualification").value = json.qualification;
 }
 
 function editTeacher(json) {
@@ -885,6 +888,7 @@ function createTeacher() {
   var joining_date = document.getElementById("joining_date").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
+  var qualification = document.getElementById("qualification").value;
 
   if (
     title != "" &&
@@ -921,6 +925,7 @@ function createTeacher() {
         joining_date: joining_date,
         home_address: home_address,
         state: state,
+        qualification: qualification
       }),
     })
       .then(function (res) {
@@ -962,6 +967,7 @@ function updateTeacher() {
   var joining_date = document.getElementById("joining_date").value;
   var home_address = document.getElementById("home_address").value;
   var state = document.getElementById("state").value.toUpperCase();
+  var qualification = document.getElementById("qualification").value;
 
   if (
     title != "" &&
@@ -999,6 +1005,7 @@ function updateTeacher() {
         joining_date: joining_date,
         home_address: home_address,
         state: state,
+        qualification: qualification
       }),
     })
       .then(function (res) {

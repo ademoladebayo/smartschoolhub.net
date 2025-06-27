@@ -516,7 +516,7 @@ class StudentService
             $GradeSettingsRepository = new GradeSettingsRepository();
             $util = new Utils();
 
-            # IF TERM IS THIRD TERM, TOTAL WILL BE DIVIDED BY THE 3 TERM
+            # IF TERM IS THIRD TERM, TOTAL WILL BE DIVIDED BY THE 3 TERM OR NUMBER OF TERMS
 
             $first_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "FIRST TERM")->first();
 
@@ -532,7 +532,6 @@ class StudentService
             $third_term = $third_term ? intval($third_term->total) : '-';
 
             if ($request->term == "THIRD TERM") {
-                 Log::debug("THIRD TERM 1: " . $third_term);
                 $data['first_term'] = $first_term;
                 $data['second_term'] = $second_term;
                 $data['third_term'] = $third_term;
@@ -543,7 +542,6 @@ class StudentService
                 if ($first_term === '-') {
                     $first_termm = 0;
                     $term_count--;
-                    Log::debug("FIRST TERM 2: " . $first_termm);
                 } else {
                     $first_termm = intval($first_term);
                 }
@@ -551,7 +549,6 @@ class StudentService
                 if ($second_term === '-') {
                     $second_termm = 0;
                     $term_count--;
-                    Log::debug("SECOND TERM 2: " . $second_termm);
                 } else {
                     $second_termm = intval($second_term);
                 }
@@ -559,7 +556,6 @@ class StudentService
                 if ($third_term === '-') {
                     $third_termm = 0;
                     $term_count--;
-                    Log::debug("THIRD TERM 2: " . $third_termm);
                 } else {
                     $third_termm = intval($third_term);
                 }
@@ -648,6 +644,13 @@ class StudentService
         $present = count($AttendanceSummary);
         $absent = intval($opened) - intval($present);
         $atd_perc = $present > 0 ? ($present / $opened) * 100 : 0;
+
+        # IF SETTINS SAY MANUAL ATTENDANCE
+        // if(){
+
+        // }
+
+
         return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary, 'attendance' => number_format($atd_perc, 2) . "%"]);
     }
 
