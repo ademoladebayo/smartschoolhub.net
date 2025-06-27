@@ -532,9 +532,12 @@ class StudentService
             $third_term = $third_term ? intval($third_term->total) : '-';
 
             if ($request->term == "THIRD TERM") {
+                 Log::debug("THIRD TERM 1: " . $third_term);
                 $data['first_term'] = $first_term;
                 $data['second_term'] = $second_term;
                 $data['third_term'] = $third_term;
+
+                 Log::debug("THIRD TERM 2: " . $third_term);
 
                 $term_count = 3;
                 if ($first_term == '-') {
@@ -560,7 +563,7 @@ class StudentService
 
                  Log::debug("FIRST TERM : " . $first_term);
             Log::debug("SECOND TERM : " . $second_term);
-            Log::debug("THIRD TERM : " . $third_term);
+            Log::debug("THIRD TERM 3: " . $third_term);
             Log::debug("term_count : " . $term_count);
 
                 // MEAN SCORE FOR THIRD TERM
