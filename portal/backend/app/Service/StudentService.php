@@ -518,13 +518,16 @@ class StudentService
 
             # IF TERM IS THIRD TERM, TOTAL WILL BE DIVIDED BY THE 3 TERM
 
-            $first_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "FIRST TERM")->first()->total;
-
-            $second_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "SECOND TERM")->first()->total;
-
-            $third_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "THIRD TERM")->first()->total;
+            $first_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "FIRST TERM")->first();
 
 
+            $second_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "SECOND TERM")->first();
+
+            $third_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "THIRD TERM")->first();
+
+            $first_term = $first_term ? intval($first_term->total) : '-';
+            $second_term = $second_term ? intval($second_term->total) : '-';
+            $third_term = $third_term ? intval($third_term->total) : '-';
 
             if ($request->term == "THIRD TERM") {
                 $data['first_term'] = $first_term;
