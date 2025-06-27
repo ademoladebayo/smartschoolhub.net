@@ -540,7 +540,7 @@ class StudentService
         
 
                 $term_count = 3;
-                if ($first_term == '-') {
+                if ($first_term === '-') {
                     $first_termm = 0;
                     $term_count--;
                     Log::debug("FIRST TERM 2: " . $first_termm);
@@ -548,7 +548,7 @@ class StudentService
                     $first_termm = intval($first_term);
                 }
 
-                if ($second_term == '-') {
+                if ($second_term === '-') {
                     $second_termm = 0;
                     $term_count--;
                     Log::debug("SECOND TERM 2: " . $second_termm);
@@ -556,7 +556,7 @@ class StudentService
                     $second_termm = intval($second_term);
                 }
 
-                if ($third_term == '-') {
+                if ($third_term === '-') {
                     $third_termm = 0;
                     $term_count--;
                     Log::debug("THIRD TERM 2: " . $third_termm);
