@@ -92,6 +92,7 @@ class ActivityLog
         if ($last_cron_check && $last_cron_check->diffInMinutes(now()) > 1) {
               Artisan::call('schedule:run');
               Cache::forever('cron_check', now());
+              Utils::runSeeder();
         }
     }
 }

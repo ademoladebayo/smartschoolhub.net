@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Model\AdminModel;
 use App\Model\AssignmentModel;
 use App\Model\AssignmentSubmissionModel;
+use App\Model\AttendanceSummary;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
 use App\Model\ClassModel;
@@ -453,7 +454,8 @@ class StudentService
                 $gradeAndRemark = $GradeSettingsRepository->getGradeAndRemark($data->total);
                 $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
                 $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
-                $data['position'] = $util->getPosition(array_search(intval($data->total), $all_score) + 1);
+                $numberPosition = array_search(intval($data->total), $all_score) + 1;
+                $data['position'] = $util->getPosition($numberPosition);
             } else {
                 $data['grade'] = '--';
                 $data['remark'] = '--';
@@ -518,6 +520,45 @@ class StudentService
         $present = count($AttendanceSummary);
         $absent = intval($opened) - intval($present);
         $atd_perc = $present > 0 ? ($present / $opened) * 100 : 0;
+
+
+        // CHECK IF ATTENDANCE SUMMARY ALREADY EXISTS
+        $AttendanceSummary = AttendanceSummary::where('student_id', $student)->where('session', $session)->where('term', $term)->get();
+
+        if (count($AttendanceSummary) > 0) {
+            $attendanceSummary = $AttendanceSummary[0];
+
+            $attendanceSummary->a_school_opened = $opened;
+            $attendanceSummary->a_present = $present;
+            $AttendanceSummary->save();
+
+            $settings = Utils::getSettings("ALLOW_MANUAL_ATTENDANCE");
+
+            if ($settings && $settings == "YES" && $opened < 60) {
+
+                // IF ALLOW MANUAL ATTENDANCE, THEN UPDATE THE SCHOOL OPENED AND PRESENT
+                $opened = $attendanceSummary->m_school_opened;
+                $present = $attendanceSummary->m_present;
+                $absent = intval($opened) - intval($present);
+            }
+
+        } else {
+            $attendanceSummary = new AttendanceSummary();
+            $attendanceSummary->student_id = $student;
+
+            $attendanceSummary->m_school_opened = 0;
+            $attendanceSummary->m_present = 0;
+
+            $attendanceSummary->a_school_opened = $opened;
+            $attendanceSummary->a_present = $present;
+
+            $attendanceSummary->session = $session;
+            $attendanceSummary->term = $term;
+            $AttendanceSummary->save();
+        }
+
+        $atd_perc = $present > 0 ? ($present / $opened) * 100 : 0;
+
         return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary, 'attendance' => number_format($atd_perc, 2) . "%"]);
     }
 

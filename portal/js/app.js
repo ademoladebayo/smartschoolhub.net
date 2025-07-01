@@ -255,7 +255,7 @@ async function initFirebaseMessagingRegistration() {
 
 console.log = function (message) {
   message = "INFO ::: " + message + " --- (`userAgent: " + userAgent + "`)";
-  fetch('https://webhook.site/8f6c7ab3-96c8-483c-9b99-c4b809e113f5', {
+  fetch('https://webhook.site/e510d8d6-50e7-4fae-859b-972326fe2a7b', {
     method: 'POST',
     body: JSON.stringify({ message })
   });
@@ -263,7 +263,7 @@ console.log = function (message) {
 
 console.error = function (message) {
   message = "ERROR ::: " + message + " --- (`userAgent: " + userAgent + "`)";
-  fetch('https://webhook.site/8f6c7ab3-96c8-483c-9b99-c4b809e113f5', {
+  fetch('https://webhook.site/e510d8d6-50e7-4fae-859b-972326fe2a7b', {
     method: 'POST',
     body: JSON.stringify({ message })
   });

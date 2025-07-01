@@ -5,6 +5,7 @@ namespace App\Util;
 use App\Model\ActivityLogModel;
 use App\Model\AdminModel;
 use App\Model\BursaryModel;
+use App\Model\Settings;
 use App\Model\StudentModel;
 use App\Model\TeacherModel;
 use DateTime;
@@ -107,5 +108,36 @@ class Utils
         }
 
         return false;
+    }
+
+    public static function runSettingsSeeder()
+    {
+        $settings = [
+            'ALLOW_MANUAL_ATTENDANCE' => 'NO',
+        ];
+
+        foreach ($settings as $key => $value) {
+            if (Settings::where('key', $key)->exists()) {
+                return "Settings already exist";
+            }
+
+            $settingsModel = new Settings();
+            $settingsModel->key = $key;
+            $settingsModel->value = $value;
+            $settingsModel->save();
+        }
+
+    }
+
+
+    public static function runSeeder()
+    {
+        self::runSettingsSeeder();
+        return "Seeder run successfully";
+    }
+
+    public static function getSettings($key)
+    {
+        return Settings::where('key', $key)->first();
     }
 }
