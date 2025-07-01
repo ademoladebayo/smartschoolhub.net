@@ -647,14 +647,14 @@ class StudentService
         $absent = intval($opened) - intval($present);
 
         // CHECK IF ATTENDANCE SUMMARY ALREADY EXISTS
-        $AttendanceSummary = AttendanceSummary::where('student_id', $student)->where('session', $session)->where('term', $term)->get();
+        $attendanceSummary = AttendanceSummary::where('student_id', $student)->where('session', $session)->where('term', $term)->get();
 
-        if (count($AttendanceSummary) > 0) {
-            $attendanceSummary = $AttendanceSummary[0];
+        if (count($attendanceSummary) > 0) {
+            $attendanceSummary = $attendanceSummary[0];
 
             $attendanceSummary->a_school_opened = $opened;
             $attendanceSummary->a_present = $present;
-            $AttendanceSummary->save();
+            $attendanceSummary->save();
 
             $settings = Utils::getSettings("ALLOW_MANUAL_ATTENDANCE");
 
@@ -677,7 +677,7 @@ class StudentService
 
             $attendanceSummary->session = $session;
             $attendanceSummary->term = $term;
-            $AttendanceSummary->save();
+            $attendanceSummary->save();
         }
 
         $atd_perc = $present > 0 ? ($present / $opened) * 100 : 0;
