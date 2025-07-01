@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class GradeSettingsModel extends Authenticatable
+class GradeSettingsModel extends Model
 {
     use  Notifiable, HasApiTokens;
     protected $table = 'grade_settings';

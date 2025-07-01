@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class TeacherModel extends Authenticatable
+class TeacherModel extends Model
 {
     use  Notifiable, HasApiTokens;
 

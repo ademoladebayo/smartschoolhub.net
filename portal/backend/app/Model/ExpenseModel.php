@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class ExpenseModel extends Authenticatable
+class ExpenseModel extends Model
 {
     use  Notifiable, HasApiTokens;
     protected $table = 'expense';

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Model\AdminModel;
 use App\Model\AssignmentModel;
 use App\Model\AssignmentSubmissionModel;
+use App\Model\AttendanceSummary;
 use App\Model\CBTModel;
 use App\Model\CBTResultModel;
 use App\Model\ClassModel;
@@ -525,7 +526,7 @@ class StudentService
 
             $third_term = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where(["subject_id" => $data->subject_id, "student_id" => $request->student_id])->where("session", $request->session)->where("term", "THIRD TERM")->first();
 
-           
+
 
             $first_term = $first_term ? intval($first_term->total) : '-';
             $second_term = $second_term ? intval($second_term->total) : '-';
@@ -536,7 +537,7 @@ class StudentService
                 $data['second_term'] = $second_term;
                 $data['third_term'] = $third_term;
 
-        
+
 
                 $term_count = 3;
                 if ($first_term === '-') {
@@ -560,7 +561,7 @@ class StudentService
                     $third_termm = intval($third_term);
                 }
 
-         
+
 
                 // MEAN SCORE FOR THIRD TERM
                 if ($term_count == 0) {
@@ -578,7 +579,8 @@ class StudentService
                 $gradeAndRemark = $GradeSettingsRepository->getGradeAndRemark($value);
                 $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
                 $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
-                $data['position'] = $util->getPosition(array_search(intval($value), $all_score) + 1);
+                $numberPosition = array_search(intval($value), $all_score) + 1;
+                $data['position'] = $util->getPosition($numberPosition);
             } else {
                 $data['grade'] = '--';
                 $data['remark'] = '--';
@@ -643,12 +645,42 @@ class StudentService
         $opened = count(array_unique($Days));
         $present = count($AttendanceSummary);
         $absent = intval($opened) - intval($present);
+
+        // CHECK IF ATTENDANCE SUMMARY ALREADY EXISTS
+        $AttendanceSummary = AttendanceSummary::where('student_id', $student)->where('session', $session)->where('term', $term)->get();
+
+        if (count($AttendanceSummary) > 0) {
+            $attendanceSummary = $AttendanceSummary[0];
+
+            $attendanceSummary->a_school_opened = $opened;
+            $attendanceSummary->a_present = $present;
+            $AttendanceSummary->save();
+
+            $settings = Utils::getSettings("ALLOW_MANUAL_ATTENDANCE");
+
+            if ($settings && $settings == "YES" && $opened < 60) {
+                // IF ALLOW MANUAL ATTENDANCE, THEN UPDATE THE SCHOOL OPENED AND PRESENT
+                $opened = $attendanceSummary->m_school_opened;
+                $present = $attendanceSummary->m_present;
+                $absent = intval($opened) - intval($present);
+            }
+
+        } else {
+            $attendanceSummary = new AttendanceSummary();
+            $attendanceSummary->student_id = $student;
+
+            $attendanceSummary->m_school_opened = 0;
+            $attendanceSummary->m_present = 0;
+
+            $attendanceSummary->a_school_opened = $opened;
+            $attendanceSummary->a_present = $present;
+
+            $attendanceSummary->session = $session;
+            $attendanceSummary->term = $term;
+            $AttendanceSummary->save();
+        }
+
         $atd_perc = $present > 0 ? ($present / $opened) * 100 : 0;
-
-        # IF SETTINS SAY MANUAL ATTENDANCE
-        // if(){
-
-        // }
 
 
         return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary, 'attendance' => number_format($atd_perc, 2) . "%"]);

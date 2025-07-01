@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class AffilateModel extends Authenticatable
+class AffilateModel extends Model
 {
     use  Notifiable, HasApiTokens;
     protected $table = 'affilate_marketer';

@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TeacherModel extends Authenticatable
+class TeacherModel extends Model
 {
     use SoftDeletes;
     use  Notifiable, HasApiTokens;

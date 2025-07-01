@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class StudentResultRatingModel extends Authenticatable
+class StudentResultRatingModel extends Model
 {
     use  Notifiable, HasApiTokens;
 

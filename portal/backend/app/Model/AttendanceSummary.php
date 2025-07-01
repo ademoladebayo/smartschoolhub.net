@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class AttendanceSummary extends Authenticatable
+class AttendanceSummary extends Model
 {
     use  Notifiable, HasApiTokens;
     protected $table = 'attendance_summary';
