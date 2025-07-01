@@ -24,11 +24,11 @@ if ("serviceWorker" in navigator) {
             if (localStorage["register_device"] == '1' || localStorage["register_device"] == undefined || localStorage["register_device"] == null) {
               // if (true) {
 
-              // Check for iPhone (iOS)
-              // if (/iPhone|iPad|iPod/i.test(userAgent)) {
-              //   getSchools();
-              //   return 0;
-              // }
+              //Check for iPhone (iOS)
+              if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                getSchools();
+                return 0;
+              }
 
               // // Check for Android
               // if (/android/i.test(userAgent)) {
