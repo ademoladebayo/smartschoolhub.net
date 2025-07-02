@@ -13,7 +13,7 @@ class LessonPlanModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'lesson_plan';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
 
     public function subject()

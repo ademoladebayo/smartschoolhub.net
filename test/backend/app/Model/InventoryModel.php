@@ -13,7 +13,7 @@ class InventoryModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'inventory';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
 
 

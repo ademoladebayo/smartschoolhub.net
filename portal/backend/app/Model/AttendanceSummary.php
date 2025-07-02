@@ -13,7 +13,7 @@ class AttendanceSummary extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'attendance_summary';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
    
 }

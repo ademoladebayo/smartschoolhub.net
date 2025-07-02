@@ -11,7 +11,7 @@ class ClassModel extends Model
  // use SoftDeletes;
     protected $table = 'class';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function class_teacher()
     {

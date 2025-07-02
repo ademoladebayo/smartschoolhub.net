@@ -13,7 +13,7 @@ class DebitorModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'debitors';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function student()
     {

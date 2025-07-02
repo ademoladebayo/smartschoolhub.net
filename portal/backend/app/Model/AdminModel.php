@@ -14,7 +14,7 @@ class AdminModel extends Model
     use Notifiable, HasApiTokens;
     protected $table = 'admin';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
 
 

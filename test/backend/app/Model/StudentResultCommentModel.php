@@ -16,7 +16,7 @@ class StudentResultCommentModel extends Model
 
     protected $table = 'student_result_comment';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
 
    

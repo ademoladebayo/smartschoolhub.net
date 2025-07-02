@@ -13,7 +13,7 @@ class ExpenseModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'expense';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     // public function pay_by()
     // {

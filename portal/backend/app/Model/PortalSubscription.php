@@ -13,6 +13,6 @@ class PortalSubscription extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'portal_subscription';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
 }

@@ -13,7 +13,7 @@ class BursaryModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'bursary';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $hidden = ['password'];
 }

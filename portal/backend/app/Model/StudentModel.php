@@ -16,7 +16,7 @@ class StudentModel extends Model
 
     protected $table = 'student';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
 
     public function class()

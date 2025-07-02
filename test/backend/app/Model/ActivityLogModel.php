@@ -9,5 +9,5 @@ class ActivityLogModel extends Model{
 
     protected $table = 'activity_log';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 }

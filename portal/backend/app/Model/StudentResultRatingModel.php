@@ -16,5 +16,5 @@ class StudentResultRatingModel extends Model
 
     protected $table = 'student_result_rating';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 }

@@ -11,7 +11,7 @@ class SubjectModel extends Model
  // use SoftDeletes;
     protected $table = 'subject';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function teacher()
     {

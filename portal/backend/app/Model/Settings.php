@@ -13,7 +13,7 @@ class Settings extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'settings';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
    
 }

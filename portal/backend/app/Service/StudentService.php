@@ -658,7 +658,7 @@ class StudentService
 
             $settings = Utils::getSettings("ALLOW_MANUAL_ATTENDANCE");
 
-            if ($settings && $settings == "YES" && $opened < 60) {
+            if ($settings && $settings === "YES" && $opened < 60) {
                 // IF ALLOW MANUAL ATTENDANCE, THEN UPDATE THE SCHOOL OPENED AND PRESENT
                 $opened = $attendanceSummary->m_school_opened;
                 $present = $attendanceSummary->m_present;

@@ -13,6 +13,6 @@ class ControlPanelModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'control_panel';
     protected $primaryKey = 'id';
-    public $timestamps = false;
+    public $timestamps = true;
 
 }
