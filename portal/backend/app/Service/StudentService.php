@@ -656,7 +656,7 @@ class StudentService
             $attendanceSummary->a_present = $present;
             $attendanceSummary->save();
 
-            $settings = Utils::getSettings(key: "ALLOW_MANUAL_ATTENDANCE");
+            $settings = Utils::getSettings("ALLOW_MANUAL_ATTENDANCE");
 
             Log::debug("ALLOW_MANUAL_ATTENDANCE : " . $settings);
             if ($settings && $settings === "YES" && $opened < 60) {
