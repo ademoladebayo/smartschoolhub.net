@@ -138,6 +138,6 @@ class Utils
 
     public static function getSettings($key)
     {
-        return Settings::where('key', $key)->first();
+        return Settings::where('key', $key)->first()->value ?? null;
     }
 }
