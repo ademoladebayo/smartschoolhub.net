@@ -367,10 +367,13 @@ class TeacherService
 
             $first_ca = $result->first_ca != "-" ? $result->first_ca : 0;
             $second_ca = $result->second_ca != "-" ? $result->second_ca : 0;
+            $note_assignment = $result->note_assignment != "-" ? $result->note_assignment : 0;
+            $cbt = $result->cbt != "-" ? $result->cbt : 0;
+            $project = $result->project != "-" ? $result->project : 0;
             $examination = $result->examination != "-" ? $result->examination : 0;
 
 
-            $result->total = $first_ca + $second_ca + $examination;
+            $result->total = $first_ca + $second_ca + $note_assignment + $cbt + $project + $examination;
             $result->save();
         }
         return response()->json(['success' => true, 'message' => 'Result upload was successful.']);

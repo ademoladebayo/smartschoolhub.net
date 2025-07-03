@@ -1551,21 +1551,39 @@ async function getTranscript() {
                                 <div class="table-responsive">
                                     <table style="padding: 0%;" class="table table-sm">
                                         <thead>
-                                            <tr>
-                                                <th style="font-size: 14px;">S/No</th>
-                                                <th style="font-size: 14px;">Subject</th>
-                                                <th style="font-size: 14px;">1<sup>st</sup> CA</th>
-                                                <th style="font-size: 14px;">2<sup>nd</sup> CA</th>
-                                                <th style="font-size: 14px;">Exam</th>
-                                                <th style="font-size: 14px;">Total</th>
-                                                <th style="font-size: 14px;">Class Average</th>
-                                                <th style="font-size: 14px;">Class Lowest</th>
-                                                <th style="font-size: 14px;">Class Highest</th>
-                                                <th style="font-size: 14px;">Position</th>
-                                                <th style="font-size: 14px;">Grade</th>
-                                                <th style="font-size: 14px;">Remark</th>
-                                            </tr>
-                                        </thead>
+                                 <tr>
+                                     <th class="vertical-header" style="font-size: 14px;">S/NO</th>
+                                     <th style="font-size: 14px; text-align:center">SUBJECT</th>
+                                     <th class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
+                                     <th class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
+                                     <th class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+                                     <th class="vertical-header" style="font-size: 14px;">CBT</th>
+                                     <th class="vertical-header" style="font-size: 14px;">PROJECT</th>
+                                     <th class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+                                     <th class="vertical-header" style="font-size: 14px;">TOTAL</th>
+
+                                     ${term == "THIRD TERM" ?
+                    `
+                                          <th class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
+                                          <th class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
+                                          <th class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
+                                          <th class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
+                                        
+                                        `
+                    :
+                    ``
+                  }
+
+
+
+                                     <th class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+                                     <th class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
+                                     <th class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+                                     <th class="vertical-header" style="font-size: 14px;">POSITION</th>
+                                     <th class="vertical-header" style="font-size: 14px;">GRADE</th>
+                                     <th style="font-size: 14px; text-align:center">REMARK</th>
+                                 </tr>
+                             </thead>
                                         <tbody id="scores_${session}_${term}">
 
                                         
@@ -1846,18 +1864,77 @@ function getResult(value) {
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 ${result.subject.subject_name}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.first_ca}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.second_ca}
               </td>
+
+                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.project}
+              </td>
+
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.note_assignment}
+              </td>
+
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.cbt}
+              </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.examination}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.total}
               </td>
+
+              ${term == "THIRD TERM" ?
+              `
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+                ? "red"
+                : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ;">
+                ${result.first_term}
+              </td>
+              
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+                ? "red"
+                : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ;">
+                ${result.second_term}
+              </td>
+
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+                ? "red"
+                : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ;">
+                ${result.third_term}
+              </td>
+              
+               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
+                ? "red"
+                : result.grade.includes("A")
+                  ? "blue"
+                  : "black"
+              } ;">
+                ${result.mean_score}
+              </td>
+              
+              `
+              : ``
+            }
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               
               ${parseFloat(result.class_average).toFixed(0)}
