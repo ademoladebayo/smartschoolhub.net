@@ -7060,12 +7060,27 @@ function getAllstudentForSubjectResultUpload(refresh) {
             <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','first_ca',this.innerHTML)" contenteditable="true" >${data.result[i].first_ca
             }</td>
+
             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','second_ca',this.innerHTML)" contenteditable="true">${data.result[i].second_ca
             }</td>
+
             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            }','note_assignment',this.innerHTML)" contenteditable="true">${data.result[i].note_assignment
+            }</td>
+
+             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            }','cbt',this.innerHTML)" contenteditable="true">${data.result[i].cbt
+            }</td>
+
+             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            }','project',this.innerHTML)" contenteditable="true">${data.result[i].project
+            }</td>
+
+             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','examination',this.innerHTML)" contenteditable="true">${data.result[i].examination
             }</td>
+
             <td style="font-size:20px; font-style:bold;"><b>${data.result[i].total
             }</b></td>
             <td> 

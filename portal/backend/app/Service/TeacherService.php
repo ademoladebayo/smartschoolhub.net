@@ -308,7 +308,7 @@ class TeacherService
     {
         // $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
 
-        $result = SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->whereHas('student', function ($query) {
+        $result = SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment, cbt, project + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->whereHas('student', function ($query) {
             $query->where('profile_status', 'ENABLED');
         })->get();
 
@@ -322,6 +322,7 @@ class TeacherService
             $data['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
             $data['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
         }
+        
         $avg = SubjectRegistrationModel::select(DB::raw('avg(total) as avg'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->avg;
         $min = SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
         $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
