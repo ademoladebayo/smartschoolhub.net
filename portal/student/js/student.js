@@ -1796,6 +1796,9 @@ function sortTerm(terms) {
 
 function getResult(value) {
   // GET ACADEMIC PERFORMANCE
+  session = value.split("_")[1];
+  term = value.split("_")[2];
+  
   return fetch(ip + "/api/student/result", {
     method: "POST",
     headers: {
@@ -1808,8 +1811,8 @@ function getResult(value) {
       user_type: "STUDENT",
       student_id: JSON.parse(localStorage["user_data"]).data.id,
       class_id: JSON.parse(localStorage["user_data"]).data.class.id,
-      session: value.split("_")[1],
-      term: value.split("_")[2],
+      session: session,
+      term: term,
     }),
   })
     .then(function (res) {
