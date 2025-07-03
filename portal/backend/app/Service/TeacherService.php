@@ -388,12 +388,15 @@ class TeacherService
             return response()->json(['success' => true, 'message' => 'Result updated']);
 
         } else if ($request->type == "ATTENDANCE") {
-            $attendanceSummary = AttendanceSummary::where('student_id', $request->student)->where('session', $request->session)->where('term', $request->term)->get();
+            $attendanceSummary = AttendanceSummary::where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->get();
+
+            $key = $request->rating_type;
+            $value = $request->value;
 
             if (count($attendanceSummary) > 0) {
                 $attendanceSummary = $attendanceSummary[0];
 
-                $attendanceSummary->$request->rating_type = $request->value;
+                $attendanceSummary->$key = $value;
                 $attendanceSummary->save();
 
             } else {
@@ -402,7 +405,7 @@ class TeacherService
 
                 // $attendanceSummary->m_school_opened = 0;
                 // $attendanceSummary->m_present = 0;
-                $attendanceSummary->$request->rating_type = $request->value;
+                $attendanceSummary->$key = $value;
 
                 $attendanceSummary->a_school_opened = 0;
                 $attendanceSummary->a_present = 0;
