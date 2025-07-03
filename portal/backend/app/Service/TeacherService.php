@@ -388,7 +388,7 @@ class TeacherService
             return response()->json(['success' => true, 'message' => 'Result updated']);
 
         } else if ($request->type == "ATTENDANCE") {
-            $attendanceSummary = AttendanceSummary::where('student_id', $request->student)->where('session', $$request->session)->where('term', $$request->term)->get();
+            $attendanceSummary = AttendanceSummary::where('student_id', $request->student)->where('session', $request->session)->where('term', $request->term)->get();
 
             if (count($attendanceSummary) > 0) {
                 $attendanceSummary = $attendanceSummary[0];
