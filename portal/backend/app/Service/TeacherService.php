@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Model\AttendanceSummary;
 use App\Model\ClassModel;
 use App\Model\StudentModel;
 use App\Model\ControlPanelModel;
@@ -385,6 +386,34 @@ class TeacherService
         if ($request->type == "COMMENT") {
             StudentResultCommentModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->update(array('class_teacher_comment' => $request->value));
             return response()->json(['success' => true, 'message' => 'Result updated']);
+
+        } else if ($request->type == "ATTENDANCE") {
+            $attendanceSummary = AttendanceSummary::where('student_id', $request->student)->where('session', $$request->session)->where('term', $$request->term)->get();
+
+            if (count($attendanceSummary) > 0) {
+                $attendanceSummary = $attendanceSummary[0];
+
+                $attendanceSummary->$request->rating_type = $request->value;
+                $attendanceSummary->save();
+
+            } else {
+                $attendanceSummary = new AttendanceSummary();
+                $attendanceSummary->student_id = $request->student;
+
+                // $attendanceSummary->m_school_opened = 0;
+                // $attendanceSummary->m_present = 0;
+                $attendanceSummary->$request->rating_type = $request->value;
+
+                $attendanceSummary->a_school_opened = 0;
+                $attendanceSummary->a_present = 0;
+
+                $attendanceSummary->session = $request->session;
+                $attendanceSummary->term = $request->term;
+                $attendanceSummary->save();
+            }
+
+            return response()->json(['success' => true, 'message' => 'Result updated']);
+
         } else {
             StudentResultRatingModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->update(array($request->rating_type => $request->value));
             return response()->json(['success' => true, 'message' => 'Result updated']);

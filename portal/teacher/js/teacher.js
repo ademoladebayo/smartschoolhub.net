@@ -1215,7 +1215,7 @@ function getTranscript() {
                                         No of times school
                                         opened
                                     </td>
-                                    <td  id="opened_${session}_${term}"
+                                    <td  id="opened_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_school_opened')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -1225,7 +1225,7 @@ function getTranscript() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         No of times present
                                     </td>
-                                    <td id="present_${session}_${term}"
+                                    <td id="present_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_present')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
