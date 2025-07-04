@@ -49,8 +49,10 @@ class TeacherService
 
             # CHECK ASSIGNED CLASS
             if ($teacher->assigned_class == null || $teacher->assigned_class == '-') {
-                self::resolveAssignedClass($teacher->id);
-                return $this->signIn($request);
+                if (self::resolveAssignedClass(teacher_id: $teacher->id)) {
+                    return $this->signIn($request);
+                }
+
             }
 
 
@@ -741,6 +743,9 @@ class TeacherService
         if ($assigned_class) {
             $AdminService = new AdminService();
             $AdminService->updateTeacherClass($teacher_id, $assigned_class->id);
+            return true;
+        } else {
+            return false;
         }
     }
 }
