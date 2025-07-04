@@ -49,10 +49,9 @@ class TeacherService
 
             # CHECK ASSIGNED CLASS
             if ($teacher->assigned_class == null || $teacher->assigned_class == '-') {
-                if (self::resolveAssignedClass(teacher_id: $teacher->id)) {
+                if (self::resolveAssignedClass($teacher->id)) {
                     return $this->signIn($request);
                 }
-
             }
 
 
