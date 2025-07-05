@@ -1552,22 +1552,33 @@ async function getTranscript() {
                                     <table style="padding: 0%;" class="table table-sm">
                                         <thead>
                                  <tr>
-                                     <th class="vertical-header" style="font-size: 14px;">S/NO</th>
-                                     <th style="font-size: 14px; text-align:center">SUBJECT</th>
-                                     <th class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
-                                     <th class="vertical-header" style="font-size: 14px;">CBT</th>
-                                     <th class="vertical-header" style="font-size: 14px;">PROJECT</th>
-                                     <th class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
-                                     <th class="vertical-header" style="font-size: 14px;">TOTAL</th>
+                                     <th id="sn_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">S/NO</th>
+
+                                     <th id="subject_header_${session}_${term}" style="font-size: 14px; text-align:center">SUBJECT</th>
+
+                                     <th id="first_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
+
+                                     <th id="second_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
+
+                                     <th id="note_ass_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+
+                                     <th id="cbt_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CBT</th>
+
+                                     <th id="project_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
+
+                                     <th id="exam_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+
+                                     <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
 
                                      ${term == "THIRD TERM" ?
                     `
-                                          <th class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
+                                          <th id="first_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
+
+                                          <th id="second_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
+
+                                          <th id="third_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
+
+                                          <th id="mean_score_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
                                         
                                         `
                     :
@@ -1576,13 +1587,19 @@ async function getTranscript() {
 
 
 
-                                     <th class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
-                                     <th class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">POSITION</th>
-                                     <th class="vertical-header" style="font-size: 14px;">GRADE</th>
-                                     <th style="font-size: 14px; text-align:center">REMARK</th>
+                                     <th id="class_average_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+
+                                     <th id="class_lowest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
+
+                                     <th id="class_highest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+
+                                     <th id="position_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">POSITION</th>
+
+                                     <th id="grade_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">GRADE</th>
+
+                                     <th id="remark_header_${session}_${term}" style="font-size: 14px; text-align:center">REMARK</th>
                                  </tr>
+
                              </thead>
                                         <tbody id="scores_${session}_${term}">
 
@@ -1798,7 +1815,7 @@ function getResult(value) {
   // GET ACADEMIC PERFORMANCE
   session = value.split("_")[1];
   term = value.split("_")[2];
-  
+
   return fetch(ip + "/api/student/result", {
     method: "POST",
     headers: {
@@ -1860,39 +1877,40 @@ function getResult(value) {
           document.getElementById(
             "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
           ).innerHTML += `
-            <tr>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+           <tr>
+              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = data.settings.sn.status == 'hidden' ? true : false}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 ${c}.
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 ${result.subject.subject_name}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.first_test.status} ${document.getElementById(`first_test_header_${session}_${term}`).hidden = data.settings.first_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.first_ca}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.second_test.status} ${document.getElementById(`second_test_header_${session}_${term}`).hidden = data.settings.second_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.second_ca}
               </td>
 
-                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                <td ${data.settings.project.status} ${document.getElementById(`project_header_${session}_${term}`).hidden = data.settings.project.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.project}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.note_ass.status} ${document.getElementById(`note_ass_header_${session}_${term}`).hidden = data.settings.note_ass.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.note_assignment}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.cbt.status} ${document.getElementById(`cbt_header_${session}_${term}`).hidden = data.settings.cbt.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.cbt}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.exam.status} ${document.getElementById(`exam_header_${session}_${term}`).hidden = data.settings.exam.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.examination}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.total}
               </td>
 
@@ -1925,7 +1943,7 @@ function getResult(value) {
                 ${result.third_term}
               </td>
               
-               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
+               <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
                 ? "red"
                 : result.grade.includes("A")
                   ? "blue"
@@ -1938,20 +1956,23 @@ function getResult(value) {
               : ``
             }
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              
+              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = data.settings.sn.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${parseFloat(result.class_average).toFixed(0)}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.class_lowest}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.class_highest}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               <b>${result.position}</b>
               </td>
-              <td style="color: ${result.grade.includes("F")
+
+              <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}`).hidden = data.settings.grade.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
               ? "red"
               : result.grade.includes("A")
                 ? "blue"
@@ -1959,7 +1980,8 @@ function getResult(value) {
             } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
-              <td style="color: ${result.grade.includes("F")
+
+              <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}`).hidden = data.settings.remark.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
               ? "red"
               : result.grade.includes("A")
                 ? "blue"
@@ -1967,6 +1989,7 @@ function getResult(value) {
             } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
+
             </tr>`;
 
           c = c + 1;
