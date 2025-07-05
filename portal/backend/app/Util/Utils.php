@@ -171,7 +171,7 @@ class Utils
 
         foreach ($settings as $key => $value) {
             if (Settings::where('key', $key)->exists()) {
-                return "Settings already exist";
+                continue;
             }
 
             $settingsModel = new Settings();
