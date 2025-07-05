@@ -617,9 +617,6 @@ class CreateAllTables extends Migration
         //     });
         // }
 
-        if (Schema::hasTable('settings')) {
-             Schema::dropIfExists('settings');
-         }
 
         # SETTINGS TABLE
         if (!Schema::hasTable('settings')) {

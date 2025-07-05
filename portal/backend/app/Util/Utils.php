@@ -196,6 +196,7 @@ class Utils
 
     public static function getResultFormat($class_sector)
     {
+        Log::debug("GETTING RESULT FORMAT FOR CLASS SECTOR: " . $class_sector);
         switch ($class_sector) {
             case "NURSERY SCHOOL":
                 return self::getSettings("NURSERY_RESULT_FORMAT");
