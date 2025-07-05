@@ -330,7 +330,7 @@ class TeacherService
         $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
 
         // GET RESULT FORMAT
-        $class_sector = SubjectModel::find(intval($request->subject_id));//->class->class_sector;
+        $class_sector = SubjectModel::find(302);//->class->class_sector;
 
         Log::debug($request->subject_id);
         Log::debug($class_sector);
