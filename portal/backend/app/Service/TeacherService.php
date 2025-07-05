@@ -329,7 +329,12 @@ class TeacherService
         $min = SubjectRegistrationModel::select(DB::raw('min(total) as min'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->min;
         $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
 
-        return response()->json(['result' => $result, 'avg' => $avg, 'min' => $min, 'max' => $max]);
+        // GET RESULT FORMAT
+        $class_sector = SubjectModel::find($request->subject_id)->with('class')->first()->class_sector;
+
+        $result_settings = Utils::getResultFormat($class_sector);
+
+        return response()->json(['settings' => json_decode($result_settings), 'result' => $result, 'avg' => $avg, 'min' => $min, 'max' => $max]);
     }
 
     public function uploadResult(Request $request)

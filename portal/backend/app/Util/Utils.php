@@ -112,8 +112,61 @@ class Utils
 
     public static function runSettingsSeeder()
     {
+        $result_format = json_encode([
+            "sn" => [
+                "header" => "S/N",
+                "status" => "active"
+            ],
+            "fullname" => [
+                "header" => "Student Fullname",
+                "status" => "active"
+            ],
+            "first_test" => [
+                "header" => "First Test",
+                "status" => "active"
+            ],
+            "second_test" => [
+                "header" => "Second Test",
+                "status" => "active"
+            ],
+            "note_ass" => [
+                "header" => "Note/Ass",
+                "status" => "active"
+            ],
+            "cbt" => [
+                "header" => "CBT",
+                "status" => "active"
+            ],
+            "project" => [
+                "header" => "Project",
+                "status" => "active"
+            ],
+            "exam" => [
+                "header" => "Exam",
+                "status" => "active"
+            ],
+            "total" => [
+                "header" => "Total",
+                "status" => "active"
+            ],
+            "grade" => [
+                "header" => "Grade",
+                "status" => "active"
+            ],
+            "remark" => [
+                "header" => "Remark",
+                "status" => "active"
+            ]
+        ]);
+
+
         $settings = [
             'ALLOW_MANUAL_ATTENDANCE' => 'NO',
+            'KG_RESULT_FORMAT' => $result_format,
+            'NURSERY_RESULT_FORMAT' => $result_format,
+            'PRIMARY_RESULT_FORMAT' => $result_format,
+            'JUNIOR_SECONDARY_RESULT_FORMAT' => $result_format,
+            'SENIOR_SECONDARY_RESULT_FORMAT' => $result_format,
         ];
 
         foreach ($settings as $key => $value) {
@@ -139,5 +192,21 @@ class Utils
     public static function getSettings($key)
     {
         return Settings::where('key', $key)->first()->value ?? null;
+    }
+
+    public static function getResultFormat($class_sector)
+    {
+        switch ($class_sector) {
+            case "NURSERY SCHOOL":
+                return self::getSettings("NURSERY_RESULT_FORMAT");
+            case "PRIMARY SCHOOL":
+                return self::getSettings("PRIMARY_RESULT_FORMAT");
+            case "JUNIOR SECONDARY SCHOOL":
+                return self::getSettings("JUNIOR_SECONDARY_RESULT_FORMAT");
+            case "SENIOR SECONDARY SCHOOL":
+                return self::getSettings("SENIOR_SECONDARY_RESULT_FORMAT");
+            default:
+                return self::getSettings("KG_RESULT_FORMAT");
+        }
     }
 }

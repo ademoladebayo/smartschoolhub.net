@@ -1693,6 +1693,7 @@ function createStudent() {
   if (
     first_name != "" &&
     last_name != "" &&
+    middle_name != "" &&
     gender != "" &&
     dob != "" &&
     religion != "" &&
@@ -2647,6 +2648,7 @@ function updateStudent() {
   if (
     first_name != "" &&
     last_name != "" &&
+    middle_name != "" &&
     gender != "" &&
     dob != "" &&
     religion != "" &&
@@ -7044,46 +7046,61 @@ function getAllstudentForSubjectResultUpload(refresh) {
       document.getElementById("min").innerHTML = data.min;
       document.getElementById("max").innerHTML = data.max;
       var c = 1;
+
+
+      // POPULATE THE TABLE HEADERS
+      document.getElementById("upload_result_header").innerHTML = ``
+      for (i in data.settings) {
+        if (data.settings[i].status == "hidden") {
+          continue;
+        }
+        document.getElementById("upload_result_header").innerHTML += `<th>${data.settings[i].header}</th>`;
+
+      }
+
+
       if (data.result.length > 0) {
         for (i in data.result) {
           document.getElementById("student_registered").innerHTML += `
             <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
 
-            <td>${c}.</td>
-            <td>${data.result[i].student.first_name +
+            <td ${data.settings.sn.status}> ${c}.</td>
+            <td ${data.settings.fullname.status} > ${data.result[i].student.first_name +
             " " +
             data.result[i].student.middle_name +
             " " +
             data.result[i].student.last_name
             }</td>
             
-            <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            <td ${data.settings.first_test.status}   class="allownumeric" oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','first_ca',this.innerHTML)" contenteditable="true" >${data.result[i].first_ca
             }</td>
 
-            <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            <td ${data.settings.second_test.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','second_ca',this.innerHTML)" contenteditable="true">${data.result[i].second_ca
             }</td>
 
-            <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            <td ${data.settings.note_ass.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','note_assignment',this.innerHTML)" contenteditable="true">${data.result[i].note_assignment
             }</td>
 
-             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+             <td ${data.settings.cbt.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','cbt',this.innerHTML)" contenteditable="true">${data.result[i].cbt
             }</td>
 
-             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+             <td ${data.settings.project.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','project',this.innerHTML)" contenteditable="true">${data.result[i].project
             }</td>
 
-             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+             <td ${data.settings.exam.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','examination',this.innerHTML)" contenteditable="true">${data.result[i].examination
             }</td>
 
-            <td style="font-size:20px; font-style:bold;"><b>${data.result[i].total
+            <td ${data.settings.total.status}  style="font-size:20px; font-style:bold;"><b>${data.result[i].total
             }</b></td>
-            <td> 
+
+
+            <td ${data.settings.grade.status} >  
               <div class="select">
                   <select onChange="addToResultList('${data.result[i].id
             }','grade',this.value)" id="standard-select" id="grade" value="${data.result[i].grade == "-"
@@ -7111,7 +7128,9 @@ function getAllstudentForSubjectResultUpload(refresh) {
                 <span class="focus"></span>
               <div>
             </td>
-            <td> 
+
+
+            <td ${data.settings.remark.status} > 
             <div class="select">
                 <select onChange="addToResultList('${data.result[i].id
             }','remark',this.value)" id="standard-select" id="remark" value="<b>${data.result[i].grade == "-"

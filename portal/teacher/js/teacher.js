@@ -1248,22 +1248,33 @@ function getTranscript() {
                                 <table style="padding: 0%;" class="table table-sm">
                                     <thead>
                                  <tr>
-                                     <th class="vertical-header" style="font-size: 14px;">S/NO</th>
-                                     <th style="font-size: 14px; text-align:center">SUBJECT</th>
-                                     <th class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
-                                     <th class="vertical-header" style="font-size: 14px;">CBT</th>
-                                     <th class="vertical-header" style="font-size: 14px;">PROJECT</th>
-                                     <th class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
-                                     <th class="vertical-header" style="font-size: 14px;">TOTAL</th>
+                                     <th id="sn_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">S/NO</th>
+
+                                     <th id="subject_header_${session}_${term}" style="font-size: 14px; text-align:center">SUBJECT</th>
+
+                                     <th id="first_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
+
+                                     <th id="second_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
+
+                                     <th id="note_ass_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+
+                                     <th id="cbt_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CBT</th>
+
+                                     <th id="project_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
+
+                                     <th id="exam_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+
+                                     <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
 
                                      ${term == "THIRD TERM" ?
             `
-                                          <th class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
-                                          <th class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
+                                          <th id="first_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
+
+                                          <th id="second_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
+
+                                          <th id="third_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
+
+                                          <th id="mean_score_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
                                         
                                         `
             :
@@ -1272,13 +1283,19 @@ function getTranscript() {
 
 
 
-                                     <th class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
-                                     <th class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
-                                     <th class="vertical-header" style="font-size: 14px;">POSITION</th>
-                                     <th class="vertical-header" style="font-size: 14px;">GRADE</th>
-                                     <th style="font-size: 14px; text-align:center">REMARK</th>
+                                     <th id="class_average_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+
+                                     <th id="class_lowest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
+
+                                     <th id="class_highest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+
+                                     <th id="position_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">POSITION</th>
+
+                                     <th id="grade_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">GRADE</th>
+
+                                     <th id="remark_header_${session}_${term}" style="font-size: 14px; text-align:center">REMARK</th>
                                  </tr>
+                                 
                              </thead>
                                     <tbody id="scores_${session}_${term}">
 
