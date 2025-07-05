@@ -537,8 +537,6 @@ class StudentService
                 $data['second_term'] = $second_term;
                 $data['third_term'] = $third_term;
 
-
-
                 $term_count = 3;
                 if ($first_term === '-') {
                     $first_termm = 0;
@@ -560,8 +558,6 @@ class StudentService
                 } else {
                     $third_termm = intval($third_term);
                 }
-
-
 
                 // MEAN SCORE FOR THIRD TERM
                 if ($term_count == 0) {
@@ -605,8 +601,12 @@ class StudentService
         $gradeAndRemark = $GradeSettingsRepository->getGradeAndRemark(floor($percentage));
         $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
 
+        // GET RESULT FORMAT
+        $class_sector = $result[0]->class->class_sector ?? 'N/A';
+        $result_settings = Utils::getResultFormat($class_sector);
 
-        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'result' => $result, 'percentage' => number_format($percentage, 2) . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
+
+        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'settings' => $result_settings, 'result' => $result, 'percentage' => number_format($percentage, 2) . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
     }
 
     public function getCommentsAndPsycho(Request $request)

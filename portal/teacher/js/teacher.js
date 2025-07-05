@@ -1304,6 +1304,7 @@ function getTranscript() {
                                     </tbody>
                                 </table>
                             </div>
+
                             <!-- POSITION AND PERCENTAGE -->
                             <div class="table-responsive">
                                 <table class="table">
@@ -1510,6 +1511,12 @@ function getResult(value) {
 
     .then((data) => {
       c = 1;
+
+
+      // REALIGN TABLE HEADER
+      da
+
+
       if (data.result.length > 0) {
         data.result.forEach((result) => {
           // ATTACH CLASS TO THAT RESULT TERM AND SESSION
@@ -1535,7 +1542,7 @@ function getResult(value) {
             "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
           ).innerHTML += `
             <tr>
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = `${data.settings.sn.status == 'hidden' ? true : false}`}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 ${c}.
               </td>
 
@@ -1543,31 +1550,31 @@ function getResult(value) {
                 ${result.subject.subject_name}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.first_test.status} ${document.getElementById(`first_test_header_${session}_${term}`).hidden = `${data.settings.first_test.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.first_ca}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.second_test.status} ${document.getElementById(`second_test_header_${session}_${term}`).hidden = `${data.settings.second_test.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.second_ca}
               </td>
 
-                <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                <td ${data.settings.project.status} ${document.getElementById(`project_header_${session}_${term}`).hidden = `${data.settings.project.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.project}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.note_ass.status} ${document.getElementById(`note_ass_header_${session}_${term}`).hidden = `${data.settings.note_ass.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.note_assignment}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.cbt.status} ${document.getElementById(`cbt_header_${session}_${term}`).hidden = `${data.settings.cbt.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.cbt}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.exam.status} ${document.getElementById(`exam_header_${session}_${term}`).hidden = `${data.settings.exam.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.examination}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = `${data.settings.total.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.total}
               </td>
 
@@ -1600,7 +1607,7 @@ function getResult(value) {
                 ${result.third_term}
               </td>
               
-               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
+               <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = `${data.settings.total.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
                 ? "red"
                 : result.grade.includes("A")
                   ? "blue"
@@ -1613,20 +1620,23 @@ function getResult(value) {
               : ``
             }
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = `${data.settings.sn.status == 'hidden' ? true : false}`} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${parseFloat(result.class_average).toFixed(0)}
               </td>
 
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.class_lowest}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.class_highest}
               </td>
+
               <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               <b>${result.position}</b>
               </td>
-              <td style="color: ${result.grade.includes("F")
+
+              <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}`).hidden = `${data.settings.grade.status == 'hidden' ? true : false}`} style="color: ${result.grade.includes("F")
               ? "red"
               : result.grade.includes("A")
                 ? "blue"
@@ -1634,7 +1644,8 @@ function getResult(value) {
             } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
-              <td style="color: ${result.grade.includes("F")
+
+              <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}`).hidden = `${data.settings.remark.status == 'hidden' ? true : false}`} style="color: ${result.grade.includes("F")
               ? "red"
               : result.grade.includes("A")
                 ? "blue"
@@ -1642,6 +1653,7 @@ function getResult(value) {
             } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
+
             </tr>`;
 
           c = c + 1;
@@ -1875,7 +1887,7 @@ function getAllSubjectForTable() {
             document.getElementById("subject_table").innerHTML += `
                 <tr>
   
-                <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
+                <td>${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = `${data.settings.sn.status == 'hidden' ? true : false}`}<input type="checkbox" class="form-check-input ml-0" name="subject_registration"
                 value="${data[i].id}" checked>
                 </td>
   
@@ -3122,100 +3134,119 @@ function getAllstudentForSubjectResultUpload(refresh) {
       document.getElementById("min").innerHTML = data.min;
       document.getElementById("max").innerHTML = data.max;
       var c = 1;
+
+      // POPULATE THE TABLE HEADERS
+      document.getElementById("upload_result_header").innerHTML = ``
+      for (i in data.settings) {
+        if (data.settings[i].status == "hidden") {
+          continue;
+        }
+        document.getElementById("upload_result_header").innerHTML += `<th>${data.settings[i].header}</th>`;
+      }
+
+
       if (data.result.length > 0) {
         for (i in data.result) {
           document.getElementById("student_registered").innerHTML += `
           <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
 
-          <td>${c}.</td>
-          <td>${data.result[i].student.first_name +
+            <td ${data.settings.sn.status}> ${c}.</td>
+            <td ${data.settings.fullname.status} > ${data.result[i].student.first_name +
             " " +
             data.result[i].student.middle_name +
             " " +
             data.result[i].student.last_name
             }</td>
-          
-          <td class="allownumeric" oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            
+            <td ${data.settings.first_test.status}   class="allownumeric" oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','first_ca',this.innerHTML)" contenteditable="true" >${data.result[i].first_ca
             }</td>
 
-          <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            <td ${data.settings.second_test.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','second_ca',this.innerHTML)" contenteditable="true">${data.result[i].second_ca
             }</td>
 
-            <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+            <td ${data.settings.note_ass.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','note_assignment',this.innerHTML)" contenteditable="true">${data.result[i].note_assignment
             }</td>
 
-             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+             <td ${data.settings.cbt.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','cbt',this.innerHTML)" contenteditable="true">${data.result[i].cbt
             }</td>
 
-             <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+             <td ${data.settings.project.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','project',this.innerHTML)" contenteditable="true">${data.result[i].project
             }</td>
 
-          <td oninput="scoreLimit(this); addToResultList('${data.result[i].id
+             <td ${data.settings.exam.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
             }','examination',this.innerHTML)" contenteditable="true">${data.result[i].examination
             }</td>
 
-          <td style="font-size:20px; font-style:bold;"><b>${data.result[i].total
+            <td ${data.settings.total.status}  style="font-size:20px; font-style:bold;"><b>${data.result[i].total
             }</b></td>
-          <td> 
-            <div class="select">
-                <select onChange="addToResultList('${data.result[i].id
+
+
+            <td ${data.settings.grade.status} >  
+              <div class="select">
+                  <select onChange="addToResultList('${data.result[i].id
             }','grade',this.value)" id="standard-select" id="grade" value="${data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
             }" class="select2">
-                <option value="<b>${data.result[i].grade == `-` ? `-` : `${data.result[i].grade}`
+                  <option value="<b>${data.result[i].grade == `-`
+              ? `-`
+              : `${data.result[i].grade}`
             }</b>">${data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
             }</option>
-          ${
+            ${
             // <option value="A">A</option>
             // <option value="B">B</option>
             // <option value="C">C</option>
             // <option value="D">D</option>
             // <option value="E">E</option>
             // <option value="F">F</option>
-            ""
+            ``
             }
-                </select>
-           
-               <span class="focus"></span>
-            <div>
-          </td>
-          <td> 
-          <div class="select">
-              <select onChange="addToResultList('${data.result[i].id
+                  </select>
+            
+                <span class="focus"></span>
+              <div>
+            </td>
+
+
+            <td ${data.settings.remark.status} > 
+            <div class="select">
+                <select onChange="addToResultList('${data.result[i].id
             }','remark',this.value)" id="standard-select" id="remark" value="<b>${data.result[i].grade == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
             }</b>" class="select2">
-              <option value="${data.result[i].remark == `-` ? `-` : `${data.result[i].remark}`
+                <option value="${data.result[i].remark == `-`
+              ? `-`
+              : `${data.result[i].remark}`
             }">${data.result[i].remark == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
             }</option>
-               ${
+                ${
             //<option value="EXCELLENT">EXCELLENT</option>
             // <option value="VERY GOOD">VERY GOOD</option>
             // <option value="GOOD">GOOD</option>
             // <option value="FAIR">FAIR</option>
             // <option value="POOR">POOR</option>
             // <option value="VERY POOR">VERY POOR</option>
-            ""
+            ``
             }
-              </select>
-              <span class="focus"></span>
-            <div>
-          </td>
-          
-          
+                </select>
+                <span class="focus"></span>
+              <div>
+            </td>
+            
+            
 
-      </tr>`;
+        </tr>`;
           c = c + 1;
         }
       } else {

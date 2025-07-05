@@ -7055,7 +7055,6 @@ function getAllstudentForSubjectResultUpload(refresh) {
           continue;
         }
         document.getElementById("upload_result_header").innerHTML += `<th>${data.settings[i].header}</th>`;
-
       }
 
 

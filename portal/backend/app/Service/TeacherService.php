@@ -330,14 +330,7 @@ class TeacherService
         $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
 
         // GET RESULT FORMAT
-        $class_sector = $result[0]->class->class_sector ?? 'N/A'; // Fallback to 'N/A' if class_sector is not available
-        // $class_sector = SubjectModel::where('id', "1")->get();//->class->class_sector;
-        // $SubjectModel = SubjectModel::find($request->subject_id);
-
-        //Log::debug($request->subject_id);
-        // Log::debug($SubjectModel);
-        Log::debug($class_sector);
-
+        $class_sector = $result[0]->class->class_sector ?? 'N/A'; 
         $result_settings = Utils::getResultFormat($class_sector);
 
         return response()->json(['settings' => json_decode($result_settings), 'result' => $result, 'avg' => $avg, 'min' => $min, 'max' => $max]);

@@ -131,15 +131,15 @@ class Utils
             ],
             "note_ass" => [
                 "header" => "Note/Ass",
-                "status" => "active"
+                "status" => "hidden"
             ],
             "cbt" => [
                 "header" => "CBT",
-                "status" => "active"
+                "status" => "hidden"
             ],
             "project" => [
                 "header" => "Project",
-                "status" => "active"
+                "status" => "hidden"
             ],
             "exam" => [
                 "header" => "Exam",
