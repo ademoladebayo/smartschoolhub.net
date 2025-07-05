@@ -1513,9 +1513,6 @@ function getResult(value) {
       c = 1;
 
 
-      // REALIGN TABLE HEADER
-      da
-
 
       if (data.result.length > 0) {
         data.result.forEach((result) => {
