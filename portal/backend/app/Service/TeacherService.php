@@ -310,7 +310,7 @@ class TeacherService
     {
         // $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
 
-        $result = SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class')->whereHas('student', function ($query) {
+        $result = SubjectRegistrationModel::select('id', 'student_id', 'class_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class')->whereHas('student', function ($query) {
             $query->where('profile_status', 'ENABLED');
         })->get();
 
