@@ -332,7 +332,10 @@ class TeacherService
         // GET RESULT FORMAT
         $class_sector = SubjectModel::where('id', "1")->get();//->class->class_sector;
 
+         $SubjectModel = SubjectModel::find($request->subject_id);
+
         Log::debug($request->subject_id);
+        Log::debug($SubjectModel);
         Log::debug($class_sector);
 
         $result_settings = Utils::getResultFormat($class_sector);
