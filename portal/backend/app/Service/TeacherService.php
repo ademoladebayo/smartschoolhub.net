@@ -310,7 +310,7 @@ class TeacherService
     {
         // $result =  SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'examination', DB::raw('(first_ca + second_ca + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->get();
 
-        $result = SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student')->whereHas('student', function ($query) {
+        $result = SubjectRegistrationModel::select('id', 'student_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class')->whereHas('student', function ($query) {
             $query->where('profile_status', 'ENABLED');
         })->get();
 
@@ -330,12 +330,12 @@ class TeacherService
         $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
 
         // GET RESULT FORMAT
-        $class_sector = SubjectModel::where('id', "1")->get();//->class->class_sector;
+        $class_sector = $result[0]->class->class_sector ?? 'N/A'; // Fallback to 'N/A' if class_sector is not available
+        // $class_sector = SubjectModel::where('id', "1")->get();//->class->class_sector;
+        // $SubjectModel = SubjectModel::find($request->subject_id);
 
-         $SubjectModel = SubjectModel::find($request->subject_id);
-
-        Log::debug($request->subject_id);
-        Log::debug($SubjectModel);
+        //Log::debug($request->subject_id);
+        // Log::debug($SubjectModel);
         Log::debug($class_sector);
 
         $result_settings = Utils::getResultFormat($class_sector);
