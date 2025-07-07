@@ -716,6 +716,7 @@ class AdminService
                 //$studentRow['scores'][$subject->subject_id] = $score;
                 array_push($scores, $score);
                 $studentRow['total'] = "$scoreTotal/$scoreOver";
+                $studentRow['scores'] = $scores;
             }
 
             $broadsheet[] = $studentRow;
