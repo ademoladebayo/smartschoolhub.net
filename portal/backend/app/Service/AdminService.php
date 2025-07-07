@@ -732,13 +732,13 @@ class AdminService
         # GET POSITION
 
         // 1. Sort the array by percentage (descending order)
-        usort($broadSheet, function ($a, $b) {
+        usort($broadsheet, function ($a, $b) {
             return $b['percentage'] <=> $a['percentage'];
         });
 
         // 2. Add position field
         $position = 1;
-        foreach ($broadSheet as &$student) {
+        foreach ($broadsheet as &$student) {
             $student['position'] = $position++;
 
             // Optional: Convert position to ordinal (1st, 2nd, 3rd)
