@@ -711,6 +711,7 @@ class AdminService
                 }
 
                 array_push($scores, $score);
+                $studentRow['sn'] = '-';
                 $studentRow['total'] = "$scoreTotal/$scoreOver";
                 $studentRow['scores'] = $scores;
 
@@ -733,6 +734,8 @@ class AdminService
         $position = 1;
         foreach ($broadsheet as &$student) {
             $percentage = $student['percentage'];
+
+            $student['sn'] = $position . '.';
             $student['position'] = $position++;
 
             // Optional: Convert position to ordinal (1st, 2nd, 3rd)
@@ -747,8 +750,9 @@ class AdminService
         }
 
         return [
-            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
-            'broadsheet' => $broadsheet
+            'header' => array_merge(['S/NO', 'STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
+            'broadsheet' => $broadsheet,
+            'summary' => ['class' => ClassModel::find($class_id)->class_name, 'session' => $session, 'term' => $term]
         ];
 
     }

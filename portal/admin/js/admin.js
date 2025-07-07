@@ -2558,13 +2558,21 @@ function uploadCommentAndRating(type, value, rating_type) {
 function getBroadsheet() {
   openSpinnerModal("Broadsheet is being generated, please wait...");
 
+
+  // SCHOOL LOGO URL
+  school_logo_url =
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
+
+  // SCHOOL_LOGO
+  document.getElementById("school_logo").src = school_logo_url;
+
   document.getElementById("school_details").innerHTML =
     localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
 
   const params = {
-    class: 7,
-    term: '2nd-term',
-    session: 'maths',
+    class: "4",
+    term: 'THIRD TERM',
+    session: "2024/2025",
   };
 
   // Convert object to query string
@@ -2590,144 +2598,101 @@ function getBroadsheet() {
 
     .then((data) => {
 
-      // STORE IN AN ACCESIBLE LIST
-      data.forEach((data) => {
-        var term = {};
-        if (session_list[data.session]) {
-          session_list[data.session][data.term] = { "loaded": false };
-        } else {
-          term[data.term] = { "loaded": false };
-          session_list[data.session] = term;
-        }
+      // SET SUMMARY DATA
+      document.getElementById('class__').innerHTML = data.summary.class;
+      document.getElementById('session').innerHTML = data.summary.session;
+      document.getElementById('term').innerHTML = data.summary.term;
+
+      // SET HEADER
+      data.header.forEach(header => {
+        document.getElementById('header').innerHTML +=
+          ` <th id="" class="${header == 'STUDENT NAME' ? `` : `vertical-header`
+          }" style="font - size: 14px; ">${header}</th> `;
       });
 
-      // console.log("SESSION TERM :::::: ")
-      // console.table(data);
-      // console.log(session_list);
 
 
-      // CREATE RESULT TEMPLATE
-      if (Object.keys(session_list).length !== 0) {
-        document.getElementById("result_div").innerHTML = ``;
+      // SET ROWS
+      data.broadsheet.forEach(broadsheet => {
+        document.getElementById('broadsheet').innerHTML +=
+          ` 
+          
+           <tr>
+            
+           <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+               <b>${broadsheet.sn}</b>
+            </td>
 
-        // LOOP THROUGH EACH SESSION AND TERM
-        for (const session in session_list) {
-          if (session_list.hasOwnProperty(session)) {
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+               <b>${broadsheet.student_name}</b>
+            </td>
 
-            for (const term in session_list[session]) {
-              if (session_list[session].hasOwnProperty(term)) {
+          `;
 
-                // CREATE RESULT TEMPLATE
-                document.getElementById("result_div").innerHTML += `
- <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
- <div style="border:1px solid black; padding-bottom: 15px;" class="row">
 
-     <div class="col-md-4">
-         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-             <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
-         </div>
-     </div>
-     <div class="col-md-4">
-         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-             <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
-         </div>
-     </div>
-     <div class="col-md-4">
-         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-             <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
-         </div>
-     </div>
+        broadsheet.scores.forEach(scores => {
 
-     
+          document.getElementById('broadsheet').innerHTML +=
+            `
+            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                <b>${scores}</b>
+            <td/>    
 
-     <!-- ACADEMIC PERFORMANCE -->
-     <div style="margin-top: 15px;" class="col-md-12 col-lg-12 col-xl-12">
-         <p><b>(B) ACADEMIC PERFORMANCE</b></p>
-         <div style="margin-top: 0px;">
-             <div class="card">
-                 <div class="card-body">
-                     <!-- SCORE TABLE -->
-                     <div class="table-responsive">
-                         <table style="padding: 0%;" class="table table-sm">
-                             <thead>
-                                <tr>
-                                     <th id="sn_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">S/NO</th>
+          `;
 
-                                     <th id="subject_header_${session}_${term}" style="font-size: 14px; text-align:center">SUBJECT</th>
+        });
 
-                                     <th id="first_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
 
-                                     <th id="second_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
 
-                                     <th id="note_ass_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+        document.getElementById('broadsheet').innerHTML +=
+          ` 
+          <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            <b>${broadsheet.total}</b>
+          </td>
 
-                                     <th id="cbt_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CBT</th>
+          <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            <b>${broadsheet.percentage}</b>
+          </td>
+          
+           <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+            <b>${broadsheet.position}</b>
+           </td>
 
-                                     <th id="project_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
+            <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}`).hidden = data.settings.grade.status == 'hidden' ? true : false} style="color: ${broadsheet.grade.includes("F")
+            ? "red"
+            : broadsheet.grade.includes("A")
+              ? "blue"
+              : "black"
+          } ; font - size: 13px; font - family: Open Sans, sans - serif; font - weight: bold; text - align: center; ">
+              ${broadsheet.grade}
+              </td >
 
-                                     <th id="exam_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+        <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}`).hidden = data.settings.remark.status == 'hidden' ? true : false} style="color: ${broadsheet.grade.includes(" F")
+            ? "red"
+            : broadsheet.grade.includes("A")
+              ? "blue"
+              : "black"
+          } ; font - size: 13px; font - family: Open Sans, sans - serif; font - weight: bold; padding: 0px; text - align: center; ">
+              ${broadsheet.remark}
+              </td >
 
-                                     <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
+           <tr />
 
-                                     <th id="class_average_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+          `;
 
-                                     <th id="class_lowest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
 
-                                     <th id="class_highest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+      });
 
-                                     <th id="position_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">POSITION</th>
 
-                                     <th id="grade_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">GRADE</th>
+      removeSpinnerModal();
 
-                                     <th id="remark_header_${session}_${term}" style="font-size: 14px; text-align:center">REMARK</th>
-                                 </tr>
-                             </thead>
-                             <tbody id="scores_${session}_${term}">
-
-                             
-                             
-                             </tbody>
-                         </table>
-                     </div>
-                     
-                    
-                 </div>
-             </div>
-         </div>
-     </div>
-
-    
- </div>
-
- </div>
-
-`;
-              }
-            }
-          }
-        }
-
-      } else {
-        document.getElementById(
-          "result_div"
-        ).innerHTML = `<hr style="color: black; border: 1px solid black">
-  <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
-  <hr style="color: black; border: 1px solid black">`;
-      }
-
-      // PROCESS RESULT CONTAINERS
-      processContainers();
-
-      main_content = parent.body.innerHTML;
-      parent.body.innerHTML = "";
-      // parent.body.innerHTML = main_content.trim();
     })
     .catch((err) => console.log(err));
-
-  // setTimeout(function () {
-  //   removeSpinnerModal();
-  // }, 10000);
 }
+
+
+
+
 
 // STUDENT ATTENDANCE
 function getAttendanceSummary(value) {
@@ -3041,7 +3006,7 @@ function searchStudent(search_data) {
           if (c % 2 == 0) {
             if (data[i].profile_status == "ENABLED") {
               document.getElementById("student_table").innerHTML += `
-            <tr class="even">
+    < tr class="even" >
   
             <td>${c}.</td>
             <td>${data[i].student_id}</td>
@@ -3063,8 +3028,9 @@ function searchStudent(search_data) {
                   ).replace(
                     /"/g,
                     "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
-            data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+                  )
+                }) " class="btn btn - warning" data-bs-toggle="modal"
+data - bs - target="#editModal" > <i class="fas fa-edit"></i> Edit</a >
 
             
             <a  onclick="updateStudentProfileStatus(${data[i].id
@@ -3073,17 +3039,17 @@ function searchStudent(search_data) {
 
             <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
                   .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
-                        class="fas fa-id-card"></i>
-                    ID Card</a> 
-            
-            <a  onclick="deleteStudent(${data[i].id
+                  .replace(/"/g, "'")}) " class="btn btn - secondary text - white"><i
+class="fas fa-id-card" ></i >
+  ID Card</a >
+
+    <a onclick="deleteStudent(${data[i].id
                 })" class="btn btn-danger text-white"><i
-                        class="fas fa-trash"></i>
-                    Delete</a>
-            </td>
-  
-        <tr>`;
+        class="fas fa-trash"></i>
+      Delete</a>
+            </td >
+
+  <tr>`;
             } else {
               document.getElementById("student_table").innerHTML += `
             <tr class="even">
@@ -3597,12 +3563,12 @@ function editClassDetails() {
   document.getElementById("class_teacher").innerHTML =
     localStorage["editClass"].split("~")[2] == ""
       ? `<option value="-">Please Select Teacher *</option>`
-      : `<option value="${localStorage["editClass"].split("~")[3]}">${localStorage["editClass"].split("~")[2]
+      : `<option value="${localStorage[" editClass"].split("~")[3]}">${localStorage["editClass"].split("~")[2]
       }</option>`;
 
   document.getElementById("class_sector").innerHTML =
-    `<option value="${localStorage["editClass"].split("~")[4]}">${localStorage["editClass"].split("~")[4]
-    }</option>` + document.getElementById("class_sector").innerHTML;
+    `< option value = "${localStorage["editClass"].split("~")[4]}" > ${localStorage["editClass"].split("~")[4]
+    }</option > ` + document.getElementById("class_sector").innerHTML;
 }
 
 function createClass() {
@@ -3765,7 +3731,7 @@ function searchClass(class_name) {
           if (c % 2 == 0) {
             if (data[i].class_teacher != null) {
               document.getElementById("class_table").innerHTML += `
-              <tr class="even">
+  < tr class="even" >
     
               <td>${c}.</td>
               <td>${data[i].class_name}</td>
@@ -3790,9 +3756,9 @@ function searchClass(class_name) {
                 })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
-              </td>
-    
-          <tr>`;
+              </td >
+
+  <tr>`;
             } else {
               document.getElementById("class_table").innerHTML += `
               <tr class="even">
@@ -4047,15 +4013,15 @@ function editSubjectDetails() {
   document.getElementById("teacher").innerHTML =
     localStorage["editSubject"].split("~")[2] == "null"
       ? `<option value="-">Please Select Teacher *</option>`
-      : `<option value="${localStorage["editSubject"].split("~")[3]}">${localStorage["editSubject"].split("~")[2]
+      : `<option value="${localStorage[" editSubject"].split("~")[3]}">${localStorage["editSubject"].split("~")[2]
       }</option>`;
 
   // FOR CLASS
   document.getElementById("class").innerHTML =
     localStorage["editSubject"].split("~")[4] == ""
       ? document.getElementById("class").innerHTML
-      : `<option value="${localStorage["editSubject"].split("~")[5]}">${localStorage["editSubject"].split("~")[4]
-      }</option>`;
+      : `< option value = "${localStorage["editSubject"].split("~")[5]}" > ${localStorage["editSubject"].split("~")[4]
+      }</option > `;
 }
 
 function updateSubject() {
@@ -4173,7 +4139,7 @@ function searchSubject(subject_name) {
               console.log("DEBUG not null: " + data[i].teacher);
               console.log(data[i].teacher);
               document.getElementById("subject_table").innerHTML += `
-              <tr class="even">
+  < tr class="even" >
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
@@ -4200,33 +4166,33 @@ function searchSubject(subject_name) {
                 })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
-              </td>
-    
-          <tr>`;
+              </td >
+
+  <tr>`;
             } else {
               console.log("DEBUG null: " + data[i].teacher);
               console.log(data[i].teacher);
               document.getElementById("subject_table").innerHTML += `
-              <tr class="even">
-    
-              <td>${c}.</td>
-              <td>${data[i].subject_name}</td>
-               <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
+    <tr class="even">
+
+      <td>${c}.</td>
+      <td>${data[i].subject_name}</td>
+      <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
                 }</td>
-              <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
-              <td>${data[i].student_no}</td>
-              <td>
-              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
+      <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
+      <td>${data[i].student_no}</td>
+      <td>
+        <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
                 }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${data[i].class.id
                 }')" class="btn btn-warning" data-bs-toggle="modal"
-              data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteClass(${data[i].id
+          data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
+        <a onclick="deleteClass(${data[i].id
                 })" class="btn btn-danger text-white"><i
-                          class="fas fa-trash"></i>
-                      Delete</a>
-              </td>
-    
-          <tr>`;
+            class="fas fa-trash"></i>
+          Delete</a>
+      </td>
+
+      <tr>`;
             }
           } else {
             if (data[i].teacher != null) {
@@ -4499,26 +4465,26 @@ function getAllSubjectForRegistration() {
               continue;
             }
             document.getElementById("subject_table").innerHTML += `
-                <tr>
-        
-                      <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration_elective"
-                      value="${data[i].id}">
-                      </td>
-        
-                      <td>${c + 1}.</td>
-                      <td><i class="fa fa-shapes"></i> ${data[i].subject_name
+        <tr>
+
+          <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration_elective"
+            value="${data[i].id}">
+          </td>
+
+          <td>${c + 1}.</td>
+          <td><i class="fa fa-shapes"></i> ${data[i].subject_name
               }</td>
-                      <td>ELECTIVE</td>
-                      <td>${data[i].teacher.title +
+          <td>ELECTIVE</td>
+          <td>${data[i].teacher.title +
               " " +
               data[i].teacher.first_name +
               " " +
               data[i].teacher.last_name
               }</td>
-                      
-                      
-            
-                  </tr>`;
+
+
+
+        </tr>`;
 
             c = c + 1;
           }
@@ -4569,7 +4535,7 @@ function registerSubject() {
     ) {
       openSpinnerModal("Register subject for student");
       document.getElementById("register_subject").innerHTML = `<i
-      class="fa fa-spinner fa-spin"></i> Registering ...`;
+          class="fa fa-spinner fa-spin"></i> Registering ...`;
 
       // PUSH TO API
       fetch(ip + "/api/student/register-subject", {
@@ -4917,7 +4883,7 @@ function registerSubject2() {
     ) {
       openSpinnerModal("Register subject for class");
       document.getElementById("register_subject").innerHTML = `<i
-    class="fa fa-spinner fa-spin"></i> Registering ...`;
+          class="fa fa-spinner fa-spin"></i> Registering ...`;
 
       // PUSH TO API
       fetch(ip + "/api/teacher/register-subject", {
@@ -5121,7 +5087,7 @@ function editSessionDetails() {
   document.getElementById("term").innerHTML =
     localStorage["editSession"].split("~")[2] == ""
       ? document.getElementById("term").innerHTML
-      : `<option value="${localStorage["editSession"].split("~")[2]}">${localStorage["editSession"].split("~")[2]
+      : `<option value="${localStorage[" editSession"].split("~")[2]}">${localStorage["editSession"].split("~")[2]
       }</option>` + document.getElementById("term").innerHTML;
 }
 
@@ -6204,7 +6170,7 @@ function getLessonPlan(lesson_status) {
 function populateLessonDetails(lesson) {
   document.getElementById("lp_subject_class").innerHTML =
     localStorage["lp_subject_class"];
-  document.getElementById("lp_status").innerHTML = `<span class="badge ${lesson.status == "APPROVED"
+  document.getElementById("lp_status").innerHTML = `<span class="badge ${lesson.status == " APPROVED"
     ? `bg-success`
     : lesson.status == "DISAPPROVED"
       ? `bg-danger`
@@ -6879,7 +6845,7 @@ async function generateIDCard() {
     document.getElementById("user_class_sector").value;
 
   document.getElementById("generate_idcard").innerHTML = `<i
-    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+      class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
 
   document.getElementById("generate_idcard").disabled = true;
 
@@ -6922,88 +6888,88 @@ async function generateIDCard() {
         "idcard_list"
       ).innerHTML += `<div style="margin-top: 20px;" class="container">
       <div class="padding">
-          <div class="font">
-              <div class="top">
-                  <b>
-                      <h4 id="school_name"
-                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
-                         ${localStorage["SCHOOL_NAME"]}
-                      </h4>
-                  </b>
-                  <div
-                      style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
-                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
-                  </div>
+        <div class="font">
+          <div class="top">
+            <b>
+              <h4 id="school_name"
+                style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                ${localStorage["SCHOOL_NAME"]}
+              </h4>
+            </b>
+            <div
+              style="display: flex; justify-content: center; margin-top: 0px; margin-bottom: 100px;">
+              <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+            </div>
 
 
-                  <img id="user_image"
-                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
-                      src="${user_type == "STUDENT"
+            <img id="user_image"
+              style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+              src="${user_type == " STUDENT"
           ? user_image + data[i].student_id + `.png?timestamp=${timestamp}`
           : user_image + data[i].teacher_id + `.png?timestamp=${timestamp}`
         }" width="">
 
 
-              </div>
-              <div class="bottom">
-                  <div style="margin-bottom:5px">
-                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+          </div>
+          <div class="bottom">
+            <div style="margin-bottom:5px">
+              <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
                   ;color: black;">${data[i].first_name + " " + data[i].last_name
         }</p>
-                      <p id="id" style="margin-bottom: 1px; color: black; ">${user_type == "STUDENT"
+              <p id="id" style="margin-bottom: 1px; color: black; ">${user_type == "STUDENT"
           ? data[i].student_id
           : data[i].teacher_id
         }</p>
 
-                      <small>
-                          <p id="gender" style="margin-bottom: 5px; color: black; font-size: 15px;">
-                              ${data[i].gender}</p>
-                      </small>
+              <small>
+                <p id="gender" style="margin-bottom: 5px; color: black; font-size: 15px;">
+                  ${data[i].gender}</p>
+              </small>
 
-                  </div>
-                  <br>
+            </div>
+            <br>
 
 
-                  <div style="display: flex; justify-content: center; margin-top: 0px">
-                      <img id="school_logo_mini"
-                          style="border-color: white; border-style: solid;padding: 0%;" src=""
-                          width="px">
-                  </div>
+              <div style="display: flex; justify-content: center; margin-top: 0px">
+                <img id="school_logo_mini"
+                  style="border-color: white; border-style: solid;padding: 0%;" src=""
+                  width="px">
+              </div>
 
-                  <div style="margin-top: 0.5px;margin-bottom: 210px;">
-                      <h5 id ="user_type" style="font-family: Poppins
+              <div style="margin-top: 0.5px;margin-bottom: 210px;">
+                <h5 id="user_type" style="font-family: Poppins
                   ;color: black; text-align: center;">${user_type == "STUDENT" ? "STUDENT" : "STAFF"
         }</h5>
-                  </div>
-
               </div>
+
           </div>
+        </div>
       </div>
       <div class="back">
-          <h1 style="margin-bottom: 0; font-family: Poppins
+        <h1 style="margin-bottom: 0; font-family: Poppins
           ;" class="Details">INFORMATION</h1>
-          <hr style="background-color: white !important;">
+        <hr style="background-color: white !important;">
           <small>
-              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
-              </h6>
+            <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+            </h6>
           </small>
           <div style="margin-top: 0%;" class="qrcode">
-              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${data[i].id
+            <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${data[i].id
         }">
-              </div>
+            </div>
           </div>
           <div class="details-info">
-              <h6 style="text-align: center;color: white !important;">if found please return to
-              </h6>
-              <h6 id="school_address"
-                  style="text-align: center;color: white !important; margin-bottom: 10px;">
-                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+            <h6 style="text-align: center;color: white !important;">if found please return to
+            </h6>
+            <h6 id="school_address"
+              style="text-align: center;color: white !important; margin-bottom: 10px;">
+              ${localStorage["SCHOOL_ADDRESS"]}</h6>
 
           </div>
       </div>
     </div>
     <div style="break-after:page"></div>
-          `;
+    `;
 
       json_to_generate_qr.push(data[i]);
 
@@ -7027,7 +6993,7 @@ async function generateIDCard2() {
     document.getElementById("user_class_sector").value;
 
   document.getElementById("generate_idcard").innerHTML = `<i
-    class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
+      class="fa fa-spinner fa-spin"></i> Generating Cards Please wait ...`;
 
   document.getElementById("generate_idcard").disabled = true;
 
@@ -7077,83 +7043,83 @@ async function generateIDCard2() {
         "idcard_list"
       ).innerHTML += `<div style="margin-top: 20px;" class="container">
       <div class="padding">
-          <div class="font">
-              <div class="top">
-                  <b>
-                      <h4 id="school_name"
-                          style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
-                         ${localStorage["SCHOOL_NAME"]}
-                      </h4>
-                  </b>
-                  
+        <div class="font">
+          <div class="top">
+            <b>
+              <h4 id="school_name"
+                style="text-align: center; font-weight: bold; font-family: Poppins; color:white !important; margin-bottom: 0%; padding: 5px;">
+                ${localStorage["SCHOOL_NAME"]}
+              </h4>
+            </b>
 
-                  <img id="user_image"
-                      style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
-                      src="${user_type == "STUDENT"
+
+            <img id="user_image"
+              style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
+              src="${user_type == " STUDENT"
           ? user_image + data[i].student_id + `.png?timestamp=${timestamp}`
           : user_image + data[i].teacher_id + `.png?timestamp=${timestamp}`
         }" width="">
 
 
-              </div>
-              <div class="bottom">
-                  <div style="margin-bottom:5px">
-                      <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
+          </div>
+          <div class="bottom">
+            <div style="margin-bottom:5px">
+              <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
                   ;color: black;">${data[i].first_name + " " + data[i].last_name
         }</p>
-                      <p id="id" style="margin-bottom: 1px; color: black; ">${user_type == "STUDENT"
+              <p id="id" style="margin-bottom: 1px; color: black; ">${user_type == "STUDENT"
           ? data[i].student_id
           : data[i].teacher_id
         }</p>
 
-                      <small>
-                          <p id="gender" style="margin-bottom: 5px; color: black; font-size: 15px;">
-                              ${data[i].gender}</p>
-                      </small>
+              <small>
+                <p id="gender" style="margin-bottom: 5px; color: black; font-size: 15px;">
+                  ${data[i].gender}</p>
+              </small>
 
-                  </div>
-                  <br>
+            </div>
+            <br>
 
-                  <div
-                      style="display: flex; justify-content: center; margin-top: 0px">
-                      <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
-                  </div>
+              <div
+                style="display: flex; justify-content: center; margin-top: 0px">
+                <img id="school_logo_mini" style="padding: 0%;" src="${school_logo_mini}" width="px">
+              </div>
 
 
-                  <div style="margin-top: 0.5px;margin-bottom: 210px;">
-                      <h5 id ="user_type" style="font-family: Poppins
+              <div style="margin-top: 0.5px;margin-bottom: 210px;">
+                <h5 id="user_type" style="font-family: Poppins
                   ;color: black; text-align: center;">${user_type == "STUDENT" ? "STUDENT" : "STAFF"
         }</h5>
-                  </div>
-
               </div>
+
           </div>
+        </div>
       </div>
       <div class="back">
-          <h1 style="margin-bottom: 0; font-family: Poppins
+        <h1 style="margin-bottom: 0; font-family: Poppins
           ;" class="Details">INFORMATION</h1>
-          <hr style="background-color: white !important;">
+        <hr style="background-color: white !important;">
           <small>
-              <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
-              </h6>
+            <h6 style="text-align: center;color: white !important; margin-bottom: 2%;">SCAN HERE<br>
+            </h6>
           </small>
           <div style="margin-top: 0%;" class="qrcode">
-              <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${data[i].id
+            <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${data[i].id
         }">
-              </div>
+            </div>
           </div>
           <div class="details-info">
-              <h6 style="text-align: center;color: white !important;">if found please return to
-              </h6>
-              <h6 id="school_address"
-                  style="text-align: center;color: white !important; margin-bottom: 10px;">
-                  ${localStorage["SCHOOL_ADDRESS"]}</h6>
+            <h6 style="text-align: center;color: white !important;">if found please return to
+            </h6>
+            <h6 id="school_address"
+              style="text-align: center;color: white !important; margin-bottom: 10px;">
+              ${localStorage["SCHOOL_ADDRESS"]}</h6>
 
           </div>
       </div>
     </div>
     <div style="break-after:page"></div>
-          `;
+    `;
 
       json_to_generate_qr.push(data[i]);
 
@@ -7568,10 +7534,10 @@ function print() {
   a.document.write(
     `<style>
         :root {
-          --front-color: ${localStorage["SCHOOL_COLOR"].split("~")[0]};
-          --back-color: ${localStorage["SCHOOL_COLOR"].split("~")[1]};
+          --front - color: ${localStorage["SCHOOL_COLOR"].split("~")[0]};
+        --back-color: ${localStorage["SCHOOL_COLOR"].split("~")[1]};
         }
-     </style>`);
+      </style>`);
   a.document.write(divContents);
   a.document.write(`</body></html>`);
   a.print();
@@ -7671,96 +7637,96 @@ async function sendTokenToServer(deviceToken, user_type, id) {
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
-  var modal = `<div class="modal fade" id="authenticationModal" tabindex="-1" role="dialog"
-aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+  var modal = `< div class="modal fade" id = "authenticationModal" tabindex = "-1" role = "dialog"
+aria - labelledby="endModalTitle" aria - hidden="true" data - backdrop="static" data - keyboard="false" >
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
-        <div class="modal-header">
-            <h4 style="font-family: Poppins; font-weight: bold;"
-                class="modal-title col-12 text-center" id="authenticationModalTitle">
-                <b>Session Timeout !</b>
-            </h4>
+      <div class="modal-header">
+        <h4 style="font-family: Poppins; font-weight: bold;"
+          class="modal-title col-12 text-center" id="authenticationModalTitle">
+          <b>Session Timeout !</b>
+        </h4>
 
-        </div>
-        <div class="modal-body text-center">
-            <div class="row">
-                <div class="col-lg-12 img-box">
-                    <img src="../asset/images/login-banner.png" alt="">
-                </div>
-                <div class="col-lg-12 no-padding">
-                    <div class="login-box">
-                        <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
-                        <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
-                        <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
-                        <div style="display: flex;
+      </div>
+      <div class="modal-body text-center">
+        <div class="row">
+          <div class="col-lg-12 img-box">
+            <img src="../asset/images/login-banner.png" alt="">
+          </div>
+          <div class="col-lg-12 no-padding">
+            <div class="login-box">
+              <link rel="stylesheet" type="text/css" href="../asset/css/style.css" />
+              <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
+                <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+                  <div style="display: flex;
                         justify-content: center;" class="row">
 
-                            <b>
-                                <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
-                                    <i style="color: #051f3e;"
-                                        class="fas fa-graduation-cap fa-xs"></i>
-                                    SMARTSCHOOLHUB.net
-                                </h3>
-                            </b>
+                    <b>
+                      <h3 style="font-weight: bold; font-family: Rowdies; color:#051f3e;">
+                        <i style="color: #051f3e;"
+                          class="fas fa-graduation-cap fa-xs"></i>
+                        SMARTSCHOOLHUB.net
+                      </h3>
+                    </b>
 
+                  </div>
+                  <br>
+
+                    <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
+                      ${localStorage["username"]},</script> please
+                    signin
+                    to continue
+                  </h5>
+                  <form autocomplete="off">
+                    <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
+                    <div class="login-row row no-margin">
+
+                      <input id="password" type="password" autocomplete="new-password"
+                        class="form-control form-control-sm">
+                        <br>
+                          <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
                         </div>
-                        <br>
-
-                        <h5 style="color: #ff9d01; font-family: Poppins; font-weight: bold;">Hi
-                           ${localStorage["username"]},</script> please
-                            signin
-                            to continue
-                        </h5>
-                       <form autocomplete="off">   
-                            <label for=""><i class="fas fa-unlock-alt"></i> Password</label>
-                            <div class="login-row row no-margin">
-                               
-                                <input id="password" type="password" autocomplete="new-password"
-                                    class="form-control form-control-sm">
-                                    <br>
-                                    <small id="togglePass" style="cursor:pointer; font-style:bold">Show password</small>
-                            </div>
-                        </form>    
-                        <br>
-                        <a  style="float: right; color: red;" href="./index.html">Log out</a>
+                      </form>
+                      <br>
+                        <a style="float: right; color: red;" href="./index.html">Log out</a>
 
 
                         <div class="login-row btnroo row no-margin">
-                            <button id="signin" onclick="reAuth()"
-                                class="btn btn-primary btn-sm ">Sign
-                                In</button>
+                          <button id="signin" onclick="reAuth()"
+                            class="btn btn-primary btn-sm ">Sign
+                            In</button>
                         </div>
 
                         <br />
 
                     </div>
                     <footer class="footer">
-                        <div style="display: flex;
-                        justify-content: center;" class="copyright">© <a  style="color: #051f3e;"
-                                href="../#"><b>
-                                    Dextroux Technologies</b></a></div>
+                      <div style="display: flex;
+                        justify-content: center;" class="copyright">© <a style="color: #051f3e;"
+                          href="../#"><b>
+                            Dextroux Technologies</b></a></div>
                     </footer>
-                </div>
+                  </div>
 
-            </div>
-            <script>
-                const password = document.querySelector('#password');
-                togglePass.addEventListener('click', function (e) {
+                </div>
+                <script>
+                  const password = document.querySelector('#password');
+                  togglePass.addEventListener('click', function (e) {
                     // toggle the type attribute
                     const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                    password.setAttribute('type', type);
-                    parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
+                  password.setAttribute('type', type);
+                  parent.document.getElementById('togglePass').innerHTML = parent.document.getElementById('togglePass').innerHTML == 'Show password' ? 'Hide password' : 'Show password';
                 })
-            </script>
-            <script src="../assets/js/lib/toastr/toastr.min.js"></script>
-            <script src="../assets/js/lib/toastr/toastr.init.js"></script>
-            <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
-            <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+                </script>
+                <script src="../assets/js/lib/toastr/toastr.min.js"></script>
+                <script src="../assets/js/lib/toastr/toastr.init.js"></script>
+                <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
+                <script src="../assets/js/lib/sweetalert/sweetalert.init.js"></script>
+            </div>
+          </div>
         </div>
-    </div>
-</div>
-</div>
-`;
+      </div>
+      `;
 
   authenticationModal = parent.document.getElementById("authenticationModal");
   if (authenticationModal != null) {
@@ -7779,46 +7745,46 @@ function openSpinnerModal(message) {
     return 0;
   }
   modal = `<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog"
-aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-<div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-        <div class="modal-body text-center">
-        <div class="spinner-grow text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div class="spinner-grow text-secondary" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div class="spinner-grow text-success" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div class="spinner-grow text-danger" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div class="spinner-grow text-warning" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div class="spinner-grow text-info" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div class="spinner-grow text-light" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div class="spinner-grow text-dark" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-        </div>
+        aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <div class="spinner-grow text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div class="spinner-grow text-secondary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div class="spinner-grow text-success" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div class="spinner-grow text-danger" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div class="spinner-grow text-warning" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div class="spinner-grow text-info" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div class="spinner-grow text-light" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div class="spinner-grow text-dark" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
 
-        <h4 style="font-family: Poppins; font-weight: bold;"
-                class="modal-title col-12 text-center" id="spinnerModalTitle">
-                <b>${message != null || message != "" ? message : ``}</b><br/>
-                <b>Processing ...</b>
+            <h4 style="font-family: Poppins; font-weight: bold;"
+              class="modal-title col-12 text-center" id="spinnerModalTitle">
+              <b>${message != null || message != "" ? message : ``}</b><br />
+              <b>Processing ...</b>
             </h4>
             <br>
-    </div>
-</div>
-</div>
-`;
+          </div>
+        </div>
+      </div>
+      `;
 
   spinnerModal = parent.document.getElementById("spinnerModal");
   if (spinnerModal != null) {
@@ -8051,61 +8017,61 @@ function handleAction() {
 // CSS (should be in your stylesheet or head section)
 function addNotificationStyles() {
   const style = `
-    <style>
-        .notification-modal {
+        <style>
+          .notification-modal {
             display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          width: 300px;
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          z-index: 1000;
+          font-family: 'Poppins', sans-serif;
+          overflow: hidden;
         }
-        .notification-header {
+          .notification-header {
             display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            background-color: #051f3e;
-            color: white;
+          align-items: center;
+          padding: 12px 15px;
+          background-color: #051f3e;
+          color: white;
         }
-        .notification-icon {
-            margin-right: 10px;
-            font-size: 20px;
+          .notification-icon {
+            margin - right: 10px;
+          font-size: 20px;
         }
-        .notification-title {
-            font-weight: bold;
-            flex-grow: 1;
+          .notification-title {
+            font - weight: bold;
+          flex-grow: 1;
         }
-        .close-btn {
+          .close-btn {
             background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
+          border: none;
+          color: white;
+          font-size: 16px;
+          cursor: pointer;
         }
-        .notification-body {
+          .notification-body {
             padding: 15px;
-            color: #333;
+          color: #333;
         }
-        .notification-footer {
+          .notification-footer {
             padding: 10px 15px;
-            text-align: right;
-            border-top: 1px solid #eee;
+          text-align: right;
+          border-top: 1px solid #eee;
         }
-        .action-btn {
-            background-color: #051f3e;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
+          .action-btn {
+            background - color: #051f3e;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 4px;
+          cursor: pointer;
         }
-    </style>
-    `;
+        </style>
+        `;
   $("head").append(style);
 }
 
