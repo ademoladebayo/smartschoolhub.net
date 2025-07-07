@@ -2607,12 +2607,12 @@ function getBroadsheet() {
       // SET HEADER
       data.header.forEach(header => {
         document.getElementById('header').innerHTML +=
-          ` <th id="" class="${header == 'STUDENT NAME' || 'REMARK' ? `` : `vertical-header`
+          ` <th id="" class="${header == 'STUDENT NAME' || header == 'REMARK' ? `` : `vertical-header`
           }" style="font - size: 14px; ">${header}</th> `;
       });
 
 
-      document.getElementById('broadsheet').innerHTML = ``;
+      document.getElementById('broadsheet').innerHTML = '';
 
       // SET ROWS
       data.broadsheet.forEach(broadsheet => {
