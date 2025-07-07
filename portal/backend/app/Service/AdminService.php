@@ -699,7 +699,14 @@ class AdminService
 
                 Log::debug($response);
 
-                $score = isset($response->mean_score) ? $response->mean_score : isset($response->total) ? $response->total : 0;
+                if (isset($response->mean_score)) {
+                    $score = $response->mean_score;
+                } elseif (isset($response->total)) {
+                    $score = $response->total;
+                } else {
+                    $score = 0;
+                }
+
                 $studentRow['scores'][$subject->subject_id] = $score;
                 $studentRow['total'] += $score;
             }
