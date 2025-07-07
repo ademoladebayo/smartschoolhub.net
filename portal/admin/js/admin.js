@@ -2558,16 +2558,11 @@ function uploadCommentAndRating(type, value, rating_type) {
 function getBroadsheet() {
   openSpinnerModal("Broadsheet is being generated, please wait...");
 
-
   // SCHOOL LOGO URL
-  school_logo_url =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
-
-  // SCHOOL_LOGO
+  const school_logo_url = domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
   document.getElementById("school_logo").src = school_logo_url;
-
   document.getElementById("school_details").innerHTML =
-    localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+    localStorage["SCHOOL_NAME"] + "<br>" + localStorage["SCHOOL_ADDRESS"];
 
   const params = {
     class: "4",
@@ -2575,11 +2570,7 @@ function getBroadsheet() {
     session: "2024/2025",
   };
 
-  // Convert object to query string
-  const queryString = new URLSearchParams(params).toString();
-
-  // CALL API THAT GET ALL SESSION
-  fetch(ip + `/api/admin/broadsheet?` + queryString, {
+  fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -2588,105 +2579,107 @@ function getBroadsheet() {
       Authorization: "Bearer " + localStorage["token"],
     },
   })
-    .then(function (res) {
-      console.log(res.status);
+    .then(res => {
       if (res.status == 401) {
         openAuthenticationModal();
         removeSpinnerModal();
+        return;
       }
       return res.json();
     })
-
-    .then((data) => {
+    .then(data => {
+      if (!data) return;
 
       // SET SUMMARY DATA
-      document.getElementById('class__').innerHTML = data.summary.class;
-      document.getElementById('session').innerHTML = data.summary.session;
-      document.getElementById('term').innerHTML = data.summary.term;
+      document.getElementById('class__').textContent = data.summary.class;
+      document.getElementById('session').textContent = data.summary.session;
+      document.getElementById('term').textContent = data.summary.term;
 
-      // SET HEADER
+      // CLEAR AND SET HEADER
+      const headerElement = document.getElementById('header');
+      headerElement.innerHTML = '';
+
       data.header.forEach(header => {
-        document.getElementById('header').innerHTML +=
-          ` <th id="" class="${header == 'STUDENT NAME' || header == 'REMARK' ? `` : `vertical-header`
-          }" style="font - size: 14px; ">${header}</th> `;
+        const th = document.createElement('th');
+        th.textContent = header;
+        if (header !== 'STUDENT NAME' && header !== 'REMARK') {
+          th.classList.add('vertical-header');
+        }
+        th.style.fontSize = '14px';
+        headerElement.appendChild(th);
       });
 
+      // CLEAR AND SET ROWS
+      const broadsheetElement = document.getElementById('broadsheet');
+      broadsheetElement.innerHTML = '';
 
-      document.getElementById('broadsheet').innerHTML = '';
+      data.broadsheet.forEach(student => {
+        const row = document.createElement('tr');
 
-      // SET ROWS
-      data.broadsheet.forEach(broadsheet => {
-        document.getElementById('broadsheet').innerHTML +=
-          ` 
-          
-           <tr>
-            
-           <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-               <b>${broadsheet.sn}</b>
-            </td>
+        // SN (Serial Number)
+        const snCell = document.createElement('td');
+        snCell.textContent = student.sn;
+        snCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        row.appendChild(snCell);
 
-            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-               <b>${broadsheet.student_name}</b>
-            </td>
+        // Student Name
+        const nameCell = document.createElement('td');
+        nameCell.textContent = student.student_name;
+        nameCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        row.appendChild(nameCell);
 
+        // Scores for each subject
+        student.scores.forEach(score => {
+          const scoreCell = document.createElement('td');
+          scoreCell.textContent = score;
+          scoreCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+          row.appendChild(scoreCell);
+        });
 
+        // Total
+        const totalCell = document.createElement('td');
+        totalCell.textContent = student.total;
+        totalCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        row.appendChild(totalCell);
 
-            ${broadsheet.scores.forEach(scores => {
+        // Percentage
+        const percentageCell = document.createElement('td');
+        percentageCell.textContent = student.percentage;
+        percentageCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        row.appendChild(percentageCell);
 
-            `
-            <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-                <b>${scores}</b>
-            <td/>    
+        // Position
+        const positionCell = document.createElement('td');
+        positionCell.textContent = student.position;
+        positionCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        row.appendChild(positionCell);
 
-          `;
-          })}
+        // Grade
+        const gradeCell = document.createElement('td');
+        gradeCell.textContent = student.grade;
+        gradeCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${student.grade.includes("F") ? "red" :
+          student.grade.includes("A") ? "blue" : "black"
+          }`;
+        row.appendChild(gradeCell);
 
+        // Remark
+        const remarkCell = document.createElement('td');
+        remarkCell.textContent = student.remark;
+        remarkCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${student.remark.includes("FAIL") ? "red" :
+          student.remark.includes("PASS") ? "blue" : "black"
+          }`;
+        row.appendChild(remarkCell);
 
-
-          <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-               <b>${broadsheet.total}</b>
-           </td>
-
-
-          <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-            <b>${broadsheet.percentage}</b>
-          </td>
-          
-           <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-            <b>${broadsheet.position}</b>
-           </td>
-
-            <td style="color: ${broadsheet.grade.includes("F")
-            ? "red"
-            : broadsheet.grade.includes("A")
-              ? "blue"
-              : "black"
-          } ; font - size: 13px; font - family: Open Sans, sans - serif; font - weight: bold; text - align: center; ">
-              ${broadsheet.grade}
-              </td >
-
-        <td style="color: ${broadsheet.grade.includes(" F")
-            ? "red"
-            : broadsheet.grade.includes("A")
-              ? "blue"
-              : "black"
-          } ; font - size: 13px; font - family: Open Sans, sans - serif; font - weight: bold; padding: 0px; text - align: center; ">
-              ${broadsheet.remark}
-              </td >
-
-           <tr/>
-
-          `;
-
+        broadsheetElement.appendChild(row);
       });
-
 
       removeSpinnerModal();
-
     })
-    .catch((err) => console.log(err));
+    .catch(err => {
+      console.error(err);
+      removeSpinnerModal();
+    });
 }
-
 
 
 
