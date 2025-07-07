@@ -668,10 +668,7 @@ class AdminService
             'profile_status' => 'ENABLED'
         ])->get();
 
-
-        $header = ['Student Name'];
         $broadsheet = [];
-        $scores = [];
 
         // Process each student
         foreach ($students as $student) {
@@ -687,6 +684,8 @@ class AdminService
             // Get scores for each subject
             $scoreTotal = 0;
             $scoreOver = 0;
+            $scores = [];
+
             foreach ($subjects as $subject) {
                 $response = $studentService->getResult(
                     null,
@@ -696,9 +695,6 @@ class AdminService
                     $session,
                     $term
                 );
-
-                //Log::debug($response);
-
 
                 if (isset($response->mean_score)) {
                     $score = $response->mean_score;
@@ -713,17 +709,26 @@ class AdminService
                     $score = '-';
                 }
 
-                //$studentRow['scores'][$subject->subject_id] = $score;
                 array_push($scores, $score);
                 $studentRow['total'] = "$scoreTotal/$scoreOver";
                 $studentRow['scores'] = $scores;
+
+
+                $percentage = ($scoreTotal / $scoreOver) * 100;
+                $studentRow['percentage'] = "$percentage%";
+
+
             }
 
             $broadsheet[] = $studentRow;
         }
 
+
+
+        # GET POSITION
+
         return [
-            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL']),
+            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'REMARK']),
             'broadsheet' => $broadsheet
         ];
 
