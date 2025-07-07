@@ -714,15 +714,8 @@ class AdminService
                 $studentRow['total'] = "$scoreTotal/$scoreOver";
                 $studentRow['scores'] = $scores;
 
-                $percentage = ($scoreTotal / $scoreOver) * 100;
+                $percentage = $scoreOver > 0 ? ($scoreTotal / $scoreOver) * 100 : 0;
                 $studentRow['percentage'] = number_format($percentage, 2);
-
-                $gradeSettingsRepository = new GradeSettingsRepository();
-                $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark($percentage);
-
-                $studentRow['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
-                $studentRow['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
-
             }
 
             $broadsheet[] = $studentRow;
@@ -739,15 +732,22 @@ class AdminService
         // 2. Add position field
         $position = 1;
         foreach ($broadsheet as &$student) {
+            $percentage = $student['percentage'];
             $student['position'] = $position++;
 
             // Optional: Convert position to ordinal (1st, 2nd, 3rd)
             $student['position'] = $utils->getPosition($student['position']);
-            $student['percentage'] = $student['percentage'] . "%";
+            $student['percentage'] = $percentage . "%";
+
+            $gradeSettingsRepository = new GradeSettingsRepository();
+            $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark(round($percentage, 0));
+
+            $studentRow['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+            $studentRow['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
         }
 
         return [
-            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'REMARK']),
+            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
             'broadsheet' => $broadsheet
         ];
 
