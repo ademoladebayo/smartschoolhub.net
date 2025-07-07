@@ -2606,7 +2606,7 @@ function getBroadsheet() {
       // SET HEADER
       data.header.forEach(header => {
         document.getElementById('header').innerHTML +=
-          ` <th id="" class="${header == 'STUDENT NAME' ? `` : `vertical-header`
+          ` <th id="" class="${header == 'STUDENT NAME' || 'REMARK' ? `` : `vertical-header`
           }" style="font - size: 14px; ">${header}</th> `;
       });
 
@@ -2627,28 +2627,24 @@ function getBroadsheet() {
                <b>${broadsheet.student_name}</b>
             </td>
 
-          `;
 
 
-        broadsheet.scores.forEach(scores => {
+            ${broadsheet.scores.forEach(scores => {
 
-          document.getElementById('broadsheet').innerHTML +=
             `
             <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 <b>${scores}</b>
             <td/>    
 
           `;
-
-        });
-
+          })}
 
 
-        document.getElementById('broadsheet').innerHTML +=
-          ` 
+
           <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-            <b>${broadsheet.total}</b>
-          </td>
+               <b>${broadsheet.total}</b>
+           </td>
+
 
           <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
             <b>${broadsheet.percentage}</b>
@@ -2658,7 +2654,7 @@ function getBroadsheet() {
             <b>${broadsheet.position}</b>
            </td>
 
-            <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}`).hidden = data.settings.grade.status == 'hidden' ? true : false} style="color: ${broadsheet.grade.includes("F")
+            <td style="color: ${broadsheet.grade.includes("F")
             ? "red"
             : broadsheet.grade.includes("A")
               ? "blue"
@@ -2667,7 +2663,7 @@ function getBroadsheet() {
               ${broadsheet.grade}
               </td >
 
-        <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}`).hidden = data.settings.remark.status == 'hidden' ? true : false} style="color: ${broadsheet.grade.includes(" F")
+        <td style="color: ${broadsheet.grade.includes(" F")
             ? "red"
             : broadsheet.grade.includes("A")
               ? "blue"
@@ -2676,11 +2672,10 @@ function getBroadsheet() {
               ${broadsheet.remark}
               </td >
 
-           <tr />
+           <tr/>
 
           `;
-
-
+          
       });
 
 
