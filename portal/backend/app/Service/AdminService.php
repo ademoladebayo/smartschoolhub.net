@@ -742,8 +742,8 @@ class AdminService
             $gradeSettingsRepository = new GradeSettingsRepository();
             $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark(round($percentage, 0));
 
-            $studentRow['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
-            $studentRow['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+            $student['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+            $student['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
         }
 
         return [
