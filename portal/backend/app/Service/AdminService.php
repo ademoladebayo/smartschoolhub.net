@@ -666,13 +666,17 @@ class AdminService
             'profile_status' => 'ENABLED'
         ])->get();
 
+
+
         $header = ['Student Name'];
         $broadsheet = [];
 
         // Prepare header with subject names
-        foreach ($subjects as $subject) {
-            $header[] = $subject->subject->subject_name;
-        }
+        // foreach ($subjects as $subject) {
+        //     $header[] = $subject->subject->subject_name;
+        // }
+
+
         $header[] = 'Total'; // Add Total column
 
         // Process each student
@@ -687,6 +691,8 @@ class AdminService
             ];
 
             // Get scores for each subject
+            $scoreTotal = 0;
+            $scoreOver = 0;
             foreach ($subjects as $subject) {
                 $response = $studentService->getResult(
                     null,
@@ -699,24 +705,31 @@ class AdminService
 
                 //Log::debug($response);
 
+
                 if (isset($response->mean_score)) {
                     $score = $response->mean_score;
+                    $scoreTotal += $score;
+                    $scoreOver += 100;
                 } elseif (isset($response->total)) {
                     $score = $response->total;
+                    $scoreTotal += $score;
+                    $scoreOver += 100;
                 } else {
-                    $score = 0;
+
+                    // STUDENT DID NOT REGISTER FOR IT
+                    $score = '-';
                 }
 
-                $studentRow['scores'][$subject->subject_id] = $score;
-                $studentRow['total'] += $score;
+                //$studentRow['scores'][$subject->subject_id] = $score;
+                array_push($studentRow['scores'], $score);
+                $studentRow['total'] = " $scoreTotal/$scoreOver";
             }
 
             $broadsheet[] = $studentRow;
         }
 
         return [
-            'header' => $header,
-            'subjects' => $subjects->pluck('subject_id', 'subject.subject_name'),
+            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject_id', 'subject.subject_name')->toArray(), ['TOTAL']),
             'broadsheet' => $broadsheet
         ];
 

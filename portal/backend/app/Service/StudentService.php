@@ -632,7 +632,7 @@ class StudentService
         # IT AN INTERNAL CALL
         if ($request->subject_id) {
             Log::debug($result);
-            return $result;
+            return $result[0];
         }
 
 
