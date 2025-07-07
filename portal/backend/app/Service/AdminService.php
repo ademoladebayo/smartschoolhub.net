@@ -652,12 +652,14 @@ class AdminService
 
         // Get all subjects for the class, session, and term
         $subjects = SubjectRegistrationModel::with('subject')
+            ->select('subject_id')
             ->where([
                 'class_id' => $class_id,
                 'session' => $session,
                 'term' => $term
             ])
             ->distinct('subject_id')
+            ->groupBy('subject_id')
             ->get();
 
         // Get all active students in the class
@@ -667,17 +669,9 @@ class AdminService
         ])->get();
 
 
-
         $header = ['Student Name'];
         $broadsheet = [];
-
-        // Prepare header with subject names
-        // foreach ($subjects as $subject) {
-        //     $header[] = $subject->subject->subject_name;
-        // }
-
-
-        $header[] = 'Total'; // Add Total column
+        $scores = [];
 
         // Process each student
         foreach ($students as $student) {
@@ -720,7 +714,7 @@ class AdminService
                 }
 
                 //$studentRow['scores'][$subject->subject_id] = $score;
-                array_push($studentRow['scores'], $score);
+                array_push($scores, $score);
                 $studentRow['total'] = "$scoreTotal/$scoreOver";
             }
 
@@ -728,7 +722,7 @@ class AdminService
         }
 
         return [
-            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject_id', 'subject.subject_name')->toArray(), ['TOTAL']),
+            'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL']),
             'broadsheet' => $broadsheet
         ];
 

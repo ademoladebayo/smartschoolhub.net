@@ -633,6 +633,7 @@ class StudentService
         if ($request->subject_id) {
             Log::debug($result);
             $response = count($result) > 0 ? $result : [];
+            Log::debug($response);
             return $response;
         }
 
