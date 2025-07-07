@@ -697,7 +697,7 @@ class AdminService
                     $term
                 );
 
-                Log::debug($response);
+                //Log::debug($response);
 
                 if (isset($response->mean_score)) {
                     $score = $response->mean_score;
