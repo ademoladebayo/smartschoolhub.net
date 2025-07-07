@@ -632,7 +632,8 @@ class StudentService
         # IT AN INTERNAL CALL
         if ($request->subject_id) {
             Log::debug($result);
-            return $result[0];
+            $response = count($result) > 0 ? $result : [];
+            return $response;
         }
 
 

@@ -715,14 +715,13 @@ class AdminService
                     $scoreTotal += $score;
                     $scoreOver += 100;
                 } else {
-
                     // STUDENT DID NOT REGISTER FOR IT
                     $score = '-';
                 }
 
                 //$studentRow['scores'][$subject->subject_id] = $score;
                 array_push($studentRow['scores'], $score);
-                $studentRow['total'] = " $scoreTotal/$scoreOver";
+                $studentRow['total'] = "$scoreTotal/$scoreOver";
             }
 
             $broadsheet[] = $studentRow;
