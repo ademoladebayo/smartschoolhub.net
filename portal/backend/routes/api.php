@@ -217,6 +217,9 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
                 Route::get('admin/communication/{id}/{type}/{user_type}', 'AdminController@getMessage', function () {
                 })->middleware(Cors::class);
 
+                Route::get('admin/broadsheet', 'AdminController@getbroadSheet', function () {
+                })->middleware(Cors::class);
+
 
                 // =============================================================================
                 //               END OF ADMIN ROUTE

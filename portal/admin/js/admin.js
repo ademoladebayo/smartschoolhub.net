@@ -2553,6 +2553,218 @@ function uploadCommentAndRating(type, value, rating_type) {
     .catch((err) => console.log(err));
 }
 
+
+// BROADSHEET RESULT
+function getBroadsheet() {
+  openSpinnerModal("Broadsheet is being generated, please wait...");
+  
+  // user_data = JSON.parse(localStorage["student_result"]);
+
+  // // IMAGE URL
+  // url =
+  //   domain +
+  //   "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
+  //   user_data.student_id +
+  //   `.png?timestamp=${timestamp}`;
+
+  // // SCHOOL LOGO URL
+  // school_logo_url =
+  //   domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
+
+  // // SCHOOL_LOGO
+  // document.getElementById("school_logo").src = school_logo_url;
+
+  // // STUDENT_IMAGE
+  // document.getElementById("student_image").src = url;
+
+  // // POPULATE STUDENTS INFORMATION
+  // document.getElementById("full_name").innerHTML =
+  //   "<b>" +
+  //   user_data.last_name +
+  //   "</b>" +
+  //   " " +
+  //   user_data.first_name +
+  //   " " +
+  //   user_data.middle_name;
+
+  // document.getElementById("student_id").innerHTML = user_data.student_id;
+  // document.getElementById("class_sector").innerHTML =
+  //   user_data.class != null ? user_data.class.class_sector : `GRADUATED`;
+
+  document.getElementById("school_details").innerHTML =
+    localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+
+
+    // QR Generator
+  // var qrcode = new QRCode("verificationQR", {
+  //   text: "STUDENT NUMBER",
+  //   width: 128,
+  //   height: 128,
+  //   colorDark: "#000000",
+  //   colorLight: "#ffffff",
+  //   correctLevel: QRCode.CorrectLevel.H,
+  // });
+
+
+  // CALL API THAT GET ALL SESSION
+  fetch(ip + "/api/general/all-session/STD-" + user_data.id, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      school: localStorage["school"],
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(function (res) {
+      console.log(res.status);
+      if (res.status == 401) {
+        openAuthenticationModal();
+      }
+      return res.json();
+    })
+
+    .then((data) => {
+
+      // STORE IN AN ACCESIBLE LIST
+      data.forEach((data) => {
+        var term = {};
+        if (session_list[data.session]) {
+          session_list[data.session][data.term] = { "loaded": false };
+        } else {
+          term[data.term] = { "loaded": false };
+          session_list[data.session] = term;
+        }
+      });
+
+      // console.log("SESSION TERM :::::: ")
+      // console.table(data);
+      // console.log(session_list);
+
+
+      // CREATE RESULT TEMPLATE
+      if (Object.keys(session_list).length !== 0) {
+        document.getElementById("result_div").innerHTML = ``;
+
+        // LOOP THROUGH EACH SESSION AND TERM
+        for (const session in session_list) {
+          if (session_list.hasOwnProperty(session)) {
+
+            for (const term in session_list[session]) {
+              if (session_list[session].hasOwnProperty(term)) {
+
+                // CREATE RESULT TEMPLATE
+                document.getElementById("result_div").innerHTML += `
+ <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
+ <div style="border:1px solid black; padding-bottom: 15px;" class="row">
+
+     <div class="col-md-4">
+         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+             <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
+         </div>
+     </div>
+     <div class="col-md-4">
+         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+             <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
+         </div>
+     </div>
+     <div class="col-md-4">
+         <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+             <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
+         </div>
+     </div>
+
+     
+
+     <!-- ACADEMIC PERFORMANCE -->
+     <div style="margin-top: 15px;" class="col-md-12 col-lg-12 col-xl-12">
+         <p><b>(B) ACADEMIC PERFORMANCE</b></p>
+         <div style="margin-top: 0px;">
+             <div class="card">
+                 <div class="card-body">
+                     <!-- SCORE TABLE -->
+                     <div class="table-responsive">
+                         <table style="padding: 0%;" class="table table-sm">
+                             <thead>
+                                <tr>
+                                     <th id="sn_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">S/NO</th>
+
+                                     <th id="subject_header_${session}_${term}" style="font-size: 14px; text-align:center">SUBJECT</th>
+
+                                     <th id="first_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
+
+                                     <th id="second_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
+
+                                     <th id="note_ass_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+
+                                     <th id="cbt_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CBT</th>
+
+                                     <th id="project_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
+
+                                     <th id="exam_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+
+                                     <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
+
+                                     <th id="class_average_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+
+                                     <th id="class_lowest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
+
+                                     <th id="class_highest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+
+                                     <th id="position_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">POSITION</th>
+
+                                     <th id="grade_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">GRADE</th>
+
+                                     <th id="remark_header_${session}_${term}" style="font-size: 14px; text-align:center">REMARK</th>
+                                 </tr>
+                             </thead>
+                             <tbody id="scores_${session}_${term}">
+
+                             
+                             
+                             </tbody>
+                         </table>
+                     </div>
+                     
+                    
+                 </div>
+             </div>
+         </div>
+     </div>
+
+    
+ </div>
+
+ </div>
+
+`;
+              }
+            }
+          }
+        }
+
+      } else {
+        document.getElementById(
+          "result_div"
+        ).innerHTML = `<hr style="color: black; border: 1px solid black">
+  <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+  <hr style="color: black; border: 1px solid black">`;
+      }
+
+      // PROCESS RESULT CONTAINERS
+      processContainers();
+
+      main_content = parent.body.innerHTML;
+      parent.body.innerHTML = "";
+      // parent.body.innerHTML = main_content.trim();
+    })
+    .catch((err) => console.log(err));
+
+  // setTimeout(function () {
+  //   removeSpinnerModal();
+  // }, 10000);
+}
+
 // STUDENT ATTENDANCE
 function getAttendanceSummary(value) {
   // GET ACADEMIC PERFORMANCE

@@ -399,8 +399,21 @@ class StudentService
 
 
     // RESULT
-    public function getResult(Request $request)
+    public function getResult(Request $request = null, $class_id = null, $subject_id = null, $student_id = null, $session = null, $term = null)
     {
+        # CREATE REQUEST IF IT DOES NOT EXISTS
+        if (!$request) {
+            $request = new Request([
+                'class_id' => $class_id,
+                'student_id' => $student_id,
+                'subject_id' => $subject_id,
+                'session' => $session,
+                'term' => $term,
+                'user_type' => 'TEACHER'
+            ]);
+        }
+
+
         // GET CURRENT SESSION AND TERM
         $session = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
         $term = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
@@ -435,7 +448,20 @@ class StudentService
 
 
 
-        $result = SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("student_id", $request->student_id)->where("session", $request->session)->where("term", $request->term)->with('student', 'class', 'subject')->get();
+        if ($request->subject_id) {
+            $result = SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))
+                ->where("student_id", $request->student_id)
+                ->where("subject_id", $request->subject_id)
+                ->where("class_id", $request->class_id)
+                ->where("session", $request->session)
+                ->where("term", $request->term)->with('student', 'class', 'subject')->get();
+        } else {
+            $result = SubjectRegistrationModel::select('id', 'student_id', 'subject_id', 'class_id', 'first_ca', 'second_ca', 'note_assignment', 'cbt', 'project', 'examination', DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))
+                ->where("student_id", $request->student_id)
+                ->where("session", $request->session)
+                ->where("term", $request->term)->with('student', 'class', 'subject')->get();
+        }
+
 
         # NO OF STUDENT WHO REGISTERED SUBJECT FOR THE CLASS, SESSION AND TERM
         if (count($result) > 0) {
@@ -600,6 +626,13 @@ class StudentService
 
         $gradeAndRemark = $GradeSettingsRepository->getGradeAndRemark(floor($percentage));
         $grade_position = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+
+
+        # IT AN INTERNAL CALL
+        if ($request->subject_id) {
+            return $result;
+        }
+
 
         // GET RESULT FORMAT
         $class_sector = $result[0]->class->class_sector ?? 'N/A';

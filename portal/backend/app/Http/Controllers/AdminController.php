@@ -126,7 +126,7 @@ class AdminController extends Controller
 
     public function getStudent($id)
     {
-        return response()->json(['success' => true, 'data' =>  StudentModel::where('id',$id)->with("class")->get()[0]]);
+        return response()->json(['success' => true, 'data' => StudentModel::where('id', $id)->with("class")->get()[0]]);
     }
 
     public function deleteStudent($student_id)
@@ -353,5 +353,13 @@ class AdminController extends Controller
     {
         $AdminService = new AdminService();
         return $AdminService->getMessage($id, $type, $user_type);
+    }
+
+
+    // BROADSHEET
+    public function getbroadSheet(Request $request)
+    {
+        $AdminService = new AdminService();
+        return $AdminService->getbroadSheet($request);
     }
 }

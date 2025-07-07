@@ -9,6 +9,7 @@ use App\Model\AdminModel;
 use App\Model\ControlPanelModel;
 use App\Model\InventoryModel;
 use App\Model\LessonPlanModel;
+use App\Model\SubjectRegistrationModel;
 use App\Model\TeacherModel;
 use App\Model\TeacherAttendanceModel;
 use App\Model\CommunicationModel;
@@ -638,5 +639,42 @@ class AdminService
         }
 
         return response()->json(['success' => true, 'messages' => $messages]);
+    }
+
+    // BROADSHEET
+    public function getbroadSheet($request)
+    {
+        $class_id = $request->class_id;
+        $session = $request->session;
+        $term = $request->term;
+
+        $studentService = new StudentService();
+
+        # GET ALL SUBJECT REGISTERD BY CLASS
+        $subjects = SubjectRegistrationModel::with('subject')->where(['class' => $class_id, 'session' => $session, 'term' => $term])->distinct('subject_id')->get();
+
+
+        # GET ALL STUDENT WHO REGISTERED FOR THE SUBJECTS
+        $students = StudentModel::where(['class' => $class_id, 'profile_status' => 'ENABLED'])->get();
+
+
+        $broadsheet = [];
+        foreach ($subjects as $subject) {
+            foreach ($students as $student) {
+                $broadsheet['student_name'] = $student->first_name . ' ' . $student->middle_name . ' ' . $student->last_name;
+
+
+                $response = $studentService->getResult(null, $class_id, $subject->id, $student->id, $session, $term);
+
+                array_push($broadsheet[$student->id], $response->mean_score ? $response->mean_score : $response->total);
+
+
+            }
+
+            array_push($header, $subject->subject_name);
+        }
+
+        return ['header' => $header, 'broadsheet' => $broadsheet];
+
     }
 }
