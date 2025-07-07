@@ -644,37 +644,72 @@ class AdminService
     // BROADSHEET
     public function getbroadSheet($request)
     {
-        $class_id = $request->class_id;
+        $class_id = $request->class;
         $session = $request->session;
         $term = $request->term;
 
         $studentService = new StudentService();
 
-        # GET ALL SUBJECT REGISTERD BY CLASS
-        $subjects = SubjectRegistrationModel::with('subject')->where(['class' => $class_id, 'session' => $session, 'term' => $term])->distinct('subject_id')->get();
+        // Get all subjects for the class, session, and term
+        $subjects = SubjectRegistrationModel::with('subject')
+            ->where([
+                'class_id' => $class_id,
+                'session' => $session,
+                'term' => $term
+            ])
+            ->distinct('subject_id')
+            ->get();
 
+        // Get all active students in the class
+        $students = StudentModel::where([
+            'class' => $class_id,
+            'profile_status' => 'ENABLED'
+        ])->get();
 
-        # GET ALL STUDENT WHO REGISTERED FOR THE SUBJECTS
-        $students = StudentModel::where(['class' => $class_id, 'profile_status' => 'ENABLED'])->get();
-
-
+        $header = ['Student Name'];
         $broadsheet = [];
+
+        // Prepare header with subject names
         foreach ($subjects as $subject) {
-            foreach ($students as $student) {
-                $broadsheet['student_name'] = $student->first_name . ' ' . $student->middle_name . ' ' . $student->last_name;
+            $header[] = $subject->subject->subject_name;
+        }
+        $header[] = 'Total'; // Add Total column
 
+        // Process each student
+        foreach ($students as $student) {
+            $studentRow = [
+                'student_id' => $student->id,
+                'student_name' => $student->first_name . ' ' .
+                    ($student->middle_name ? $student->middle_name . ' ' : '') .
+                    $student->last_name,
+                'scores' => [],
+                'total' => 0
+            ];
 
-                $response = $studentService->getResult(null, $class_id, $subject->id, $student->id, $session, $term);
+            // Get scores for each subject
+            foreach ($subjects as $subject) {
+                $response = $studentService->getResult(
+                    null,
+                    $class_id,
+                    $subject->subject_id,
+                    $student->id,
+                    $session,
+                    $term
+                );
 
-                array_push($broadsheet[$student->id], $response->mean_score ? $response->mean_score : $response->total);
-
-
+                $score = $response->mean_score ?? $response->total ?? 0;
+                $studentRow['scores'][$subject->subject_id] = $score;
+                $studentRow['total'] += $score;
             }
 
-            array_push($header, $subject->subject_name);
+            $broadsheet[] = $studentRow;
         }
 
-        return ['header' => $header, 'broadsheet' => $broadsheet];
+        return [
+            'header' => $header,
+            'subjects' => $subjects->pluck('subject_id', 'subject.subject_name'),
+            'broadsheet' => $broadsheet
+        ];
 
     }
 }

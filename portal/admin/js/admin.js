@@ -2557,57 +2557,21 @@ function uploadCommentAndRating(type, value, rating_type) {
 // BROADSHEET RESULT
 function getBroadsheet() {
   openSpinnerModal("Broadsheet is being generated, please wait...");
-  
-  // user_data = JSON.parse(localStorage["student_result"]);
-
-  // // IMAGE URL
-  // url =
-  //   domain +
-  //   "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
-  //   user_data.student_id +
-  //   `.png?timestamp=${timestamp}`;
-
-  // // SCHOOL LOGO URL
-  // school_logo_url =
-  //   domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
-
-  // // SCHOOL_LOGO
-  // document.getElementById("school_logo").src = school_logo_url;
-
-  // // STUDENT_IMAGE
-  // document.getElementById("student_image").src = url;
-
-  // // POPULATE STUDENTS INFORMATION
-  // document.getElementById("full_name").innerHTML =
-  //   "<b>" +
-  //   user_data.last_name +
-  //   "</b>" +
-  //   " " +
-  //   user_data.first_name +
-  //   " " +
-  //   user_data.middle_name;
-
-  // document.getElementById("student_id").innerHTML = user_data.student_id;
-  // document.getElementById("class_sector").innerHTML =
-  //   user_data.class != null ? user_data.class.class_sector : `GRADUATED`;
 
   document.getElementById("school_details").innerHTML =
     localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
 
+  const params = {
+    class: 7,
+    term: '2nd-term',
+    session: 'maths',
+  };
 
-    // QR Generator
-  // var qrcode = new QRCode("verificationQR", {
-  //   text: "STUDENT NUMBER",
-  //   width: 128,
-  //   height: 128,
-  //   colorDark: "#000000",
-  //   colorLight: "#ffffff",
-  //   correctLevel: QRCode.CorrectLevel.H,
-  // });
-
+  // Convert object to query string
+  const queryString = new URLSearchParams(params).toString();
 
   // CALL API THAT GET ALL SESSION
-  fetch(ip + "/api/general/all-session/STD-" + user_data.id, {
+  fetch(ip + `/api/admin/broadsheet?` + queryString, {
     method: "GET",
     headers: {
       Accept: "application/json",
