@@ -649,6 +649,7 @@ class AdminService
         $term = $request->term;
 
         $studentService = new StudentService();
+        $utils = new Utils();
 
         // Get all subjects for the class, session, and term
         $subjects = SubjectRegistrationModel::with('subject')
@@ -713,10 +714,14 @@ class AdminService
                 $studentRow['total'] = "$scoreTotal/$scoreOver";
                 $studentRow['scores'] = $scores;
 
-
                 $percentage = ($scoreTotal / $scoreOver) * 100;
-                $studentRow['percentage'] = "$percentage%";
+                $studentRow['percentage'] = number_format($percentage, 2);
 
+                $gradeSettingsRepository = new GradeSettingsRepository();
+                $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark($percentage);
+
+                $studentRow['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+                $studentRow['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
 
             }
 
@@ -724,8 +729,22 @@ class AdminService
         }
 
 
-
         # GET POSITION
+
+        // 1. Sort the array by percentage (descending order)
+        usort($broadSheet, function ($a, $b) {
+            return $b['percentage'] <=> $a['percentage'];
+        });
+
+        // 2. Add position field
+        $position = 1;
+        foreach ($broadSheet as &$student) {
+            $student['position'] = $position++;
+
+            // Optional: Convert position to ordinal (1st, 2nd, 3rd)
+            $student['position'] = $utils->getPosition($student['position']);
+            $student['percentage'] = $student['percentage'] . "%";
+        }
 
         return [
             'header' => array_merge(['STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'REMARK']),

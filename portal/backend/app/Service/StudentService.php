@@ -412,7 +412,6 @@ class StudentService
                 'user_type' => 'TEACHER'
             ]);
         }
-        Log::debug($request);
 
 
         // GET CURRENT SESSION AND TERM
@@ -631,9 +630,7 @@ class StudentService
 
         # IT AN INTERNAL CALL
         if ($request->subject_id) {
-            Log::debug($result);
             $response = count($result) > 0 ? $result[0] : [];
-            Log::debug($response);
             return $response;
         }
 
