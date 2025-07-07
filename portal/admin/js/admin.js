@@ -2592,6 +2592,7 @@ function getBroadsheet() {
       console.log(res.status);
       if (res.status == 401) {
         openAuthenticationModal();
+        removeSpinnerModal();
       }
       return res.json();
     })
@@ -2611,6 +2612,7 @@ function getBroadsheet() {
       });
 
 
+      document.getElementById('broadsheet').innerHTML = ``;
 
       // SET ROWS
       data.broadsheet.forEach(broadsheet => {
@@ -2675,7 +2677,7 @@ function getBroadsheet() {
            <tr/>
 
           `;
-          
+
       });
 
 
