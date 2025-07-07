@@ -2560,6 +2560,7 @@ function getBroadsheet() {
 
   // SCHOOL LOGO URL
   const school_logo_url = domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
+  
   document.getElementById("school_logo").src = school_logo_url;
   document.getElementById("school_details").innerHTML =
     localStorage["SCHOOL_NAME"] + "<br>" + localStorage["SCHOOL_ADDRESS"];

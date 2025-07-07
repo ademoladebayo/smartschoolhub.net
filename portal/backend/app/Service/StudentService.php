@@ -589,7 +589,7 @@ class StudentService
                 if ($term_count == 0) {
                     $data['mean_score'] = 0;
                 } else {
-                    $data['mean_score'] = round(($first_termm + $second_termm + $third_termm) / $term_count, 2);
+                    $data['mean_score'] = round(($first_termm + $second_termm + $third_termm) / $term_count, 0);
                 }
 
             }
