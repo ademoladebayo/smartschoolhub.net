@@ -697,7 +697,9 @@ class AdminService
                     $term
                 );
 
-                $score = isset($response->mean_score) ? $response->mean_score : $response->total;
+                Log::debug($response);
+
+                $score = isset($response->mean_score) ? $response->mean_score : isset($response->total) ? $response->total : 0;
                 $studentRow['scores'][$subject->subject_id] = $score;
                 $studentRow['total'] += $score;
             }
