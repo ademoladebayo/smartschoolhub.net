@@ -57,7 +57,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="loadSideNav('result'); loadCustomSubjectClass(); loadCustomSessionTerm(); getAllClassForDropDown();  loadDashBoardInformation();">
+    onload="onload(); loadSideNav('result'); loadCustomSubjectClass(false); loadCustomSessionTerm(); getAllClassForDropDown();  loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -389,6 +389,9 @@
         }
     });
 
+    function onload() {
+        document.getElementById('page_action').value = 'RESULT_UPLOAD';
+    }
 
     function changePageAction(action) {
         if (action === 'GENERATE_BROADSHEET') {

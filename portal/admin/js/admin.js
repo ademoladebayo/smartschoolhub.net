@@ -402,7 +402,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Broadsheet / Result Upload</span></a>
     </li>
 
 
@@ -521,7 +521,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Upload Result</span></a>
+        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Broadsheet / Result Upload</span></a>
     </li>
 
 
@@ -2667,8 +2667,8 @@ function getBroadsheet() {
         // Remark
         const remarkCell = document.createElement('td');
         remarkCell.textContent = student.remark;
-        remarkCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${student.remark.includes("FAIL") ? "red" :
-          student.remark.includes("PASS") ? "blue" : "black"
+        remarkCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${student.grade.includes("F") ? "red" :
+          student.grade.includes("A") ? "blue" : "black"
           }`;
         row.appendChild(remarkCell);
 
@@ -7426,7 +7426,7 @@ function uploadBulkResult() {
 }
 
 // CUSTOM SUBJECT CLASS
-function loadCustomSubjectClass() {
+function loadCustomSubjectClass(getLessonNote = true) {
   fetch(ip + "/api/admin/all-subject", {
     method: "GET",
     headers: {
@@ -7452,7 +7452,10 @@ function loadCustomSubjectClass() {
         ).innerHTML += `<option value="${data[i].id}">${data[i].subject_name} (${data[i].class.class_name})</option>`;
       }
 
-      getLessonPlan("ALL");
+      if (getLessonNote) {
+        getLessonPlan("ALL");
+      }
+      
       subjects = document.getElementById("subject_class");
       localStorage.setItem(
         "lp_subject_class",
