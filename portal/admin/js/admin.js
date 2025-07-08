@@ -2560,15 +2560,15 @@ function getBroadsheet() {
 
   // SCHOOL LOGO URL
   const school_logo_url = domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
-  
+
   document.getElementById("school_logo").src = school_logo_url;
   document.getElementById("school_details").innerHTML =
     localStorage["SCHOOL_NAME"] + "<br>" + localStorage["SCHOOL_ADDRESS"];
 
   const params = {
-    class: "4",
-    term: 'THIRD TERM',
-    session: "2024/2025",
+    class: localStorage['broadsheet_class'],
+    term: localStorage['broadsheet_term'],
+    session: localStorage['broadsheet_session'],
   };
 
   fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
@@ -2603,6 +2603,7 @@ function getBroadsheet() {
       data.header.forEach(header => {
         const th = document.createElement('th');
         th.textContent = header;
+        th.style.cssText = 'text-align:center;';
         if (header !== 'STUDENT NAME' && header !== 'REMARK') {
           th.classList.add('vertical-header');
         }
@@ -7628,8 +7629,8 @@ async function sendTokenToServer(deviceToken, user_type, id) {
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
-  var modal = `< div class="modal fade" id = "authenticationModal" tabindex = "-1" role = "dialog"
-aria - labelledby="endModalTitle" aria - hidden="true" data - backdrop="static" data - keyboard="false" >
+  var modal = `<div class="modal fade" id = "authenticationModal" tabindex = "-1" role = "dialog"
+aria - labelledby="endModalTitle" aria - hidden="true" data - backdrop="static" data - keyboard="false">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -7725,9 +7726,7 @@ aria - labelledby="endModalTitle" aria - hidden="true" data - backdrop="static" 
   }
 
   parent.$("body").append(modal);
-  parent
-    .$("#authenticationModal")
-    .modal({ backdrop: "static", keyboard: false });
+  parent.$("#authenticationModal").modal({ backdrop: "static", keyboard: false });
   parent.$("#authenticationModal").modal("show");
 }
 
