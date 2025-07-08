@@ -32,6 +32,8 @@
     <meta name="theme-color" content="#051f3e">
     <!-- Select 2 CSS -->
     <link rel="stylesheet" href="./css/select2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;" onload="">
@@ -64,8 +66,7 @@
                             <div id="select_school" style="display: flex; justify-content: center;" class="row">
                                 <p style="color: #051f3e;text-align: center;"> <b>Please select your school</b></p>
                                 <br><br>
-                                <select onchange="getSchoolDetails(this.value)" id="schools" style="text-align: center;"
-                                    id="class_sector" class="select2">
+                                <select onchange="getSchoolDetails(this.value)" id="schools" style="text-align: center;" class="js-example-basic-single" style="width: 100%">
                                     <option value="">CLICK TO SELECT YOUR SCHOOL</option>
                                 </select>
                             </div>
@@ -171,6 +172,9 @@
 <!-- <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js"></script> -->
 
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+
 <style>
     .card {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -233,9 +237,31 @@
     .container::-webkit-scrollbar-thumb {
         background-color: #999;
     }
+
+
+    .select2-container--default .select2-selection--single {
+        height: 46px;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 44px;
+    }
+
+    
+</style>
 </style>
 
 <script>
+
+    $(document).ready(function () {
+        $('#schools').select2({
+            placeholder: "Search for your school ...",
+            allowClear: true
+        });
+    });
 
     // Request notification permission
     // if ('Notification' in window) {
