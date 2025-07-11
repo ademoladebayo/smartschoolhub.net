@@ -402,7 +402,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Broadsheet / Result Upload</span></a>
+        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Broadsheet / Result</span></a>
     </li>
 
 
@@ -521,7 +521,7 @@ function loadSideNav(page) {
     </li>
 
     <li class="nav-item">
-        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Broadsheet / Result Upload</span></a>
+        <a  onclick="goTo('upload-result.html')"  id="result" href="#" class="nav-link"><i class="fas fa-file-upload"></i></i><span>Broadsheet / Result</span></a>
     </li>
 
 
@@ -7535,6 +7535,22 @@ function print() {
       </style>`);
   a.document.write(divContents);
   a.document.write(`</body></html>`);
+  a.print();
+  a.document.close();
+}
+
+function print1(section) {
+  var divContents = document.getElementById(section).innerHTML;
+  var head = document.getElementById("common-library").innerHTML;
+  console.log(divContents);
+  var a = window.open("", "", "height=1000, width=1000");
+  a.document.write("<html>");
+  a.document.write(head);
+  a.document.write(`<body style="font-family: Poppins; font-weight: bold;">`);
+  a.document.write(divContents);
+  a.document.write(`
+  </body>
+  </html>`);
   a.print();
   a.document.close();
 }

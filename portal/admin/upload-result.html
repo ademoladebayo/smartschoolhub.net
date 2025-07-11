@@ -51,6 +51,10 @@
 
     <link href="../assets/css/lib/toastr/toastr.min.css" rel="stylesheet">
     <link href="../assets/css/lib/sweetalert/sweetalert.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../css/frame_style.css">
+
     <!-- Modernize js -->
     <script src="../js/modernizr-3.6.0.min.js"></script>
 
@@ -154,6 +158,8 @@
 
                 </div>
             </div>
+
+
             <!-- Sidebar Area End Here -->
             <div class="dashboard-content-one">
                 <br>
@@ -232,7 +238,9 @@
                     </div>
                 </div>
 
-                <div class="row">
+
+
+                <div id="upload_result_div" class="row">
                     <div class="card height-auto">
                         <div class="card-body">
                             <div class="heading-layout1" style="display: flex; justify-content: center;">
@@ -311,20 +319,64 @@
                     </div>
                 </div>
 
-                <footer class="footer-wrap-layout1">
-                    <!-- <div class="copyright">© Copyrights <a href="../#"><b>SMARTSCHOOLHUB.NET</b></a> 2025. All rights
+
+                <div hidden id="broadsheet_div" class="row">
+                    <div class="card height-auto">
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+                                <!-- <div style="float: right;" class="header-inline item-header">
+                                    <div class="header-elements">
+                                        <ul>
+                                            <li><a onclick="print1('iframe')" href="#"><i class="fas fa-print"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> -->
+
+                                <iframe id="iframe" src="./broadsheet.html" title="description" style="border:none;"
+                                    title="Iframe Example" scrolling="no"></iframe>
+                            </div>
+
+
+
+                            <div class="col-lg-2 col-12 form-group">
+                                <br>
+                                <button id="upload" onclick="viewToPrint()" class="fw-btn-fill btn-gradient-yellow"><i
+                                        class="fas fa-file-upload"></i>
+                                    VIEW TO PRINT</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+
+    <footer class="footer-wrap-layout1">
+        <!-- <div class="copyright">© Copyrights <a href="../#"><b>SMARTSCHOOLHUB.NET</b></a> 2025. All rights
                         reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div> -->
 
-                    <div class="copyright" style="display: flex; justify-content:center;">©Copyrights <a
-                            href="https://www.smartschoolhub.net"> <b>SMARTSCHOOLHUB.NET</b> </a> 2022. All rights
-                        reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
-                </footer>
-            </div>
-            <!-- Social Media End Here -->
-            <!-- Footer Area Start Here -->
+        <div class="copyright" style="display: flex; justify-content:center;">©Copyrights <a
+                href="https://www.smartschoolhub.net"> <b>SMARTSCHOOLHUB.NET</b> </a> 2025. All rights
+            reserved. Designed by <a href="../#"><b>Dextroux Technologies</b></a></div>
+    </footer>
+    </div>
+    <!-- Social Media End Here -->
+    <!-- Footer Area Start Here -->
 
-            <!-- Footer Area End Here -->
-        </div>
+    <!-- Footer Area End Here -->
+    </div>
     </div>
     <!-- Page Area End Here -->
     </div>
@@ -363,6 +415,9 @@
     <script src="./js/admin.js"></script>
     <script src="../common-library.js?v=1.0"></script>
 
+    <script src="../js/iframeSizer.min.js"></script>
+    <script src="../js/frame_script.js"></script>
+
     <script src="../assets/js/lib/toastr/toastr.min.js"></script>
     <script src="../assets/js/lib/toastr/toastr.init.js"></script>
     <script src="../assets/js/lib/sweetalert/sweetalert.min.js"></script>
@@ -398,11 +453,19 @@
             document.getElementById('action_title').innerHTML = "SELECT SUBJECT AND SESSION";
             document.getElementById('subject_class_div').hidden = true;
             document.getElementById('classes_div').hidden = false;
+
+            document.getElementById('broadsheet_div').hidden = false;
+            document.getElementById('upload_result_div').hidden = true;
+            document.getElementById('iframe').src = "./broadsheet.html";
+
             //console.log(action);
         } else if (action === 'RESULT_UPLOAD') {
             document.getElementById('action_title').innerHTML = "SELECT CLASS AND SESSION";
             document.getElementById('subject_class_div').hidden = false;
             document.getElementById('classes_div').hidden = true;
+
+            document.getElementById('broadsheet_div').hidden = true;
+            document.getElementById('upload_result_div').hidden = false;
             //console.log(action);
         }
 
@@ -425,10 +488,16 @@
 
             localStorage.setItem('broadsheet_class', document.getElementById("classes").value);
 
-            window.parent.location.assign(domain + "/admin/broadsheet.html");
+            //window.parent.location.assign(domain + "/admin/broadsheet.html");
         }
 
     }
+
+
+    function viewToPrint() {
+        window.parent.location.assign(domain + "/admin/broadsheet.html");
+    }
+
 
 
 </script>

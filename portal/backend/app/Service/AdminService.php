@@ -712,11 +712,12 @@ class AdminService
 
                 array_push($scores, $score);
                 $studentRow['sn'] = '-';
+                $studentRow['scoreTotal'] = $scoreTotal;
                 $studentRow['total'] = "$scoreTotal/$scoreOver";
                 $studentRow['scores'] = $scores;
 
                 $percentage = $scoreOver > 0 ? ($scoreTotal / $scoreOver) * 100 : 0;
-                $studentRow['percentage'] = number_format($percentage, 0);
+                $studentRow['percentage'] = floor($percentage);
             }
 
             $broadsheet[] = $studentRow;
@@ -727,7 +728,7 @@ class AdminService
 
         // 1. Sort the array by percentage (descending order)
         usort($broadsheet, function ($a, $b) {
-            return $b['percentage'] <=> $a['percentage'];
+            return $b['scoreTotal'] <=> $a['scoreTotal'];
         });
 
         // 2. Add position field
@@ -743,7 +744,7 @@ class AdminService
             $student['percentage'] = $percentage . "%";
 
             $gradeSettingsRepository = new GradeSettingsRepository();
-            $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark(round($percentage, 0));
+            $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark($percentage);
 
             $student['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
             $student['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';

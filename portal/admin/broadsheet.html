@@ -1,6 +1,6 @@
 <html lang="en">
 
-<head>
+<head id="common-library">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Scope+One&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&amp;display=swap">
     <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="../css/all.min.css">
+
     <!-- QR LIBRARY -->
     <script type="text/javascript" src="./js/adapter.min.js"></script>
 
@@ -24,14 +28,22 @@
     <script type="text/javascript" src="./js/instascan.min.js"></script>
 </head>
 
+<!-- <div style="float: right;" class="header-inline item-header">
+    <div class="header-elements">
+        <ul>
+            <li><a onclick="print1('broadsheet_print')" href="#"><i class="fas fa-print"></i></a>
+            </li>
+        </ul>
+    </div>
+</div> -->
+
+
+
 <body style="font-family: Poppins; font-weight: bold;" style="background: #ffffff;" onload="getBroadsheet()">
 
-
     <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
-    <section>
-        <div style="float: right;" class="header-inline item-header">
+    <section id="broadsheet_print">
 
-        </div>
 
         <div style="border: 2px solid black;margin: 0%;" class="result-page">
             <!-- SCHOOL LOGO-->
@@ -111,7 +123,7 @@
                                                 <thead>
                                                     <tr id="header">
 
-                                                       
+
 
 
                                                     </tr>
@@ -160,22 +172,12 @@
         </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         <div class="text-center" style="height: 5px;background: #ffffff;margin-bottom: 15px;">
             <div class="w-100" style="background: var(--bs-blue);margin-bottom: 5px;"></div>
         </div>
+
     </section>
+
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
