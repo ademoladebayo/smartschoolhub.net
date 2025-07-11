@@ -456,7 +456,7 @@
 
             document.getElementById('broadsheet_div').hidden = false;
             document.getElementById('upload_result_div').hidden = true;
-            document.getElementById('iframe').src = "./broadsheet.html";
+            reloadFrame('iframe');
 
             //console.log(action);
         } else if (action === 'RESULT_UPLOAD') {

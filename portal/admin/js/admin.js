@@ -625,6 +625,13 @@ function reloadEditFrame() {
   iframe.src = temp;
 }
 
+function reloadFrame(frame) {
+  var iframe = document.getElementById(frame);
+  temp = iframe.src;
+  iframe.src = "";
+  iframe.src = temp;
+}
+
 // TEACHER
 function getAllTeacherForClass() {
   fetch(ip + "/api/admin/all-teacher", {
