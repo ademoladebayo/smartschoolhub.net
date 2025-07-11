@@ -717,7 +717,7 @@ class AdminService
                 $studentRow['scores'] = $scores;
 
                 $percentage = $scoreOver > 0 ? ($scoreTotal / $scoreOver) * 100 : 0;
-                $studentRow['percentage'] = round($percentage, 2);
+                $studentRow['percentage'] = number_format($percentage, 2);
             }
 
             $broadsheet[] = $studentRow;

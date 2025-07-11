@@ -640,7 +640,7 @@ class StudentService
         $result_settings = Utils::getResultFormat($class_sector);
 
 
-        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'settings' => json_decode($result_settings), 'result' => $result, 'percentage' => round($percentage, 2) . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
+        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'settings' => json_decode($result_settings), 'result' => $result, 'percentage' => number_format($percentage, 2) . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
     }
 
     public function getCommentsAndPsycho(Request $request)
