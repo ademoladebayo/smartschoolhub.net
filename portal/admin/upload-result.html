@@ -240,7 +240,7 @@
 
 
 
-                <div id="upload_result_div" class="row">
+                <div hidden id="upload_result_div" class="row">
                     <div class="card height-auto">
                         <div class="card-body">
                             <div class="heading-layout1" style="display: flex; justify-content: center;">
@@ -334,7 +334,7 @@
                                     </div>
                                 </div> -->
 
-                                <iframe id="iframe" src="./broadsheet.html" title="description" style="border:none;"
+                                <iframe id="iframe" src="" title="description" style="border:none;"
                                     title="Iframe Example" scrolling="no"></iframe>
                             </div>
 
@@ -456,7 +456,7 @@
 
             document.getElementById('broadsheet_div').hidden = false;
             document.getElementById('upload_result_div').hidden = true;
-            reloadFrame('iframe');
+            reloadFrame('iframe', "./broadsheet.html");
 
             //console.log(action);
         } else if (action === 'RESULT_UPLOAD') {
@@ -476,12 +476,16 @@
     function processAction() {
         pageAction = document.getElementById('page_action').value;
         if (pageAction === 'RESULT_UPLOAD') {
+            document.getElementById('upload_result_div').hidden = false;
             getAllstudentForSubjectResultUpload();
         } else if (pageAction == 'GENERATE_BROADSHEET') {
             if (document.getElementById("session_term").value == '' || document.getElementById("classes").value == '') {
                 alert('Please select class and session !');
                 return 0;
             }
+
+            document.getElementById('broadsheet_div').hidden = false;
+
             localStorage.setItem('broadsheet_session', document.getElementById("session_term").value.split("-")[0]);
 
             localStorage.setItem('broadsheet_term', document.getElementById("session_term").value.split("-")[1]);
