@@ -2578,6 +2578,12 @@ function getBroadsheet() {
     session: localStorage['broadsheet_session'],
   };
 
+  if (!params.class || !params.term || !params.session) {
+    removeSpinnerModal();
+    document.getElementById('broadsheet').innerHTML = `<h3 class="text-center">Please select a class, term and session to generate broadsheet.</h3>`;
+    return;
+  }
+
   fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
     method: "GET",
     headers: {
@@ -7462,7 +7468,7 @@ function loadCustomSubjectClass(getLessonNote = true) {
       if (getLessonNote) {
         getLessonPlan("ALL");
       }
-      
+
       subjects = document.getElementById("subject_class");
       localStorage.setItem(
         "lp_subject_class",
