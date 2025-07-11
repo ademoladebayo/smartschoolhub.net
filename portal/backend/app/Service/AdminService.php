@@ -717,7 +717,7 @@ class AdminService
                 $studentRow['scores'] = $scores;
 
                 $percentage = $scoreOver > 0 ? ($scoreTotal / $scoreOver) * 100 : 0;
-                $studentRow['percentage'] = floor($percentage);
+                $studentRow['percentage'] = round($percentage, 2);
             }
 
             $broadsheet[] = $studentRow;
@@ -727,28 +727,31 @@ class AdminService
         # GET POSITION
 
         // 1. Sort the array by percentage (descending order)
-        usort($broadsheet, function ($a, $b) {
-            return $b['scoreTotal'] <=> $a['scoreTotal'];
-        });
+        if (count($subjects) > 0) {
+            usort($broadsheet, function ($a, $b) {
+                return $b['scoreTotal'] <=> $a['scoreTotal'];
+            });
 
-        // 2. Add position field
-        $position = 1;
-        foreach ($broadsheet as &$student) {
-            $percentage = $student['percentage'];
+            // 2. Add position field
+            $position = 1;
+            foreach ($broadsheet as &$student) {
+                $percentage = $student['percentage'];
 
-            $student['sn'] = $position . '.';
-            $student['position'] = $position++;
+                $student['sn'] = $position . '.';
+                $student['position'] = $position++;
 
-            // Optional: Convert position to ordinal (1st, 2nd, 3rd)
-            $student['position'] = $utils->getPosition($student['position']);
-            $student['percentage'] = $percentage . "%";
+                // Optional: Convert position to ordinal (1st, 2nd, 3rd)
+                $student['position'] = $utils->getPosition($student['position']);
+                $student['percentage'] = $percentage . "%";
 
-            $gradeSettingsRepository = new GradeSettingsRepository();
-            $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark($percentage);
+                $gradeSettingsRepository = new GradeSettingsRepository();
+                $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark($percentage);
 
-            $student['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
-            $student['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+                $student['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
+                $student['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+            }
         }
+
 
         return [
             'header' => array_merge(['S/NO', 'STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
