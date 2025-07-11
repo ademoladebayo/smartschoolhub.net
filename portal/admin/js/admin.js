@@ -625,11 +625,11 @@ function reloadEditFrame() {
   iframe.src = temp;
 }
 
-function reloadFrame(frame, new_page = null) {
+function reloadFrame(frame, new_page = '') {
   var iframe = document.getElementById(frame);
   temp = iframe.src;
   iframe.src = "";
-  iframe.src = new_page ? new_page : temp;
+  iframe.src = new_page != '' ? new_page : temp;
 }
 
 // TEACHER
