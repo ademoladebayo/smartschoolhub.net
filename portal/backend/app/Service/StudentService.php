@@ -518,7 +518,7 @@ class StudentService
             $sum_mean_score = 0;
             $sum_mean_count = 0;
             foreach ($scores as $score) {
-                $value = isset($score->mean_score) ? $score->mean_score : $score->total;
+                $value = isset($score->mean_score) ? floor($score->mean_score) : $score->total;
                 array_push($all_score, intval($value));
 
                 if ($request->term == "THIRD TERM") {
@@ -589,7 +589,7 @@ class StudentService
                 if ($term_count == 0) {
                     $data['mean_score'] = 0;
                 } else {
-                    $data['mean_score'] = round(($first_termm + $second_termm + $third_termm) / $term_count, 0);
+                    $data['mean_score'] = floor(($first_termm + $second_termm + $third_termm) / $term_count);
                 }
 
             }
@@ -639,8 +639,15 @@ class StudentService
         $class_sector = $result[0]->class->class_sector ?? 'N/A';
         $result_settings = Utils::getResultFormat($class_sector);
 
+        #GET CLASS POSITION
+        $class_position = StudentResultCommentModel::where([
+            'student_id' => $request->student_id,
+            'session' => $session,
+            'term' => $term
+        ])->first()->class_position ?? '-';
 
-        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'settings' => json_decode($result_settings), 'result' => $result, 'percentage' => number_format($percentage, 2) . '%', 'grade_position' => $grade_position, 'no_student' => $no_student]);
+
+        return response()->json(['success' => true, 'message' => 'Result fetch was successfull.', 'settings' => json_decode($result_settings), 'result' => $result, 'percentage' => number_format($percentage, 2) . '%', 'grade_position' => $grade_position, 'class_position' => $class_position, 'no_student' => $no_student]);
     }
 
     public function getCommentsAndPsycho(Request $request)

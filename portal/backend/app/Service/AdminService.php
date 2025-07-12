@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Model\ClassModel;
+use App\Model\StudentResultCommentModel;
 use App\Model\SubjectModel;
 use App\Model\StudentModel;
 use App\Model\AdminModel;
@@ -26,6 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AdminService
 {
@@ -745,10 +748,14 @@ class AdminService
                 $student['percentage'] = $percentage . "%";
 
                 $gradeSettingsRepository = new GradeSettingsRepository();
-                $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark($percentage);
+                $gradeAndRemark = $gradeSettingsRepository->getGradeAndRemark(floor($percentage));
 
                 $student['grade'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->grade : '--';
                 $student['remark'] = count($gradeAndRemark) != 0 ? $gradeAndRemark[0]->remark : '--';
+
+                # STORE POSITION IN STUDENT
+                self::updateStudentPosition($student['student_id'], $student['position'], $session, $term);
+
             }
         }
 
@@ -760,4 +767,29 @@ class AdminService
         ];
 
     }
+
+
+    public static function updateStudentPosition($student_id, $position, $session, $term)
+  {
+    // Check if column doesn't exist before adding it
+    if (!Schema::hasColumn('student_result_comment', 'class_position')) {
+        Schema::table('student_result_comment', function (Blueprint $table) {
+            $table->string('class_position')
+                ->after('principal_comment')
+                ->default('-');
+        });
+    }
+
+    // Update the record (works whether column just created or already existed)
+    StudentResultCommentModel::updateOrCreate(
+        [
+            'student_id' => $student_id,
+            'session' => $session,
+            'term' => $term
+        ],
+        [
+            'class_position' => $position
+        ]
+    );
+}
 }

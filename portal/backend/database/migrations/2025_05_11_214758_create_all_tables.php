@@ -531,7 +531,7 @@ class CreateAllTables extends Migration
         //         });
         // }
 
-        //if (!Schema::hasColumn('idempotency_keys', 'expires_at')) {
+        // if (!Schema::hasColumn('idempotency_keys', 'expires_at')) {
         //      Schema::table('idempotency_keys', function (Blueprint $table) {
         //         $table->timestamp('expires_at')->after('key')->nullable();
         //     });
@@ -618,16 +618,19 @@ class CreateAllTables extends Migration
         // }
 
 
-        # SETTINGS TABLE
-        if (!Schema::hasTable('settings')) {
-            Schema::create('settings', function (Blueprint $table) {
-                $table->id();
-                $table->string('key', 255)->unique();
-                $table->text('value')->nullable();
-                $table->timestamps();
-                $table->softDeletes();
-            });
-        }
+        // # SETTINGS TABLE
+        // if (!Schema::hasTable('settings')) {
+        //     Schema::create('settings', function (Blueprint $table) {
+        //         $table->id();
+        //         $table->string('key', 255)->unique();
+        //         $table->text('value')->nullable();
+        //         $table->timestamps();
+        //         $table->softDeletes();
+        //     });
+        // }
+
+
+
     }
 
 
