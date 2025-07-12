@@ -642,8 +642,8 @@ class StudentService
         #GET CLASS POSITION
         $class_position = StudentResultCommentModel::where([
             'student_id' => $request->student_id,
-            'session' => $session,
-            'term' => $term
+            'session' => $request->session,
+            'term' => $request->term
         ])->first()->class_position ?? '-';
 
 
