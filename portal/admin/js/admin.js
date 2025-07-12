@@ -2318,7 +2318,7 @@ function getResult(value) {
             ).innerHTML = data.no_student;
 
             document.getElementById(
-              "class_position" + value.split("_")[1] + "_" + value.split("_")[2]
+              "class_position_" + value.split("_")[1] + "_" + value.split("_")[2]
             ).innerHTML = data.class_position;
 
             document.getElementById(

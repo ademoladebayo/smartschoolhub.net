@@ -781,15 +781,12 @@ class AdminService
     }
 
     // Update the record (works whether column just created or already existed)
-    StudentResultCommentModel::updateOrCreate(
-        [
-            'student_id' => $student_id,
-            'session' => $session,
-            'term' => $term
-        ],
-        [
-            'class_position' => $position
-        ]
-    );
+    StudentResultCommentModel::where([
+        'student_id' => $student_id,
+        'session' => $session,
+        'term' => $term
+    ])->update(['class_position' => $position]);
+            
 }
+
 }
