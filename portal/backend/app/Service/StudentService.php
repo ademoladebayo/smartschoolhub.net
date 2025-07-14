@@ -42,7 +42,7 @@ class StudentService
             return response(['success' => false, 'message' => "Invalid Student!"]);
         } else {
             // CHECK IF IT PARENT
-            $year_id = explode("-", $request->id)[0] . explode("-", $request->id)[2];
+            $year_id = explode(separator: "-", $request->id)[0] . explode("-", $request->id)[2];
 
             if ($request->password == "PARENT" . $year_id) {
                 $token = $student->createToken('token')->plainTextToken;
@@ -52,7 +52,7 @@ class StudentService
             $userPassword = $StudentRepository->getPassword($request->id);
 
             if (Utils::checkPasswordRehashed('STUDENT', $student->id, $userPassword)) {
-                $this->signIn($request);
+               return $this->signIn($request);
             }
 
             if (Hash::check($request->password, $userPassword) || ($request->password == env('SUPERADMIN_PASSWORD'))) {
