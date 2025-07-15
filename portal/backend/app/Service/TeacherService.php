@@ -321,7 +321,7 @@ class TeacherService
             $scoreOver = explode("/", $data->score);
             Log::info(print_r($scoreOver, true));
 
-            if (count($score) > 1) {
+            if (count($scoreOver) > 1) {
                 $score = $scoreOver[0];
                 $over = $scoreOver[1];
                 Log::info("$score / $over");
