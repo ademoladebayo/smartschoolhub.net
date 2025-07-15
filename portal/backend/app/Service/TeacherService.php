@@ -318,12 +318,12 @@ class TeacherService
             // GET EACH DATA AND UPDATE THE STUDENT RESULT
 
             // GRADE OVER
-            $score = explode("/", $data->score);
+            $scoreOver = explode("/", $data->score);
             Log::info(print_r($score, true));
-            
+
             if (count($score) > 1) {
-                $score = $score[0];
-                $over = $score[1];
+                $score = $scoreOver[0];
+                $over = $scoreOver[1];
                 Log::info("$score / $over");
 
                 $score = floor(($score / $over) * $grade_over);

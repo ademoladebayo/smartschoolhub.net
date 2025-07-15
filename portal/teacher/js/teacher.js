@@ -3054,6 +3054,8 @@ function useCBTResultFor() {
     return
   }
 
+  openSpinnerModal('Upload result as ' + useResultFor.toUpperCase())
+
 
   // PUSH TO API
   fetch(
@@ -3080,14 +3082,17 @@ function useCBTResultFor() {
       console.log(res.status);
       if (res.status == 401) {
         openAuthenticationModal();
+        removeSpinnerModal();
       }
       return res.json();
     })
 
     .then((data) => {
+      removeSpinnerModal();
       alert(data.message);
     })
     .catch((err) => console.log(err));
+  removeSpinnerModal();
 }
 
 
