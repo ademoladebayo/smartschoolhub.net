@@ -2990,7 +2990,7 @@ function getResultForCBT() {
 
       header = data.result_settings;
       for (key in header) {
-        if (header[key] !== 'sn' || header[key] !== 'fullname' || header[key].status !== 'active') {
+        if (header[key] == 'sn' || header[key] == 'fullname' || header[key].status == 'active') {
           continue;
         }
 
@@ -3010,9 +3010,9 @@ function getResultForCBT() {
           document.getElementById("cbt_result").innerHTML += `
         <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
               <td>${c}.</td>
-              <td>${data[i].student.first_name + " " + data[i].student.last_name
+              <td>${data.result[i].student.first_name + " " + data.result[i].student.last_name
             }</td>
-              <td>${data[i].score}</td>
+              <td>${data.result[i].score}</td>
         </tr>
         `;
           c = c + 1;

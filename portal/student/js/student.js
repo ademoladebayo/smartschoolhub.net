@@ -3,7 +3,7 @@
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 const timestamp = new Date().getTime();
-hasInternet = false;
+hasInternet = true;
 
 
 var ip = localStorage["ip"];
@@ -954,7 +954,10 @@ function submitCBT(timeup) {
         $("#resultModal").modal("show");
         document.getElementById("result").innerHTML = data.result;
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        alert("Check that you are connected to the internet and try again ... DO NOT REFRESH");
+        console.log(err)
+      });
   } else {
     if (confirm("ARE YOU SURE YOU WANT TO SUBMIT NOW ?")) {
       clearInterval(timeInterval);
@@ -993,7 +996,11 @@ function submitCBT(timeup) {
           $("#resultModal").modal("show");
           document.getElementById("result").innerHTML = data.result;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          alert("Check that you are connected to the internet and try again ... DO NOT REFRESH");
+          console.log(err)
+
+        });
     }
   }
 }
