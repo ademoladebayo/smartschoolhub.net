@@ -81,7 +81,7 @@ class Utils
         $minutesDifference = $interval->days * 24 * 60 + $interval->h * 60 + $interval->i;
         //log::alert("TOKEN IS " . $minutesDifference . "MINUTES OLD");
 
-        if ($minutesDifference > 60) {
+        if ($minutesDifference > 120) {
             return true;
         }
     }
