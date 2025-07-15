@@ -303,7 +303,7 @@ class TeacherService
 
         $gradeOver = explode(",", $cbt->cbt_questions_number);
 
-        return ['result' => $result, 'result_settings' => json_encode($result_settings), 'grade_over' => count($gradeOver)];
+        return ['result' => $result, 'result_settings' => json_decode($result_settings), 'grade_over' => count($gradeOver)];
     }
 
     public function useCBTResultFor($cbt_id, $use_result_for, $grade_over, $subject_id)

@@ -45,6 +45,13 @@ class ActivityLog
         // REQUEST
         $token = $request->header("Authorization");
         $school = $request->header("school");
+
+
+        if ($school == 'undefined') {
+            return response()->json(['success' => false, 'message' => 'Please logout and make sure your school is selected.']);
+        }
+
+
         config(['database.default' => $school]);
 
         $request_data = $request->input();
@@ -76,7 +83,7 @@ class ActivityLog
         $utils->logUserActivity($token, $activityLog);
 
         //  dispatch(function () use ($response_status) {
-            $this->doTasksBeforeResponse();
+        $this->doTasksBeforeResponse();
         //  });
     }
 
@@ -90,9 +97,9 @@ class ActivityLog
 
 
         if ($last_cron_check && $last_cron_check->diffInMinutes(now()) > 1) {
-              Artisan::call('schedule:run');
-              Cache::forever('cron_check', now());
-              Utils::runSeeder();
+            Artisan::call('schedule:run');
+            Cache::forever('cron_check', now());
+            Utils::runSeeder();
         }
     }
 }

@@ -30,6 +30,11 @@ class PreventDuplicateRequest
         //return $next($request);
 
         $school = $request->header("school");
+
+        if ($school == 'undefined') {
+            return response()->json(['success' => false, 'message' => 'Please logout and make sure your school is selected.']);
+        }
+
         config(['database.default' => $school]);
 
         $user = true; //$request->user();
