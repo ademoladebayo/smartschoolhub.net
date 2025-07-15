@@ -2989,7 +2989,7 @@ function getResultForCBT() {
 
 
       header = data.result_settings;
-      for (key in header) {
+      for (key in Object.keys(header)) {
         if (header[key] == 'sn' || header[key] == 'fullname' || header[key].status == 'active') {
           continue;
         }

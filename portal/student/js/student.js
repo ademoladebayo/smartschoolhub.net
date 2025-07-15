@@ -956,6 +956,7 @@ function submitCBT(timeup) {
       })
       .catch((err) => {
         alert("Check that you are connected to the internet and try again ... DO NOT REFRESH");
+        document.getElementById("submitCBT").innerHTML = `Click to submit`;
         console.log(err)
       });
   } else {
@@ -998,6 +999,7 @@ function submitCBT(timeup) {
         })
         .catch((err) => {
           alert("Check that you are connected to the internet and try again ... DO NOT REFRESH");
+          document.getElementById("submitCBT").innerHTML = `Click to submit`;
           console.log(err)
 
         });
