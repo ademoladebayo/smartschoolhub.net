@@ -13,7 +13,7 @@ class SwitchDatabaseConnection
 
 
         if ($school_name == 'undefined') {
-            return ['success' => false, 'message' => 'Please logout and make sure your school is selected.'];
+            return response()->json(['success' => false, 'message' => 'Please logout and make sure your school is selected.']);
         }
 
         // Log::debug("ksskksjsjsjjssj".$school_name);

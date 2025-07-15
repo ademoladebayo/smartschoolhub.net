@@ -111,10 +111,10 @@ class TeacherService
         foreach (StudentModel::select('id')->where('profile_status', 'ENABLED')->where('class', $request->class)->get() as $data) {
             array_push($students_id, $data->id);
         }
-        Log::debug("STUDENTS ID : ");
-        Log::debug($students_id);
-        Log::debug("                              ");
-        Log::debug("                              ");
+        // Log::debug("STUDENTS ID : ");
+        // Log::debug($students_id);
+        // Log::debug("                              ");
+        // Log::debug("                              ");
 
         // LOOP THROUGH EACH STUDENT
         for ($i = 0; $i < count($students_id); $i++) {
@@ -218,8 +218,9 @@ class TeacherService
         return SubjectModel::where("teacher", $request->teacher_id)->with('class')->get();
     }
 
-    // CBT
 
+
+    // CBT
     public function createCBT(Request $request)
     {
         $CBTModel = new CBTModel();
@@ -302,7 +303,7 @@ class TeacherService
 
         $gradeOver = explode(",", $cbt->cbt_questions_number);
 
-        return ['result' => $result, 'result_settings' => $result_settings, 'grade_over' => count($gradeOver)];
+        return ['result' => $result, 'result_settings' => json_encode($result_settings), 'grade_over' => count($gradeOver)];
     }
 
     public function useCBTResultFor($cbt_id, $use_result_for, $grade_over, $subject_id)

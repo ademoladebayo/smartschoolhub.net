@@ -3010,9 +3010,9 @@ function getResultForCBT() {
           document.getElementById("cbt_result").innerHTML += `
         <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
               <td>${c}.</td>
-              <td>${data[i].student.first_name + " " + data[i].student.last_name
+              <td>${data[i].result.student.first_name + " " + data[i].result.student.last_name
             }</td>
-              <td>${data[i].score}</td>
+              <td>${data[i].result.score}</td>
         </tr>
         `;
           c = c + 1;
