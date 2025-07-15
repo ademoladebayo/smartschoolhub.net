@@ -2989,19 +2989,23 @@ function getResultForCBT() {
 
 
       header = data.result_settings;
-      for (key in Object.keys(header)) {
-        console.log("TESTING" + key);
-        if (header[key] == 'sn' || header[key] == 'fullname' || header[key].status == 'active') {
-          continue;
+      Object.keys(header).forEach(key => {
+        console.log("TESTING " + key);
+
+        // Check if the value matches 'sn' or 'fullname' or has status 'active'
+        if (header[key] === 'sn' || header[key] === 'fullname' ||
+          (header[key] && header[key].status === 'active')) {
+          return; // equivalent to continue in forEach
         }
 
-        if (header[key] == 'total') {
-          break;
+        if (header[key] === 'total') {
+          return false; // equivalent to break in forEach
         }
 
-        document.getElementById("use_result_for").innerHTML += `<option value="${header[key]}">${header[key].header}</option>`;
-
-      }
+        // Add option to select element
+        document.getElementById("use_result_for").innerHTML +=
+          `<option value="${key}">${header[key].header || header[key]}</option>`;
+      });
 
 
       c = 1;
