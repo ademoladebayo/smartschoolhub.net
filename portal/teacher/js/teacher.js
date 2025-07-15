@@ -2997,15 +2997,15 @@ function getResultForCBT() {
 
       for (const key of Object.keys(header)) {
         // Check if the value matches 'sn' or 'fullname' or has status 'active'
-        if (header[key] == 'sn' || header[key] == 'fullname') {
+        if (key == 'sn' || key == 'fullname') {
           continue; // equivalent to continue in forEach
         }
 
-        if (header[key] == 'total') {
+        if (key == 'total') {
           break; // equivalent to break in forEach
         }
 
-        if ((header[key] && header[key].status != 'active')) {
+        if ((key && header[key].status != 'active')) {
           continue; // equivalent to continue in forEach
         }
 

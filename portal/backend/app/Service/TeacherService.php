@@ -319,9 +319,12 @@ class TeacherService
 
             // GRADE OVER
             $score = explode("/", $data->score);
-            if (count($score) > 0) {
+            Log::info(print_r($score, true));
+            
+            if (count($score) > 1) {
                 $score = $score[0];
                 $over = $score[1];
+                Log::info("$score / $over");
 
                 $score = floor(($score / $over) * $grade_over);
             } else {
