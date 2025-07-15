@@ -319,7 +319,7 @@ class TeacherService
 
             // GRADE OVER
             $scoreOver = explode("/", $data->score);
-            Log::info(print_r($score, true));
+            Log::info(print_r($scoreOver, true));
 
             if (count($score) > 1) {
                 $score = $scoreOver[0];

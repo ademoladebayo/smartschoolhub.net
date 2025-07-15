@@ -2962,6 +2962,10 @@ function getResultForCBT() {
     localStorage["cbt_subject_name"] +
     " " +
     localStorage["cbt_subject_class"];
+
+  openSpinnerModal('FETCH CBT RESULT');
+
+
   // PUSH TO API
   fetch(ip + "/api/teacher/cbt-result/" + localStorage["cbt_result_cbt_id"], {
     method: "GET",
@@ -2981,37 +2985,26 @@ function getResultForCBT() {
     })
 
     .then((data) => {
-
+      removeSpinnerModal();
 
       // USE RESULT FOR
       document.getElementById("use_result_for").innerHTML = ``;
       document.getElementById("grade_over").value = data.grade_over;
 
-
       header = data.result_settings;
-      // Object.keys(header).forEach(key => {
-
-
-
-      // });
-
       for (const key of Object.keys(header)) {
-        // Check if the value matches 'sn' or 'fullname' or has status 'active'
         if (key == 'sn' || key == 'fullname') {
-          continue; // equivalent to continue in forEach
+          continue;
         }
 
         if (key == 'total') {
-          break; // equivalent to break in forEach
+          break;
         }
 
         if ((key && header[key].status != 'active')) {
-          continue; // equivalent to continue in forEach
+          continue;
         }
 
-        console.log("TESTING " + key);
-
-        // Add option to select element
         document.getElementById("use_result_for").innerHTML +=
           `<option value="${key}">${header[key].header || header[key]}</option>`;
       }
@@ -3036,6 +3029,7 @@ function getResultForCBT() {
       }
     })
     .catch((err) => console.log(err));
+    removeSpinnerModal();
 }
 
 function useCBTResultFor() {
