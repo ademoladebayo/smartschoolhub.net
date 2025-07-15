@@ -2,8 +2,8 @@
 <html class="no-js" lang="">
 
 
-<head> 
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>SSHUB | CBT Result</title>
@@ -41,14 +41,15 @@
     <link rel="stylesheet" href="../../style.css">
     <!-- Select 2 CSS -->
     <link rel="stylesheet" href="../../css/select2.min.css">
-   
+
     <!-- Data Table CSS -->
     <link rel="stylesheet" href="../../css/jquery.dataTables.min.css">
     <!-- Modernize js -->
     <script src="../../js/modernizr-3.6.0.min.js"></script>
 </head>
 
-<body style="font-family: Poppins; font-weight: bold;"  onload="loadSideNav('cbt'); getResultForCBT();loadDashBoardInformation()">
+<body style="font-family: Poppins; font-weight: bold;"
+    onload="loadSideNav('cbt'); getResultForCBT();loadDashBoardInformation()">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -129,7 +130,8 @@
         <!-- Page Area Start Here -->
         <div class="dashboard-page-one">
             <!-- Sidebar Area Start Here -->
-            <div  style="font-family: Poppins; font-weight: bold;" class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
+            <div style="font-family: Poppins; font-weight: bold;"
+                class="sidebar-main sidebar-menu-one sidebar-expand-md sidebar-color">
 
 
                 <div class="mobile-sidebar-header d-md-none">
@@ -161,28 +163,35 @@
                         <div class="card-body">
                             <div class="heading-layout1">
                                 <div class="item-title">
-                                    <h id="result_title" style="font-weight: bold;font-family: Poppins, serif;">RESULT FOR
-                                    </h3>
+                                    <h id="result_title" style="font-weight: bold;font-family: Poppins, serif;">RESULT
+                                        FOR
+                                        </h3>
                                 </div>
 
                             </div>
                             <div class="row gutters-8 ">
                                 <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
-                                    <label style="color: black;">USE RESULT FOR?</label>
+                                    <label style="color: black;">USE RESULT FOR AND GRADE OVER ?</label>
                                 </div>
 
-                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-6 form-group">
                                     <select id="use_result_for" class="select2">
-                                        <option value="">PLEASE SELECT *</option>
+                                        <!-- <option value="">PLEASE SELECT *</option>
                                         <option value="first_ca">1<sup>st</sup> CA</option>
                                         <option value="second_ca">2<sup>nd</sup> CA</option>
-                                        <option value="examination">Examination</option>
+                                        <option value="examination">Examination</option> -->
                                     </select>
+                                </div>
+
+                                <div class="col-3-xxxl col-xl-3 col-lg-3 col-6 form-group">
+                                    <input type="text" id="grade_over" class="form-control"
+                                        placeholder="Grade Over"/>
                                 </div>
                                 <br />
 
                                 <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
-                                    <button onclick="useCBTResultFor()" type="submit" class="fw-btn-fill btn-gradient-yellow">PROCEED</button>
+                                    <button onclick="useCBTResultFor()" type="submit"
+                                        class="fw-btn-fill btn-gradient-yellow">PROCEED</button>
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -203,7 +212,7 @@
 
 
 
-                                        
+
 
                                     </tbody>
                                 </table>

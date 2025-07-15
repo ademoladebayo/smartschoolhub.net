@@ -264,7 +264,15 @@ class TeacherService
 
     public function allCBT(Request $request)
     {
-        return CBTModel::where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('class', 'subject')->get();
+        $cbt = CBTModel::where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->with('class', 'subject')->get();
+
+        if ($request->user_type == 'STUDENT') {
+            foreach ($cbt as $c) {
+                unset($c->cbt_answer);
+            }
+        }
+
+        return $cbt;
     }
 
     public function deleteCBT($cbt_id)
@@ -285,10 +293,19 @@ class TeacherService
 
     public function getCBTResult($cbt_id)
     {
-        return CBTResultModel::where("cbt_id", $cbt_id)->with("student")->get();
+        $result = CBTResultModel::where("cbt_id", $cbt_id)->with("student")->get();
+
+        // GET RESULT FORMAT
+        $cbt = CBTModel::with('class')->find($cbt_id);
+        $class_sector = $cbt->class->class_sector ?? 'N/A';
+        $result_settings = Utils::getResultFormat($class_sector);
+
+        $gradeOver = explode(",", $cbt->cbt_questions_number);
+
+        return ['result' => $result, 'result_settings' => $result_settings, 'grade_over' => count($gradeOver)];
     }
 
-    public function useCBTResultFor($cbt_id, $use_result_for, $subject_id)
+    public function useCBTResultFor($cbt_id, $use_result_for, $grade_over, $subject_id)
     {
         // GET CURRENT SESSION AND TERM
         $session = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
@@ -298,7 +315,19 @@ class TeacherService
         $cbt_result = CBTResultModel::select('student_id', 'score', )->where('cbt_id', $cbt_id)->get();
         foreach ($cbt_result as $data) {
             // GET EACH DATA AND UPDATE THE STUDENT RESULT
-            SubjectRegistrationModel::where('student_id', $data->student_id)->where('subject_id', $subject_id)->where('session', $session)->where('term', $term)->update(array($use_result_for => $data->score));
+
+            // GRADE OVER
+            $score = explode("/", $data->score);
+            if (count($score) > 0) {
+                $score = $score[0];
+                $over = $score[1];
+
+                $score = floor(($score / $over) * $grade_over);
+            } else {
+                $score = $data->score;
+            }
+
+            SubjectRegistrationModel::where('student_id', $data->student_id)->where('subject_id', $subject_id)->where('session', $session)->where('term', $term)->update(array($use_result_for => $score));
         }
 
         return response()->json(['success' => true, 'message' => 'Process was successful']);
@@ -330,7 +359,7 @@ class TeacherService
         $max = SubjectRegistrationModel::select(DB::raw('max(total) as max'))->where("subject_id", $request->subject_id)->where("session", $request->session)->where("term", $request->term)->get()[0]->max;
 
         // GET RESULT FORMAT
-        $class_sector = $result[0]->class->class_sector ?? 'N/A'; 
+        $class_sector = $result[0]->class->class_sector ?? 'N/A';
         $result_settings = Utils::getResultFormat($class_sector);
 
         return response()->json(['settings' => json_decode($result_settings), 'result' => $result, 'avg' => $avg, 'min' => $min, 'max' => $max]);

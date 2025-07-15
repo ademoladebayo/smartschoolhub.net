@@ -2116,6 +2116,7 @@ function getCBTForSubject() {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
+      user_type: "TEACHER",
       subject_id: localStorage["cbt_subject_id"],
       session: localStorage["current_session"],
       term: localStorage["current_term"],
@@ -2980,10 +2981,32 @@ function getResultForCBT() {
     })
 
     .then((data) => {
+
+
+      // USE RESULT FOR
+      document.getElementById("use_result_for").innerHTML = ``;
+      document.getElementById("grade_over").value = data.grade_over;
+
+
+      header = data.result_settings;
+      for (key in header) {
+        if (header[key] !== 'sn' || header[key] !== 'fullname' || header[key].status !== 'active') {
+          continue;
+        }
+
+        if (header[key] == 'total') {
+          break;
+        }
+
+        document.getElementById("use_result_for").innerHTML += `<option value="${header[key]}">${header[key].header}</option>`;
+
+      }
+
+
       c = 1;
       document.getElementById("cbt_result").innerHTML = ``;
-      if (data.length > 0) {
-        for (i in data) {
+      if (data.result.length > 0) {
+        for (i in data.result) {
           document.getElementById("cbt_result").innerHTML += `
         <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
               <td>${c}.</td>
@@ -3002,13 +3025,31 @@ function getResultForCBT() {
 }
 
 function useCBTResultFor() {
+
+  // CHECK IF USE RESULT FOR IS SELECTED
+  useResultFor = document.getElementById("use_result_for").value;
+  gradeOver = document.getElementById("grade_over").value;
+
+  if (useResultFor == "" || gradeOver == "") {
+    alert("Please check that the 'use result for' and 'grade over' is not empty.");
+    return;
+  }
+
+
+  if (!confirm("Are you sure you want to use this result for (" + document.getElementById("use_result_for").innerHTML + ") and grade it over (" + gradeOver + ") for all student that took it ?")) {
+    return
+  }
+
+
   // PUSH TO API
   fetch(
     ip +
     "/api/teacher/use-cbt-result/" +
     localStorage["cbt_result_cbt_id"] +
     "/" +
-    document.getElementById("use_result_for").value +
+    useResultFor +
+    "/" +
+    gradeOver +
     "/" +
     localStorage["cbt_subject_id"],
     {
@@ -3034,6 +3075,8 @@ function useCBTResultFor() {
     })
     .catch((err) => console.log(err));
 }
+
+
 
 // RESULT UPLOADS
 function getAssignedSubjectForResultUpload() {

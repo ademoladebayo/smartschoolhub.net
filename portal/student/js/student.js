@@ -651,6 +651,7 @@ function getCBTForSubject() {
       Authorization: "Bearer " + localStorage["token"],
     },
     body: JSON.stringify({
+      user_type: "STUDENT",
       subject_id: localStorage["cbt_subject_id"],
       session: localStorage["current_session"],
       term: localStorage["current_term"],
@@ -914,6 +915,11 @@ function saveAnswer(text) {
 }
 
 function submitCBT(timeup) {
+  if (!navigator.onLine) {
+    errortoast("No internet connection available !");
+    return 0;
+  }
+
   if (timeup) {
     // SUBMIT CBT
     fetch(ip + "/api/student/submit-cbt", {

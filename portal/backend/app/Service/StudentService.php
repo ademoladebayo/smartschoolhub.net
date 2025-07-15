@@ -213,14 +213,17 @@ class StudentService
             return response(['result' => "You have already submitted !"]);
         }
 
+        $score = $this->markCBTAndGetScore($request->cbt_id, $request->student_answer);
+        $totalQuestion = count($request->student_answer);
+
         $CBTResult = new CBTResultModel();
         $CBTResult->cbt_id = $request->cbt_id;
         $CBTResult->student_id = $request->student_id;
-        $CBTResult->score = $this->markCBTAndGetScore($request->cbt_id, $request->student_answer);
+        $CBTResult->score = $score . '/' . $totalQuestion;
         $CBTResult->answer = implode(",", $request->student_answer);
         $CBTResult->save();
 
-        return response(['result' => "You scored " . $CBTResult->score . " out of " . count($request->student_answer)]);
+        return response(['result' => "You scored " . $score . " out of " . $totalQuestion]);
     }
     public function markCBTAndGetScore($cbt_id, $student_answer)
     {
