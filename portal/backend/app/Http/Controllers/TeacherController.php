@@ -76,10 +76,10 @@ class TeacherController extends Controller
     }
 
 
-    public function useCBTResultFor($cbt_id, $use_result_for, $subject_id)
+    public function useCBTResultFor($cbt_id, $use_result_for, $grade_over, $subject_id)
     {
         $TeacherService = new TeacherService();
-        return $TeacherService->useCBTResultFor($cbt_id, $use_result_for, $subject_id);
+        return $TeacherService->useCBTResultFor($cbt_id, $use_result_for, $grade_over, $subject_id);
     }
 
 
@@ -175,37 +175,37 @@ class TeacherController extends Controller
         return $TeacherService->deleteSubjectMaterial($request);
     }
 
-     // ASSIGNMENT SUBMISSION
-     public function postSubmission(Request $request)
-     {
-         $TeacherService = new TeacherService();
-         return $TeacherService->postSubmission($request);
-     }
- 
-     public function editSubmission(Request $request)
-     {
-         $TeacherService = new TeacherService();
-         return $TeacherService->editSubmission($request);
-     }
- 
-     public function getSubmission($assignment_id)
-     {
-         $TeacherService = new TeacherService();
-         return $TeacherService->getSubmission($assignment_id);
-     }
+    // ASSIGNMENT SUBMISSION
+    public function postSubmission(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->postSubmission($request);
+    }
+
+    public function editSubmission(Request $request)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->editSubmission($request);
+    }
+
+    public function getSubmission($assignment_id)
+    {
+        $TeacherService = new TeacherService();
+        return $TeacherService->getSubmission($assignment_id);
+    }
 
     // LIVE CLASS
     public function scheduleLiveClass(Request $request)
     {
         $TeacherService = new TeacherService();
         return $TeacherService->scheduleLiveClass($request);
-    } 
+    }
 
     public function editScheduledLiveClass(Request $request)
     {
         $TeacherService = new TeacherService();
         return $TeacherService->editScheduledLiveClass($request);
-    } 
+    }
 
     public function getLiveClass($subject_id)
     {

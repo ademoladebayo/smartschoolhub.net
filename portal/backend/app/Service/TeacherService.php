@@ -313,7 +313,7 @@ class TeacherService
         $term = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->term;
 
 
-        $cbt_result = CBTResultModel::select('student_id', 'score', )->where('cbt_id', $cbt_id)->get();
+        $cbt_result = CBTResultModel::select('student_id', 'score')->where('cbt_id', $cbt_id)->get();
         foreach ($cbt_result as $data) {
             // GET EACH DATA AND UPDATE THE STUDENT RESULT
 

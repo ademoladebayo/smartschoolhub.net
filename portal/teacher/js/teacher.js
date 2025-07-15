@@ -2990,11 +2990,10 @@ function getResultForCBT() {
 
       header = data.result_settings;
       Object.keys(header).forEach(key => {
-       
+
 
         // Check if the value matches 'sn' or 'fullname' or has status 'active'
-        if (header[key] === 'sn' || header[key] === 'fullname' ||
-          (header[key] && header[key].status !== 'active')) {
+        if (header[key] === 'sn' || header[key] === 'fullname') {
           return; // equivalent to continue in forEach
         }
 
@@ -3002,7 +3001,11 @@ function getResultForCBT() {
           return false; // equivalent to break in forEach
         }
 
-         console.log("TESTING " + key);
+        if ((header[key] && header[key].status !== 'active')) {
+          return; // equivalent to continue in forEach
+        }
+
+        console.log("TESTING " + key);
 
         // Add option to select element
         document.getElementById("use_result_for").innerHTML +=
@@ -3043,7 +3046,7 @@ function useCBTResultFor() {
   }
 
 
-  if (!confirm("Are you sure you want to use this result for (" + document.getElementById("use_result_for").innerHTML + ") and grade it over (" + gradeOver + ") for all student that took it ?")) {
+  if (!confirm("Are you sure you want to use this result for (" + toUpperCase(useCBTResultFor) + ") and grade it over (" + gradeOver + ") for all student that took it ?")) {
     return
   }
 
