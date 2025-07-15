@@ -2998,15 +2998,15 @@ function getResultForCBT() {
       for (const key of Object.keys(header)) {
         // Check if the value matches 'sn' or 'fullname' or has status 'active'
         if (header[key] == 'sn' || header[key] == 'fullname') {
-          return; // equivalent to continue in forEach
+          continue; // equivalent to continue in forEach
         }
 
         if (header[key] == 'total') {
-          return false; // equivalent to break in forEach
+          break; // equivalent to break in forEach
         }
 
         if ((header[key] && header[key].status != 'active')) {
-          return; // equivalent to continue in forEach
+          continue; // equivalent to continue in forEach
         }
 
         console.log("TESTING " + key);
@@ -3050,7 +3050,7 @@ function useCBTResultFor() {
   }
 
 
-  if (!confirm("Are you sure you want to use this result for (" + useCBTResultFor.toUpperCase() + ") and grade it over (" + gradeOver + ") for all student that took it ?")) {
+  if (!confirm("Are you sure you want to use this result for (" + useResultFor.toUpperCase() + ") and grade it over (" + gradeOver + ") for all student that took it ?")) {
     return
   }
 
