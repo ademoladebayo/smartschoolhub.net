@@ -13,7 +13,7 @@ class OptionalFeeRequestModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'optional_fee_request';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
     public function student()
     {

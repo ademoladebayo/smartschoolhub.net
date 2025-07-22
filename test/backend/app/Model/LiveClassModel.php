@@ -13,5 +13,5 @@ class LiveClassModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'live_class';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 }

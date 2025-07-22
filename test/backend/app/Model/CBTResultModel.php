@@ -11,7 +11,7 @@ class CBTResultModel extends Model
  // use SoftDeletes;
     protected $table = 'cbt_result';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
     public function student()
     {

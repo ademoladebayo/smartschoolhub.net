@@ -11,7 +11,7 @@ class CBTModel extends Model
  // use SoftDeletes;
     protected $table = 'cbt';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
     public function subject()
     {

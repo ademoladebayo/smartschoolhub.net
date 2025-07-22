@@ -11,7 +11,7 @@ class UserProfileModel extends Model
  // use SoftDeletes;
     protected $table = 'user_profile';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
     
 }

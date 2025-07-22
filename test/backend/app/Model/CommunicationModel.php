@@ -13,7 +13,7 @@ class CommunicationModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'communication';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
 
     public function sender()

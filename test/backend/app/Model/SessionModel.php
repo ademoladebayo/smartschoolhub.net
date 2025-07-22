@@ -11,7 +11,7 @@ class SessionModel extends Model
  // use SoftDeletes;
     protected $table = 'session';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
     
 }

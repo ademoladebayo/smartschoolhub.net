@@ -11,7 +11,7 @@ class AssignmentSubmissionModel extends Model
  // use SoftDeletes;
     protected $table = 'assignment_submission';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
   
 }

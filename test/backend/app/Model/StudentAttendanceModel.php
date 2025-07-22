@@ -11,7 +11,7 @@ class StudentAttendanceModel extends Model
  // use SoftDeletes;
     protected $table = 'student_attendance';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
     public function student()
     {

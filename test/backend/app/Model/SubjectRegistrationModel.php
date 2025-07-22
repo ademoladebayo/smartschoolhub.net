@@ -11,7 +11,7 @@ class SubjectRegistrationModel extends Model
  // use SoftDeletes;
     protected $table = 'subject_registration';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
     public function class()
     {

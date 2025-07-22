@@ -11,7 +11,7 @@ class UploadModel extends Model
  // use SoftDeletes;
     protected $table = 'uploads';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
   
 }

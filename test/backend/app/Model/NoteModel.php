@@ -11,7 +11,7 @@ class NoteModel extends Model
  // use SoftDeletes;
     protected $table = 'notes';
     protected $primaryKey = 'id';
-    public $timestamps = true;
+    public $timestamps = false;
 
   
 }
