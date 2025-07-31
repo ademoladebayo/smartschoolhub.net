@@ -761,7 +761,7 @@ class AdminService
         }
 
         $subjectNames = $subjects->map(function ($item) {
-            return strtoupper(Str::substr($item->subject->subject_name, 0, 10)); 
+            return strtoupper(\Str::substr($item->subject->subject_name, 0, 10)); 
         })->toArray();
 
         return [
