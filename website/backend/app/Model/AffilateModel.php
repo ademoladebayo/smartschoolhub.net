@@ -13,7 +13,7 @@ class AffilateModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'affilate_marketer';
     protected $primaryKey = 'id';
-   // public $timestamps = true;
+    public $timestamps = false;
 
 
 

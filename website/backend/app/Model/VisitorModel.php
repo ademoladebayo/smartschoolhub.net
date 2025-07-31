@@ -13,7 +13,7 @@ class VisitorModel extends Model
     use  Notifiable, HasApiTokens;
     protected $table = 'visitors';
     protected $primaryKey = 'id';
-    //public $timestamps = true;
+    public $timestamps = false;
 
 
 
