@@ -678,12 +678,13 @@ class AdminService
         foreach ($students as $student) {
             $studentRow = [
                 'student_id' => $student->id,
-                'student_name' => $student->first_name . ' ' .
-                    ($student->middle_name ? $student->middle_name . ' ' : '') .
-                    $student->last_name,
+                'student_name' => $student->first_name . ' ' . $student->last_name,
                 'scores' => [],
                 'total' => 0
             ];
+
+            // // ($student->middle_name ? $student->middle_name . ' ' : '') .
+            // $student->last_name,
 
             // Get scores for each subject
             $scoreTotal = 0;
@@ -759,9 +760,12 @@ class AdminService
             }
         }
 
+        $subjectNames = $subjects->map(function ($item) {
+            return strtoupper(Str::substr($item->subject->subject_name, 0, 10)); 
+        })->toArray();
 
         return [
-            'header' => array_merge(['S/NO', 'STUDENT NAME'], $subjects->pluck('subject.subject_name')->toArray(), ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
+            'header' => array_merge(['S/NO', 'STUDENT NAME'], $subjectNames, ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
             'broadsheet' => $broadsheet,
             'summary' => ['class' => ClassModel::find($class_id)->class_name, 'session' => $session, 'term' => $term]
         ];
@@ -770,23 +774,23 @@ class AdminService
 
 
     public static function updateStudentPosition($student_id, $position, $session, $term)
-  {
-    // Check if column doesn't exist before adding it
-    if (!Schema::hasColumn('student_result_comment', 'class_position')) {
-        Schema::table('student_result_comment', function (Blueprint $table) {
-            $table->string('class_position')
-                ->after('principal_comment')
-                ->default('-');
-        });
-    }
+    {
+        // Check if column doesn't exist before adding it
+        if (!Schema::hasColumn('student_result_comment', 'class_position')) {
+            Schema::table('student_result_comment', function (Blueprint $table) {
+                $table->string('class_position')
+                    ->after('principal_comment')
+                    ->default('-');
+            });
+        }
 
-    // Update the record (works whether column just created or already existed)
-    StudentResultCommentModel::where([
-        'student_id' => $student_id,
-        'session' => $session,
-        'term' => $term
-    ])->update(['class_position' => $position]);
-            
-}
+        // Update the record (works whether column just created or already existed)
+        StudentResultCommentModel::where([
+            'student_id' => $student_id,
+            'session' => $session,
+            'term' => $term
+        ])->update(['class_position' => $position]);
+
+    }
 
 }

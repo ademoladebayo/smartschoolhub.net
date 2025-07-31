@@ -421,11 +421,14 @@ class TeacherService
 
     public function uploadCommentAndRating(Request $request)
     {
+        $request->value = $request->value == null ? '' : strip_tags($request->value);
+
         if ($request->type == "COMMENT") {
             StudentResultCommentModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->update(array('class_teacher_comment' => $request->value));
             return response()->json(['success' => true, 'message' => 'Result updated']);
 
         } else if ($request->type == "ATTENDANCE") {
+            $request->value = $request->value == '' ? '0' : $request->value;
             $attendanceSummary = AttendanceSummary::where('student_id', $request->student_id)->where('session', $request->session)->where('term', $request->term)->get();
 
             $key = $request->rating_type;
@@ -456,6 +459,7 @@ class TeacherService
             return response()->json(['success' => true, 'message' => 'Result updated']);
 
         } else {
+            $request->value = $request->value == '' ? '5' : $request->value;
             StudentResultRatingModel::where('student_id', $request->student_id)->where("session", $request->session)->where("term", $request->term)->update(array($request->rating_type => $request->value));
             return response()->json(['success' => true, 'message' => 'Result updated']);
         }
