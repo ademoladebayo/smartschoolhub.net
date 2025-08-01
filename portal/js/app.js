@@ -36,8 +36,8 @@ if ("serviceWorker" in navigator) {
               // }
 
 
-
-              initFirebaseMessagingRegistration();
+              getSchools();
+             // initFirebaseMessagingRegistration();
             } else {
               getSchools();
             }
