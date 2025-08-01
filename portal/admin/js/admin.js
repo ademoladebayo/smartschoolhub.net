@@ -2660,13 +2660,13 @@ function getBroadsheet() {
         // Total
         const totalCell = document.createElement('td');
         totalCell.textContent = student.total;
-        totalCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        totalCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:2;text-align:center;';
         row.appendChild(totalCell);
 
         // Percentage
         const percentageCell = document.createElement('td');
         percentageCell.textContent = student.percentage;
-        percentageCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        percentageCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:2;text-align:center;';
         row.appendChild(percentageCell);
 
         // Position
