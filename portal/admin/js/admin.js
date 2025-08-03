@@ -2519,7 +2519,7 @@ function getCommentsAndPsycho(value) {
       ).innerHTML = data.student_rating.health;
 
 
-       localStorage.setItem("loadNextResult", "true");
+      localStorage.setItem("loadNextResult", "true");
     })
     .catch((err) => console.log(err));
 }
@@ -3131,12 +3131,10 @@ function getResultsByClass() {
           }
 
 
+          loadNextResult = localStorage.getItem("loadNextResult");
         }
 
-        // setTimeout(function () {
-
-        // }, 10000);
-
+      
       });
 
       //removeSpinnerModal();
