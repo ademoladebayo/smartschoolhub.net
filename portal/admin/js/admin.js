@@ -2702,7 +2702,7 @@ function getBroadsheet() {
     });
 }
 
-function getStudentResult() {
+async function getStudentResult() {
   user_data = JSON.parse(localStorage["student_result"]);
 
   openSpinnerModal("Result for " + user_data.first_name + " " + user_data.last_name);
@@ -3055,11 +3055,11 @@ function getStudentResult() {
   for (i = 0; i < result_containers.length; i++) {
     container_name = result_containers[i].attributes[0].nodeValue;
     // ATTENDANCEk
-    getAttendanceSummary(container_name);
+    await getAttendanceSummary(container_name);
     //ACADEMIC PERFORMANCE
-    getResult(container_name);
+    await getResult(container_name);
     // COMMENTS AND PSYCHO MOTOR REPORTS
-    getCommentsAndPsycho(container_name);
+    await getCommentsAndPsycho(container_name);
   }
 
   removeSpinnerModal();
@@ -3078,7 +3078,7 @@ function getResultsByClass() {
     return 0;
   }
 
-  openSpinnerModal("Broadsheet is being generated, please wait...");
+  openSpinnerModal("Results are being generated, please wait...");
 
   fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
     method: "GET",
@@ -3104,11 +3104,13 @@ function getResultsByClass() {
 
       data.broadsheet.forEach(student => {
 
-        localStorage.setItem('student_result', JSON.stringify(student.student));
-        iframe = `iframe_${student.student_id}`;
-        document.getElementById('result-list').innerHTML +=
-          ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
-        iFrameResize({ log: true }, `#${iframe}`)
+        setTimeout(function () {
+          localStorage.setItem('student_result', JSON.stringify(student.student));
+          iframe = `iframe_${student.student_id}`;
+          document.getElementById('result-list').innerHTML +=
+            ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
+          iFrameResize({ log: true }, `#${iframe}`)
+        }, 10000);
 
       });
 
