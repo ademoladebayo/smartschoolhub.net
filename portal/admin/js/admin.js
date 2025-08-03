@@ -2752,8 +2752,8 @@ function getStudentResult() {
 
   var sessions = [];
   var terms = [];
-  sessions[0] = localStorage["current_session"];
-  terms[0] = localStorage["current_term"];
+  sessions[0] = localStorage["broadsheet_session"];
+  terms[0] = localStorage["broadsheet_term"];
 
   // CREATE RESULT TEMPLATE
   if (sessions.length > 0) {
@@ -3065,7 +3065,6 @@ function getStudentResult() {
   removeSpinnerModal();
 }
 
-
 // RESULT LIST BY CLASS
 function getResultsByClass() {
 
@@ -3079,7 +3078,7 @@ function getResultsByClass() {
     return 0;
   }
 
-  //openSpinnerModal("Broadsheet is being generated, please wait...");
+  openSpinnerModal("Broadsheet is being generated, please wait...");
 
   fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
     method: "GET",
@@ -3101,23 +3100,25 @@ function getResultsByClass() {
     .then(data => {
       if (!data) return;
 
+      removeSpinnerModal();
+
       data.broadsheet.forEach(student => {
 
-        localStorage.setItem('student_result', student.student);
+        localStorage.setItem('student_result', JSON.stringify(student.student));
+        iframe = `${student.student_id}_iframe`;
         document.getElementById('result-list').innerHTML +=
-          ` <iframe id="${student.id}_iframe" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
+          ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
+        iFrameResize({ log: true }, `#${iframe}`)
 
       });
 
-      removeSpinnerModal();
+      //removeSpinnerModal();
     })
     .catch(err => {
       console.error(err);
       removeSpinnerModal();
     });
 }
-
-
 
 
 
