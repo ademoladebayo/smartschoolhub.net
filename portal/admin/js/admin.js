@@ -3063,7 +3063,7 @@ async function getStudentResult() {
     await getCommentsAndPsycho(container_name);
 
 
-     localStorage['loadNextResult'] = true;
+    localStorage['loadNextResult'] = true;
   }
 
   removeSpinnerModal();
@@ -3113,7 +3113,7 @@ function getResultsByClass() {
         while (!localStorage['loadNextResult']) {
           iframe = `iframe_${student.student_id}`;
           studentIframe = document.getElementById(iframe);
-
+          console.log("FRANE :::::::::"+studentIframe);
           if (!studentIframe) {
             localStorage.setItem('student_result', JSON.stringify(student.student));
             document.getElementById('result-list').innerHTML +=
