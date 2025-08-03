@@ -677,6 +677,7 @@ class AdminService
         // Process each student
         foreach ($students as $student) {
             $studentRow = [
+                'student' => StudentModel::with('class')->find($student->id),
                 'student_id' => $student->id,
                 'student_name' => $student->first_name . ' ' . $student->last_name,
                 'scores' => [],

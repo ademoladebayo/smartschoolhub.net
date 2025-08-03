@@ -450,7 +450,7 @@
     }
 
     function changePageAction(action) {
-        if (action === 'GENERATE_BROADSHEET') {
+        if (action === 'GENERATE_BROADSHEET' || action === 'VIEW_RESULT') {
             document.getElementById('action_title').innerHTML = "SELECT SUBJECT AND SESSION";
             document.getElementById('subject_class_div').hidden = true;
             document.getElementById('classes_div').hidden = false;
@@ -459,8 +459,12 @@
             document.getElementById('upload_result_div').hidden = true;
             reloadFrame('iframe', "./broadsheet.html");
 
+            if (action === 'VIEW_RESULT') {
+                document.getElementById('broadsheet_div').hidden = false;
+            }
+
             //console.log(action);
-        } else if (action === 'RESULT_UPLOAD' || action === 'VIEW_RESULT') {
+        } else if (action === 'RESULT_UPLOAD') {
             document.getElementById('action_title').innerHTML = "SELECT CLASS AND SESSION";
             document.getElementById('subject_class_div').hidden = false;
             document.getElementById('classes_div').hidden = true;
@@ -468,9 +472,7 @@
             document.getElementById('broadsheet_div').hidden = true;
             document.getElementById('upload_result_div').hidden = false;
 
-            if (action === 'VIEW_RESULT') {
-                document.getElementById('broadsheet_div').hidden = false;
-            }
+
             //console.log(action);
         }
 
@@ -483,8 +485,8 @@
         if (pageAction === 'RESULT_UPLOAD') {
             document.getElementById('upload_result_div').hidden = false;
             getAllstudentForSubjectResultUpload();
-            
-        } else if (pageAction == 'GENERATE_BROADSHEET') {
+
+        } else if (pageAction == 'GENERATE_BROADSHEET' || pageAction == 'VIEW_RESULT') {
             if (document.getElementById("session_term").value == '' || document.getElementById("classes").value == '') {
                 alert('Please select class and session !');
                 return 0;
@@ -498,12 +500,14 @@
 
             localStorage.setItem('broadsheet_class', document.getElementById("classes").value);
 
+            if (pageAction == 'VIEW_RESULT') {
+                window.parent.location.assign(domain + "/admin/class-results.html");
+            }
+
             reloadFrame('iframe');
             //getBroadsheet();
 
             //window.parent.location.assign(domain + "/admin/broadsheet.html");
-        } else if (pageAction == 'VIEW_RESULT') {
-            window.parent.location.assign(domain + "/admin/results.html");
         }
 
     }

@@ -2705,6 +2705,8 @@ function getBroadsheet() {
 function getStudentResult() {
   user_data = JSON.parse(localStorage["student_result"]);
 
+  openSpinnerModal("Result for " + user_data.first_name + " " + user_data.last_name);
+
   // IMAGE URL
   url =
     domain +
@@ -3059,8 +3061,9 @@ function getStudentResult() {
     // COMMENTS AND PSYCHO MOTOR REPORTS
     getCommentsAndPsycho(container_name);
   }
-}
 
+  removeSpinnerModal();
+}
 
 
 // RESULT LIST BY CLASS
@@ -3076,7 +3079,7 @@ function getResultsByClass() {
     return 0;
   }
 
-  openSpinnerModal("Broadsheet is being generated, please wait...");
+  //openSpinnerModal("Broadsheet is being generated, please wait...");
 
   fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
     method: "GET",
@@ -3100,7 +3103,7 @@ function getResultsByClass() {
 
       data.broadsheet.forEach(student => {
 
-
+        localStorage.setItem('student_result', student.student);
         document.getElementById('result-list').innerHTML +=
           ` <iframe id="${student.id}_iframe" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
 
