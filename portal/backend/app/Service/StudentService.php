@@ -725,7 +725,7 @@ class StudentService
             $attendanceSummary->save();
         }
 
-        $atd_perc = $present > 0 ? ($present / $opened) * 100 : 0;
+        $atd_perc = ($present > 0 && $opened > 0) ? ($present / $opened) * 100 : 0;
 
 
         return response()->json(['opened' => $opened, 'present' => $present, 'absent' => $absent, 'attendance_summary' => $AttendanceSummary, 'attendance' => number_format($atd_perc, 2) . "%"]);

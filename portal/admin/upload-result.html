@@ -165,7 +165,7 @@
                 <br>
 
                 <h2 id="" style="text-align: center; font-weight: bold; font-family: Poppins; text-align: center">
-                    BROADSHEET / RESULT UPLOAD
+                    RESULT UPLOAD / BROADSHEET / VIEW RESULT
                 </h2>
 
                 <div class="row">
@@ -187,6 +187,7 @@
                                             class="select2">
                                             <option value="RESULT_UPLOAD">RESULT UPLOAD</option>
                                             <option value="GENERATE_BROADSHEET">GENERATE BROADSHEET</option>
+                                            <option value="VIEW_RESULT">VIEW RESULTS</option>
                                         </select>
                                     </div>
 
@@ -459,13 +460,17 @@
             reloadFrame('iframe', "./broadsheet.html");
 
             //console.log(action);
-        } else if (action === 'RESULT_UPLOAD') {
+        } else if (action === 'RESULT_UPLOAD' || action === 'VIEW_RESULT') {
             document.getElementById('action_title').innerHTML = "SELECT CLASS AND SESSION";
             document.getElementById('subject_class_div').hidden = false;
             document.getElementById('classes_div').hidden = true;
 
             document.getElementById('broadsheet_div').hidden = true;
             document.getElementById('upload_result_div').hidden = false;
+
+            if (action === 'VIEW_RESULT') {
+                document.getElementById('broadsheet_div').hidden = false;
+            }
             //console.log(action);
         }
 
@@ -478,6 +483,7 @@
         if (pageAction === 'RESULT_UPLOAD') {
             document.getElementById('upload_result_div').hidden = false;
             getAllstudentForSubjectResultUpload();
+            
         } else if (pageAction == 'GENERATE_BROADSHEET') {
             if (document.getElementById("session_term").value == '' || document.getElementById("classes").value == '') {
                 alert('Please select class and session !');
@@ -496,6 +502,8 @@
             //getBroadsheet();
 
             //window.parent.location.assign(domain + "/admin/broadsheet.html");
+        } else if (pageAction == 'VIEW_RESULT') {
+            window.parent.location.assign(domain + "/admin/results.html");
         }
 
     }

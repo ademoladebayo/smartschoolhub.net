@@ -2702,6 +2702,419 @@ function getBroadsheet() {
     });
 }
 
+function getStudentResult() {
+  user_data = JSON.parse(localStorage["student_result"]);
+
+  // IMAGE URL
+  url =
+    domain +
+    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
+    user_data.student_id +
+    `.png?timestamp=${timestamp}`;
+
+  // SCHOOL LOGO URL
+  school_logo_url =
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
+
+  // SCHOOL_LOGO
+  document.getElementById("school_logo").src = school_logo_url;
+
+  // STUDENT_IMAGE
+  document.getElementById("student_image").src = url;
+
+  // POPULATE STUDENTS INFORMATION
+  document.getElementById("full_name").innerHTML =
+    "<b>" +
+    user_data.last_name +
+    "</b>" +
+    " " +
+    user_data.first_name +
+    " " +
+    user_data.middle_name;
+
+  document.getElementById("student_id").innerHTML = user_data.student_id;
+  document.getElementById("class_sector").innerHTML =
+    user_data.class.class_sector;
+  document.getElementById("school_details").innerHTML =
+    localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
+
+  // QR Generator
+  var qrcode = new QRCode("verificationQR", {
+    text: "STUDENT NUMBER",
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+
+  var sessions = [];
+  var terms = [];
+  sessions[0] = localStorage["current_session"];
+  terms[0] = localStorage["current_term"];
+
+  // CREATE RESULT TEMPLATE
+  if (sessions.length > 0) {
+    document.getElementById("result_div").innerHTML = ``;
+    // LOOP THROUGH EACH SESSION AND TERM
+    sessions.forEach((session) => {
+      terms.forEach((term) => {
+        // CREATE RESULT TEMPLATE
+        document.getElementById("result_div").innerHTML += `
+        <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
+        <div style="border:1px solid black; padding-bottom: 15px;" class="row">
+
+            <div class="col-md-4">
+                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                    <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                    <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
+                    <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
+                </div>
+            </div>
+
+            <!-- ATTTENDANCE -->
+            <div style="margin-top: 15px;" class="container">
+                <p><b>(A) ATTTENDANCE</b></p>
+                <div class="row">
+                    <div class="col-md-12 table-responsive">
+                        <table style="padding: 0%;" class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        No of times school
+                                        opened
+                                    </td>
+                                    <td  id="opened_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_school_opened')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        No of times present
+                                    </td>
+                                    <td id="present_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_present')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ACADEMIC PERFORMANCE -->
+            <div style="margin-top: 15px;" class="col-md-12 col-lg-12 col-xl-12">
+                <p><b>(B) ACADEMIC PERFORMANCE</b></p>
+                <div style="margin-top: 0px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- SCORE TABLE -->
+                            <div class="table-responsive">
+                                <table style="padding: 0%;" class="table table-sm">
+                                    <thead>
+                                 <tr>
+                                     <th id="sn_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">S/NO</th>
+
+                                     <th id="subject_header_${session}_${term}" style="font-size: 14px; text-align:center">SUBJECT</th>
+
+                                     <th id="first_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
+
+                                     <th id="second_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
+
+                                     <th id="note_ass_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+
+                                     <th id="cbt_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CBT</th>
+
+                                     <th id="project_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
+
+                                     <th id="exam_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+
+                                     <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
+
+                                     ${term == "THIRD TERM" ?
+            `
+                                          <th id="first_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
+
+                                          <th id="second_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
+
+                                          <th id="third_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
+
+                                          <th id="mean_score_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
+                                        
+                                        `
+            :
+            ``
+          }
+
+
+
+                                     <th id="class_average_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+
+                                     <th id="class_lowest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
+
+                                     <th id="class_highest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+
+                                     <th id="position_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">POSITION</th>
+
+                                     <th id="grade_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">GRADE</th>
+
+                                     <th id="remark_header_${session}_${term}" style="font-size: 14px; text-align:center">REMARK</th>
+                                 </tr>
+                                 
+                             </thead>
+                                    <tbody id="scores_${session}_${term}">
+
+                                    
+                                    
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- POSITION AND PERCENTAGE -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-size: 13px;font-style: italic;">NO IN CLASS :
+                                                <span id="no_student_${session}_${term}"></span>
+                                            </th>
+                                            <th style="font-size: 13px;font-style: italic;">CLASS POSITION :
+                                                <span id="class_position_${session}_${term}"></span>
+                                            </th>
+                                            <th style="font-size: 13px;font-style: italic;">GRADE POSITION :
+                                                <span id="grade_position_${session}_${term}"></span>
+                                            </th>
+                                            <th style="font-size: 13px;font-style: italic;">PERCENTAGE :
+                                                <span id="percentage_${session}_${term}"></span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="font-size: 13px;">
+
+                                        <tr style="font-size: 13px;">
+                                            <td style="font-size: 13px;font-family: Open Sans, sans-serif;"
+                                                colspan="6">
+                                                <span style="font-weight: bold;">Class Teacher's
+                                                    Comment :
+                                                </span>
+                                                <font color="black"><b id="teacher_comment_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
+                                            </td>
+                                        </tr>
+
+                                        
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AFFECTIVE & PSYCHO MOTOR REPORT -->
+            <div style="margin-top: 5px;" class="container">
+                <p><b>(C) AFFECTIVE & PSYCHO MOTOR REPORT</b></p>
+                <div class="row">
+                    <div class="col-md-6 table-responsive">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Hand Writing
+                                    </td>
+                                    <td id="handwriting_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                
+                                <tr>
+                                    <td 
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Games
+                                    </td>
+                                    <td id="games_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Handing Tools
+                                    </td>
+                                    <td id="handing_tools_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Drawing and Painting
+                                    </td>
+                                    <td id="drawing_painting_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6 table-responsive">
+                        <table class="table table-sm">
+                            <tbody>
+
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Neatness
+                                    </td>
+                                    <td id="neatness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Politeness
+                                    </td>
+                                    <td id="politeness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                               
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Co-operation with others
+                                    </td>
+                                    <td id="cooperation_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+                                
+                          
+                                <tr>
+                                    <td
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        Health
+                                    </td>
+                                    <td id="health_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
+                                        style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
+                                        </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+`;
+      });
+    });
+  } else {
+    document.getElementById(
+      "result_div"
+    ).innerHTML = `<hr style="color: black; border: 1px solid black">
+  <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+  <hr style="color: black; border: 1px solid black">`;
+  }
+
+  // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
+  result_containers = document.getElementsByClassName("result_container");
+
+  for (i = 0; i < result_containers.length; i++) {
+    container_name = result_containers[i].attributes[0].nodeValue;
+    // ATTENDANCEk
+    getAttendanceSummary(container_name);
+    //ACADEMIC PERFORMANCE
+    getResult(container_name);
+    // COMMENTS AND PSYCHO MOTOR REPORTS
+    getCommentsAndPsycho(container_name);
+  }
+}
+
+
+
+// RESULT LIST BY CLASS
+function getResultsByClass() {
+
+  const params = {
+    class: localStorage['broadsheet_class'],
+    term: localStorage['broadsheet_term'],
+    session: localStorage['broadsheet_session'],
+  };
+
+  if (!params.class || !params.term || !params.session) {
+    return 0;
+  }
+
+  openSpinnerModal("Broadsheet is being generated, please wait...");
+
+  fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      school: localStorage["school"],
+      "Content-type": "application/json",
+      Authorization: "Bearer " + localStorage["token"],
+    },
+  })
+    .then(res => {
+      if (res.status == 401) {
+        openAuthenticationModal();
+        removeSpinnerModal();
+        return;
+      }
+      return res.json();
+    })
+    .then(data => {
+      if (!data) return;
+
+      data.broadsheet.forEach(student => {
+
+
+        document.getElementById('result-list').innerHTML +=
+          ` <iframe id="${student.id}_iframe" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
+
+      });
+
+      removeSpinnerModal();
+    })
+    .catch(err => {
+      console.error(err);
+      removeSpinnerModal();
+    });
+}
+
+
 
 
 
@@ -2789,6 +3202,7 @@ function readURL(input) {
     reader.readAsDataURL(input.files[0]);
   }
 }
+
 $("#imageUpload").change(function () {
   readURL(this);
 });
@@ -3439,6 +3853,7 @@ async function getStaffIDCard() {
 }
 
 // CLASS
+
 function getAllClassForTable() {
   fetch(ip + "/api/admin/all-class", {
     method: "GET",
