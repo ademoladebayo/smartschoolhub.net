@@ -2517,6 +2517,9 @@ function getCommentsAndPsycho(value) {
       document.getElementById(
         "health_" + value.split("_")[1] + "_" + value.split("_")[2]
       ).innerHTML = data.student_rating.health;
+
+
+       localStorage.setItem("loadNextResult", "true");
     })
     .catch((err) => console.log(err));
 }
@@ -3111,15 +3114,15 @@ function getResultsByClass() {
 
         localStorage.setItem("loadNextResult", "false");
         iframe = `iframe_${student.student_id}`;
-        studentIframe = document.getElementById(iframe);
+        loadNextResult = localStorage.getItem("loadNextResult");
 
         console.log("FRAME :::::::::" + studentIframe);
 
-        loadNextResult = localStorage.getItem("loadNextResult");
 
         while (loadNextResult == "false" || loadNextResult == undefined || loadNextResult == null) {
           console.log("STILL FALSE");
 
+          studentIframe = document.getElementById(iframe);
           if (studentIframe == null) {
             localStorage.setItem('student_result', JSON.stringify(student.student));
             document.getElementById('result-list').innerHTML +=
