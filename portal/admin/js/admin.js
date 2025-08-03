@@ -3110,10 +3110,14 @@ function getResultsByClass() {
       data.broadsheet.forEach(student => {
 
         localStorage['loadNextResult'] = false;
-        while (localStorage['loadNextResult'] == false) {
-          iframe = `iframe_${student.student_id}`;
-          studentIframe = document.getElementById(iframe);
-          console.log("FRANE :::::::::"+studentIframe);
+        iframe = `iframe_${student.student_id}`;
+        studentIframe = document.getElementById(iframe);
+
+        console.log("FRAME :::::::::" + studentIframe);
+
+        while (localStorage['loadNextResult'] === false) {
+          console.log("STILL FALSE");
+
           if (!studentIframe) {
             localStorage.setItem('student_result', JSON.stringify(student.student));
             document.getElementById('result-list').innerHTML +=
