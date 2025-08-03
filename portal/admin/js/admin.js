@@ -3115,10 +3115,10 @@ function getResultsByClass() {
 
         console.log("FRAME :::::::::" + studentIframe);
 
-        while (localStorage['loadNextResult'] === false) {
+        while (localStorage['loadNextResult'] == false) {
           console.log("STILL FALSE");
 
-          if (!studentIframe) {
+          if (studentIframe == null) {
             localStorage.setItem('student_result', JSON.stringify(student.student));
             document.getElementById('result-list').innerHTML +=
               ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
