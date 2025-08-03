@@ -2702,6 +2702,7 @@ function getBroadsheet() {
     });
 }
 
+
 async function getStudentResult() {
   user_data = JSON.parse(localStorage["student_result"]);
 
@@ -3060,10 +3061,14 @@ async function getStudentResult() {
     await getResult(container_name);
     // COMMENTS AND PSYCHO MOTOR REPORTS
     await getCommentsAndPsycho(container_name);
+
+
+     localStorage['loadNextResult'] = true;
   }
 
   removeSpinnerModal();
 }
+
 
 // RESULT LIST BY CLASS
 function getResultsByClass() {
@@ -3104,12 +3109,23 @@ function getResultsByClass() {
 
       data.broadsheet.forEach(student => {
 
-        setTimeout(function () {
-          localStorage.setItem('student_result', JSON.stringify(student.student));
+        localStorage['loadNextResult'] = false;
+        while (!localStorage['loadNextResult']) {
           iframe = `iframe_${student.student_id}`;
-          document.getElementById('result-list').innerHTML +=
-            ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
-          iFrameResize({ log: true }, `#${iframe}`)
+          studentIframe = document.getElementById(iframe);
+
+          if (!studentIframe) {
+            localStorage.setItem('student_result', JSON.stringify(student.student));
+            document.getElementById('result-list').innerHTML +=
+              ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
+            iFrameResize({ log: true }, `#${iframe}`)
+          }
+
+
+        }
+
+        setTimeout(function () {
+
         }, 10000);
 
       });
