@@ -3116,7 +3116,7 @@ function getResultsByClass() {
         iframe = `iframe_${student.student_id}`;
         loadNextResult = localStorage.getItem("loadNextResult");
 
-        console.log("FRAME :::::::::" + studentIframe);
+        //console.log("FRAME :::::::::" + studentIframe);
 
 
         while (loadNextResult == "false" || loadNextResult == undefined || loadNextResult == null) {
