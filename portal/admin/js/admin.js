@@ -3105,7 +3105,7 @@ function getResultsByClass() {
       data.broadsheet.forEach(student => {
 
         localStorage.setItem('student_result', JSON.stringify(student.student));
-        iframe = `${student.student_id}_iframe`;
+        iframe = `iframe_${student.student_id}`;
         document.getElementById('result-list').innerHTML +=
           ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
         iFrameResize({ log: true }, `#${iframe}`)
