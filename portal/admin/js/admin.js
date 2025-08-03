@@ -3063,7 +3063,7 @@ async function getStudentResult() {
     await getCommentsAndPsycho(container_name);
 
 
-    localStorage['loadNextResult'] = true;
+    localStorage.setItem("loadNextResult", "true");
   }
 
   removeSpinnerModal();
@@ -3109,13 +3109,15 @@ function getResultsByClass() {
 
       data.broadsheet.forEach(student => {
 
-        localStorage['loadNextResult'] = false;
+        localStorage.setItem("loadNextResult", "false");
         iframe = `iframe_${student.student_id}`;
         studentIframe = document.getElementById(iframe);
 
         console.log("FRAME :::::::::" + studentIframe);
 
-        while (localStorage['loadNextResult'] == false) {
+        loadNextResult = localStorage.getItem("loadNextResult");
+
+        while (loadNextResult == "false" || loadNextResult == undefined || loadNextResult == null) {
           console.log("STILL FALSE");
 
           if (studentIframe == null) {
@@ -3128,9 +3130,9 @@ function getResultsByClass() {
 
         }
 
-        setTimeout(function () {
+        // setTimeout(function () {
 
-        }, 10000);
+        // }, 10000);
 
       });
 
