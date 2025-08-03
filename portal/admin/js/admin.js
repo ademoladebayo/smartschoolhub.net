@@ -3110,7 +3110,7 @@ function getResultsByClass() {
       data.broadsheet.forEach(student => {
 
         localStorage['loadNextResult'] = false;
-        while (!localStorage['loadNextResult']) {
+        while (localStorage['loadNextResult'] == false) {
           iframe = `iframe_${student.student_id}`;
           studentIframe = document.getElementById(iframe);
           console.log("FRANE :::::::::"+studentIframe);
