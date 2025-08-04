@@ -2784,12 +2784,12 @@ async function getStudentResult() {
             </div>
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">SESSION: <strong>${session}_${user_data.id}</strong></h6>
+                    <h6 style="font-size: 15px;">SESSION: <strong>${session}}</strong></h6>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">TERM: <strong>${term}_${user_data.id}</strong></h6>
+                    <h6 style="font-size: 15px;">TERM: <strong>${term}}</strong></h6>
                 </div>
             </div>
 
@@ -3081,8 +3081,160 @@ async function getStudentResult() {
 
 
 // RESULT LIST BY CLASS
-async function getResultsByClass() {
+// async function getResultsByClass() {
 
+//   const params = {
+//     class: localStorage['broadsheet_class'],
+//     term: localStorage['broadsheet_term'],
+//     session: localStorage['broadsheet_session'],
+//   };
+
+//   if (!params.class || !params.term || !params.session) {
+//     return 0;
+//   }
+
+//   openSpinnerModal("Results are being generated, please wait...");
+
+//   fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
+//     method: "GET",
+//     headers: {
+//       Accept: "application/json",
+//       school: localStorage["school"],
+//       "Content-type": "application/json",
+//       Authorization: "Bearer " + localStorage["token"],
+//     },
+//   })
+//     .then(res => {
+//       if (res.status == 401) {
+//         openAuthenticationModal();
+//         removeSpinnerModal();
+//         return;
+//       }
+//       return res.json();
+//     })
+//     .then(data => {
+//       if (!data) return;
+
+
+
+//       removeSpinnerModal();
+//       data.broadsheet.forEach(student => {
+
+
+//         document.getElementById("result-list").innerHTML +=
+//           `
+//         <section>
+//         <div style="float: right;" class="header-inline item-header">
+
+//         </div>
+
+//         <div style="border: 2px solid black;margin: 0%;" class="result-page">
+
+//             <!-- SCHOOL LOGO-->
+//             <div class="container">
+//                 <div class="row">
+//                     <div class="col-md-4 col-lg-3">
+
+//                     </div>
+//                     <div class="col-md-4 col-lg-6">
+//                         <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img id="school_logo_${student.student_id}"
+//                                 src="../assets/img/sample_logo.png" height="150px" width="130px"></div>
+
+//                     </div>
+//                     <div class="col-md-4 col-lg-3">
+
+//                     </div>
+//                 </div>
+//             </div>
+
+
+//             <!-- RESULT HEADER -->
+//             <div class="container">
+
+//                 <div class="row">
+//                     <div class="col-md-4">
+
+//                     </div>
+//                     <div class="col-md-4">
+//                         <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 0px;">
+//                             <h5 style="font-weight: bold;font-family: Poppins, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
+//                         </div>
+//                     </div>
+
+//                     <div class="w-100" style="margin-bottom: 0px;"></div>
+
+//                     <div class="col-md-4">
+//                         <div id="verificationQR_${student.student_id}" style="margin-left: 100px;margin-top: 30px;" title="STUDENT NUMBER">
+
+
+//                         </div>
+//                     </div>
+
+//                     <div class="col-md-4" style="display: flex;
+//                     justify-content: center;">
+//                         <div class="text-center" style="margin-top: 30px;">
+//                             <p id="full_name_${student.student_id}" style="font-size: 14px;">_____________________________</p>
+//                             <p id="student_id_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+//                                 _____________________________</p>
+//                             <p id="class_sector_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+//                                 _____________________________</p>
+//                             <p id="school_details_${student.student_id}" style="font-size: 14px;font-family: Poppins;">
+//                                 <b>_____________________________</b>
+//                             </p>
+//                         </div>
+//                     </div>
+//                     <div class="col-md-4" style="display: flex;
+//                             justify-content: center;"><br>
+//                         <img style="margin-bottom: 15px; margin-top: 15px;" id="student_image_${student.student_id}"
+//                             src="../assets/img/sample_image.png" height="150px" width="130px">
+//                     </div>
+//                 </div>
+//             </div>
+
+
+
+//             <div id="result_div_${student.student_id}">
+
+
+//                 <hr style="color: black; border: 1px solid black">
+//                 <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+//                 <hr style="color: black; border: 1px solid black">
+
+
+//             </div>
+
+
+//         </div>
+
+
+//     </section>
+
+
+
+
+//         `;
+
+
+
+//         studentIdSuffix = `_${student.student_id}`;
+//         localStorage.setItem('student_result', JSON.stringify(student.student));
+//         await getStudentResult();
+
+
+
+//       });
+
+//       //removeSpinnerModal();
+//     })
+//     .catch(err => {
+//       console.error(err);
+//       removeSpinnerModal();
+//     });
+// }
+
+
+async function getResultsByClass() {
+  // Validate required parameters
   const params = {
     class: localStorage['broadsheet_class'],
     term: localStorage['broadsheet_term'],
@@ -3090,171 +3242,124 @@ async function getResultsByClass() {
   };
 
   if (!params.class || !params.term || !params.session) {
+    console.error('Missing required parameters');
     return 0;
   }
 
-  openSpinnerModal("Results are being generated, please wait...");
+  try {
+    openSpinnerModal("Results are being generated, please wait...");
 
-  fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      school: localStorage["school"],
-      "Content-type": "application/json",
-      Authorization: "Bearer " + localStorage["token"],
-    },
-  })
-    .then(res => {
-      if (res.status == 401) {
-        openAuthenticationModal();
-        removeSpinnerModal();
-        return;
-      }
-      return res.json();
-    })
-    .then(data => {
-      if (!data) return;
-
-
-
-      removeSpinnerModal();
-      data.broadsheet.forEach(student => {
-
-
-        document.getElementById("result-list").innerHTML +=
-          `
-        <section>
-        <div style="float: right;" class="header-inline item-header">
-
-        </div>
-
-        <div style="border: 2px solid black;margin: 0%;" class="result-page">
-
-            <!-- SCHOOL LOGO-->
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-lg-3">
-
-                    </div>
-                    <div class="col-md-4 col-lg-6">
-                        <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img id="school_logo_${student.student_id}"
-                                src="../assets/img/sample_logo.png" height="150px" width="130px"></div>
-
-                    </div>
-                    <div class="col-md-4 col-lg-3">
-
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- RESULT HEADER -->
-            <div class="container">
-
-                <div class="row">
-                    <div class="col-md-4">
-
-                    </div>
-                    <div class="col-md-4">
-                        <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 0px;">
-                            <h5 style="font-weight: bold;font-family: Poppins, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
-                        </div>
-                    </div>
-
-                    <div class="w-100" style="margin-bottom: 0px;"></div>
-
-                    <div class="col-md-4">
-                        <div id="verificationQR_${student.student_id}" style="margin-left: 100px;margin-top: 30px;" title="STUDENT NUMBER">
-
-
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="display: flex;
-                    justify-content: center;">
-                        <div class="text-center" style="margin-top: 30px;">
-                            <p id="full_name_${student.student_id}" style="font-size: 14px;">_____________________________</p>
-                            <p id="student_id_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
-                                _____________________________</p>
-                            <p id="class_sector_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
-                                _____________________________</p>
-                            <p id="school_details_${student.student_id}" style="font-size: 14px;font-family: Poppins;">
-                                <b>_____________________________</b>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-4" style="display: flex;
-                            justify-content: center;"><br>
-                        <img style="margin-bottom: 15px; margin-top: 15px;" id="student_image_${student.student_id}"
-                            src="../assets/img/sample_image.png" height="150px" width="130px">
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div id="result_div_${student.student_id}">
-
-
-                <hr style="color: black; border: 1px solid black">
-                <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
-                <hr style="color: black; border: 1px solid black">
-
-
-            </div>
-
-
-        </div>
-
-
-    </section>
-        
-        
-        
-        
-        `;
-
-
-
-        studentIdSuffix = `_${student.student_id}`;
-        localStorage.setItem('student_result', JSON.stringify(student.student));
-        getStudentResult();
-
-
-        // localStorage.setItem("loadNextResult", "false");
-        // iframe = `iframe_${student.student_id}`;
-        // loadNextResult = localStorage.getItem("loadNextResult");
-
-        //console.log("FRAME :::::::::" + studentIframe);
-
-
-        // while (loadNextResult == "false" || loadNextResult == undefined || loadNextResult == null) {
-        //   console.log("STILL FALSE");
-
-        //   studentIframe = document.getElementById(iframe);
-        //   if (studentIframe == null) {
-        //      console.log("NO FRAME");
-        //     localStorage.setItem('student_result', JSON.stringify(student.student));
-        //     document.getElementById('result-list').innerHTML +=
-        //       ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
-        //     iFrameResize({ log: true }, `#${iframe}`)
-        //   }
-
-
-
-
-        //   loadNextResult = localStorage.getItem("loadNextResult");
-        // }
-
-
-      });
-
-      //removeSpinnerModal();
-    })
-    .catch(err => {
-      console.error(err);
-      removeSpinnerModal();
+    // Fetch data from API
+    const response = await fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        school: localStorage["school"],
+        "Content-type": "application/json",
+        Authorization: "Bearer " + localStorage["token"],
+      },
     });
+
+    if (response.status === 401) {
+      openAuthenticationModal();
+      removeSpinnerModal();
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data?.broadsheet?.length) {
+      console.log('No results found');
+      removeSpinnerModal();
+      return;
+    }
+
+    // Process each student result
+    const resultList = document.getElementById("result-list");
+    resultList.innerHTML = ''; // Clear existing content
+
+    for (const student of data.broadsheet) {
+      // Create result section
+      const studentSection = document.createElement('section');
+      studentSection.innerHTML = generateStudentResultHTML(student);
+      resultList.appendChild(studentSection);
+
+      // Process student result data
+      localStorage.setItem('student_result', JSON.stringify(student.student));
+      await getStudentResult(student.student_id);
+    }
+
+  } catch (error) {
+    console.error('Error fetching results:', error);
+    // Optionally show error to user
+    // openErrorModal("Failed to load results. Please try again.");
+  } finally {
+    removeSpinnerModal();
+  }
+}
+
+
+// Helper function to generate HTML template
+function generateStudentResultHTML(student) {
+  return `
+    <section>
+      <div style="float: right;" class="header-inline item-header"></div>
+      <div style="border: 2px solid black; margin: 0%;" class="result-page">
+        <!-- SCHOOL LOGO -->
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 col-lg-3"></div>
+            <div class="col-md-4 col-lg-6">
+              <div class="text-center" style="margin-top: 2px; margin-bottom: 10px;">
+                <img id="school_logo_${student.student_id}" src="../assets/img/sample_logo.png" height="150px" width="130px">
+              </div>
+            </div>
+            <div class="col-md-4 col-lg-3"></div>
+          </div>
+        </div>
+
+        <!-- RESULT HEADER -->
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="text-center" style="margin: 0; margin-top: 0;">
+                <h5 style="font-weight: bold; font-family: Poppins, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
+              </div>
+            </div>
+            <div class="w-100" style="margin-bottom: 0px;"></div>
+            <div class="col-md-4">
+              <div id="verificationQR_${student.student_id}" style="margin-left: 100px; margin-top: 30px;" title="STUDENT NUMBER"></div>
+            </div>
+            <div class="col-md-4" style="display: flex; justify-content: center;">
+              <div class="text-center" style="margin-top: 30px;">
+                <p id="full_name_${student.student_id}" style="font-size: 14px;">_____________________________</p>
+                <p id="student_id_${student.student_id}" style="font-size: 14px; font-family: Quicksand, sans-serif;">_____________________________</p>
+                <p id="class_sector_${student.student_id}" style="font-size: 14px; font-family: Quicksand, sans-serif;">_____________________________</p>
+                <p id="school_details_${student.student_id}" style="font-size: 14px; font-family: Poppins;">
+                  <b>_____________________________</b>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4" style="display: flex; justify-content: center;">
+              <br>
+              <img style="margin-bottom: 15px; margin-top: 15px;" id="student_image_${student.student_id}"
+                src="../assets/img/sample_image.png" height="150px" width="130px">
+            </div>
+          </div>
+        </div>
+
+        <div id="result_div_${student.student_id}">
+          <hr style="color: black; border: 1px solid black">
+          <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+          <hr style="color: black; border: 1px solid black">
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 
