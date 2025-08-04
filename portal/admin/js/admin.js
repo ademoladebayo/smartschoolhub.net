@@ -8,10 +8,12 @@ var errorSound = new Audio("../asset/sound/error1.mp3");
 const timestamp = new Date().getTime();
 
 
+
 //const config = new Config();
 
 var ip = localStorage["ip"];
 var domain = localStorage["domain"];
+var studentIdSuffix = "";
 
 // REMOTE ACCESS
 // var ip = "http://192.168.42.168/smartschoolhub.net/SSHUB_BACKEND/server.php";
@@ -2302,6 +2304,9 @@ function getResult(value) {
     })
 
     .then((data) => {
+
+      value.split("_")[2] = value.split("_")[2] + studentIdSuffix;
+
       c = 1;
       if (data.result.length > 0) {
         data.result.forEach((result) => {
@@ -2487,6 +2492,8 @@ function getCommentsAndPsycho(value) {
     })
 
     .then((data) => {
+      value.split("_")[2] = value.split("_")[2] + studentIdSuffix;
+
       // POPULATE COMMENT
       document.getElementById(
         "teacher_comment_" + value.split("_")[1] + "_" + value.split("_")[2]
@@ -2723,13 +2730,13 @@ async function getStudentResult() {
     domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
 
   // SCHOOL_LOGO
-  document.getElementById("school_logo").src = school_logo_url;
+  document.getElementById("school_logo_" + user_data.id).src = school_logo_url;
 
   // STUDENT_IMAGE
-  document.getElementById("student_image").src = url;
+  document.getElementById("student_image_" + user_data.id).src = url;
 
   // POPULATE STUDENTS INFORMATION
-  document.getElementById("full_name").innerHTML =
+  document.getElementById("full_name_" + user_data.id).innerHTML =
     "<b>" +
     user_data.last_name +
     "</b>" +
@@ -2738,14 +2745,14 @@ async function getStudentResult() {
     " " +
     user_data.middle_name;
 
-  document.getElementById("student_id").innerHTML = user_data.student_id;
-  document.getElementById("class_sector").innerHTML =
+  document.getElementById("student_id_" + user_data.id).innerHTML = user_data.student_id;
+  document.getElementById("class_sector_" + user_data.id).innerHTML =
     user_data.class.class_sector;
-  document.getElementById("school_details").innerHTML =
+  document.getElementById("school_details_" + user_data.id).innerHTML =
     localStorage["SCHOOL_NAME"] + "<br> " + localStorage["SCHOOL_ADDRESS"];
 
   // QR Generator
-  var qrcode = new QRCode("verificationQR", {
+  var qrcode = new QRCode("verificationQR_" + user_data.id, {
     text: "STUDENT NUMBER",
     width: 128,
     height: 128,
@@ -2761,28 +2768,28 @@ async function getStudentResult() {
 
   // CREATE RESULT TEMPLATE
   if (sessions.length > 0) {
-    document.getElementById("result_div").innerHTML = ``;
+    document.getElementById("result_div_" + user_data.id).innerHTML = ``;
     // LOOP THROUGH EACH SESSION AND TERM
     sessions.forEach((session) => {
       terms.forEach((term) => {
         // CREATE RESULT TEMPLATE
-        document.getElementById("result_div").innerHTML += `
-        <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
+        document.getElementById("result_div_" + user_data.id).innerHTML += `
+        <div id="result_${session}_${term}_${user_data.id}" name="result_${session}_${term}_${user_data.id}" class="container result_container" style="margin-bottom: 30px;">
         <div style="border:1px solid black; padding-bottom: 15px;" class="row">
 
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}"></strong></h6>
+                    <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}_${user_data.id}"></strong></h6>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
+                    <h6 style="font-size: 15px;">SESSION: <strong>${session}_${user_data.id}</strong></h6>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
+                    <h6 style="font-size: 15px;">TERM: <strong>${term}_${user_data.id}</strong></h6>
                 </div>
             </div>
 
@@ -2799,7 +2806,7 @@ async function getStudentResult() {
                                         No of times school
                                         opened
                                     </td>
-                                    <td  id="opened_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_school_opened')" contenteditable="true"
+                                    <td  id="opened_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_school_opened')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2809,7 +2816,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         No of times present
                                     </td>
-                                    <td id="present_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_present')" contenteditable="true"
+                                    <td id="present_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_present')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2832,33 +2839,33 @@ async function getStudentResult() {
                                 <table style="padding: 0%;" class="table table-sm">
                                     <thead>
                                  <tr>
-                                     <th id="sn_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">S/NO</th>
+                                     <th id="sn_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">S/NO</th>
 
-                                     <th id="subject_header_${session}_${term}" style="font-size: 14px; text-align:center">SUBJECT</th>
+                                     <th id="subject_header_${session}_${term}_${user_data.id}" style="font-size: 14px; text-align:center">SUBJECT</th>
 
-                                     <th id="first_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
+                                     <th id="first_test_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
 
-                                     <th id="second_test_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
+                                     <th id="second_test_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
 
-                                     <th id="note_ass_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+                                     <th id="note_ass_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
 
-                                     <th id="cbt_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CBT</th>
+                                     <th id="cbt_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CBT</th>
 
-                                     <th id="project_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
+                                     <th id="project_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
 
-                                     <th id="exam_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+                                     <th id="exam_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
 
-                                     <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
+                                     <th id="total_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
 
                                      ${term == "THIRD TERM" ?
             `
-                                          <th id="first_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
+                                          <th id="first_term_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
 
-                                          <th id="second_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
+                                          <th id="second_term_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
 
-                                          <th id="third_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
+                                          <th id="third_term_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px; color:green">THIRD TERM</th>
 
-                                          <th id="mean_score_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
+                                          <th id="mean_score_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
                                         
                                         `
             :
@@ -2867,21 +2874,21 @@ async function getStudentResult() {
 
 
 
-                                     <th id="class_average_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+                                     <th id="class_average_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
 
-                                     <th id="class_lowest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
+                                     <th id="class_lowest_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
 
-                                     <th id="class_highest_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+                                     <th id="class_highest_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
 
-                                     <th id="position_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">POSITION</th>
+                                     <th id="position_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">POSITION</th>
 
-                                     <th id="grade_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">GRADE</th>
+                                     <th id="grade_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">GRADE</th>
 
-                                     <th id="remark_header_${session}_${term}" style="font-size: 14px; text-align:center">REMARK</th>
+                                     <th id="remark_header_${session}_${term}_${user_data.id}" style="font-size: 14px; text-align:center">REMARK</th>
                                  </tr>
                                  
                              </thead>
-                                    <tbody id="scores_${session}_${term}">
+                                    <tbody id="scores_${session}_${term}_${user_data.id}">
 
                                     
                                     
@@ -2895,16 +2902,16 @@ async function getStudentResult() {
                                     <thead>
                                         <tr>
                                             <th style="font-size: 13px;font-style: italic;">NO IN CLASS :
-                                                <span id="no_student_${session}_${term}"></span>
+                                                <span id="no_student_${session}_${term}_${user_data.id}"></span>
                                             </th>
                                             <th style="font-size: 13px;font-style: italic;">CLASS POSITION :
-                                                <span id="class_position_${session}_${term}"></span>
+                                                <span id="class_position_${session}_${term}_${user_data.id}"></span>
                                             </th>
                                             <th style="font-size: 13px;font-style: italic;">GRADE POSITION :
-                                                <span id="grade_position_${session}_${term}"></span>
+                                                <span id="grade_position_${session}_${term}_${user_data.id}"></span>
                                             </th>
                                             <th style="font-size: 13px;font-style: italic;">PERCENTAGE :
-                                                <span id="percentage_${session}_${term}"></span>
+                                                <span id="percentage_${session}_${term}_${user_data.id}"></span>
                                             </th>
                                         </tr>
                                     </thead>
@@ -2916,7 +2923,7 @@ async function getStudentResult() {
                                                 <span style="font-weight: bold;">Class Teacher's
                                                     Comment :
                                                 </span>
-                                                <font color="black"><b id="teacher_comment_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
+                                                <font color="black"><b id="teacher_comment_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
                                             </td>
                                         </tr>
 
@@ -2943,7 +2950,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Hand Writing
                                     </td>
-                                    <td id="handwriting_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
+                                    <td id="handwriting_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2954,7 +2961,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Games
                                     </td>
-                                    <td id="games_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
+                                    <td id="games_${session}_${term}_${user_data.id}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2965,7 +2972,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Handing Tools
                                     </td>
-                                    <td id="handing_tools_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
+                                    <td id="handing_tools_${session}_${term}_${user_data.id}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2975,7 +2982,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Drawing and Painting
                                     </td>
-                                    <td id="drawing_painting_${session}_${term}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
+                                    <td id="drawing_painting_${session}_${term}_${user_data.id}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2993,7 +3000,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Neatness
                                     </td>
-                                    <td id="neatness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
+                                    <td id="neatness_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3003,7 +3010,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Politeness
                                     </td>
-                                    <td id="politeness_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
+                                    <td id="politeness_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3014,7 +3021,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Co-operation with others
                                     </td>
-                                    <td id="cooperation_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
+                                    <td id="cooperation_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3026,7 +3033,7 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Health
                                     </td>
-                                    <td id="health_${session}_${term}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
+                                    <td id="health_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3066,7 +3073,7 @@ async function getStudentResult() {
     await getCommentsAndPsycho(container_name);
 
 
-    localStorage.setItem("loadNextResult", "true");
+    //localStorage.setItem("loadNextResult", "true");
   }
 
   removeSpinnerModal();
@@ -3074,7 +3081,7 @@ async function getStudentResult() {
 
 
 // RESULT LIST BY CLASS
-function getResultsByClass() {
+async function getResultsByClass() {
 
   const params = {
     class: localStorage['broadsheet_class'],
@@ -3108,33 +3115,138 @@ function getResultsByClass() {
     .then(data => {
       if (!data) return;
 
-      removeSpinnerModal();
 
+
+      removeSpinnerModal();
       data.broadsheet.forEach(student => {
 
-        localStorage.setItem("loadNextResult", "false");
-        iframe = `iframe_${student.student_id}`;
-        loadNextResult = localStorage.getItem("loadNextResult");
+
+        document.getElementById("result-list").innerHTML +=
+          `
+        <section>
+        <div style="float: right;" class="header-inline item-header">
+
+        </div>
+
+        <div style="border: 2px solid black;margin: 0%;" class="result-page">
+
+            <!-- SCHOOL LOGO-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3">
+
+                    </div>
+                    <div class="col-md-4 col-lg-6">
+                        <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img id="school_logo_${student.student_id}"
+                                src="../assets/img/sample_logo.png" height="150px" width="130px"></div>
+
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- RESULT HEADER -->
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 0px;">
+                            <h5 style="font-weight: bold;font-family: Poppins, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
+                        </div>
+                    </div>
+
+                    <div class="w-100" style="margin-bottom: 0px;"></div>
+
+                    <div class="col-md-4">
+                        <div id="verificationQR_${student.student_id}" style="margin-left: 100px;margin-top: 30px;" title="STUDENT NUMBER">
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="display: flex;
+                    justify-content: center;">
+                        <div class="text-center" style="margin-top: 30px;">
+                            <p id="full_name_${student.student_id}" style="font-size: 14px;">_____________________________</p>
+                            <p id="student_id_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+                                _____________________________</p>
+                            <p id="class_sector_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+                                _____________________________</p>
+                            <p id="school_details_${student.student_id}" style="font-size: 14px;font-family: Poppins;">
+                                <b>_____________________________</b>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="display: flex;
+                            justify-content: center;"><br>
+                        <img style="margin-bottom: 15px; margin-top: 15px;" id="student_image_${student.student_id}"
+                            src="../assets/img/sample_image.png" height="150px" width="130px">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="result_div_${student.student_id}">
+
+
+                <hr style="color: black; border: 1px solid black">
+                <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+                <hr style="color: black; border: 1px solid black">
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+        
+        
+        
+        
+        `;
+
+
+
+        studentIdSuffix = `_${student.student_id}`;
+        localStorage.setItem('student_result', JSON.stringify(student.student));
+        getStudentResult();
+
+
+        // localStorage.setItem("loadNextResult", "false");
+        // iframe = `iframe_${student.student_id}`;
+        // loadNextResult = localStorage.getItem("loadNextResult");
 
         //console.log("FRAME :::::::::" + studentIframe);
 
 
-        while (loadNextResult == "false" || loadNextResult == undefined || loadNextResult == null) {
-          console.log("STILL FALSE");
+        // while (loadNextResult == "false" || loadNextResult == undefined || loadNextResult == null) {
+        //   console.log("STILL FALSE");
 
-          studentIframe = document.getElementById(iframe);
-          if (studentIframe == null) {
-            localStorage.setItem('student_result', JSON.stringify(student.student));
-            document.getElementById('result-list').innerHTML +=
-              ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
-            iFrameResize({ log: true }, `#${iframe}`)
-          }
+        //   studentIframe = document.getElementById(iframe);
+        //   if (studentIframe == null) {
+        //      console.log("NO FRAME");
+        //     localStorage.setItem('student_result', JSON.stringify(student.student));
+        //     document.getElementById('result-list').innerHTML +=
+        //       ` <iframe id="${iframe}" class="iframe" src="./student-result.html" title="description" style="border:none;" title="Iframe Example" scrolling="no"></iframe> <br/>`;
+        //     iFrameResize({ log: true }, `#${iframe}`)
+        //   }
 
 
-          loadNextResult = localStorage.getItem("loadNextResult");
-        }
 
-      
+
+        //   loadNextResult = localStorage.getItem("loadNextResult");
+        // }
+
+
       });
 
       //removeSpinnerModal();
@@ -3173,6 +3285,8 @@ function getAttendanceSummary(value) {
     })
 
     .then((data) => {
+      value.split("_")[2] = value.split("_")[2] + studentIdSuffix;
+
       document.getElementById(
         "opened_" + value.split("_")[1] + "_" + value.split("_")[2]
       ).innerHTML = data.opened;
