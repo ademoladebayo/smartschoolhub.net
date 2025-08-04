@@ -3385,10 +3385,9 @@ async function getResultsByClass() {
       studentIdSuffix = `_${student.student_id}`;
       localStorage.setItem('student_result', JSON.stringify(student.student));
 
-      await setTimeout(function () {
-        getStudentResult(student.student_id);
-      }, 150000);
+      await delay(15000);
 
+      await getStudentResult(student.student_id);
     }
 
   } catch (error) {
