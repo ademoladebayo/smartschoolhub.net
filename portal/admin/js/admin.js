@@ -7,6 +7,8 @@ var warningSound = new Audio("../asset/sound/warning.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 const timestamp = new Date().getTime();
 
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 
 
 //const config = new Config();
