@@ -2307,7 +2307,7 @@ function getResult(value) {
 
     .then((data) => {
 
-      value.split("_")[2] = value.split("_")[2] + studentIdSuffix;
+      value.split("_")[2] = value.split("_")[2] + "" + studentIdSuffix;
 
       c = 1;
       if (data.result.length > 0) {
@@ -2494,7 +2494,7 @@ function getCommentsAndPsycho(value) {
     })
 
     .then((data) => {
-      value.split("_")[2] = value.split("_")[2] + studentIdSuffix;
+      value.split("_")[2] = value.split("_")[2] + "" + studentIdSuffix;
 
       // POPULATE COMMENT
       document.getElementById(
@@ -3387,7 +3387,7 @@ async function getResultsByClass() {
       studentIdSuffix = `_${student.student_id}`;
       localStorage.setItem('student_result', JSON.stringify(student.student));
 
-      await delay(15000);
+      await delay(5000);
 
       await getStudentResult(student.student_id);
     }
@@ -3466,13 +3466,6 @@ function generateStudentResultHTML(student) {
 
 // STUDENT ATTENDANCE
 
-
-
-
-
-
-
-
 function getAttendanceSummary(value) {
   // GET ACADEMIC PERFORMANCE
   return fetch(ip + "/api/student/attendance-summary", {
@@ -3498,7 +3491,8 @@ function getAttendanceSummary(value) {
     })
 
     .then((data) => {
-      value.split("_")[2] = value.split("_")[2] + studentIdSuffix;
+      console.log("CHEEKLSAAS +++++ " + studentIdSuffix);
+      value.split("_")[2] = value.split("_")[2] + "" + studentIdSuffix;
 
       document.getElementById(
         "opened_" + value.split("_")[1] + "_" + value.split("_")[2]
