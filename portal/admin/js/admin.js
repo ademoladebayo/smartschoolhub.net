@@ -2784,12 +2784,12 @@ async function getStudentResult() {
             </div>
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">SESSION: <strong>${session}}</strong></h6>
+                    <h6 style="font-size: 15px;">SESSION: <strong>${session}</strong></h6>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">TERM: <strong>${term}}</strong></h6>
+                    <h6 style="font-size: 15px;">TERM: <strong>${term}</strong></h6>
                 </div>
             </div>
 
@@ -3283,13 +3283,112 @@ async function getResultsByClass() {
 
     for (const student of data.broadsheet) {
       // Create result section
-      const studentSection = document.createElement('section');
-      studentSection.innerHTML = generateStudentResultHTML(student);
-      resultList.appendChild(studentSection);
+      // const studentSection = document.createElement('section');
+      // studentSection.innerHTML = generateStudentResultHTML(student);
+      // resultList.appendChild(studentSection);
+
+
+      document.getElementById("result-list").innerHTML +=
+        `
+        <section>
+        <div style="float: right;" class="header-inline item-header">
+
+        </div>
+
+        <div style="border: 2px solid black;margin: 0%;" class="result-page">
+
+            <!-- SCHOOL LOGO-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3">
+
+                    </div>
+                    <div class="col-md-4 col-lg-6">
+                        <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img id="school_logo_${student.student_id}"
+                                src="../assets/img/sample_logo.png" height="150px" width="130px"></div>
+
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- RESULT HEADER -->
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center" style="margin-right: 0px;margin-left: 0px;margin-top: 0px;">
+                            <h5 style="font-weight: bold;font-family: Poppins, serif;">STUDENT<br>MINI-TRANSCRIPT</h5>
+                        </div>
+                    </div>
+
+                    <div class="w-100" style="margin-bottom: 0px;"></div>
+
+                    <div class="col-md-4">
+                        <div id="verificationQR_${student.student_id}" style="margin-left: 100px;margin-top: 30px;" title="STUDENT NUMBER">
+
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" style="display: flex;
+                    justify-content: center;">
+                        <div class="text-center" style="margin-top: 30px;">
+                            <p id="full_name_${student.student_id}" style="font-size: 14px;">_____________________________</p>
+                            <p id="student_id_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+                                _____________________________</p>
+                            <p id="class_sector_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+                                _____________________________</p>
+                            <p id="school_details_${student.student_id}" style="font-size: 14px;font-family: Poppins;">
+                                <b>_____________________________</b>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="display: flex;
+                            justify-content: center;"><br>
+                        <img style="margin-bottom: 15px; margin-top: 15px;" id="student_image_${student.student_id}"
+                            src="../assets/img/sample_image.png" height="150px" width="130px">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="result_div_${student.student_id}">
+
+
+                <hr style="color: black; border: 1px solid black">
+                <h3 style="text-align: center;">NO RESULT AVAILABLE</h3>
+                <hr style="color: black; border: 1px solid black">
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+
+        `;
 
       // Process student result data
+      studentIdSuffix = `_${student.student_id}`;
       localStorage.setItem('student_result', JSON.stringify(student.student));
-      await getStudentResult(student.student_id);
+
+      await setTimeout(function () {
+        getStudentResult(student.student_id);
+      }, 150000);
+
     }
 
   } catch (error) {
@@ -3365,6 +3464,14 @@ function generateStudentResultHTML(student) {
 
 
 // STUDENT ATTENDANCE
+
+
+
+
+
+
+
+
 function getAttendanceSummary(value) {
   // GET ACADEMIC PERFORMANCE
   return fetch(ip + "/api/student/attendance-summary", {
