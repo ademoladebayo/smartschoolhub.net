@@ -3387,7 +3387,7 @@ async function getResultsByClass() {
       studentIdSuffix = `_${student.student_id}`;
       localStorage.setItem('student_result', JSON.stringify(student.student));
 
-      await delay(5000);
+      await delay(20000);
 
       await getStudentResult(student.student_id);
     }
@@ -3493,6 +3493,8 @@ function getAttendanceSummary(value) {
     .then((data) => {
       console.log("CHEEKLSAAS +++++ " + studentIdSuffix);
       value.split("_")[2] = value.split("_")[2] + "" + studentIdSuffix;
+
+      console.log("FFFFFFFF +++++ " + value.split("_")[2]);
 
       document.getElementById(
         "opened_" + value.split("_")[1] + "_" + value.split("_")[2]
