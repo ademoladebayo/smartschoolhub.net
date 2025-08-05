@@ -520,8 +520,11 @@ class StudentService
             // PUSH ALL SCORE TO ARRAY TO GET POSITION
             $sum_mean_score = 0;
             $sum_mean_count = 0;
-            
-            \Log::info("SCORE : " . json_encode($scores));
+
+            if ($data->subject_id == 69 && $request->student_id == 117) {
+                \Log::info("SCORE : " . print_r($scores, true));
+            }
+
             foreach ($scores as $score) {
                 $value = isset($score->mean_score) ? floor($score->mean_score) : $score->total;
                 array_push($all_score, intval($value));
