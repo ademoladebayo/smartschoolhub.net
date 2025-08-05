@@ -2772,7 +2772,7 @@ async function getStudentResult() {
       terms.forEach((term) => {
         // CREATE RESULT TEMPLATE
         document.getElementById("result_div_" + user_data.id).innerHTML += `
-        <div id="result_${session}_${term}_${user_data.id}" name="result_${session}_${term}_${user_data.id}" class="container result_container" style="margin-bottom: 30px;">
+        <div id="result_${session}_${term}_${user_data.id}" name="result_${session}_${term}_${user_data.id}" class="container result_container_${user_data.id}" style="margin-bottom: 30px;">
         <div style="border:1px solid black; padding-bottom: 15px;" class="row">
 
             <div class="col-md-4">
@@ -3059,7 +3059,7 @@ async function getStudentResult() {
   }
 
   // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
-  result_containers = document.getElementsByClassName("result_container");
+  result_containers = document.getElementsByClassName(`result_container_${user_data.id}`);
 
   for (i = 0; i < result_containers.length; i++) {
     container_name = result_containers[i].attributes[0].nodeValue;
