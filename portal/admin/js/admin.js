@@ -2276,7 +2276,7 @@ function getResult(value) {
   // GET ACADEMIC PERFORMANCE
 
   session = value.split("_")[1];
-  term = value.split("_")[2] + "" + studentIdSuffix;
+  term = value.split("_")[2];
 
   return fetch(ip + "/api/student/result", {
     method: "POST",
