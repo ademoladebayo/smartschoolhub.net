@@ -3380,11 +3380,11 @@ async function getResultsByClass() {
         `;
 
       // Process student result data
-      studentIdSuffix = `_${student.student_id}`;
+
       localStorage.setItem('student_result', JSON.stringify(student.student));
 
       await delay(20000);
-
+      studentIdSuffix = `_${student.student_id}`;
       await getStudentResult(student.student_id);
     }
 
