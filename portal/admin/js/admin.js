@@ -2338,7 +2338,7 @@ function getResult(value) {
               "scores_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
             ).innerHTML += `
           <tr>
-              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = data.settings.sn.status == 'hidden' ? true : false}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.sn.status == 'hidden' ? true : false}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 ${c}.
               </td>
 
@@ -2346,31 +2346,31 @@ function getResult(value) {
                 ${result.subject.subject_name}
               </td>
 
-              <td ${data.settings.first_test.status} ${document.getElementById(`first_test_header_${session}_${term}`).hidden = data.settings.first_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.first_test.status} ${document.getElementById(`first_test_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.first_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.first_ca}
               </td>
 
-              <td ${data.settings.second_test.status} ${document.getElementById(`second_test_header_${session}_${term}`).hidden = data.settings.second_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.second_test.status} ${document.getElementById(`second_test_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.second_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.second_ca}
               </td>
 
-                <td ${data.settings.project.status} ${document.getElementById(`project_header_${session}_${term}`).hidden = data.settings.project.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                <td ${data.settings.project.status} ${document.getElementById(`project_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.project.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.project}
               </td>
 
-              <td ${data.settings.note_ass.status} ${document.getElementById(`note_ass_header_${session}_${term}`).hidden = data.settings.note_ass.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.note_ass.status} ${document.getElementById(`note_ass_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.note_ass.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.note_assignment}
               </td>
 
-              <td ${data.settings.cbt.status} ${document.getElementById(`cbt_header_${session}_${term}`).hidden = data.settings.cbt.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.cbt.status} ${document.getElementById(`cbt_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.cbt.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.cbt}
               </td>
 
-              <td ${data.settings.exam.status} ${document.getElementById(`exam_header_${session}_${term}`).hidden = data.settings.exam.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.exam.status} ${document.getElementById(`exam_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.exam.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.examination}
               </td>
 
-              <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.total}
               </td>
 
@@ -2403,7 +2403,7 @@ function getResult(value) {
                 ${result.third_term}
               </td>
               
-               <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
+               <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
                   ? "red"
                   : result.grade.includes("A")
                     ? "blue"
@@ -2416,7 +2416,7 @@ function getResult(value) {
                 : ``
               }
 
-              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = data.settings.sn.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.sn.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${parseFloat(result.class_average).toFixed(0)}
               </td>
 
@@ -2432,7 +2432,7 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
 
-              <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}`).hidden = data.settings.grade.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
+              <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.grade.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
                 ? "red"
                 : result.grade.includes("A")
                   ? "blue"
@@ -2441,7 +2441,7 @@ function getResult(value) {
               ${result.grade}
               </td>
 
-              <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}`).hidden = data.settings.remark.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
+              <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.remark.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
                 ? "red"
                 : result.grade.includes("A")
                   ? "blue"
@@ -2491,7 +2491,7 @@ function getCommentsAndPsycho(value) {
     })
 
     .then((data) => {
-    
+
       // POPULATE COMMENT
       document.getElementById(
         "teacher_comment_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
