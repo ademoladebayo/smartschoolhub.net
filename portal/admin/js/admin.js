@@ -2276,7 +2276,7 @@ function getResult(value) {
   // GET ACADEMIC PERFORMANCE
 
   session = value.split("_")[1];
-  term = value.split("_")[2];
+  term = value.split("_")[2] + "" + studentIdSuffix;
 
   return fetch(ip + "/api/student/result", {
     method: "POST",
@@ -2306,9 +2306,6 @@ function getResult(value) {
     })
 
     .then((data) => {
-
-      value.split("_")[2] = value.split("_")[2] + "" + studentIdSuffix;
-
       c = 1;
       if (data.result.length > 0) {
         data.result.forEach((result) => {
@@ -2316,29 +2313,29 @@ function getResult(value) {
           if (result.subject) {
             // ATTACH CLASS TO THAT RESULT TERM AND SESSION
             document.getElementById(
-              "class_" + value.split("_")[1] + "_" + value.split("_")[2]
+              "class_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
             ).innerHTML = result.class.class_name;
 
             // ATTACH NO OF STUDENT , GRADE POSITION AND PERCENTAGE
             document.getElementById(
-              "no_student_" + value.split("_")[1] + "_" + value.split("_")[2]
+              "no_student_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
             ).innerHTML = data.no_student;
 
             document.getElementById(
-              "class_position_" + value.split("_")[1] + "_" + value.split("_")[2]
+              "class_position_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
             ).innerHTML = data.class_position;
 
             document.getElementById(
-              "grade_position_" + value.split("_")[1] + "_" + value.split("_")[2]
+              "grade_position_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
             ).innerHTML = data.grade_position;
 
             document.getElementById(
-              "percentage_" + value.split("_")[1] + "_" + value.split("_")[2]
+              "percentage_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
             ).innerHTML = data.percentage;
 
             // SCORE TABLE
             document.getElementById(
-              "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
+              "scores_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
             ).innerHTML += `
           <tr>
               <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = data.settings.sn.status == 'hidden' ? true : false}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
@@ -2494,37 +2491,36 @@ function getCommentsAndPsycho(value) {
     })
 
     .then((data) => {
-      value.split("_")[2] = value.split("_")[2] + "" + studentIdSuffix;
-
+    
       // POPULATE COMMENT
       document.getElementById(
-        "teacher_comment_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "teacher_comment_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = "<b><i>" + data.teacher_comment + "</b></i>";
 
       // POPULATE RATINGS
       document.getElementById(
-        "handwriting_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "handwriting_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.handwriting;
       document.getElementById(
-        "games_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "games_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.games;
       document.getElementById(
-        "handing_tools_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "handing_tools_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.handling_tools;
       document.getElementById(
-        "drawing_painting_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "drawing_painting_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.drawing_painting;
       document.getElementById(
-        "neatness_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "neatness_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.neatness;
       document.getElementById(
-        "politeness_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "politeness_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.politeness;
       document.getElementById(
-        "cooperation_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "cooperation_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.cooperation;
       document.getElementById(
-        "health_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "health_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.student_rating.health;
 
 
@@ -3067,7 +3063,7 @@ async function getStudentResult() {
 
   for (i = 0; i < result_containers.length; i++) {
     container_name = result_containers[i].attributes[0].nodeValue;
-    // ATTENDANCEk
+    // ATTENDANCE
     await getAttendanceSummary(container_name);
     //ACADEMIC PERFORMANCE
     await getResult(container_name);
@@ -3491,16 +3487,11 @@ function getAttendanceSummary(value) {
     })
 
     .then((data) => {
-      console.log("CHEEKLSAAS +++++ " + studentIdSuffix);
-      value.split("_")[2] = value.split("_")[2] + "" + studentIdSuffix;
-
-      console.log("FFFFFFFF +++++ " + value.split("_")[2]);
-
       document.getElementById(
-        "opened_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "opened_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.opened;
       document.getElementById(
-        "present_" + value.split("_")[1] + "_" + value.split("_")[2]
+        "present_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
       ).innerHTML = data.present;
     })
     .catch((err) => console.log(err));
