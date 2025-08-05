@@ -61,7 +61,7 @@
 </head>
 
 <body style="font-family: Poppins; font-weight: bold;"
-    onload="onload(); loadSideNav('result'); loadCustomSubjectClass(false); loadCustomSessionTerm(); getAllClassForDropDown();  loadDashBoardInformation();">
+    onload="onload(); loadSideNav('result'); loadCustomSubjectClass(false); loadCustomSessionTerm(); getAllClassForDropDown(); getCurrentSession(); loadDashBoardInformation();">
     <!-- Preloader Start Here -->
     <div id="preloader"></div>
     <!-- Preloader End Here -->
@@ -457,10 +457,11 @@
 
             document.getElementById('broadsheet_div').hidden = false;
             document.getElementById('upload_result_div').hidden = true;
-            reloadFrame('iframe', "./broadsheet.html");
 
             if (action === 'VIEW_RESULT') {
                 document.getElementById('broadsheet_div').hidden = true;
+            } else {
+                reloadFrame('iframe', "./broadsheet.html");
             }
 
             //console.log(action);
@@ -502,11 +503,11 @@
 
             if (pageAction == 'VIEW_RESULT') {
                 window.parent.location.assign(domain + "/admin/student-result.html");
+            } else {
+                reloadFrame('iframe');
             }
 
-            reloadFrame('iframe');
             //getBroadsheet();
-
             //window.parent.location.assign(domain + "/admin/broadsheet.html");
         }
 

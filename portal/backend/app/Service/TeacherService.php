@@ -401,8 +401,10 @@ class TeacherService
         foreach ($data as $keys => $value) {
             $result = SubjectRegistrationModel::find($keys);
             foreach ($data[$keys] as $key => $value) {
-                $result[$key] = $value == null ? "-" : $value;
+                $result[$key] = $value == null ? "-" : $this->safeAbs($value);
             }
+
+            //abs()
 
             $first_ca = $result->first_ca != "-" ? $result->first_ca : 0;
             $second_ca = $result->second_ca != "-" ? $result->second_ca : 0;
@@ -416,6 +418,15 @@ class TeacherService
             $result->save();
         }
         return response()->json(['success' => true, 'message' => 'Result upload was successful.']);
+    }
+
+    function safeAbs($value)
+    {
+        // Remove all whitespace and extra minuses
+        $cleaned = preg_replace('/\s+/', '', $value);
+        $cleaned = str_replace('--', '-', $cleaned);
+
+        return abs($cleaned);
     }
 
 
