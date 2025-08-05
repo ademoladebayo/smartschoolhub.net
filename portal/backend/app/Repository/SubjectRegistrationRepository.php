@@ -23,6 +23,7 @@ class SubjectRegistrationRepository
             // ->where('subject_type', 'COMPULSORY')
             ->where('session', $request->session)
             ->where('term', $request->term)
+            ->whereNull('subject_registration.deleted_at') // Exclude soft-deleted records
             ->join('subject', 'subject_registration.subject_id', '=', 'subject.id')
             ->join('teacher', 'subject.teacher', '=', 'teacher.id')
             ->select('subject.id','subject_registration.subject_type', 'subject.subject_name', 'subject_registration.subject_id', 'subject.teacher', DB::raw('CONCAT(teacher.title, " ", teacher.first_name, " ", teacher.last_name) as teacher'))
@@ -39,6 +40,7 @@ class SubjectRegistrationRepository
             ->where('session',  $util->getCurrentSession()[0])
             ->where('term', $util->getCurrentSession()[1])
             ->select('subject_id')
+            ->whereNull('deleted_at') // Exclude soft-deleted records
             ->get();
 
         foreach ($subjects as $subject) {

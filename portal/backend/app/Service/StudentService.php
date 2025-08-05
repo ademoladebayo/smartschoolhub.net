@@ -468,7 +468,7 @@ class StudentService
 
         # NO OF STUDENT WHO REGISTERED SUBJECT FOR THE CLASS, SESSION AND TERM
         if (count($result) > 0) {
-            $no_student = DB::select('select count(distinct sr.student_id) as no_student from subject_registration sr join student s on sr.student_id = s.id where s.profile_status ="ENABLED" and   class_id ="' . $result[0]->class->id . '" and session ="' . $request->session . '" and term ="' . $request->term . '"')[0]->no_student;
+            $no_student = DB::select('select count(distinct sr.student_id) as no_student from subject_registration sr join student s on sr.student_id = s.id where s.profile_status ="ENABLED" and   class_id ="' . $result[0]->class->id . '" and session ="' . $request->session . '" and term ="' . $request->term . '" and sr.deleted_at is null')[0]->no_student;
         }
 
         // LOOP THROUGH RESULT AND ATTACH GRADE
@@ -501,6 +501,7 @@ class StudentService
                     ->where('sub.id', $data->subject_id)
                     ->where('cl.id', $data->class_id)
                     ->where('sr.session', $request->session)
+                    ->whereNull('sr.deleted_at') // Exclude soft-deleted records
                     // ->where('sr.term', 'FIRST TERM') // commented out to include all terms
                     ->groupBy([
                         's.student_id',
@@ -521,9 +522,9 @@ class StudentService
             $sum_mean_score = 0;
             $sum_mean_count = 0;
 
-            if ($data->subject_id == 69 && $request->student_id == 117) {
-                \Log::info("SCORE : " . print_r($scores, true));
-            }
+            // if ($data->subject_id == 69 && $request->student_id == 117) {
+            //     \Log::info("SCORE : " . print_r($scores, true));
+            // }
 
             foreach ($scores as $score) {
                 $value = isset($score->mean_score) ? floor($score->mean_score) : $score->total;
