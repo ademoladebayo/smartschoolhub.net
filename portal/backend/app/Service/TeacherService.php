@@ -150,6 +150,7 @@ class TeacherService
             foreach ($diffrence as $diff) {
                 array_push($subject_to_delete, $diff);
             }
+            
             // DELETE SUBJECTS
             foreach ($subject_to_delete as $subject) {
                 SubjectRegistrationModel::where('student_id', $students_id[$i])->where('class_id', $request->class)->where('subject_id', $subject)->Where('subject_type', 'COMPULSORY')->Where('session', $request->session)->Where('term', $request->term)->delete();
@@ -175,6 +176,7 @@ class TeacherService
             }
 
             Log::alert(StudentResultCommentModel::where('student_id', $students_id[$i])->where('session', $request->session)->where('term', $request->term)->exists());
+
             // CHECK IF IT HAS BEEN CREATED FOR CURRENT STUDENT
             if (!StudentResultCommentModel::where('student_id', $students_id[$i])->where('session', $request->session)->where('term', $request->term)->exists()) {
 
