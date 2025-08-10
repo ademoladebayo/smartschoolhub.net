@@ -118,9 +118,9 @@ class TeacherService
 
         // LOOP THROUGH EACH STUDENT
         for ($i = 0; $i < count($students_id); $i++) {
-            Log::debug("=========================================================");
-            Log::debug("REGISTRATION FOR STUDENT " . ($i + 1));
-            Log::debug("=========================================================");
+            // Log::debug("=========================================================");
+            // Log::debug("REGISTRATION FOR STUDENT " . ($i + 1));
+            // Log::debug("=========================================================");
             $StudentResultCommentModel = new StudentResultCommentModel();
             $StudentResultRatingModel = new StudentResultRatingModel();
 

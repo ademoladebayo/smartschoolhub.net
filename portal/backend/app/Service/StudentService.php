@@ -86,8 +86,8 @@ class StudentService
         foreach (SubjectRegistrationModel::select("subject_id")->where('student_id', $request->student_id)->where('class_id', $request->class)->Where('subject_type', 'ELECTIVE')->Where('session', $request->session)->Where('term', $request->term)->get() as $data) {
             array_push($previous_registration_id, $data->subject_id);
         }
-        Log::debug("PREVIOUS REGISTRATION : ");
-        Log::debug($previous_registration_id);
+        // Log::debug("PREVIOUS REGISTRATION : ");
+        // Log::debug($previous_registration_id);
 
         // GET THE DIFFRENCE BETWEEN THE PREVIOUS AND NEW REGISTRATION
         $subject_to_register = [];
@@ -111,10 +111,10 @@ class StudentService
             SubjectRegistrationModel::where('student_id', $request->student_id)->where('class_id', $request->class)->where('subject_id', $subject)->Where('subject_type', 'ELECTIVE')->Where('session', $request->session)->Where('term', $request->term)->delete();
         }
 
-        Log::debug("SUBJECT TO REGISTER");
-        Log::debug($subject_to_register);
-        Log::debug("SUBJECT TO DELETE");
-        Log::debug($subject_to_delete);
+        // Log::debug("SUBJECT TO REGISTER");
+        // Log::debug($subject_to_register);
+        // Log::debug("SUBJECT TO DELETE");
+        // Log::debug($subject_to_delete);
 
 
         // NOW REGISTER THE SUBJECTS
@@ -286,7 +286,7 @@ class StudentService
         $approved_optional_fee_id = $bursaryService->getApprovedOptionalFeeId($request->student_id, $request->session, $request->term);
 
         $arrears = DebitorModel::select("amount", "last_checked")->where("student_id", $request->student_id)->get();
-        Log::alert("ARREARS : " . $arrears);
+        //Log::alert("ARREARS : " . $arrears);
 
         if (count($arrears) > 0) {
             $student["last_checked"] = $arrears[0]->last_checked;
@@ -538,8 +538,8 @@ class StudentService
 
             if ($request->term == "THIRD TERM") {
                 $avg = $sum_mean_count > 0 ? round($sum_mean_score / $sum_mean_count, 2) : 0;
-                $min = min($all_score);
-                $max = max($all_score);
+                $min = count($all_score) > 0 ? min($all_score) : 0;
+                $max = count($all_score) > 0 ? max($all_score) : 0;
             }
 
 
