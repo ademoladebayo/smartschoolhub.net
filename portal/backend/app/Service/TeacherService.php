@@ -150,7 +150,7 @@ class TeacherService
             foreach ($diffrence as $diff) {
                 array_push($subject_to_delete, $diff);
             }
-            
+
             // DELETE SUBJECTS
             foreach ($subject_to_delete as $subject) {
                 SubjectRegistrationModel::where('student_id', $students_id[$i])->where('class_id', $request->class)->where('subject_id', $subject)->Where('subject_type', 'COMPULSORY')->Where('session', $request->session)->Where('term', $request->term)->delete();
@@ -326,7 +326,7 @@ class TeacherService
             if (count($scoreOver) > 1) {
                 $score = $scoreOver[0];
                 $over = $scoreOver[1];
-                Log::info("$score / $over");
+                //Log::info("$score / $over");
 
                 $score = floor(($score / $over) * $grade_over);
             } else {

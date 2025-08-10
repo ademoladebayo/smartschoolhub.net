@@ -58,9 +58,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'pgsql' => [
@@ -108,9 +117,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'abs' => [
@@ -128,9 +146,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'rps' => [
@@ -148,9 +175,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'elshaddai' => [
@@ -168,9 +204,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'it' => [
@@ -188,9 +233,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'hgs' => [
@@ -208,9 +262,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'csu' => [
@@ -228,9 +291,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'csi' => [
@@ -248,9 +320,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'ca' => [
@@ -268,9 +349,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ],
 
         'ds' => [
@@ -288,9 +378,18 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            //'options' => extension_loaded('pdo_mysql') ? array_filter([
+//                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+//            ]) : [],
+
+            'options' => [
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Return arrays instead of objects
+                PDO::ATTR_EMULATE_PREPARES => false, // Use real prepared statements
+                PDO::ATTR_PERSISTENT => false, // Disable persistent connections
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION wait_timeout=60"
+            ],
         ]
     ],
 
