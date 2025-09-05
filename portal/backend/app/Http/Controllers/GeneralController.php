@@ -29,11 +29,11 @@ class GeneralController extends Controller
     function allSession($sort)
     {
         if (str_contains($sort, 'STD')) {
-            $result_session = DB::select('SELECT distinct session,  term FROM subject_registration where student_id =' . explode("-", $sort)[1] .' deleted_at is not null');
+            $result_session = DB::select('SELECT distinct session,  term FROM subject_registration where student_id =' . explode("-", $sort)[1] .' AND deleted_at is not null');
             return $result_session;
 
         } else if (str_contains($sort, 'PAY')) {
-            $payment_session = DB::select('SELECT distinct session,  term FROM payment_history where student_id =' . explode("-", $sort)[1].' deleted_at is not null');
+            $payment_session = DB::select('SELECT distinct session,  term FROM payment_history where student_id =' . explode("-", $sort)[1].' AND deleted_at is not null');
             return $payment_session;
         } else {
             if ($sort == "DESC") {
