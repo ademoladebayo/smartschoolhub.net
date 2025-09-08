@@ -116,7 +116,8 @@ class SessionRepository
         $term = substr($sessionId, 8);
 
         // Format term with space (convert "THIRDTERM" to "THIRD TERM")
-        $term = preg_replace('/([A-Z])([A-Z])/', '$1 $2', $term);
+        //$term = preg_replace('/([A-Z])([A-Z])/', '$1 $2', $term);
+        $term = preg_replace('/(TERM)$/', ' $1', $term);
 
        
         $count = DB::table('subject_registration')
