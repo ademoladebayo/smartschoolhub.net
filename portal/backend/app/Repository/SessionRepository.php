@@ -118,12 +118,17 @@ class SessionRepository
         // Format term with space (convert "THIRDTERM" to "THIRD TERM")
         $term = preg_replace('/([A-Z])([A-Z])/', '$1 $2', $term);
 
-        return DB::table('subject_registration')
+       
+        $count = DB::table('subject_registration')
             ->where('total', '>', 0)
             ->where('term', $term)
             ->where('session', $session)
             ->distinct('student_id')
             ->count('student_id');
+ 
+       Log::info($count .' '." $session - $term --- $sessionId");
+
+        return  $count;
     }
 
     public function getCurrentSession()
