@@ -92,6 +92,9 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
                 Route::get('admin/all-student', 'AdminController@getAllStudent', function () {
                 })->middleware(Cors::class);
 
+                Route::get('admin/student/export-list', 'AdminController@exportStudentList', function () {
+                })->middleware(Cors::class);
+
                 Route::get('admin/student/{id}', 'AdminController@getStudent', function () {
                 })->middleware(Cors::class);
 
@@ -111,8 +114,7 @@ Route::middleware([SwitchDatabaseConnection::class])->group(function () {
                 Route::post('admin/upload-image', 'AdminController@uploadImage', function () {
                 })->middleware(Cors::class);
 
-                Route::get('admin/student/export-list', 'AdminController@exportStudentList', function () {
-                })->middleware(Cors::class);
+
 
 
 
