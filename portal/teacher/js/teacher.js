@@ -3877,7 +3877,7 @@ function postMaterial(TOPIC, CONTENT, material_type) {
       content: CONTENT,
       subject_id: localStorage["LH_SUBJECT_ID"],
       mark_obtainable:
-        document.getElementById("mark_obtainable").value != ""
+        material_type != "VIDEO"
           ? document.getElementById("mark_obtainable").value
           : 0,
     });
