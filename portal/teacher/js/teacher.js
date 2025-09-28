@@ -4116,11 +4116,11 @@ function getLearningHubMaterials(subject_id) {
         <div id="upload_${upload.id}" class="collapse"
             class="card-body text-dark bg-light">
            
- <object data="${domain + "/backend/storage/app/public/fileupload/learninghub/" + upload.url
+ <object data="${domain + "/backend/storage/app/public/fileupload/"+ localStorage["school"] +"learninghub/" + upload.url
             }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
         <embed
             src="${domain +
-            "/backend/storage/app/public/fileupload/learninghub/" +
+            "/backend/storage/app/public/fileupload/"+ localStorage["school"] +"/learninghub/" +
             upload.url
             }"
             type="application/pdf" class="img-fluid">
