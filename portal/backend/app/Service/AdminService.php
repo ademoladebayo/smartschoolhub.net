@@ -655,16 +655,8 @@ class AdminService
         $utils = new Utils();
 
         // Get all subjects for the class, session, and term
-        $subjects = SubjectRegistrationModel::with('subject')
-            ->select('subject_id')
-            ->where([
-               # 'class_id' => $class_id,
-                'session' => $session,
-                'term' => $term
-            ])
-            ->distinct('subject_id')
-            ->groupBy('subject_id');
-           # ->get();
+        $subjects = SubjectRegistrationModel::with('subject');
+            
 
         // Get all active students in the class
         $students = StudentModel::where([
@@ -676,7 +668,7 @@ class AdminService
 
         // GET CLASS BY SESSION AND TERM
         $classInSessiontTerm = 0;
-
+        $subjectslist = null;
         $broadsheet = [];
 
         // Process each student
@@ -701,11 +693,20 @@ class AdminService
             $classInSessionTerm = $classInSessionTerm == 0 ? $class_id : $classInSessionTerm;
 
 
-            $subjectslist = $subjects->where('class_id',$classInSessiontTerm)->get();
+            $subjectslist = $subjects->select('subject_id')
+            ->where([
+                'class_id' => $classInSessionTerm,
+                'session' => $session,
+                'term' => $term
+            ])
+            ->distinct('subject_id')
+            ->groupBy('subject_id')
+            ->get();
+
             foreach ($subjectslist as $subject) {
                 $response = $studentService->getResult(
                     null,
-                   $classInSessionTerm, #$class_id,  # USE CLASS THAT USER WAS IN THAT TERM AND SESSION
+                    $classInSessionTerm,  # USE CLASS THAT USER WAS IN THAT TERM AND SESSION
                     $subject->subject_id,
                     $student->id,
                     $session,
@@ -775,7 +776,7 @@ class AdminService
             return strtoupper(\Str::substr($item->subject->subject_name, 0, 12)); 
         })->toArray();
 
-       # Log::info("classInSessionTerm ::: ". $classInSessionTerm);
+        Log::info("classInSessionTerm ::: ", ["classInSessionTerm" => $classInSessionTerm, "session" => $session, "term" => $term, "subjects" => $subjectslist]);
 
         return [
             'header' => array_merge(['S/NO', 'STUDENT NAME'], $subjectNames, ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
