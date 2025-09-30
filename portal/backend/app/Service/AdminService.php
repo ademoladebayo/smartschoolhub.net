@@ -697,11 +697,11 @@ class AdminService
             $scoreOver = 0;
             $scores = [];
 
-            $classInSessiontTerm = $studentService->getClassBySessionAndTerm($student->id,$session,$term);
+            $classInSessionTerm = $studentService->getClassBySessionAndTerm($student->id,$session,$term);
             foreach ($subjects as $subject) {
                 $response = $studentService->getResult(
                     null,
-                   $classInSessiontTerm, #$class_id,  # USE CLASS THAT USER WAS IN THAT TERM AND SESSION
+                   $classInSessionTerm, #$class_id,  # USE CLASS THAT USER WAS IN THAT TERM AND SESSION
                     $subject->subject_id,
                     $student->id,
                     $session,
@@ -771,12 +771,12 @@ class AdminService
             return strtoupper(\Str::substr($item->subject->subject_name, 0, 12)); 
         })->toArray();
 
-        Log::info("classInSessiontTerm ::: ". $classInSessiontTerm);
+       # Log::info("classInSessionTerm ::: ". $classInSessionTerm);
 
         return [
             'header' => array_merge(['S/NO', 'STUDENT NAME'], $subjectNames, ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
             'broadsheet' => $broadsheet,
-            'summary' => ['class' => ClassModel::find($classInSessiontTerm)->class_name, 'session' => $session, 'term' => $term]
+            'summary' => ['class' => ClassModel::find($classInSessionTerm)->class_name, 'session' => $session, 'term' => $term]
         ];
 
     }
