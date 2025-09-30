@@ -658,13 +658,13 @@ class AdminService
         $subjects = SubjectRegistrationModel::with('subject')
             ->select('subject_id')
             ->where([
-                'class_id' => $class_id,
+               # 'class_id' => $class_id,
                 'session' => $session,
                 'term' => $term
             ])
             ->distinct('subject_id')
-            ->groupBy('subject_id')
-            ->get();
+            ->groupBy('subject_id');
+           # ->get();
 
         // Get all active students in the class
         $students = StudentModel::where([
@@ -698,7 +698,11 @@ class AdminService
             $scores = [];
 
             $classInSessionTerm = $studentService->getClassBySessionAndTerm($student->id,$session,$term);
-            foreach ($subjects as $subject) {
+            $classInSessionTerm = $classInSessionTerm == 0 ? $class_id : $classInSessionTerm;
+
+
+            $subjectslist = $subjects->where('class_id',$classInSessiontTerm)->get();
+            foreach ($subjectslist as $subject) {
                 $response = $studentService->getResult(
                     null,
                    $classInSessionTerm, #$class_id,  # USE CLASS THAT USER WAS IN THAT TERM AND SESSION
