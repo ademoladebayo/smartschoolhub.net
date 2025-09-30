@@ -7672,8 +7672,8 @@ async function generateIDCard2() {
             <img id="user_image"
               style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
               src="${user_type == " STUDENT"
-          ? user_image + data[i].student_id + `.png?timestamp=${timestamp}`
-          : user_image + data[i].teacher_id + `.png?timestamp=${timestamp}`
+          ? user_image + ''+ data[i].student_id + `.png?timestamp=${timestamp}`
+          : user_image + ''+data[i].teacher_id + `.png?timestamp=${timestamp}`
         }" width="">
 
 
