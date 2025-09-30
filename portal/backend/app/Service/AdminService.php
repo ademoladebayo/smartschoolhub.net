@@ -742,7 +742,7 @@ class AdminService
         # GET POSITION
 
         // 1. Sort the array by percentage (descending order)
-        if (count($subjects) > 0) {
+        if (count($subjectslist) > 0) {
             usort($broadsheet, function ($a, $b) {
                 return $b['scoreTotal'] <=> $a['scoreTotal'];
             });
@@ -771,7 +771,7 @@ class AdminService
             }
         }
 
-        $subjectNames = $subjects->map(function ($item) {
+        $subjectNames = $subjectslist->map(function ($item) {
             return strtoupper(\Str::substr($item->subject->subject_name, 0, 12)); 
         })->toArray();
 
