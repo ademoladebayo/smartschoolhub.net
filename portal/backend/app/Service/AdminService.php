@@ -771,6 +771,8 @@ class AdminService
             return strtoupper(\Str::substr($item->subject->subject_name, 0, 12)); 
         })->toArray();
 
+        Log::info("classInSessiontTerm ::: ". $classInSessiontTerm);
+
         return [
             'header' => array_merge(['S/NO', 'STUDENT NAME'], $subjectNames, ['TOTAL', 'PERCENTAGE', 'POSITION', 'GRADE', 'REMARK']),
             'broadsheet' => $broadsheet,
