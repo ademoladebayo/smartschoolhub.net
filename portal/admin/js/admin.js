@@ -7500,6 +7500,11 @@ async function generateIDCard() {
       ) {
         continue;
       }
+
+      userId = user_type == "STUDENT"
+          ? data[i].student_id
+          : data[i].teacher_id;
+
       document.getElementById(
         "idcard_list"
       ).innerHTML += `<div style="margin-top: 20px;" class="container">
@@ -7521,8 +7526,8 @@ async function generateIDCard() {
             <img id="user_image"
               style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
               src="${user_type == " STUDENT"
-          ? user_image + data[i].student_id + `.png?timestamp=${timestamp}`
-          : user_image + data[i].teacher_id + `.png?timestamp=${timestamp}`
+          ? user_image + userId + `.png?timestamp=${timestamp}`
+          : user_image + userId + `.png?timestamp=${timestamp}`
         }" width="">
 
 
@@ -7532,9 +7537,7 @@ async function generateIDCard() {
               <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
                   ;color: black;">${data[i].first_name + " " + data[i].last_name
         }</p>
-              <p id="id" style="margin-bottom: 1px; color: black; ">${user_type == "STUDENT"
-          ? data[i].student_id
-          : data[i].teacher_id
+              <p id="id" style="margin-bottom: 1px; color: black; ">${userId}
         }</p>
 
               <small>
@@ -7659,7 +7662,7 @@ async function generateIDCard2() {
           ? data[i].student_id
           : data[i].teacher_id;
 
-      console.log("USER-ID .... " + userId);
+      //console.log("USER-ID .... " + userId);
 
       document.getElementById(
         "idcard_list"
@@ -7677,7 +7680,7 @@ async function generateIDCard2() {
 
             <img id="user_image"
               style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
-              src="${user_image + ''+ userId + `.png?timestamp=${timestamp}`}
+              src="${user_image + userId + `.png?timestamp=${timestamp}`}
         }" width="">
 
 
