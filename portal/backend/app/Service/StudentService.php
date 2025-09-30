@@ -743,6 +743,11 @@ class StudentService
         return SubjectRegistrationModel::where("student_id", $student)->orderBy("id", "DESC")->get()[0]->class;
     }
 
+    public function getClassBySessionAndTerm($studentId, $session, $term)
+    {
+        return SubjectRegistrationModel::where(["student_id"=> $studentId, "session" => $session, "term" => $term])->orderBy("id", "DESC")->get()[0]->class;
+    }
+
     // CHANGE PASSWORD
     public function changePassword(Request $request)
     {

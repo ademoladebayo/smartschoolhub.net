@@ -7690,8 +7690,7 @@ async function generateIDCard2() {
               <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
                   ;color: black;">${data[i].first_name + " " + data[i].last_name
         }</p>
-              <p id="id" style="margin-bottom: 1px; color: black; ">${userId}
-        }</p>
+              <p id="id" style="margin-bottom: 1px; color: black; ">${userId}</p>
 
               <small>
                 <p id="gender" style="margin-bottom: 5px; color: black; font-size: 15px;">
