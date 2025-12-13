@@ -667,7 +667,7 @@ class AdminService
 
 
         // GET CLASS BY SESSION AND TERM
-        $classInSessiontTerm = 0;
+        $classInSessionTerm = 0;
         $classInSessionTerm1 = 0;
         $subjectslist = null;
         $subjectslist1 = null;
