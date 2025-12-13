@@ -2644,7 +2644,7 @@ function getBroadsheet() {
 
       for (const student of data.broadsheet) {
        scoreLength = student.scores.length;
-       console.log(student.sn + "--" + scoreLength)
+       alert(student.sn + "--" + scoreLength)
        if (scoreLength === 0) continue;
 
         const row = document.createElement('tr');
