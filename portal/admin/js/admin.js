@@ -2644,7 +2644,7 @@ function getBroadsheet() {
 
       data.broadsheet.forEach(student => {
 
-        if(student.scores.length < 1) return;
+        if(student.scores.length < 1) return 0;
         
 
         const row = document.createElement('tr');

@@ -668,6 +668,7 @@ class AdminService
 
         // GET CLASS BY SESSION AND TERM
         $classInSessiontTerm = 0;
+        $classInSessionTerm1 = 0;
         $subjectslist = null;
         $subjectslist1 = null;
         $broadsheet = [];
@@ -690,8 +691,8 @@ class AdminService
             $scoreOver = 0;
             $scores = [];
 
-            $classInSessionTerm = $studentService->getClassBySessionAndTerm($student->id, $session, $term);
-            $classInSessionTerm = $classInSessionTerm == 0 ? $class_id : $classInSessionTerm;
+            $classInSessionTerm1 = $studentService->getClassBySessionAndTerm($student->id, $session, $term);
+            $classInSessionTerm1 = $classInSessionTerm == 0 ? $class_id : $classInSessionTerm;
 
 
             $subjectslist1 = $subjects->select('subject_id')
@@ -739,6 +740,7 @@ class AdminService
 
             if (count($subjectslist1) > 0) {
                 $subjectslist = $subjectslist1;
+                $classInSessionTerm = $classInSessionTerm1
             } else {
                 $studentRow['scoreTotal'] = 0;
                 $studentRow['percentage'] = 0;
