@@ -2642,9 +2642,9 @@ function getBroadsheet() {
       const broadsheetElement = document.getElementById('broadsheet');
       broadsheetElement.innerHTML = '';
 
-      data.broadsheet.forEach(student => {
+      for (const student of data.broadsheet) {
 
-       if (!student.scores?.length) return;
+       if (student.scores.length === 0) continue;
 
         const row = document.createElement('tr');
 
@@ -2703,7 +2703,7 @@ function getBroadsheet() {
         row.appendChild(remarkCell);
 
         broadsheetElement.appendChild(row);
-      });
+      };
 
       removeSpinnerModal();
     })
