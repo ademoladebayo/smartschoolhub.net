@@ -740,7 +740,7 @@ class AdminService
 
             if (count($subjectslist1) > 0) {
                 $subjectslist = $subjectslist1;
-                $classInSessionTerm = $classInSessionTerm1
+                $classInSessionTerm = $classInSessionTerm1;
             } else {
                 $studentRow['scoreTotal'] = 0;
                 $studentRow['percentage'] = 0;
