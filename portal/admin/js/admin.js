@@ -2643,6 +2643,10 @@ function getBroadsheet() {
       broadsheetElement.innerHTML = '';
 
       data.broadsheet.forEach(student => {
+
+        if(student.scores.length <1) return;
+        
+
         const row = document.createElement('tr');
 
         // SN (Serial Number)

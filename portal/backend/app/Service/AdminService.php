@@ -656,7 +656,7 @@ class AdminService
 
         // Get all subjects for the class, session, and term
         $subjects = SubjectRegistrationModel::with('subject');
-            
+
 
         // Get all active students in the class
         $students = StudentModel::where([
@@ -669,6 +669,7 @@ class AdminService
         // GET CLASS BY SESSION AND TERM
         $classInSessiontTerm = 0;
         $subjectslist = null;
+        $subjectslist1 = null;
         $broadsheet = [];
 
         // Process each student
@@ -689,21 +690,21 @@ class AdminService
             $scoreOver = 0;
             $scores = [];
 
-            $classInSessionTerm = $studentService->getClassBySessionAndTerm($student->id,$session,$term);
+            $classInSessionTerm = $studentService->getClassBySessionAndTerm($student->id, $session, $term);
             $classInSessionTerm = $classInSessionTerm == 0 ? $class_id : $classInSessionTerm;
 
 
-            $subjectslist = $subjects->select('subject_id')
-            ->where([
-                'class_id' => $classInSessionTerm,
-                'session' => $session,
-                'term' => $term
-            ])
-            ->distinct('subject_id')
-            ->groupBy('subject_id')
-            ->get();
+            $subjectslist1 = $subjects->select('subject_id')
+                ->where([
+                    'class_id' => $classInSessionTerm,
+                    'session' => $session,
+                    'term' => $term
+                ])
+                ->distinct('subject_id')
+                ->groupBy('subject_id')
+                ->get();
 
-            foreach ($subjectslist as $subject) {
+            foreach ($subjectslist1 as $subject) {
                 $response = $studentService->getResult(
                     null,
                     $classInSessionTerm,  # USE CLASS THAT USER WAS IN THAT TERM AND SESSION
@@ -734,6 +735,10 @@ class AdminService
 
                 $percentage = $scoreOver > 0 ? ($scoreTotal / $scoreOver) * 100 : 0;
                 $studentRow['percentage'] = number_format($percentage, 2);
+            }
+
+            if (count($subjectslist1) > 0) {
+                $subjectslist = $subjectslist1;
             }
 
             $broadsheet[] = $studentRow;
@@ -768,12 +773,11 @@ class AdminService
 
                 # STORE POSITION IN STUDENT
                 self::updateStudentPosition($student['student_id'], $student['position'], $session, $term);
-
             }
         }
 
         $subjectNames = $subjectslist->map(function ($item) {
-            return strtoupper(\Str::substr($item->subject->subject_name, 0, 12)); 
+            return strtoupper(\Str::substr($item->subject->subject_name, 0, 12));
         })->toArray();
 
         //Log::info("classInSessionTerm ::: ", ["classInSessionTerm" => $classInSessionTerm, "session" => $session, "term" => $term, "subjects" => $subjectslist]);
@@ -783,7 +787,6 @@ class AdminService
             'broadsheet' => $broadsheet,
             'summary' => ['class' => ClassModel::find($classInSessionTerm)->class_name, 'session' => $session, 'term' => $term]
         ];
-
     }
 
 
@@ -804,7 +807,5 @@ class AdminService
             'session' => $session,
             'term' => $term
         ])->update(['class_position' => $position]);
-
     }
-
 }
