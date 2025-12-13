@@ -669,8 +669,8 @@ class AdminService
         // GET CLASS BY SESSION AND TERM
         $classInSessionTerm = 0;
         $classInSessionTerm1 = 0;
-        $subjectslist = null;
-        $subjectslist1 = null;
+        $subjectslist = [];
+        $subjectslist1 = [];
         $broadsheet = [];
 
         // Process each student
