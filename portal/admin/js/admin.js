@@ -2643,8 +2643,9 @@ function getBroadsheet() {
       broadsheetElement.innerHTML = '';
 
       for (const student of data.broadsheet) {
-
-       if (student.scores.length === 0) continue;
+       scoreLength = student.scores.length;
+       console.log(student.sn + "--" + scoreLength)
+       if (scoreLength === 0) continue;
 
         const row = document.createElement('tr');
 
