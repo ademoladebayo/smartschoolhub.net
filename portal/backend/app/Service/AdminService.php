@@ -692,12 +692,12 @@ class AdminService
             $scores = [];
 
             $classInSessionTerm1 = $studentService->getClassBySessionAndTerm($student->id, $session, $term);
-            $classInSessionTerm1 = $classInSessionTerm == 0 ? $class_id : $classInSessionTerm;
+            $classInSessionTerm1 = $classInSessionTerm1 == 0 ? $class_id : $classInSessionTerm1;
 
 
             $subjectslist1 = $subjects->select('subject_id')
                 ->where([
-                    'class_id' => $classInSessionTerm,
+                    'class_id' => $classInSessionTerm1,
                     'session' => $session,
                     'term' => $term
                 ])
