@@ -741,6 +741,7 @@ class AdminService
                 $subjectslist = $subjectslist1;
             } else {
                 $studentRow['scoreTotal'] = 0;
+                $studentRow['percentage'] = 0;
             }
 
             $broadsheet[] = $studentRow;
