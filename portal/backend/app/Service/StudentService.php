@@ -202,8 +202,7 @@ class StudentService
     public function checkIfStudenHasTakenCBT($cbt_id, $student_id)
     {
         count(CBTResultModel::where('cbt_id', $cbt_id)->where('student_id', $student_id)->get()) < 1 ? $studentHasTakenCBT = false : $studentHasTakenCBT = true;
-        return response(['taken' => $studentHasTakenCBT]);
-        ;
+        return response(['taken' => $studentHasTakenCBT]);;
     }
 
     public function submitCBT(Request $request)
@@ -416,6 +415,11 @@ class StudentService
             ]);
         }
 
+        if ($student_id == "112") {
+            Log::info(print_r($request, true));
+        }
+
+
 
         // GET CURRENT SESSION AND TERM
         $session = SessionModel::select('session', 'term')->where('session_status', 'CURRENT')->get()[0]->session;
@@ -511,9 +515,6 @@ class StudentService
                     ])
                     ->orderBy('mean_score', 'DESC')
                     ->get();
-
-
-
             } else {
                 $scores = SubjectRegistrationModel::select(DB::raw('(first_ca + second_ca + note_assignment + cbt + project + examination) as total'))->where("subject_id", $data->subject_id)->where("session", $request->session)->where("term", $request->term)->orderBy('total', 'DESC')->get();
             }
@@ -600,7 +601,6 @@ class StudentService
                 } else {
                     $data['mean_score'] = floor(($first_termm + $second_termm + $third_termm) / $term_count);
                 }
-
             }
 
             if ($data->total > 0 || (isset($data['mean_score']) && $data['mean_score'] > 0)) {
@@ -714,7 +714,6 @@ class StudentService
                 $present = $attendanceSummary->m_present;
                 $absent = intval($opened) - intval($present);
             }
-
         } else {
             $attendanceSummary = new AttendanceSummary();
             $attendanceSummary->student_id = $student;
@@ -745,7 +744,7 @@ class StudentService
 
     public function getClassBySessionAndTerm($studentId, $session, $term)
     {
-        $registration =  SubjectRegistrationModel::where(["student_id"=> $studentId, "session" => $session, "term" => $term])->orderBy("id", "DESC")->first();
+        $registration =  SubjectRegistrationModel::where(["student_id" => $studentId, "session" => $session, "term" => $term])->orderBy("id", "DESC")->first();
         $class = $registration != null ? $registration->class->id : 0;
         return $class;
     }
