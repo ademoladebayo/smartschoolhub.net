@@ -667,8 +667,8 @@ class AdminService
 
 
         // GET CLASS BY SESSION AND TERM
-        $classInSessionTerm = 0;
-        $classInSessionTerm1 = 0;
+        $classInSessionTerm = $class_id;
+        $classInSessionTerm1 = $class_id;
         $subjectslist = [];
         $subjectslist1 = [];
         $broadsheet = [];
