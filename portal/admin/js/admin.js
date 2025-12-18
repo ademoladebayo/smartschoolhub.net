@@ -1,4 +1,3 @@
-
 // import Config from '../../utils/js/config.js';
 
 // SOUND VARIABLES
@@ -7,9 +6,7 @@ var warningSound = new Audio("../asset/sound/warning.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 const timestamp = new Date().getTime();
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 //const config = new Config();
 
@@ -28,11 +25,9 @@ window.addEventListener("offline", () =>
   errortoast("<b>INTERNET DISCONNECTED</b>")
 );
 
-window.addEventListener('load', function () {
-
+window.addEventListener("load", function () {
   setTimeout(() => {
     try {
-
       const firebaseConfig = {
         apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
         authDomain: "dextroux-technologies.firebaseapp.com",
@@ -42,7 +37,7 @@ window.addEventListener('load', function () {
         appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
         measurementId: "G-QWNY4DPSNH",
       };
-      const app = firebase.initializeApp(firebaseConfig)
+      const app = firebase.initializeApp(firebaseConfig);
       const messaging = firebase.messaging();
 
       // Listen for incoming messages (when app is in foreground)
@@ -50,7 +45,7 @@ window.addEventListener('load', function () {
         // notification data receive here, use it however you want
         // keep in mind if message receive here, it will not notify in background
 
-        console.log('in app notify ', payload);
+        console.log("in app notify ", payload);
         const notificationTitle = payload.notification.title;
         const notificationOptions = {
           body: payload.notification.body,
@@ -67,17 +62,17 @@ window.addEventListener('load', function () {
         //   }
         // });
 
-
-        notificationDialog(payload.notification.title, payload.notification.body);
+        notificationDialog(
+          payload.notification.title,
+          payload.notification.body
+        );
         successSound.play();
-
       });
     } catch (err) {
-      console.log('eFCM initialization failed:', err);
+      console.log("eFCM initialization failed:", err);
     }
-
   }, 5000); // Adjust delay if needed
-})
+});
 
 //STARTERS
 collapseSidebar();
@@ -94,7 +89,6 @@ if (
 // VAR
 var result_list = {};
 var session_list = {};
-
 
 // if(!window.location.href.includes("portal-subcription")){
 //   checkPortalSubscription();
@@ -159,17 +153,18 @@ async function signIn() {
           //deviceToken = await initFirebaseMessagingRegistration();
 
           // Get or initialize device token
-          const deviceToken = localStorage.getItem('sshub_fcm_token') || null;
-          const needsRegistration = localStorage.getItem('register_device') == '1';
+          const deviceToken = localStorage.getItem("sshub_fcm_token") || null;
+          const needsRegistration =
+            localStorage.getItem("register_device") == "1";
 
           // Register new/changed token
           if (!deviceToken || data.data.device_token != deviceToken) {
             if (!needsRegistration) {
-              console.log('Registering device token...');
-              console.log('Old Device token:', data.data.device_token);
-              console.log('sshub_fcm_token', deviceToken);
+              console.log("Registering device token...");
+              console.log("Old Device token:", data.data.device_token);
+              console.log("sshub_fcm_token", deviceToken);
 
-              localStorage.setItem('register_device', '1');
+              localStorage.setItem("register_device", "1");
               errortoast("Device not registered.");
 
               // alert("Flagged to register Device token: " + deviceToken + " --- " + data.data.device_token + " ---" + needsRegistration);
@@ -182,13 +177,12 @@ async function signIn() {
             try {
               const userType = "ADMIN";
               await sendTokenToServer(deviceToken, userType, data.data.id);
-              localStorage.setItem('register_device', '0'); // Mark as completed
+              localStorage.setItem("register_device", "0"); // Mark as completed
             } catch (error) {
-              console.error('Failed to register token:', error);
+              console.error("Failed to register token:", error);
               // Consider keeping register_device=1 to retry later
             }
           }
-
 
           if (username.includes("SECURITY")) {
             setTimeout(function () {
@@ -264,10 +258,12 @@ function reAuth() {
 }
 
 function loadDashBoardInformation() {
-  document.getElementById("user_name").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.username
-    }</b>`;
-  document.getElementById("user_name1").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.username
-    }</b>`;
+  document.getElementById("user_name").innerHTML = `<b>${
+    JSON.parse(localStorage["user_data"]).data.username
+  }</b>`;
+  document.getElementById("user_name1").innerHTML = `<b>${
+    JSON.parse(localStorage["user_data"]).data.username
+  }</b>`;
 }
 
 function getCurrentSession() {
@@ -422,7 +418,8 @@ function loadSideNav(page) {
     </li>
 
     <!-- <li class="nav-item">
-      <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + "/bursary/dashboard.html"
+      <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+        domain + "/bursary/dashboard.html"
       }')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
     </li> !-->
     <a  href="" class="nav-link"><i class=""></i><span></span></a>
@@ -564,7 +561,8 @@ function loadSideNav(page) {
     </li>
 
     <!-- <li class="nav-item">
-      <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${domain + "/bursary/dashboard.html"
+      <a  style="cursor: pointer; color:white" id="" onclick="window.parent.location.assign('${
+        domain + "/bursary/dashboard.html"
       }')" class="nav-link"><span><b>GOTO BURSARY</b></span></a>
     </li> !-->
     <a  href="" class="nav-link"><i class=""></i><span></span></a>
@@ -629,11 +627,11 @@ function reloadEditFrame() {
   iframe.src = temp;
 }
 
-function reloadFrame(frame, new_page = '') {
+function reloadFrame(frame, new_page = "") {
   var iframe = document.getElementById(frame);
   temp = iframe.src;
   iframe.src = "";
-  iframe.src = new_page != '' ? new_page : temp;
+  iframe.src = new_page != "" ? new_page : temp;
 }
 
 // TEACHER
@@ -663,12 +661,14 @@ function getAllTeacherForClass() {
         if (data[i].assigned_class == null) {
           document.getElementById(
             "class_teacher"
-          ).innerHTML += `<option value="${data[i].id}">${data[i].title + " " + data[i].first_name + " " + data[i].last_name
+          ).innerHTML += `<option value="${data[i].id}">${
+            data[i].title + " " + data[i].first_name + " " + data[i].last_name
           }</option>`;
         } else {
           document.getElementById(
             "class_teacher"
-          ).innerHTML += `<option value="${data[i].id}">${data[i].title + " " + data[i].first_name + " " + data[i].last_name
+          ).innerHTML += `<option value="${data[i].id}">${
+            data[i].title + " " + data[i].first_name + " " + data[i].last_name
           }<p style='color:green'> (${data[i].assigned_class.class_name}
             Already Assigned)</p></option>`;
         }
@@ -700,9 +700,11 @@ function getAllTeacherForDropDown() {
         if (data[i].profile_status == "DISABLED") {
           continue;
         }
-        document.getElementById("teacher").innerHTML += `<option value="${data[i].id
-          }">${data[i].title + " " + data[i].first_name + " " + data[i].last_name
-          }</option>`;
+        document.getElementById("teacher").innerHTML += `<option value="${
+          data[i].id
+        }">${
+          data[i].title + " " + data[i].first_name + " " + data[i].last_name
+        }</option>`;
       }
     })
     .catch((err) => console.log(err));
@@ -736,42 +738,47 @@ function getAllTeacherForTable() {
     
         <td>${c}.</td>
         <td>${data[i].teacher_id}</td>
-        <td>${data[i].title + " " + data[i].first_name + " " + data[i].last_name
-          }</td>
+        <td>${
+          data[i].title + " " + data[i].first_name + " " + data[i].last_name
+        }</td>
         <td>${data[i].gender}</td>
-        <td class="text-white">${data[i].profile_status == "ENABLED"
+        <td class="text-white">${
+          data[i].profile_status == "ENABLED"
             ? `<span class="badge bg-success"><b>ENABLED</b></span>`
             : `<span class="badge bg-danger"><b>DISABLED</b></span>`
-          }</td>
+        }</td>
         <td>
         <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
-            .replace(/'/g, "")
-            .replace(
-              /"/g,
-              "'"
-            )})" class="btn btn-primary text-white" data-bs-toggle="modal"
+          .replace(/'/g, "")
+          .replace(
+            /"/g,
+            "'"
+          )})" class="btn btn-primary text-white" data-bs-toggle="modal"
                                                 data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
         <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-              data[i]
-            ).replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
+          data[i]
+        ).replace(/"/g, "'")})" class="btn btn-warning" data-bs-toggle="modal"
         data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
     
         
-        <a  onclick="updateTeacherProfileStatus(${data[i].id
-          })" class="btn gradient-orange-peel"><i
-            class='${data[i].profile_status == "ENABLED"
-            ? "fas fa-lock"
-            : "fas fa-unlock-alt"
-          }'></i></a>  
+        <a  onclick="updateTeacherProfileStatus(${
+          data[i].id
+        })" class="btn gradient-orange-peel"><i
+            class='${
+              data[i].profile_status == "ENABLED"
+                ? "fas fa-lock"
+                : "fas fa-unlock-alt"
+            }'></i></a>  
             
         <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
-            .replace(/'/g, "")
-            .replace(/"/g, "'")})" class="btn btn-secondary text-white">
+          .replace(/'/g, "")
+          .replace(/"/g, "'")})" class="btn btn-secondary text-white">
           <i class="fas fa-id-card"></i>
                </a> 
         
-        <a  onclick="resetAccount('STAFF','${data[i].teacher_id
-          }')" class="btn btn-success text-white">
+        <a  onclick="resetAccount('STAFF','${
+          data[i].teacher_id
+        }')" class="btn btn-success text-white">
         <i class="fas fa-sync-alt"></i>
                 </a>
         </td>
@@ -936,7 +943,7 @@ function createTeacher() {
         joining_date: joining_date,
         home_address: home_address,
         state: state,
-        qualification: qualification
+        qualification: qualification,
       }),
     })
       .then(function (res) {
@@ -1016,7 +1023,7 @@ function updateTeacher() {
         joining_date: joining_date,
         home_address: home_address,
         state: state,
-        qualification: qualification
+        qualification: qualification,
       }),
     })
       .then(function (res) {
@@ -1153,46 +1160,49 @@ function searchTeacher(search_data) {
     
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
-              <td>${data[i].title +
+              <td>${
+                data[i].title +
                 " " +
                 data[i].first_name +
                 " " +
                 data[i].last_name
-                }</td>
+              }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
              
               <td>
               <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateTeacherProfileStatus(${data[i].id
-                })" class="btn gradient-orange-peel"><i
+              <a  onclick="updateTeacherProfileStatus(${
+                data[i].id
+              })" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
   
               <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a> 
               
-              <a  onclick="deleteTeacher(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteTeacher(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -1204,45 +1214,48 @@ function searchTeacher(search_data) {
     
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
-              <td>${data[i].title +
+              <td>${
+                data[i].title +
                 " " +
                 data[i].first_name +
                 " " +
                 data[i].last_name
-                }</td>
+              }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
               <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateTeacherProfileStatus(${data[i].id
-                })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+              <a  onclick="updateTeacherProfileStatus(${
+                data[i].id
+              })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
               <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
-              <a  onclick="deleteTeacher(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteTeacher(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -1256,46 +1269,49 @@ function searchTeacher(search_data) {
     
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
-              <td>${data[i].title +
+              <td>${
+                data[i].title +
                 " " +
                 data[i].first_name +
                 " " +
                 data[i].last_name
-                }</td>
+              }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
               
               <td>
               <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateTeacherProfileStatus(${data[i].id
-                })" href="#" class="btn gradient-orange-peel"><i
+              <a  onclick="updateTeacherProfileStatus(${
+                data[i].id
+              })" href="#" class="btn gradient-orange-peel"><i
                   class="fas fa-lock"></i> Disable</a>  
               
               <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>    
               
-              <a  onclick="deleteTeacher(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteTeacher(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -1307,45 +1323,48 @@ function searchTeacher(search_data) {
     
               <td>${c}.</td>
               <td>${data[i].teacher_id}</td>
-              <td>${data[i].title +
+              <td>${
+                data[i].title +
                 " " +
                 data[i].first_name +
                 " " +
                 data[i].last_name
-                }</td>
+              }</td>
               <td>${data[i].gender}</td>
               <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
               
               <td>
               <a  onmouseover="viewTeacher(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                       data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
               <a  onmouseover="reloadEditFrame(); editTeacher(${JSON.stringify(
-                    data[i]
-                  )
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+                data[i]
+              )
+                .replace(/'/g, "")
+                .replace(
+                  /"/g,
+                  "'"
+                )})" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
               
-              <a  onclick="updateTeacherProfileStatus(${data[i].id
-                })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+              <a  onclick="updateTeacherProfileStatus(${
+                data[i].id
+              })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
   
               <a  onclick="viewStaffIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
+                .replace(/'/g, "")
+                .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                           class="fas fa-id-card"></i>
                       ID Card</a>
               
-              <a  onclick="deleteTeacher(${data[i].id
-                })" class="btn btn-danger text-white"><i
+              <a  onclick="deleteTeacher(${
+                data[i].id
+              })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -1426,44 +1445,49 @@ function getAllStudentForTable() {
           <td>${data[i].student_id}</td>
           <td>${data[i].first_name + " " + data[i].last_name}</td>
           <td>${data[i].gender}</td>
-          <td class="text-white">${data[i].profile_status == "ENABLED"
+          <td class="text-white">${
+            data[i].profile_status == "ENABLED"
               ? `<span class="badge bg-success"><b>ENABLED</b></span>`
               : `<span class="badge bg-danger"><b>DISABLED</b></span>`
-            }</td>
-          <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
+          }</td>
+          <td>${
+            data[i].class == null ? `GRADUATED` : data[i].class.class_name
+          }</td>
           <td>
           <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-              .replace(/'/g, "")
-              .replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
           <a  onclick ="reloadEditFrame(); editStudent(${JSON.stringify(data[i])
-              .replace(/'/g, "")
-              .replace(
-                /"/g,
-                "'"
-              )})" class="btn btn-warning" data-bs-toggle="modal"
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-warning" data-bs-toggle="modal"
           data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
       
           
-          <a   onclick="updateStudentProfileStatus(${data[i].id
-            })" class="btn gradient-orange-peel"><i
-              class='${data[i].profile_status == "ENABLED"
-              ? "fas fa-lock"
-              : "fas fa-unlock-alt"
-            }'></i></a>  
+          <a   onclick="updateStudentProfileStatus(${
+            data[i].id
+          })" class="btn gradient-orange-peel"><i
+              class='${
+                data[i].profile_status == "ENABLED"
+                  ? "fas fa-lock"
+                  : "fas fa-unlock-alt"
+              }'></i></a>  
               
           <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
-              .replace(/'/g, "")
-              .replace(/"/g, "'")})" class="btn btn-secondary text-white">
+            .replace(/'/g, "")
+            .replace(/"/g, "'")})" class="btn btn-secondary text-white">
             <i class="fas fa-id-card"></i>
                  </a> 
           
-          <a  onclick="resetAccount('STUDENT','${data[i].student_id
-            }')" class="btn btn-success text-white">
+          <a  onclick="resetAccount('STUDENT','${
+            data[i].student_id
+          }')" class="btn btn-success text-white">
           <i class="fas fa-sync-alt"></i>
                   </a>
           </td>
@@ -1537,8 +1561,9 @@ function getAllStudentForDropDown(class_id) {
           if (student_class != class_id) {
             continue;
           }
-          document.getElementById("student").innerHTML += `<option value="${data[i].id
-            }">${data[i].first_name + " " + data[i].last_name}</option>`;
+          document.getElementById("student").innerHTML += `<option value="${
+            data[i].id
+          }">${data[i].first_name + " " + data[i].last_name}</option>`;
         }
       } else {
         document.getElementById(
@@ -1578,12 +1603,23 @@ function getAllStudentAndClassForDropDown() {
         for (i in data) {
           student_class =
             data[i].class == null ? `GRADUATED` : data[i].class.id;
-          if (student_class == "GRADUATED" || data[i].profile_status == "DISABLED") {
+          if (
+            student_class == "GRADUATED" ||
+            data[i].profile_status == "DISABLED"
+          ) {
             continue;
           }
 
-          document.getElementById("student").innerHTML += `<option value="${data[i].id
-            }">${data[i].first_name + " " + data[i].last_name + " (" + data[i].class.class_name + ")"}</option>`;
+          document.getElementById("student").innerHTML += `<option value="${
+            data[i].id
+          }">${
+            data[i].first_name +
+            " " +
+            data[i].last_name +
+            " (" +
+            data[i].class.class_name +
+            ")"
+          }</option>`;
         }
       } else {
         document.getElementById(
@@ -1808,36 +1844,40 @@ function getAllStudentForTranscript() {
           <td>${data[i].student_id}</td>
           <td>${data[i].first_name + " " + data[i].last_name}</td>
           <td>${data[i].gender}</td>
-          <td class="text-white">${data[i].can_access_transcript == "YES"
+          <td class="text-white">${
+            data[i].can_access_transcript == "YES"
               ? `<span class="badge bg-success"><b>YES</b></span>`
               : `<span class="badge bg-danger"><b>NO</b></span>`
-            }</td>
-          <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
+          }</td>
+          <td>${
+            data[i].class == null ? `GRADUATED` : data[i].class.class_name
+          }</td>
           <td>
           <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-              .replace(/'/g, "")
-              .replace(
-                /"/g,
-                "'"
-              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                   data-bs-target="#viewModal"><i class="fas fa-eye"></i> </a>
 
-          <a   onclick="updateTranscriptAccess(${data[i].id})" class='${data[i].can_access_transcript == "YES"
+          <a   onclick="updateTranscriptAccess(${data[i].id})" class='${
+            data[i].can_access_transcript == "YES"
               ? "btn btn-danger"
               : "btn btn-success"
-            }'><i
-              class='${data[i].can_access_transcript == "YES"
-              ? "fas fa-lock"
-              : "fas fa-unlock-alt"
-            }'></i></a> 
+          }'><i
+              class='${
+                data[i].can_access_transcript == "YES"
+                  ? "fas fa-lock"
+                  : "fas fa-unlock-alt"
+              }'></i></a> 
 
           <a  onclick="viewStudentResult(${JSON.stringify(data[i])
-              .replace(/'/g, "")
-              .replace(
-                /"/g,
-                "'"
-              )})" class="btn gradient-orange-peel text-black"><i
+            .replace(/'/g, "")
+            .replace(
+              /"/g,
+              "'"
+            )})" class="btn gradient-orange-peel text-black"><i
                       class="fas fa-poll"></i></a>
       </tr>`;
 
@@ -1860,13 +1900,18 @@ function getTranscript() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    "/student/" +
     user_data.student_id +
     `.png?timestamp=${timestamp}`;
 
   // SCHOOL LOGO URL
   school_logo_url =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    "/school_logo.png";
 
   // SCHOOL_LOGO
   document.getElementById("school_logo").src = school_logo_url;
@@ -1900,7 +1945,6 @@ function getTranscript() {
     correctLevel: QRCode.CorrectLevel.H,
   });
 
-
   // CALL API THAT GET ALL SESSION
   fetch(ip + "/api/general/all-session/STD-" + user_data.id, {
     method: "GET",
@@ -1920,14 +1964,13 @@ function getTranscript() {
     })
 
     .then((data) => {
-
       // STORE IN AN ACCESIBLE LIST
       data.forEach((data) => {
         var term = {};
         if (session_list[data.session]) {
-          session_list[data.session][data.term] = { "loaded": false };
+          session_list[data.session][data.term] = { loaded: false };
         } else {
-          term[data.term] = { "loaded": false };
+          term[data.term] = { loaded: false };
           session_list[data.session] = term;
         }
       });
@@ -1936,7 +1979,6 @@ function getTranscript() {
       // console.table(data);
       // console.log(session_list);
 
-
       // CREATE RESULT TEMPLATE
       if (Object.keys(session_list).length !== 0) {
         document.getElementById("result_div").innerHTML = ``;
@@ -1944,10 +1986,8 @@ function getTranscript() {
         // LOOP THROUGH EACH SESSION AND TERM
         for (const session in session_list) {
           if (session_list.hasOwnProperty(session)) {
-
             for (const term in session_list[session]) {
               if (session_list[session].hasOwnProperty(term)) {
-
                 // CREATE RESULT TEMPLATE
                 document.getElementById("result_div").innerHTML += `
  <div id="result_${session}_${term}" name="result_${session}_${term}" class="container result_container" style="margin-bottom: 30px;">
@@ -2033,8 +2073,9 @@ function getTranscript() {
 
                                      <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
 
-                                     ${term == "THIRD TERM" ?
-                    `
+                                     ${
+                                       term == "THIRD TERM"
+                                         ? `
                                           <th id="first_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
 
                                           <th id="second_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
@@ -2044,9 +2085,8 @@ function getTranscript() {
                                           <th id="mean_score_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
                                         
                                         `
-                    :
-                    ``
-                  }
+                                         : ``
+                                     }
 
 
 
@@ -2228,7 +2268,6 @@ function getTranscript() {
             }
           }
         }
-
       } else {
         document.getElementById(
           "result_div"
@@ -2251,7 +2290,6 @@ function getTranscript() {
   // }, 10000);
 }
 
-
 async function processContainers() {
   // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
   result_containers = document.getElementsByClassName("result_container");
@@ -2266,7 +2304,6 @@ async function processContainers() {
 
     // ACADEMIC PERFORMANCE
     await getResult(containerName);
-
   }
 
   removeSpinnerModal();
@@ -2309,36 +2346,70 @@ function getResult(value) {
       c = 1;
       if (data.result.length > 0) {
         data.result.forEach((result) => {
-
           if (result.subject) {
             // ATTACH CLASS TO THAT RESULT TERM AND SESSION
             document.getElementById(
-              "class_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+              "class_" +
+                value.split("_")[1] +
+                "_" +
+                value.split("_")[2] +
+                "" +
+                studentIdSuffix
             ).innerHTML = result.class.class_name;
 
             // ATTACH NO OF STUDENT , GRADE POSITION AND PERCENTAGE
             document.getElementById(
-              "no_student_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+              "no_student_" +
+                value.split("_")[1] +
+                "_" +
+                value.split("_")[2] +
+                "" +
+                studentIdSuffix
             ).innerHTML = data.no_student;
 
             document.getElementById(
-              "class_position_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+              "class_position_" +
+                value.split("_")[1] +
+                "_" +
+                value.split("_")[2] +
+                "" +
+                studentIdSuffix
             ).innerHTML = data.class_position;
 
             document.getElementById(
-              "grade_position_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+              "grade_position_" +
+                value.split("_")[1] +
+                "_" +
+                value.split("_")[2] +
+                "" +
+                studentIdSuffix
             ).innerHTML = data.grade_position;
 
             document.getElementById(
-              "percentage_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+              "percentage_" +
+                value.split("_")[1] +
+                "_" +
+                value.split("_")[2] +
+                "" +
+                studentIdSuffix
             ).innerHTML = data.percentage;
 
             // SCORE TABLE
             document.getElementById(
-              "scores_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+              "scores_" +
+                value.split("_")[1] +
+                "_" +
+                value.split("_")[2] +
+                "" +
+                studentIdSuffix
             ).innerHTML += `
           <tr>
-              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.sn.status == 'hidden' ? true : false}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${(document.getElementById(
+              `sn_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.sn.status == "hidden"
+                ? true
+                : false)}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 ${c}.
               </td>
 
@@ -2346,77 +2417,129 @@ function getResult(value) {
                 ${result.subject.subject_name}
               </td>
 
-              <td ${data.settings.first_test.status} ${document.getElementById(`first_test_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.first_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.first_test.status} ${(document.getElementById(
+              `first_test_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.first_test.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.first_ca}
               </td>
 
-              <td ${data.settings.second_test.status} ${document.getElementById(`second_test_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.second_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${
+                data.settings.second_test.status
+              } ${(document.getElementById(
+              `second_test_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.second_test.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.second_ca}
               </td>
 
-                <td ${data.settings.project.status} ${document.getElementById(`project_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.project.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.project}
-              </td>
-
-              <td ${data.settings.note_ass.status} ${document.getElementById(`note_ass_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.note_ass.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.note_ass.status} ${(document.getElementById(
+              `note_ass_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.note_ass.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.note_assignment}
               </td>
 
-              <td ${data.settings.cbt.status} ${document.getElementById(`cbt_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.cbt.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.cbt.status} ${(document.getElementById(
+              `cbt_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.cbt.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.cbt}
               </td>
 
-              <td ${data.settings.exam.status} ${document.getElementById(`exam_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.exam.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                <td ${data.settings.project.status} ${(document.getElementById(
+              `project_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.project.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.project}
+              </td>
+
+              <td ${data.settings.exam.status} ${(document.getElementById(
+              `exam_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.exam.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.examination}
               </td>
 
-              <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.total.status} ${(document.getElementById(
+              `total_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.total.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.total}
               </td>
 
-              ${term == "THIRD TERM" ?
-                `
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+              ${
+                term == "THIRD TERM"
+                  ? `
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${
+                result.grade.includes("F")
                   ? "red"
                   : result.grade.includes("A")
-                    ? "blue"
-                    : "black"
-                } ;">
+                  ? "blue"
+                  : "black"
+              } ;">
                 ${result.first_term}
               </td>
               
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${
+                result.grade.includes("F")
                   ? "red"
                   : result.grade.includes("A")
-                    ? "blue"
-                    : "black"
-                } ;">
+                  ? "blue"
+                  : "black"
+              } ;">
                 ${result.second_term}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${
+                result.grade.includes("F")
                   ? "red"
                   : result.grade.includes("A")
-                    ? "blue"
-                    : "black"
-                } ;">
+                  ? "blue"
+                  : "black"
+              } ;">
                 ${result.third_term}
               </td>
               
-               <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
-                  ? "red"
-                  : result.grade.includes("A")
-                    ? "blue"
-                    : "black"
-                } ;">
+               <td ${data.settings.total.status} ${(document.getElementById(
+                      `total_header_${session}_${term}${studentIdSuffix}`
+                    ).hidden =
+                      data.settings.total.status == "hidden"
+                        ? true
+                        : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${
+                      result.grade.includes("F")
+                        ? "red"
+                        : result.grade.includes("A")
+                        ? "blue"
+                        : "black"
+                    } ;">
                 ${result.mean_score}
               </td>
               
               `
-                : ``
+                  : ``
               }
 
-              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.sn.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${(document.getElementById(
+              `sn_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.sn.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${parseFloat(result.class_average).toFixed(0)}
               </td>
 
@@ -2432,21 +2555,33 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
 
-              <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.grade.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
+              <td ${data.settings.grade.status} ${(document.getElementById(
+              `grade_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.grade.status == "hidden"
+                ? true
+                : false)} style="color: ${
+              result.grade.includes("F")
                 ? "red"
                 : result.grade.includes("A")
-                  ? "blue"
-                  : "black"
-              } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
+                ? "blue"
+                : "black"
+            } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
 
-              <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}${studentIdSuffix}`).hidden = data.settings.remark.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
+              <td ${data.settings.remark.status} ${(document.getElementById(
+              `remark_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.remark.status == "hidden"
+                ? true
+                : false)} style="color: ${
+              result.grade.includes("F")
                 ? "red"
                 : result.grade.includes("A")
-                  ? "blue"
-                  : "black"
-              } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                ? "blue"
+                : "black"
+            } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
 
@@ -2454,9 +2589,8 @@ function getResult(value) {
 
             c = c + 1;
           }
-
-
-        }); value.split("_")[1]
+        });
+        value.split("_")[1];
       } else {
         // DELETE RESULT CONTAINER
         console.log("DELETE THIS VALUE " + value);
@@ -2491,38 +2625,81 @@ function getCommentsAndPsycho(value) {
     })
 
     .then((data) => {
-
       // POPULATE COMMENT
       document.getElementById(
-        "teacher_comment_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "teacher_comment_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = "<b><i>" + data.teacher_comment + "</b></i>";
 
       // POPULATE RATINGS
       document.getElementById(
-        "handwriting_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "handwriting_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.handwriting;
       document.getElementById(
-        "games_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "games_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.games;
       document.getElementById(
-        "handing_tools_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "handing_tools_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.handling_tools;
       document.getElementById(
-        "drawing_painting_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "drawing_painting_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.drawing_painting;
       document.getElementById(
-        "neatness_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "neatness_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.neatness;
       document.getElementById(
-        "politeness_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "politeness_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.politeness;
       document.getElementById(
-        "cooperation_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "cooperation_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.cooperation;
       document.getElementById(
-        "health_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "health_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.student_rating.health;
-
 
       localStorage.setItem("loadNextResult", "true");
     })
@@ -2575,21 +2752,23 @@ function uploadCommentAndRating(type, value, rating_type) {
     .catch((err) => console.log(err));
 }
 
-
 // BROADSHEET RESULT
 function getBroadsheet() {
-
   // SCHOOL LOGO URL
-  const school_logo_url = domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
+  const school_logo_url =
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    "/school_logo.png";
 
   document.getElementById("school_logo").src = school_logo_url;
   document.getElementById("school_details").innerHTML =
     localStorage["SCHOOL_NAME"] + "<br>" + localStorage["SCHOOL_ADDRESS"];
 
   const params = {
-    class: localStorage['broadsheet_class'],
-    term: localStorage['broadsheet_term'],
-    session: localStorage['broadsheet_session'],
+    class: localStorage["broadsheet_class"],
+    term: localStorage["broadsheet_term"],
+    session: localStorage["broadsheet_session"],
   };
 
   if (!params.class || !params.term || !params.session) {
@@ -2607,7 +2786,7 @@ function getBroadsheet() {
       Authorization: "Bearer " + localStorage["token"],
     },
   })
-    .then(res => {
+    .then((res) => {
       if (res.status == 401) {
         openAuthenticationModal();
         removeSpinnerModal();
@@ -2615,124 +2794,144 @@ function getBroadsheet() {
       }
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       if (!data) return;
 
       // SET SUMMARY DATA
-      document.getElementById('class__').textContent = data.summary.class;
-      document.getElementById('session').textContent = data.summary.session;
-      document.getElementById('term').textContent = data.summary.term;
+      document.getElementById("class__").textContent = data.summary.class;
+      document.getElementById("session").textContent = data.summary.session;
+      document.getElementById("term").textContent = data.summary.term;
 
       // CLEAR AND SET HEADER
-      const headerElement = document.getElementById('header');
-      headerElement.innerHTML = '';
+      const headerElement = document.getElementById("header");
+      headerElement.innerHTML = "";
 
-      data.header.forEach(header => {
-        const th = document.createElement('th');
+      data.header.forEach((header) => {
+        const th = document.createElement("th");
         th.textContent = header;
-        th.style.cssText = 'text-align:center;';
-        if (header !== 'STUDENT NAME' && header !== 'REMARK') {
-          th.classList.add('vertical-header');
+        th.style.cssText = "text-align:center;";
+        if (header !== "STUDENT NAME" && header !== "REMARK") {
+          th.classList.add("vertical-header");
         }
-        th.style.fontSize = '14px';
+        th.style.fontSize = "14px";
         headerElement.appendChild(th);
       });
 
       // CLEAR AND SET ROWS
-      const broadsheetElement = document.getElementById('broadsheet');
-      broadsheetElement.innerHTML = '';
+      const broadsheetElement = document.getElementById("broadsheet");
+      broadsheetElement.innerHTML = "";
 
       for (const student of data.broadsheet) {
-       const scores = student.scores;
+        const scores = student.scores;
 
-        const hasValidScore =Array.isArray(scores) &&
-        scores.some(s => String(s).trim() !== '');
+        const hasValidScore =
+          Array.isArray(scores) && scores.some((s) => String(s).trim() !== "");
 
         if (!hasValidScore) continue;
 
-        const row = document.createElement('tr');
+        const row = document.createElement("tr");
 
         // SN (Serial Number)
-        const snCell = document.createElement('td');
+        const snCell = document.createElement("td");
         snCell.textContent = student.sn;
-        snCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        snCell.style.cssText =
+          "font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;";
         row.appendChild(snCell);
 
         // Student Name
-        const nameCell = document.createElement('td');
+        const nameCell = document.createElement("td");
         nameCell.textContent = student.student_name;
-        nameCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        nameCell.style.cssText =
+          "font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;";
         row.appendChild(nameCell);
 
         // Scores for each subject
-        student.scores.forEach(score => {
-          const scoreCell = document.createElement('td');
+        student.scores.forEach((score) => {
+          const scoreCell = document.createElement("td");
           scoreCell.textContent = score;
-          scoreCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+          scoreCell.style.cssText =
+            "font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;";
           row.appendChild(scoreCell);
         });
 
         // Total
-        const totalCell = document.createElement('td');
+        const totalCell = document.createElement("td");
         totalCell.textContent = student.total;
-        totalCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:2;text-align:center;';
+        totalCell.style.cssText =
+          "font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:2;text-align:center;";
         row.appendChild(totalCell);
 
         // Percentage
-        const percentageCell = document.createElement('td');
+        const percentageCell = document.createElement("td");
         percentageCell.textContent = student.percentage;
-        percentageCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:2;text-align:center;';
+        percentageCell.style.cssText =
+          "font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:2;text-align:center;";
         row.appendChild(percentageCell);
 
         // Position
-        const positionCell = document.createElement('td');
+        const positionCell = document.createElement("td");
         positionCell.textContent = student.position;
-        positionCell.style.cssText = 'font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;';
+        positionCell.style.cssText =
+          "font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;";
         row.appendChild(positionCell);
 
         // Grade
-        const gradeCell = document.createElement('td');
+        const gradeCell = document.createElement("td");
         gradeCell.textContent = student.grade;
-        gradeCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${student.grade.includes("F") ? "red" :
-          student.grade.includes("A") ? "blue" : "black"
-          }`;
+        gradeCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${
+          student.grade.includes("F")
+            ? "red"
+            : student.grade.includes("A")
+            ? "blue"
+            : "black"
+        }`;
         row.appendChild(gradeCell);
 
         // Remark
-        const remarkCell = document.createElement('td');
+        const remarkCell = document.createElement("td");
         remarkCell.textContent = student.remark;
-        remarkCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${student.grade.includes("F") ? "red" :
-          student.grade.includes("A") ? "blue" : "black"
-          }`;
+        remarkCell.style.cssText = `font-size:13px;font-family:Open Sans,sans-serif;font-weight:bold;padding:0;text-align:center;color:${
+          student.grade.includes("F")
+            ? "red"
+            : student.grade.includes("A")
+            ? "blue"
+            : "black"
+        }`;
         row.appendChild(remarkCell);
 
         broadsheetElement.appendChild(row);
-      };
+      }
 
       removeSpinnerModal();
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       removeSpinnerModal();
     });
 }
 
-
 async function getStudentResult() {
   user_data = JSON.parse(localStorage["student_result"]);
 
-  openSpinnerModal("Result for " + user_data.first_name + " " + user_data.last_name);
+  openSpinnerModal(
+    "Result for " + user_data.first_name + " " + user_data.last_name
+  );
 
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    "/student/" +
     user_data.student_id +
     `.png?timestamp=${timestamp}`;
 
   // SCHOOL LOGO URL
   school_logo_url =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/school_logo.png";
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    "/school_logo.png";
 
   // SCHOOL_LOGO
   document.getElementById("school_logo_" + user_data.id).src = school_logo_url;
@@ -2750,7 +2949,8 @@ async function getStudentResult() {
     " " +
     user_data.middle_name;
 
-  document.getElementById("student_id_" + user_data.id).innerHTML = user_data.student_id;
+  document.getElementById("student_id_" + user_data.id).innerHTML =
+    user_data.student_id;
   document.getElementById("class_sector_" + user_data.id).innerHTML =
     user_data.class.class_sector;
   document.getElementById("school_details_" + user_data.id).innerHTML =
@@ -2779,12 +2979,20 @@ async function getStudentResult() {
       terms.forEach((term) => {
         // CREATE RESULT TEMPLATE
         document.getElementById("result_div_" + user_data.id).innerHTML += `
-        <div id="result_${session}_${term}_${user_data.id}" name="result_${session}_${term}_${user_data.id}" class="container result_container_${user_data.id}" style="margin-bottom: 30px;">
+        <div id="result_${session}_${term}_${
+          user_data.id
+        }" name="result_${session}_${term}_${
+          user_data.id
+        }" class="container result_container_${
+          user_data.id
+        }" style="margin-bottom: 30px;">
         <div style="border:1px solid black; padding-bottom: 15px;" class="row">
 
             <div class="col-md-4">
                 <div style="text-align: left;margin-top: 30px;margin-left: 50px;">
-                    <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}_${user_data.id}"></strong></h6>
+                    <h6 style="font-size: 15px;">CLASS: <strong id="class_${session}_${term}_${
+          user_data.id
+        }"></strong></h6>
                 </div>
             </div>
             <div class="col-md-4">
@@ -2811,7 +3019,9 @@ async function getStudentResult() {
                                         No of times school
                                         opened
                                     </td>
-                                    <td  id="opened_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_school_opened')" contenteditable="true"
+                                    <td  id="opened_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_school_opened')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2821,7 +3031,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         No of times present
                                     </td>
-                                    <td id="present_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_present')" contenteditable="true"
+                                    <td id="present_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('ATTENDANCE',this.innerHTML,'m_present')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2844,26 +3056,45 @@ async function getStudentResult() {
                                 <table style="padding: 0%;" class="table table-sm">
                                     <thead>
                                  <tr>
-                                     <th id="sn_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">S/NO</th>
+                                     <th id="sn_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">S/NO</th>
 
-                                     <th id="subject_header_${session}_${term}_${user_data.id}" style="font-size: 14px; text-align:center">SUBJECT</th>
+                                     <th id="subject_header_${session}_${term}_${
+          user_data.id
+        }" style="font-size: 14px; text-align:center">SUBJECT</th>
 
-                                     <th id="first_test_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
+                                     <th id="first_test_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">FIRST TEST</th>
 
-                                     <th id="second_test_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
+                                     <th id="second_test_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">SECOND TEST</th>
 
-                                     <th id="note_ass_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
+                                     <th id="note_ass_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">NOTE/ASS</th>
 
-                                     <th id="cbt_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CBT</th>
+                                     <th id="cbt_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">CBT</th>
 
-                                     <th id="project_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">PROJECT</th>
+                                     <th id="project_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">PROJECT</th>
 
-                                     <th id="exam_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
+                                     <th id="exam_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">EXAMINATION</th>
 
-                                     <th id="total_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
+                                     <th id="total_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">TOTAL</th>
 
-                                     ${term == "THIRD TERM" ?
-            `
+                                     ${
+                                       term == "THIRD TERM"
+                                         ? `
                                           <th id="first_term_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
 
                                           <th id="second_term_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
@@ -2873,27 +3104,40 @@ async function getStudentResult() {
                                           <th id="mean_score_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
                                         
                                         `
-            :
-            ``
-          }
+                                         : ``
+                                     }
 
 
 
-                                     <th id="class_average_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
+                                     <th id="class_average_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">CLASS AVERAGE</th>
 
-                                     <th id="class_lowest_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
+                                     <th id="class_lowest_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">CLASS LOWEST</th>
 
-                                     <th id="class_highest_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
+                                     <th id="class_highest_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">CLASS HIGHEST</th>
 
-                                     <th id="position_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">POSITION</th>
+                                     <th id="position_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">POSITION</th>
 
-                                     <th id="grade_header_${session}_${term}_${user_data.id}" class="vertical-header" style="font-size: 14px;">GRADE</th>
+                                     <th id="grade_header_${session}_${term}_${
+          user_data.id
+        }" class="vertical-header" style="font-size: 14px;">GRADE</th>
 
-                                     <th id="remark_header_${session}_${term}_${user_data.id}" style="font-size: 14px; text-align:center">REMARK</th>
+                                     <th id="remark_header_${session}_${term}_${
+          user_data.id
+        }" style="font-size: 14px; text-align:center">REMARK</th>
                                  </tr>
                                  
                              </thead>
-                                    <tbody id="scores_${session}_${term}_${user_data.id}">
+                                    <tbody id="scores_${session}_${term}_${
+          user_data.id
+        }">
 
                                     
                                     
@@ -2907,16 +3151,24 @@ async function getStudentResult() {
                                     <thead>
                                         <tr>
                                             <th style="font-size: 13px;font-style: italic;">NO IN CLASS :
-                                                <span id="no_student_${session}_${term}_${user_data.id}"></span>
+                                                <span id="no_student_${session}_${term}_${
+          user_data.id
+        }"></span>
                                             </th>
                                             <th style="font-size: 13px;font-style: italic;">CLASS POSITION :
-                                                <span id="class_position_${session}_${term}_${user_data.id}"></span>
+                                                <span id="class_position_${session}_${term}_${
+          user_data.id
+        }"></span>
                                             </th>
                                             <th style="font-size: 13px;font-style: italic;">GRADE POSITION :
-                                                <span id="grade_position_${session}_${term}_${user_data.id}"></span>
+                                                <span id="grade_position_${session}_${term}_${
+          user_data.id
+        }"></span>
                                             </th>
                                             <th style="font-size: 13px;font-style: italic;">PERCENTAGE :
-                                                <span id="percentage_${session}_${term}_${user_data.id}"></span>
+                                                <span id="percentage_${session}_${term}_${
+          user_data.id
+        }"></span>
                                             </th>
                                         </tr>
                                     </thead>
@@ -2928,7 +3180,9 @@ async function getStudentResult() {
                                                 <span style="font-weight: bold;">Class Teacher's
                                                     Comment :
                                                 </span>
-                                                <font color="black"><b id="teacher_comment_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
+                                                <font color="black"><b id="teacher_comment_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('COMMENT',this.innerHTML,'')" contenteditable="true"></b></font>
                                             </td>
                                         </tr>
 
@@ -2955,7 +3209,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Hand Writing
                                     </td>
-                                    <td id="handwriting_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
+                                    <td id="handwriting_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handwriting')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2966,7 +3222,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Games
                                     </td>
-                                    <td id="games_${session}_${term}_${user_data.id}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
+                                    <td id="games_${session}_${term}_${
+          user_data.id
+        }"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'games')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2977,7 +3235,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Handing Tools
                                     </td>
-                                    <td id="handing_tools_${session}_${term}_${user_data.id}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
+                                    <td id="handing_tools_${session}_${term}_${
+          user_data.id
+        }"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'handling_tools')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -2987,7 +3247,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Drawing and Painting
                                     </td>
-                                    <td id="drawing_painting_${session}_${term}_${user_data.id}"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
+                                    <td id="drawing_painting_${session}_${term}_${
+          user_data.id
+        }"  oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'drawing_painting')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3005,7 +3267,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Neatness
                                     </td>
-                                    <td id="neatness_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
+                                    <td id="neatness_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'neatness')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3015,7 +3279,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Politeness
                                     </td>
-                                    <td id="politeness_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
+                                    <td id="politeness_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'politeness')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3026,7 +3292,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Co-operation with others
                                     </td>
-                                    <td id="cooperation_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
+                                    <td id="cooperation_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'cooperation')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3038,7 +3306,9 @@ async function getStudentResult() {
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         Health
                                     </td>
-                                    <td id="health_${session}_${term}_${user_data.id}" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
+                                    <td id="health_${session}_${term}_${
+          user_data.id
+        }" oninput="uploadCommentAndRatingDebouncer('RATING',this.innerHTML,'health')" contenteditable="true"
                                         style="width:60%; padding:3px; size: 5px; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold;">
                                         </td>
 
@@ -3066,7 +3336,9 @@ async function getStudentResult() {
   }
 
   // LOOP THROUGH THE CREATED TEMPLATE AND POPULATE ATTENDANCE , ACADEMIC PERFORMANCE COMMENTS AND PSYCHO MOTOR REPORTS
-  result_containers = document.getElementsByClassName(`result_container_${user_data.id}`);
+  result_containers = document.getElementsByClassName(
+    `result_container_${user_data.id}`
+  );
 
   for (i = 0; i < result_containers.length; i++) {
     container_name = result_containers[i].attributes[0].nodeValue;
@@ -3077,24 +3349,22 @@ async function getStudentResult() {
     // COMMENTS AND PSYCHO MOTOR REPORTS
     await getCommentsAndPsycho(container_name);
 
-
     //localStorage.setItem("loadNextResult", "true");
   }
 
   removeSpinnerModal();
 }
 
-
 async function getResultsByClass() {
   // Validate required parameters
   const params = {
-    class: localStorage['broadsheet_class'],
-    term: localStorage['broadsheet_term'],
-    session: localStorage['broadsheet_session'],
+    class: localStorage["broadsheet_class"],
+    term: localStorage["broadsheet_term"],
+    session: localStorage["broadsheet_session"],
   };
 
   if (!params.class || !params.term || !params.session) {
-    console.error('Missing required parameters');
+    console.error("Missing required parameters");
     return 0;
   }
 
@@ -3102,15 +3372,18 @@ async function getResultsByClass() {
     openSpinnerModal("Results are being generated, please wait...");
 
     // Fetch data from API
-    const response = await fetch(ip + `/api/admin/broadsheet?` + new URLSearchParams(params), {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        school: localStorage["school"],
-        "Content-type": "application/json",
-        Authorization: "Bearer " + localStorage["token"],
-      },
-    });
+    const response = await fetch(
+      ip + `/api/admin/broadsheet?` + new URLSearchParams(params),
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          school: localStorage["school"],
+          "Content-type": "application/json",
+          Authorization: "Bearer " + localStorage["token"],
+        },
+      }
+    );
 
     if (response.status === 401) {
       openAuthenticationModal();
@@ -3124,14 +3397,14 @@ async function getResultsByClass() {
 
     const data = await response.json();
     if (!data?.broadsheet?.length) {
-      console.log('No results found');
+      console.log("No results found");
       removeSpinnerModal();
       return;
     }
 
     // Process each student result
     const resultList = document.getElementById("result-list");
-    resultList.innerHTML = ''; // Clear existing content
+    resultList.innerHTML = ""; // Clear existing content
 
     for (const student of data.broadsheet) {
       // Create result section
@@ -3139,9 +3412,7 @@ async function getResultsByClass() {
       // studentSection.innerHTML = generateStudentResultHTML(student);
       // resultList.appendChild(studentSection);
 
-
-      document.getElementById("result-list").innerHTML +=
-        `
+      document.getElementById("result-list").innerHTML += `
         <section>
         <div style="float: right;" class="header-inline item-header">
 
@@ -3235,22 +3506,20 @@ async function getResultsByClass() {
 
       // Process student result data
 
-      localStorage.setItem('student_result', JSON.stringify(student.student));
+      localStorage.setItem("student_result", JSON.stringify(student.student));
 
       await delay(10000);
       studentIdSuffix = `_${student.student_id}`;
       await getStudentResult(student.student_id);
     }
-
   } catch (error) {
-    console.error('Error fetching results:', error);
+    console.error("Error fetching results:", error);
     // Optionally show error to user
     // openErrorModal("Failed to load results. Please try again.");
   } finally {
     removeSpinnerModal();
   }
 }
-
 
 // Helper function to generate HTML template
 function generateStudentResultHTML(student) {
@@ -3312,8 +3581,6 @@ function generateStudentResultHTML(student) {
   `;
 }
 
-
-
 // STUDENT ATTENDANCE
 
 function getAttendanceSummary(value) {
@@ -3342,10 +3609,20 @@ function getAttendanceSummary(value) {
 
     .then((data) => {
       document.getElementById(
-        "opened_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "opened_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.opened;
       document.getElementById(
-        "present_" + value.split("_")[1] + "_" + value.split("_")[2] + "" + studentIdSuffix
+        "present_" +
+          value.split("_")[1] +
+          "_" +
+          value.split("_")[2] +
+          "" +
+          studentIdSuffix
       ).innerHTML = data.present;
     })
     .catch((err) => console.log(err));
@@ -3635,38 +3912,43 @@ function searchStudent(search_data) {
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  ).replace(
-                    /"/g,
-                    "'"
-                  )
-                }) " class="btn btn - warning" data-bs-toggle="modal"
+              data[i]
+            ).replace(
+              /"/g,
+              "'"
+            )}) " class="btn btn - warning" data-bs-toggle="modal"
 data - bs - target="#editModal" > <i class="fas fa-edit"></i> Edit</a >
 
             
-            <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" class="btn gradient-orange-peel"><i
+            <a  onclick="updateStudentProfileStatus(${
+              data[i].id
+            })" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
             <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")}) " class="btn btn - secondary text - white"><i
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )}) " class="btn btn - secondary text - white"><i
 class="fas fa-id-card" ></i >
   ID Card</a >
 
-    <a onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+    <a onclick="deleteStudent(${
+      data[i].id
+    })" class="btn btn-danger text-white"><i
         class="fas fa-trash"></i>
       Delete</a>
             </td >
@@ -3681,36 +3963,39 @@ class="fas fa-id-card" ></i >
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  ).replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+              data[i]
+            ).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
             
-            <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+            <a  onclick="updateStudentProfileStatus(${
+              data[i].id
+            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
             <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a  onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+            <a  onclick="deleteStudent(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -3727,37 +4012,40 @@ class="fas fa-id-card" ></i >
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-success"><b>ENABLED</b></span></td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  ).replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+              data[i]
+            ).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
             
-            <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" href="#" class="btn gradient-orange-peel"><i
+            <a  onclick="updateStudentProfileStatus(${
+              data[i].id
+            })" href="#" class="btn gradient-orange-peel"><i
                 class="fas fa-lock"></i> Disable</a>  
 
             <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a  onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+            <a  onclick="deleteStudent(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -3772,36 +4060,39 @@ class="fas fa-id-card" ></i >
             <td>${data[i].first_name + " " + data[i].last_name}</td>
             <td>${data[i].gender}</td>
             <td class="text-white"><span class="badge bg-danger"><b>DISABLED</b></span></td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td>
             <a  onmouseover="viewStudent(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(
-                    /"/g,
-                    "'"
-                  )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
+              .replace(/'/g, "")
+              .replace(
+                /"/g,
+                "'"
+              )})"  class="btn btn-primary text-white" data-bs-toggle="modal"
                                                     data-bs-target="#viewModal"><i class="fas fa-eye"></i> View</a>
             <a  onmouseover="reloadEditFrame(); editStudent(${JSON.stringify(
-                    data[i]
-                  ).replace(
-                    /"/g,
-                    "'"
-                  )})" class="btn btn-warning" data-bs-toggle="modal"
+              data[i]
+            ).replace(
+              /"/g,
+              "'"
+            )})" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
 
             
-            <a  onclick="updateStudentProfileStatus(${data[i].id
-                })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
+            <a  onclick="updateStudentProfileStatus(${
+              data[i].id
+            })" href="#" class="btn gradient-orange-peel"><i class="fas fa-unlock-alt"></i> Enable</a>  
 
             <a  onclick="viewStudentIDCard(${JSON.stringify(data[i])
-                  .replace(/'/g, "")
-                  .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
+              .replace(/'/g, "")
+              .replace(/"/g, "'")})" class="btn btn-secondary text-white"><i
                         class="fas fa-id-card"></i>
                     ID Card</a> 
             
-            <a  onclick="deleteStudent(${data[i].id
-                })" class="btn btn-danger text-white"><i
+            <a  onclick="deleteStudent(${
+              data[i].id
+            })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a>
             </td>
@@ -3955,7 +4246,9 @@ async function getStudentIDCard() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/student/" +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    "/student/" +
     JSON.parse(student_id).student_id +
     `.png?timestamp=${timestamp}`;
 
@@ -3966,7 +4259,10 @@ async function getStudentIDCard() {
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + `/school_logo_mini.png?timestamp=${timestamp}`;
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    `/school_logo_mini.png?timestamp=${timestamp}`;
   document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
@@ -4009,7 +4305,9 @@ async function getStaffIDCard() {
   // IMAGE URL
   url =
     domain +
-    "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/staff/" +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    "/staff/" +
     JSON.parse(staff_id).teacher_id +
     `.png?timestamp=${timestamp}`;
 
@@ -4020,7 +4318,10 @@ async function getStaffIDCard() {
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + `/school_logo_mini.png?timestamp=${timestamp}`;
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    `/school_logo_mini.png?timestamp=${timestamp}`;
   document.getElementById("school_logo_mini").src = school_logo_mini;
 
   // FILL CARD DETAILS
@@ -4084,25 +4385,30 @@ function getAllClassForTable() {
             <td>${c}.</td>
             <td>${data[i].class_name}</td>
             <td>${data[i].class_sector}</td>
-            <td>${data[i].class_teacher.title +
-            " " +
-            data[i].class_teacher.first_name +
-            " " +
-            data[i].class_teacher.last_name
+            <td>${
+              data[i].class_teacher.title +
+              " " +
+              data[i].class_teacher.first_name +
+              " " +
+              data[i].class_teacher.last_name
             }</td>
             <td>${data[i].student_no}</td>
             <td>
-            <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id
-            }~${data[i].class_name}~${data[i].class_teacher.title +
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+              data[i].id
+            }~${data[i].class_name}~${
+            data[i].class_teacher.title +
             " " +
             data[i].class_teacher.first_name +
             " " +
             data[i].class_teacher.last_name
-            }~${data[i].class_teacher.id}~${data[i].class_sector
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+          }~${data[i].class_teacher.id}~${
+            data[i].class_sector
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-               <!-- <a  onclick="deleteClass(${data[i].id
-            })" class="btn btn-danger text-white"><i
+               <!-- <a  onclick="deleteClass(${
+                 data[i].id
+               })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a> -->
             </td>
@@ -4117,12 +4423,15 @@ function getAllClassForTable() {
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>${data[i].student_no}</td>
             <td>
-            <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id
-            }~${data[i].class_name}~~~${data[i].class_sector
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+              data[i].id
+            }~${data[i].class_name}~~~${
+            data[i].class_sector
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                <!-- <a  onclick="deleteClass(${data[i].id
-            })" class="btn btn-danger text-white"><i
+                <!-- <a  onclick="deleteClass(${
+                  data[i].id
+                })" class="btn btn-danger text-white"><i
                         class="fas fa-trash"></i>
                     Delete</a> -->
             </td>
@@ -4186,11 +4495,13 @@ function editClassDetails() {
   document.getElementById("class_teacher").innerHTML =
     localStorage["editClass"].split("~")[2] == ""
       ? `<option value="-">Please Select Teacher *</option>`
-      : `<option value="${localStorage[" editClass"].split("~")[3]}">${localStorage["editClass"].split("~")[2]
-      }</option>`;
+      : `<option value="${localStorage[" editClass"].split("~")[3]}">${
+          localStorage["editClass"].split("~")[2]
+        }</option>`;
 
   document.getElementById("class_sector").innerHTML =
-    `< option value = "${localStorage["editClass"].split("~")[4]}" > ${localStorage["editClass"].split("~")[4]
+    `< option value = "${localStorage["editClass"].split("~")[4]}" > ${
+      localStorage["editClass"].split("~")[4]
     }</option > ` + document.getElementById("class_sector").innerHTML;
 }
 
@@ -4358,25 +4669,30 @@ function searchClass(class_name) {
     
               <td>${c}.</td>
               <td>${data[i].class_name}</td>
-              <td>${data[i].class_teacher.title +
+              <td>${
+                data[i].class_teacher.title +
                 " " +
                 data[i].class_teacher.first_name +
                 " " +
                 data[i].class_teacher.last_name
-                }</td>
+              }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id
-                }~${data[i].class_name}~${data[i].class_teacher.title +
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+                data[i].id
+              }~${data[i].class_name}~${
+                data[i].class_teacher.title +
                 " " +
                 data[i].class_teacher.first_name +
                 " " +
                 data[i].class_teacher.last_name
-                }~${data[i].class_teacher.id
-                }')" class="btn btn-warning" data-bs-toggle="modal"
+              }~${
+                data[i].class_teacher.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteClass(${data[i].id
-                })" class="btn btn-danger text-white"><i
+                  <a  onclick="deleteClass(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td >
@@ -4407,25 +4723,30 @@ function searchClass(class_name) {
     
               <td>${c}.</td>
               <td>${data[i].class_name}</td>
-              <td>${data[i].class_teacher.title +
+              <td>${
+                data[i].class_teacher.title +
                 " " +
                 data[i].class_teacher.first_name +
                 " " +
                 data[i].class_teacher.last_name
-                }</td>
+              }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${data[i].id
-                }~${data[i].class_name}~${data[i].class_teacher.title +
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editClass','${
+                data[i].id
+              }~${data[i].class_name}~${
+                data[i].class_teacher.title +
                 " " +
                 data[i].class_teacher.first_name +
                 " " +
                 data[i].class_teacher.last_name
-                }~${data[i].class_teacher.id
-                }')" class="btn btn-warning" data-bs-toggle="modal"
+              }~${
+                data[i].class_teacher.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteClass(${data[i].id
-                })" class="btn btn-danger text-white"><i
+                  <a  onclick="deleteClass(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -4537,37 +4858,45 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
-            <td>${data[i].teacher.title +
-            " " +
-            data[i].teacher.first_name +
-            " " +
-            data[i].teacher.last_name
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
+            <td>${
+              data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
             }</td>
             <td>${data[i].student_no}</td>
 
             <td>
-            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-            }~${data[i].subject_name}~${data[i].teacher.title +
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~${
+            data[i].teacher.title +
             " " +
             data[i].teacher.first_name +
             " " +
             data[i].teacher.last_name
-            }~${data[i].teacher.id}~${data[i].class.class_name}~${data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+          }~${data[i].teacher.id}~${data[i].class.class_name}~${
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
-           <!-- <a  onclick="deleteSubject(${data[i].id
-            })" class="btn btn-danger text-white"><i
+           <!-- <a  onclick="deleteSubject(${
+             data[i].id
+           })" class="btn btn-danger text-white"><i
                     class="fa fa-trash"></i></a> -->
 
-            <a  onclick="exportSubjectSheet('${data[i].id}','${data[i].subject_name
-            }','${data[i].class.class_name}'
+            <a  onclick="exportSubjectSheet('${data[i].id}','${
+            data[i].subject_name
+          }','${data[i].class.class_name}'
             )" class="btn btn-primary text-white">
                 <i class="fas fa-file-download"></i></a>       
 
-            <a  onclick="uploadResultSheet(${data[i].id
+            <a  onclick="uploadResultSheet(${
+              data[i].id
             })" class="btn btn-success text-white">
                 <i class="fas fa-file-upload"></i></a>   
                      
@@ -4582,26 +4911,32 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>${data[i].student_no}</td>
             <td>
-            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-            }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+            <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
-            <a  onclick="deleteSubject(${data[i].id
+            <a  onclick="deleteSubject(${
+              data[i].id
             })" class="btn btn-danger text-white"><i
                     class="fa fa-trash"></i></a>
 
-            <a  onclick="downloadResultSheet(${data[i].id
+            <a  onclick="downloadResultSheet(${
+              data[i].id
             })" class="btn btn-primary text-white">
                 <i class="fas fa-file-download"></i></a>       
 
-            <a  onclick="uploadResultSheet(${data[i].id
+            <a  onclick="uploadResultSheet(${
+              data[i].id
             })" class="btn btn-success text-white">
                 <i class="fas fa-file-upload"></i></a>   
                      
@@ -4636,15 +4971,17 @@ function editSubjectDetails() {
   document.getElementById("teacher").innerHTML =
     localStorage["editSubject"].split("~")[2] == "null"
       ? `<option value="-">Please Select Teacher *</option>`
-      : `<option value="${localStorage[" editSubject"].split("~")[3]}">${localStorage["editSubject"].split("~")[2]
-      }</option>`;
+      : `<option value="${localStorage[" editSubject"].split("~")[3]}">${
+          localStorage["editSubject"].split("~")[2]
+        }</option>`;
 
   // FOR CLASS
   document.getElementById("class").innerHTML =
     localStorage["editSubject"].split("~")[4] == ""
       ? document.getElementById("class").innerHTML
-      : `< option value = "${localStorage["editSubject"].split("~")[5]}" > ${localStorage["editSubject"].split("~")[4]
-      }</option > `;
+      : `< option value = "${localStorage["editSubject"].split("~")[5]}" > ${
+          localStorage["editSubject"].split("~")[4]
+        }</option > `;
 }
 
 function updateSubject() {
@@ -4766,27 +5103,33 @@ function searchSubject(subject_name) {
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-               <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
-              <td>${data[i].teacher.title +
+               <td>${
+                 data[i].class == null ? `GRADUATED` : data[i].class.class_name
+               }</td>
+              <td>${
+                data[i].teacher.title +
                 " " +
                 data[i].teacher.first_name +
                 " " +
                 data[i].teacher.last_name
-                }</td>
+              }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-                }~${data[i].subject_name}~${data[i].teacher.title +
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+                data[i].id
+              }~${data[i].subject_name}~${
+                data[i].teacher.title +
                 " " +
                 data[i].teacher.first_name +
                 " " +
                 data[i].teacher.last_name
-                }~${data[i].teacher.id}~${data[i].class.class_name}~${data[i].class.id
-                }')" class="btn btn-warning" data-bs-toggle="modal"
+              }~${data[i].teacher.id}~${data[i].class.class_name}~${
+                data[i].class.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteSubject(${data[i].id
-                })" class="btn btn-danger text-white"><i
+                  <a  onclick="deleteSubject(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td >
@@ -4800,17 +5143,19 @@ function searchSubject(subject_name) {
 
       <td>${c}.</td>
       <td>${data[i].subject_name}</td>
-      <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
+      <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name}</td>
       <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
       <td>${data[i].student_no}</td>
       <td>
-        <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-                }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${data[i].class.id
-                }')" class="btn btn-warning" data-bs-toggle="modal"
+        <a onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+          data[i].id
+        }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${
+                data[i].class.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
           data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-        <a onclick="deleteClass(${data[i].id
-                })" class="btn btn-danger text-white"><i
+        <a onclick="deleteClass(${
+          data[i].id
+        })" class="btn btn-danger text-white"><i
             class="fas fa-trash"></i>
           Delete</a>
       </td>
@@ -4824,27 +5169,33 @@ function searchSubject(subject_name) {
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-               <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
-              <td>${data[i].teacher.title +
+               <td>${
+                 data[i].class == null ? `GRADUATED` : data[i].class.class_name
+               }</td>
+              <td>${
+                data[i].teacher.title +
                 " " +
                 data[i].teacher.first_name +
                 " " +
                 data[i].teacher.last_name
-                }</td>
+              }</td>
               <td>${data[i].student_no}</td>
               <td>
-              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-                }~${data[i].subject_name}~${data[i].teacher.title +
+              <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+                data[i].id
+              }~${data[i].subject_name}~${
+                data[i].teacher.title +
                 " " +
                 data[i].teacher.first_name +
                 " " +
                 data[i].teacher.last_name
-                }~${data[i].teacher.id}~${data[i].class.class_name}~${data[i].class.id
-                }')" class="btn btn-warning" data-bs-toggle="modal"
+              }~${data[i].teacher.id}~${data[i].class.class_name}~${
+                data[i].class.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
               data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteSubject(${data[i].id
-                })" class="btn btn-danger text-white"><i
+                  <a  onclick="deleteSubject(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -4856,17 +5207,21 @@ function searchSubject(subject_name) {
     
               <td>${c}.</td>
               <td>${data[i].subject_name}</td>
-               <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-                }</td>
+               <td>${
+                 data[i].class == null ? `GRADUATED` : data[i].class.class_name
+               }</td>
               <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
               <td>${data[i].student_no}</td>
               <td>
-                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-                }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${data[i].class.id
-                }')" class="btn btn-warning" data-bs-toggle="modal"
+                  <a  onmouseover="reloadEditFrame();localStorage.setItem('editSubject','${
+                    data[i].id
+                  }~${data[i].subject_name}~ ~ ~${data[i].class.class_name}~${
+                data[i].class.id
+              }')" class="btn btn-warning" data-bs-toggle="modal"
                       data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
-                  <a  onclick="deleteSubject(${data[i].id
-                })" class="btn btn-danger text-white"><i
+                  <a  onclick="deleteSubject(${
+                    data[i].id
+                  })" class="btn btn-danger text-white"><i
                           class="fas fa-trash"></i>
                       Delete</a>
               </td>
@@ -4931,7 +5286,7 @@ function exportSubjectSheet(subject_id, subject_name, class_name) {
     .catch((err) => console.log(err));
 }
 
-function importSubjectSheet() { }
+function importSubjectSheet() {}
 
 function getPreviousSubjectRegistration(student_id, class_id, session, term) {
   registered_subject = [];
@@ -5026,11 +5381,15 @@ function getAllSubjectForRegistration() {
             <tr>
     
                   <td><input type="checkbox" class="form-check-input ml-0" name="subject_registration"
-                  value="${data[i].subject_id}" checked  onclick="this.checked = !this.checked">
+                  value="${
+                    data[i].subject_id
+                  }" checked  onclick="this.checked = !this.checked">
                   </td>
     
                   <td>${c + 1}.</td>
-                  <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
+                  <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${
+                    data[i].subject_name
+                  }</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   
@@ -5047,7 +5406,9 @@ function getAllSubjectForRegistration() {
                   </td>
     
                   <td>${c + 1}.</td>
-                  <td> <small><i class="fa fa-shapes" aria-hidden="true"></i></small> ${data[i].subject_name}</td>
+                  <td> <small><i class="fa fa-shapes" aria-hidden="true"></i></small> ${
+                    data[i].subject_name
+                  }</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   
@@ -5095,15 +5456,15 @@ function getAllSubjectForRegistration() {
           </td>
 
           <td>${c + 1}.</td>
-          <td><i class="fa fa-shapes"></i> ${data[i].subject_name
-              }</td>
+          <td><i class="fa fa-shapes"></i> ${data[i].subject_name}</td>
           <td>ELECTIVE</td>
-          <td>${data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
-              }</td>
+          <td>${
+            data[i].teacher.title +
+            " " +
+            data[i].teacher.first_name +
+            " " +
+            data[i].teacher.last_name
+          }</td>
 
 
 
@@ -5150,10 +5511,10 @@ function registerSubject() {
     if (
       confirm(
         "Kindly confirm you would like to register the selected subject for session " +
-        session +
-        " " +
-        term +
-        " for the selected student"
+          session +
+          " " +
+          term +
+          " for the selected student"
       )
     ) {
       openSpinnerModal("Register subject for student");
@@ -5240,37 +5601,45 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
-            <td>${data[i].teacher.title +
-            " " +
-            data[i].teacher.first_name +
-            " " +
-            data[i].teacher.last_name
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
+            <td>${
+              data[i].teacher.title +
+              " " +
+              data[i].teacher.first_name +
+              " " +
+              data[i].teacher.last_name
             }</td>
             <td>${data[i].student_no}</td>
 
             <td>
-            <a  onclick="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-            }~${data[i].subject_name}~${data[i].teacher.title +
+            <a  onclick="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~${
+            data[i].teacher.title +
             " " +
             data[i].teacher.first_name +
             " " +
             data[i].teacher.last_name
-            }~${data[i].teacher.id}~${data[i].class.class_name}~${data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+          }~${data[i].teacher.id}~${data[i].class.class_name}~${
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
-           <!-- <a  onclick="deleteSubject(${data[i].id
-            })" class="btn btn-danger text-white"><i
+           <!-- <a  onclick="deleteSubject(${
+             data[i].id
+           })" class="btn btn-danger text-white"><i
                     class="fa fa-trash"></i></a> -->
 
-            <a  onclick="exportSubjectSheet('${data[i].id}','${data[i].subject_name
-            }','${data[i].class.class_name}'
+            <a  onclick="exportSubjectSheet('${data[i].id}','${
+            data[i].subject_name
+          }','${data[i].class.class_name}'
             )" class="btn btn-primary text-white">
                 <i class="fas fa-file-download"></i></a>       
 
-            <a  onclick="uploadResultSheet(${data[i].id
+            <a  onclick="uploadResultSheet(${
+              data[i].id
             })" class="btn btn-success text-white">
                 <i class="fas fa-file-upload"></i></a>   
                      
@@ -5285,26 +5654,32 @@ function getAllSubjectForTable() {
   
             <td>${c}.</td>
             <td>${data[i].subject_name}</td>
-             <td>${data[i].class == null ? `GRADUATED` : data[i].class.class_name
-            }</td>
+             <td>${
+               data[i].class == null ? `GRADUATED` : data[i].class.class_name
+             }</td>
             <td class="text-white"><span class="badge bg-danger"><b>TEACHER NOT ASSIGNED</b></span></td>
             <td>${data[i].student_no}</td>
             <td>
-            <a  onclick="reloadEditFrame();localStorage.setItem('editSubject','${data[i].id
-            }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${data[i].class.id
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+            <a  onclick="reloadEditFrame();localStorage.setItem('editSubject','${
+              data[i].id
+            }~${data[i].subject_name}~null~null~${data[i].class.class_name}~${
+            data[i].class.id
+          }')" class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="btn btn-warning" data-bs-toggle="modal"
             data-bs-target="#editModal"><i class="fas fa-edit"></i></a>
 
-            <a  onclick="deleteSubject(${data[i].id
+            <a  onclick="deleteSubject(${
+              data[i].id
             })" class="btn btn-danger text-white"><i
                     class="fa fa-trash"></i></a>
 
-            <a  onclick="downloadResultSheet(${data[i].id
+            <a  onclick="downloadResultSheet(${
+              data[i].id
             })" class="btn btn-primary text-white">
                 <i class="fas fa-file-download"></i></a>       
 
-            <a  onclick="uploadResultSheet(${data[i].id
+            <a  onclick="uploadResultSheet(${
+              data[i].id
             })" class="btn btn-success text-white">
                 <i class="fas fa-file-upload"></i></a>   
                      
@@ -5407,15 +5782,17 @@ function getAllSubjectForTable2() {
                 </td>
   
                 <td>${nc}.</td>
-                <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${data[i].subject_name
-              }</td>
+                <td> <small><i class="fa fa-star" aria-hidden="true"></i></small> ${
+                  data[i].subject_name
+                }</td>
                 <td>COMPULSORY</td>
-                <td>${data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
-              }</td>
+                <td>${
+                  data[i].teacher.title +
+                  " " +
+                  data[i].teacher.first_name +
+                  " " +
+                  data[i].teacher.last_name
+                }</td>
                 
       
             </tr>`;
@@ -5430,11 +5807,12 @@ function getAllSubjectForTable2() {
               <td>${nc}.</td>
               <td>${data[i].subject_name}</td>
               <td>COMPULSORY</td>
-              <td>${data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
+              <td>${
+                data[i].teacher.title +
+                " " +
+                data[i].teacher.first_name +
+                " " +
+                data[i].teacher.last_name
               }</td>
               
     
@@ -5473,10 +5851,10 @@ function getAllSubjectForTable2() {
 
         nc = nc + 1;
       }
-      document.getElementById("number_registered").innerHTML = "Total registered: " + c;
+      document.getElementById("number_registered").innerHTML =
+        "Total registered: " + c;
     })
     .catch((err) => console.log(err));
-
 }
 
 function registerSubject2() {
@@ -5498,10 +5876,10 @@ function registerSubject2() {
     if (
       confirm(
         "Kindly confirm you would like to register the selected subject for session " +
-        session +
-        " " +
-        term +
-        " for all student in the selected class"
+          session +
+          " " +
+          term +
+          " for all student in the selected class"
       )
     ) {
       openSpinnerModal("Register subject for class");
@@ -5710,8 +6088,9 @@ function editSessionDetails() {
   document.getElementById("term").innerHTML =
     localStorage["editSession"].split("~")[2] == ""
       ? document.getElementById("term").innerHTML
-      : `<option value="${localStorage[" editSession"].split("~")[2]}">${localStorage["editSession"].split("~")[2]
-      }</option>` + document.getElementById("term").innerHTML;
+      : `<option value="${localStorage[" editSession"].split("~")[2]}">${
+          localStorage["editSession"].split("~")[2]
+        }</option>` + document.getElementById("term").innerHTML;
 }
 
 function updateSession() {
@@ -5842,13 +6221,16 @@ function getAllGradeForTable() {
                 <td>${data[i].grade}</td>
                 <td>${data[i].remark}</td>
                 <td>
-                    <a  onmouseover="reloadEditFrame();localStorage.setItem('editGrade','${data[i].id
-            }~${data[i].min}~${data[i].max}~${data[i].grade}~${data[i].remark
-            }')" class="btn btn-warning" data-bs-toggle="modal"
+                    <a  onmouseover="reloadEditFrame();localStorage.setItem('editGrade','${
+                      data[i].id
+                    }~${data[i].min}~${data[i].max}~${data[i].grade}~${
+            data[i].remark
+          }')" class="btn btn-warning" data-bs-toggle="modal"
                     data-bs-target="#editModal"><i class="fas fa-edit"></i> Edit</a>
   
-                    <a  onclick="deleteGrade(${data[i].id
-            })" href="#" class="btn btn-danger"><i
+                    <a  onclick="deleteGrade(${
+                      data[i].id
+                    })" href="#" class="btn btn-danger"><i
                     class="fas fa-trash"></i>
                      Delete</a>
                  </td>
@@ -6256,14 +6638,16 @@ function getAttendance() {
               <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
       
                     <td>${c}.</td>
-                    <td>${data[i].student.first_name +
-            " " +
-            data[i].student.last_name
-            }</td>
-                     <td>${data[i].class == null
-              ? `GRADUATED`
-              : data[i].class.class_name
-            }</td>
+                    <td>${
+                      data[i].student.first_name +
+                      " " +
+                      data[i].student.last_name
+                    }</td>
+                     <td>${
+                       data[i].class == null
+                         ? `GRADUATED`
+                         : data[i].class.class_name
+                     }</td>
                     <td>${data[i].student.gender}</td>
                     <td>${data[i].date}</td>
                     <td>${data[i].time_in}</td>
@@ -6568,10 +6952,11 @@ function getTeacherAttendance() {
               <tr ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
       
                     <td>${c}.</td>
-                    <td>${data[i].teacher.first_name +
-            " " +
-            data[i].teacher.last_name
-            }</td>
+                    <td>${
+                      data[i].teacher.first_name +
+                      " " +
+                      data[i].teacher.last_name
+                    }</td>
                     <td>${data[i].teacher.gender}</td>
                     <td>${data[i].date}</td>
                     <td>${data[i].time_in}</td>
@@ -6758,26 +7143,29 @@ function getLessonPlan(lesson_status) {
         <td>${lesson.week}</td>
         <td>${lesson.teacher}</td>
         <td>${lesson.term}</td>
-        <td><span class="badge ${lesson.status == "APPROVED"
+        <td><span class="badge ${
+          lesson.status == "APPROVED"
             ? `bg-success`
             : lesson.status == "DISAPPROVED"
-              ? `bg-danger`
-              : `bg-warning`
-          }"><b>${lesson.status}</b></span></td>
+            ? `bg-danger`
+            : `bg-warning`
+        }"><b>${lesson.status}</b></span></td>
         <td>
 
             <a  onmouseover="populateLessonDetails(${JSON.stringify(
-            lesson
-          ).replace(
-            /"/g,
-            "'"
-          )})" href="#" class="btn btn-primary" data-bs-toggle="modal"
+              lesson
+            ).replace(
+              /"/g,
+              "'"
+            )})" href="#" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"><i class="fas fa-eye"></i> View</a>
-            <a  onclick="saveLessonPlan(${lesson.id
-          },'APPROVE')" href="#" class="btn btn-success" data-bs-toggle="modal"
+            <a  onclick="saveLessonPlan(${
+              lesson.id
+            },'APPROVE')" href="#" class="btn btn-success" data-bs-toggle="modal"
                 data-bs-target="#"><i class="fas fa-edit"></i> Approve</a>
-            <a  onclick="saveLessonPlan(${lesson.id
-          },'DISAPPROVE')" href="#" class="btn btn-danger"><i class="fas fa-ban"></i>
+            <a  onclick="saveLessonPlan(${
+              lesson.id
+            },'DISAPPROVE')" href="#" class="btn btn-danger"><i class="fas fa-ban"></i>
                 Disapprove</a>
         </td>
       </tr>
@@ -6793,12 +7181,13 @@ function getLessonPlan(lesson_status) {
 function populateLessonDetails(lesson) {
   document.getElementById("lp_subject_class").innerHTML =
     localStorage["lp_subject_class"];
-  document.getElementById("lp_status").innerHTML = `<span class="badge ${lesson.status == " APPROVED"
-    ? `bg-success`
-    : lesson.status == "DISAPPROVED"
+  document.getElementById("lp_status").innerHTML = `<span class="badge ${
+    lesson.status == " APPROVED"
+      ? `bg-success`
+      : lesson.status == "DISAPPROVED"
       ? `bg-danger`
       : `bg-warning`
-    }"><b>${lesson.status}</b></span>`;
+  }"><b>${lesson.status}</b></span>`;
 
   document.getElementById("lp_teacher").innerHTML = lesson.teacher;
 
@@ -6978,22 +7367,27 @@ function getInventory() {
           <td id="last_modified${data.id}">${data.last_modified}</td>
           <td>
         
-              <a  id="saveUpdateButton${data.id
-            }" onclick="updateInventoryItem(${data.id
-            })" href="#" class="btn btn-primary" hidden>
+              <a  id="saveUpdateButton${
+                data.id
+              }" onclick="updateInventoryItem(${
+            data.id
+          })" href="#" class="btn btn-primary" hidden>
                     Save Update
               </a>
-              <a  id="editButton${data.id}" onclick="allowEdit(${data.id
-            },true)" href="#" class="btn btn-warning">
+              <a  id="editButton${data.id}" onclick="allowEdit(${
+            data.id
+          },true)" href="#" class="btn btn-warning">
                     Edit
               </a>
-              <a  id="deleteButton${data.id}" onclick="deleteInventoryItem(${data.id
-            })" href="#" class="btn btn-danger">
+              <a  id="deleteButton${data.id}" onclick="deleteInventoryItem(${
+            data.id
+          })" href="#" class="btn btn-danger">
                     Delete
               </a>
   
-              <a  id="discardButton${data.id}"onclick="allowEdit(${data.id
-            },false)" href="#" class="btn btn-danger" hidden>
+              <a  id="discardButton${data.id}"onclick="allowEdit(${
+            data.id
+          },false)" href="#" class="btn btn-danger" hidden>
                     Discard Change
               </a>
         
@@ -7221,26 +7615,28 @@ function getPortalSubscription() {
                     <td>${c}.</td>
                     <td>${data[i].subscription_id}</td>
                     <td>${data[i].description}</td>  
-                    <td><span style="color:white" class="badge ${data[i].status == "NOT PAID"
-              ? `bg-danger`
-              : data[i].status == "USAGE IN-PROGRESS" ||
-                data[i].status == "EXTENDED"
-                ? `bg-warning`
-                : `bg-success`
-            }"><b>${data[i].status}</b></span></td>
+                    <td><span style="color:white" class="badge ${
+                      data[i].status == "NOT PAID"
+                        ? `bg-danger`
+                        : data[i].status == "USAGE IN-PROGRESS" ||
+                          data[i].status == "EXTENDED"
+                        ? `bg-warning`
+                        : `bg-success`
+                    }"><b>${data[i].status}</b></span></td>
                     <td>${formatNumber(parseInt(data[i].amount))}</td>
                     <td>   
-                      ${data[i].status == "NOT PAID" ||
-              data[i].status == "EXTENDED"
-              ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
+                      ${
+                        data[i].status == "NOT PAID" ||
+                        data[i].status == "EXTENDED"
+                          ? `<a  id="" onclick="payWithPaystack('${data[i].id}',
                           '${data[i].amount}',
                           '${data[i].subscription_id}',
                           '${data[i].description}'
                         )" href="#" class="btn btn-primary">
                                  Pay Now
                             </a>`
-              : ``
-            }
+                          : ``
+                      }
                     </td>
                    </tr>
                     `;
@@ -7474,11 +7870,15 @@ async function generateIDCard() {
 
   await getSchoolDetails();
   // STUDENT_IMAGE
-  user_image = domain + "/backend/storage/app/public/fileupload/" + localStorage["school"];
+  user_image =
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"];
 
   // MINI SCHOOL LOGO
   school_logo_mini =
-    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + `/school_logo_mini.png?timestamp=${timestamp}`;
+    domain +
+    "/backend/storage/app/public/fileupload/" +
+    localStorage["school"] +
+    `/school_logo_mini.png?timestamp=${timestamp}`;
 
   if (user_type == "STUDENT") {
     user_image = user_image + "/student/";
@@ -7496,21 +7896,18 @@ async function generateIDCard() {
     for (i in data) {
       if (
         user_type == "STUDENT" &&
-        (data[i].class == null || data[i].class == "GRADUATED" || data[i].profile_status == "DISABLED")
+        (data[i].class == null ||
+          data[i].class == "GRADUATED" ||
+          data[i].profile_status == "DISABLED")
       ) {
         continue;
       }
 
-      if (
-        user_type == "TEACHER" &&
-        (data[i].profile_status == "DISABLED")
-      ) {
+      if (user_type == "TEACHER" && data[i].profile_status == "DISABLED") {
         continue;
       }
 
-      userId = user_type == "STUDENT"
-          ? data[i].student_id
-          : data[i].teacher_id;
+      userId = user_type == "STUDENT" ? data[i].student_id : data[i].teacher_id;
 
       document.getElementById(
         "idcard_list"
@@ -7532,18 +7929,20 @@ async function generateIDCard() {
 
             <img id="user_image"
               style="border-color: white; border-style: solid;padding: 0%; margin-top: 5px;"
-              src="${user_type == " STUDENT"
-          ? user_image + userId + `.png?timestamp=${timestamp}`
-          : user_image + userId + `.png?timestamp=${timestamp}`
-        }" width="">
+              src="${
+                user_type == " STUDENT"
+                  ? user_image + userId + `.png?timestamp=${timestamp}`
+                  : user_image + userId + `.png?timestamp=${timestamp}`
+              }" width="">
 
 
           </div>
           <div class="bottom">
             <div style="margin-bottom:5px">
               <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
-                  ;color: black;">${data[i].first_name + " " + data[i].last_name
-        }</p>
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
               <p id="id" style="margin-bottom: 1px; color: black; ">${userId}
         }</p>
 
@@ -7564,8 +7963,9 @@ async function generateIDCard() {
 
               <div style="margin-top: 0.5px;margin-bottom: 210px;">
                 <h5 id="user_type" style="font-family: Poppins
-                  ;color: black; text-align: center;">${user_type == "STUDENT" ? "STUDENT" : "STAFF"
-        }</h5>
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
               </div>
 
           </div>
@@ -7580,8 +7980,9 @@ async function generateIDCard() {
             </h6>
           </small>
           <div style="margin-top: 0%;" class="qrcode">
-            <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${data[i].id
-        }">
+            <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+              data[i].id
+            }">
             </div>
           </div>
           <div class="details-info">
@@ -7626,9 +8027,7 @@ async function generateIDCard2() {
   await getSchoolDetails();
   // STUDENT_IMAGE
   user_image =
-    domain +
-    "/backend/storage/app/public/fileupload/" +
-    localStorage["school"];
+    domain + "/backend/storage/app/public/fileupload/" + localStorage["school"];
 
   // MINI SCHOOL LOGO
   school_logo_mini =
@@ -7653,21 +8052,18 @@ async function generateIDCard2() {
     for (i in data) {
       if (
         user_type == "STUDENT" &&
-        (data[i].class == null || data[i].class == "GRADUATED" || data[i].profile_status == "DISABLED")
+        (data[i].class == null ||
+          data[i].class == "GRADUATED" ||
+          data[i].profile_status == "DISABLED")
       ) {
         continue;
       }
 
-      if (
-        user_type == "TEACHER" &&
-        (data[i].profile_status == "DISABLED")
-      ) {
+      if (user_type == "TEACHER" && data[i].profile_status == "DISABLED") {
         continue;
       }
 
-      userId = user_type == "STUDENT"
-          ? data[i].student_id
-          : data[i].teacher_id;
+      userId = user_type == "STUDENT" ? data[i].student_id : data[i].teacher_id;
 
       //console.log("USER-ID .... " + userId);
 
@@ -7695,8 +8091,9 @@ async function generateIDCard2() {
           <div class="bottom">
             <div style="margin-bottom:5px">
               <p id="full_name" style="margin-bottom: 1px; font-family: Poppins; font-style: bold
-                  ;color: black;">${data[i].first_name + " " + data[i].last_name
-        }</p>
+                  ;color: black;">${
+                    data[i].first_name + " " + data[i].last_name
+                  }</p>
               <p id="id" style="margin-bottom: 1px; color: black; ">${userId}</p>
 
               <small>
@@ -7715,8 +8112,9 @@ async function generateIDCard2() {
 
               <div style="margin-top: 0.5px;margin-bottom: 210px;">
                 <h5 id="user_type" style="font-family: Poppins
-                  ;color: black; text-align: center;">${user_type == "STUDENT" ? "STUDENT" : "STAFF"
-        }</h5>
+                  ;color: black; text-align: center;">${
+                    user_type == "STUDENT" ? "STUDENT" : "STAFF"
+                  }</h5>
               </div>
 
           </div>
@@ -7731,8 +8129,9 @@ async function generateIDCard2() {
             </h6>
           </small>
           <div style="margin-top: 0%;" class="qrcode">
-            <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${data[i].id
-        }">
+            <div style="display: flex; justify-content: center; text-align: center;" id="IDQR${
+              data[i].id
+            }">
             </div>
           </div>
           <div class="details-info">
@@ -7762,11 +8161,11 @@ async function makeQRCode(data, user_type) {
     var QRDATA =
       user_type == "STUDENT"
         ? "StudentATDCard~" +
-        data[i].id +
-        "~" +
-        data[i].class.id +
-        "~" +
-        data[i].first_name
+          data[i].id +
+          "~" +
+          data[i].class.id +
+          "~" +
+          data[i].first_name
         : "TeacherATDCard~" + data[i].id + "~" + data[i].first_name;
 
     var qrdiv = "IDQR" + data[i].id;
@@ -7829,16 +8228,16 @@ function getAllstudentForSubjectResultUpload(refresh) {
       document.getElementById("max").innerHTML = data.max;
       var c = 1;
 
-
       // POPULATE THE TABLE HEADERS
-      document.getElementById("upload_result_header").innerHTML = ``
+      document.getElementById("upload_result_header").innerHTML = ``;
       for (i in data.settings) {
         if (data.settings[i].status == "hidden") {
           continue;
         }
-        document.getElementById("upload_result_header").innerHTML += `<th>${data.settings[i].header}</th>`;
+        document.getElementById(
+          "upload_result_header"
+        ).innerHTML += `<th>${data.settings[i].header}</th>`;
       }
-
 
       if (data.result.length > 0) {
         for (i in data.result) {
@@ -7846,63 +8245,95 @@ function getAllstudentForSubjectResultUpload(refresh) {
             <tr  ${c % 2 == 0 ? `class="even"` : `class="odd"`}>
 
             <td ${data.settings.sn.status}> ${c}.</td>
-            <td ${data.settings.fullname.status} > ${data.result[i].student.first_name +
+            <td ${data.settings.fullname.status} > ${
+            data.result[i].student.first_name +
             " " +
             data.result[i].student.middle_name +
             " " +
             data.result[i].student.last_name
-            }</td>
+          }</td>
             
-            <td ${data.settings.first_test.status}   class="allownumeric" oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','first_ca',this.innerHTML)" contenteditable="true" >${data.result[i].first_ca
-            }</td>
+            <td ${
+              data.settings.first_test.status
+            }   class="allownumeric" oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','first_ca',this.innerHTML)" contenteditable="true" >${
+            data.result[i].first_ca
+          }</td>
 
-            <td ${data.settings.second_test.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','second_ca',this.innerHTML)" contenteditable="true">${data.result[i].second_ca
-            }</td>
+            <td ${
+              data.settings.second_test.status
+            }  oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','second_ca',this.innerHTML)" contenteditable="true">${
+            data.result[i].second_ca
+          }</td>
 
-            <td ${data.settings.note_ass.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','note_assignment',this.innerHTML)" contenteditable="true">${data.result[i].note_assignment
-            }</td>
+            <td ${
+              data.settings.note_ass.status
+            }  oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','note_assignment',this.innerHTML)" contenteditable="true">${
+            data.result[i].note_assignment
+          }</td>
 
-             <td ${data.settings.cbt.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','cbt',this.innerHTML)" contenteditable="true">${data.result[i].cbt
-            }</td>
+             <td ${
+               data.settings.cbt.status
+             }  oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','cbt',this.innerHTML)" contenteditable="true">${
+            data.result[i].cbt
+          }</td>
 
-             <td ${data.settings.project.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','project',this.innerHTML)" contenteditable="true">${data.result[i].project
-            }</td>
+             <td ${
+               data.settings.project.status
+             }  oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','project',this.innerHTML)" contenteditable="true">${
+            data.result[i].project
+          }</td>
 
-             <td ${data.settings.exam.status}  oninput="scoreLimit(this); addToResultList('${data.result[i].id
-            }','examination',this.innerHTML)" contenteditable="true">${data.result[i].examination
-            }</td>
+             <td ${
+               data.settings.exam.status
+             }  oninput="scoreLimit(this); addToResultList('${
+            data.result[i].id
+          }','examination',this.innerHTML)" contenteditable="true">${
+            data.result[i].examination
+          }</td>
 
-            <td ${data.settings.total.status}  style="font-size:20px; font-style:bold;"><b>${data.result[i].total
-            }</b></td>
+            <td ${
+              data.settings.total.status
+            }  style="font-size:20px; font-style:bold;"><b>${
+            data.result[i].total
+          }</b></td>
 
 
             <td ${data.settings.grade.status} >  
               <div class="select">
-                  <select onChange="addToResultList('${data.result[i].id
-            }','grade',this.value)" id="standard-select" id="grade" value="${data.result[i].grade == "-"
+                  <select onChange="addToResultList('${
+                    data.result[i].id
+                  }','grade',this.value)" id="standard-select" id="grade" value="${
+            data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
-            }" class="select2">
-                  <option value="<b>${data.result[i].grade == `-`
-              ? `-`
-              : `${data.result[i].grade}`
-            }</b>">${data.result[i].grade == "-"
+          }" class="select2">
+                  <option value="<b>${
+                    data.result[i].grade == `-`
+                      ? `-`
+                      : `${data.result[i].grade}`
+                  }</b>">${
+            data.result[i].grade == "-"
               ? "Select Grade"
               : `${data.result[i].grade}`
-            }</option>
+          }</option>
             ${
-            // <option value="A">A</option>
-            // <option value="B">B</option>
-            // <option value="C">C</option>
-            // <option value="D">D</option>
-            // <option value="E">E</option>
-            // <option value="F">F</option>
-            ``
+              // <option value="A">A</option>
+              // <option value="B">B</option>
+              // <option value="C">C</option>
+              // <option value="D">D</option>
+              // <option value="E">E</option>
+              // <option value="F">F</option>
+              ``
             }
                   </select>
             
@@ -7913,27 +8344,31 @@ function getAllstudentForSubjectResultUpload(refresh) {
 
             <td ${data.settings.remark.status} > 
             <div class="select">
-                <select onChange="addToResultList('${data.result[i].id
-            }','remark',this.value)" id="standard-select" id="remark" value="<b>${data.result[i].grade == "-"
+                <select onChange="addToResultList('${
+                  data.result[i].id
+                }','remark',this.value)" id="standard-select" id="remark" value="<b>${
+            data.result[i].grade == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
-            }</b>" class="select2">
-                <option value="${data.result[i].remark == `-`
-              ? `-`
-              : `${data.result[i].remark}`
-            }">${data.result[i].remark == "-"
+          }</b>" class="select2">
+                <option value="${
+                  data.result[i].remark == `-`
+                    ? `-`
+                    : `${data.result[i].remark}`
+                }">${
+            data.result[i].remark == "-"
               ? "Select Remark"
               : `${data.result[i].remark}`
-            }</option>
+          }</option>
                 ${
-            //<option value="EXCELLENT">EXCELLENT</option>
-            // <option value="VERY GOOD">VERY GOOD</option>
-            // <option value="GOOD">GOOD</option>
-            // <option value="FAIR">FAIR</option>
-            // <option value="POOR">POOR</option>
-            // <option value="VERY POOR">VERY POOR</option>
-            ``
-            }
+                  //<option value="EXCELLENT">EXCELLENT</option>
+                  // <option value="VERY GOOD">VERY GOOD</option>
+                  // <option value="GOOD">GOOD</option>
+                  // <option value="FAIR">FAIR</option>
+                  // <option value="POOR">POOR</option>
+                  // <option value="VERY POOR">VERY POOR</option>
+                  ``
+                }
                 </select>
                 <span class="focus"></span>
               <div>
@@ -8122,14 +8557,17 @@ function loadCustomSessionTerm() {
     })
 
     .then((data) => {
-      document.getElementById("session_term").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
-        }">${localStorage["current_session"] + " - " + localStorage["current_term"]
-        }</option>`;
+      document.getElementById("session_term").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + " - " + localStorage["current_term"]
+      }</option>`;
       data.forEach((sessions) => {
         term.forEach((term) => {
           document.getElementById(
             "session_term"
-          ).innerHTML += `<option value="${sessions.session + "-" + term}">${sessions.session + " - " + term
+          ).innerHTML += `<option value="${sessions.session + "-" + term}">${
+            sessions.session + " - " + term
           }</option>`;
         });
       });
@@ -8167,7 +8605,8 @@ function print() {
           --front - color: ${localStorage["SCHOOL_COLOR"].split("~")[0]};
         --back-color: ${localStorage["SCHOOL_COLOR"].split("~")[1]};
         }
-      </style>`);
+      </style>`
+  );
   a.document.write(divContents);
   a.document.write(`</body></html>`);
   a.print();
@@ -8280,7 +8719,6 @@ async function sendTokenToServer(deviceToken, user_type, id) {
     })
     .catch((err) => console.log(err));
 }
-
 
 // RE - AUTHENTICATION MODAL
 function openAuthenticationModal() {
@@ -8610,13 +9048,7 @@ if ("serviceWorker" in navigator) {
 // observer.observe(body, observerConfig);
 //
 
-
-
-
-
-
-//NOTIFICATION DIALOG	
-
+//NOTIFICATION DIALOG
 
 function notificationDialog(title, message) {
   // Create the modal HTML
@@ -8659,7 +9091,7 @@ function closeNotification() {
 
 // Action handler
 function handleAction() {
-  alert('Redirecting to messages...');
+  alert("Redirecting to messages...");
   closeNotification();
   // Add your actual action here
 }
@@ -8727,7 +9159,7 @@ function addNotificationStyles() {
 
 // Initialize when needed
 $(document).ready(function () {
-  addNotificationStyles()
+  addNotificationStyles();
   if (!$(".notification-modal").length) {
     addNotificationStyles();
   }

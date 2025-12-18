@@ -1562,19 +1562,39 @@ function getResult(value) {
               ${result.second_ca}
               </td>
 
-                <td ${data.settings.project.status} ${document.getElementById(`project_header_${session}_${term}`).hidden = data.settings.project.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.project}
-              </td>
-
-              <td ${data.settings.note_ass.status} ${document.getElementById(`note_ass_header_${session}_${term}`).hidden = data.settings.note_ass.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+               <td ${data.settings.note_ass.status} ${(document.getElementById(
+              `note_ass_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.note_ass.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.note_assignment}
               </td>
 
-              <td ${data.settings.cbt.status} ${document.getElementById(`cbt_header_${session}_${term}`).hidden = data.settings.cbt.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.cbt.status} ${(document.getElementById(
+              `cbt_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.cbt.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.cbt}
               </td>
 
-              <td ${data.settings.exam.status} ${document.getElementById(`exam_header_${session}_${term}`).hidden = data.settings.exam.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                <td ${data.settings.project.status} ${(document.getElementById(
+              `project_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.project.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.project}
+              </td>
+
+              <td ${data.settings.exam.status} ${(document.getElementById(
+              `exam_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.exam.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.examination}
               </td>
 

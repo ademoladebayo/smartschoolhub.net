@@ -415,9 +415,9 @@ class StudentService
             ]);
         }
 
-        if ($student_id == "112") {
-            Log::info(print_r($request, true));
-        }
+        // if ($student_id == "112") {
+        //     Log::info(print_r($request, true));
+        // }
 
 
 

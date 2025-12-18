@@ -1,10 +1,8 @@
-
 // SOUND VARIABLES
 var successSound = new Audio("../asset/sound/verified.mp3");
 var errorSound = new Audio("../asset/sound/error1.mp3");
 const timestamp = new Date().getTime();
 hasInternet = true;
-
 
 var ip = localStorage["ip"];
 var domain = localStorage["domain"];
@@ -15,23 +13,325 @@ answer = [];
 //var
 var session_list = {};
 
-var LZString = function () { var r = String.fromCharCode, o = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", n = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$", e = {}; function t(r, o) { if (!e[r]) { e[r] = {}; for (var n = 0; n < r.length; n++)e[r][r.charAt(n)] = n } return e[r][o] } var i = { compressToBase64: function (r) { if (null == r) return ""; var n = i._compress(r, 6, function (r) { return o.charAt(r) }); switch (n.length % 4) { default: case 0: return n; case 1: return n + "==="; case 2: return n + "=="; case 3: return n + "=" } }, decompressFromBase64: function (r) { return null == r ? "" : "" == r ? null : i._decompress(r.length, 32, function (n) { return t(o, r.charAt(n)) }) }, compressToUTF16: function (o) { return null == o ? "" : i._compress(o, 15, function (o) { return r(o + 32) }) + " " }, decompressFromUTF16: function (r) { return null == r ? "" : "" == r ? null : i._decompress(r.length, 16384, function (o) { return r.charCodeAt(o) - 32 }) }, compressToUint8Array: function (r) { for (var o = i.compress(r), n = new Uint8Array(2 * o.length), e = 0, t = o.length; e < t; e++) { var s = o.charCodeAt(e); n[2 * e] = s >>> 8, n[2 * e + 1] = s % 256 } return n }, decompressFromUint8Array: function (o) { if (null == o) return i.decompress(o); for (var n = new Array(o.length / 2), e = 0, t = n.length; e < t; e++)n[e] = 256 * o[2 * e] + o[2 * e + 1]; var s = []; return n.forEach(function (o) { s.push(r(o)) }), i.decompress(s.join("")) }, compressToEncodedURIComponent: function (r) { return null == r ? "" : i._compress(r, 6, function (r) { return n.charAt(r) }) }, decompressFromEncodedURIComponent: function (r) { return null == r ? "" : "" == r ? null : (r = r.replace(/ /g, "+"), i._decompress(r.length, 32, function (o) { return t(n, r.charAt(o)) })) }, compress: function (o) { return i._compress(o, 16, function (o) { return r(o) }) }, _compress: function (r, o, n) { if (null == r) return ""; var e, t, i, s = {}, u = {}, a = "", p = "", c = "", l = 2, f = 3, h = 2, d = [], m = 0, v = 0; for (i = 0; i < r.length; i += 1)if (a = r.charAt(i), Object.prototype.hasOwnProperty.call(s, a) || (s[a] = f++, u[a] = !0), p = c + a, Object.prototype.hasOwnProperty.call(s, p)) c = p; else { if (Object.prototype.hasOwnProperty.call(u, c)) { if (c.charCodeAt(0) < 256) { for (e = 0; e < h; e++)m <<= 1, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++; for (t = c.charCodeAt(0), e = 0; e < 8; e++)m = m << 1 | 1 & t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1 } else { for (t = 1, e = 0; e < h; e++)m = m << 1 | t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t = 0; for (t = c.charCodeAt(0), e = 0; e < 16; e++)m = m << 1 | 1 & t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1 } 0 == --l && (l = Math.pow(2, h), h++), delete u[c] } else for (t = s[c], e = 0; e < h; e++)m = m << 1 | 1 & t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1; 0 == --l && (l = Math.pow(2, h), h++), s[p] = f++, c = String(a) } if ("" !== c) { if (Object.prototype.hasOwnProperty.call(u, c)) { if (c.charCodeAt(0) < 256) { for (e = 0; e < h; e++)m <<= 1, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++; for (t = c.charCodeAt(0), e = 0; e < 8; e++)m = m << 1 | 1 & t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1 } else { for (t = 1, e = 0; e < h; e++)m = m << 1 | t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t = 0; for (t = c.charCodeAt(0), e = 0; e < 16; e++)m = m << 1 | 1 & t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1 } 0 == --l && (l = Math.pow(2, h), h++), delete u[c] } else for (t = s[c], e = 0; e < h; e++)m = m << 1 | 1 & t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1; 0 == --l && (l = Math.pow(2, h), h++) } for (t = 2, e = 0; e < h; e++)m = m << 1 | 1 & t, v == o - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1; for (; ;) { if (m <<= 1, v == o - 1) { d.push(n(m)); break } v++ } return d.join("") }, decompress: function (r) { return null == r ? "" : "" == r ? null : i._decompress(r.length, 32768, function (o) { return r.charCodeAt(o) }) }, _decompress: function (o, n, e) { var t, i, s, u, a, p, c, l = [], f = 4, h = 4, d = 3, m = "", v = [], g = { val: e(0), position: n, index: 1 }; for (t = 0; t < 3; t += 1)l[t] = t; for (s = 0, a = Math.pow(2, 2), p = 1; p != a;)u = g.val & g.position, g.position >>= 1, 0 == g.position && (g.position = n, g.val = e(g.index++)), s |= (u > 0 ? 1 : 0) * p, p <<= 1; switch (s) { case 0: for (s = 0, a = Math.pow(2, 8), p = 1; p != a;)u = g.val & g.position, g.position >>= 1, 0 == g.position && (g.position = n, g.val = e(g.index++)), s |= (u > 0 ? 1 : 0) * p, p <<= 1; c = r(s); break; case 1: for (s = 0, a = Math.pow(2, 16), p = 1; p != a;)u = g.val & g.position, g.position >>= 1, 0 == g.position && (g.position = n, g.val = e(g.index++)), s |= (u > 0 ? 1 : 0) * p, p <<= 1; c = r(s); break; case 2: return "" }for (l[3] = c, i = c, v.push(c); ;) { if (g.index > o) return ""; for (s = 0, a = Math.pow(2, d), p = 1; p != a;)u = g.val & g.position, g.position >>= 1, 0 == g.position && (g.position = n, g.val = e(g.index++)), s |= (u > 0 ? 1 : 0) * p, p <<= 1; switch (c = s) { case 0: for (s = 0, a = Math.pow(2, 8), p = 1; p != a;)u = g.val & g.position, g.position >>= 1, 0 == g.position && (g.position = n, g.val = e(g.index++)), s |= (u > 0 ? 1 : 0) * p, p <<= 1; l[h++] = r(s), c = h - 1, f--; break; case 1: for (s = 0, a = Math.pow(2, 16), p = 1; p != a;)u = g.val & g.position, g.position >>= 1, 0 == g.position && (g.position = n, g.val = e(g.index++)), s |= (u > 0 ? 1 : 0) * p, p <<= 1; l[h++] = r(s), c = h - 1, f--; break; case 2: return v.join("") }if (0 == f && (f = Math.pow(2, d), d++), l[c]) m = l[c]; else { if (c !== h) return null; m = i + i.charAt(0) } v.push(m), l[h++] = i + m.charAt(0), i = m, 0 == --f && (f = Math.pow(2, d), d++) } } }; return i }(); "function" == typeof define && define.amd ? define(function () { return LZString }) : "undefined" != typeof module && null != module ? module.exports = LZString : "undefined" != typeof angular && null != angular && angular.module("LZString", []).factory("LZString", function () { return LZString });
+var LZString = (function () {
+  var r = String.fromCharCode,
+    o = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+    n = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",
+    e = {};
+  function t(r, o) {
+    if (!e[r]) {
+      e[r] = {};
+      for (var n = 0; n < r.length; n++) e[r][r.charAt(n)] = n;
+    }
+    return e[r][o];
+  }
+  var i = {
+    compressToBase64: function (r) {
+      if (null == r) return "";
+      var n = i._compress(r, 6, function (r) {
+        return o.charAt(r);
+      });
+      switch (n.length % 4) {
+        default:
+        case 0:
+          return n;
+        case 1:
+          return n + "===";
+        case 2:
+          return n + "==";
+        case 3:
+          return n + "=";
+      }
+    },
+    decompressFromBase64: function (r) {
+      return null == r
+        ? ""
+        : "" == r
+        ? null
+        : i._decompress(r.length, 32, function (n) {
+            return t(o, r.charAt(n));
+          });
+    },
+    compressToUTF16: function (o) {
+      return null == o
+        ? ""
+        : i._compress(o, 15, function (o) {
+            return r(o + 32);
+          }) + " ";
+    },
+    decompressFromUTF16: function (r) {
+      return null == r
+        ? ""
+        : "" == r
+        ? null
+        : i._decompress(r.length, 16384, function (o) {
+            return r.charCodeAt(o) - 32;
+          });
+    },
+    compressToUint8Array: function (r) {
+      for (
+        var o = i.compress(r),
+          n = new Uint8Array(2 * o.length),
+          e = 0,
+          t = o.length;
+        e < t;
+        e++
+      ) {
+        var s = o.charCodeAt(e);
+        (n[2 * e] = s >>> 8), (n[2 * e + 1] = s % 256);
+      }
+      return n;
+    },
+    decompressFromUint8Array: function (o) {
+      if (null == o) return i.decompress(o);
+      for (var n = new Array(o.length / 2), e = 0, t = n.length; e < t; e++)
+        n[e] = 256 * o[2 * e] + o[2 * e + 1];
+      var s = [];
+      return (
+        n.forEach(function (o) {
+          s.push(r(o));
+        }),
+        i.decompress(s.join(""))
+      );
+    },
+    compressToEncodedURIComponent: function (r) {
+      return null == r
+        ? ""
+        : i._compress(r, 6, function (r) {
+            return n.charAt(r);
+          });
+    },
+    decompressFromEncodedURIComponent: function (r) {
+      return null == r
+        ? ""
+        : "" == r
+        ? null
+        : ((r = r.replace(/ /g, "+")),
+          i._decompress(r.length, 32, function (o) {
+            return t(n, r.charAt(o));
+          }));
+    },
+    compress: function (o) {
+      return i._compress(o, 16, function (o) {
+        return r(o);
+      });
+    },
+    _compress: function (r, o, n) {
+      if (null == r) return "";
+      var e,
+        t,
+        i,
+        s = {},
+        u = {},
+        a = "",
+        p = "",
+        c = "",
+        l = 2,
+        f = 3,
+        h = 2,
+        d = [],
+        m = 0,
+        v = 0;
+      for (i = 0; i < r.length; i += 1)
+        if (
+          ((a = r.charAt(i)),
+          Object.prototype.hasOwnProperty.call(s, a) ||
+            ((s[a] = f++), (u[a] = !0)),
+          (p = c + a),
+          Object.prototype.hasOwnProperty.call(s, p))
+        )
+          c = p;
+        else {
+          if (Object.prototype.hasOwnProperty.call(u, c)) {
+            if (c.charCodeAt(0) < 256) {
+              for (e = 0; e < h; e++)
+                (m <<= 1), v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++;
+              for (t = c.charCodeAt(0), e = 0; e < 8; e++)
+                (m = (m << 1) | (1 & t)),
+                  v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+                  (t >>= 1);
+            } else {
+              for (t = 1, e = 0; e < h; e++)
+                (m = (m << 1) | t),
+                  v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+                  (t = 0);
+              for (t = c.charCodeAt(0), e = 0; e < 16; e++)
+                (m = (m << 1) | (1 & t)),
+                  v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+                  (t >>= 1);
+            }
+            0 == --l && ((l = Math.pow(2, h)), h++), delete u[c];
+          } else
+            for (t = s[c], e = 0; e < h; e++)
+              (m = (m << 1) | (1 & t)),
+                v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+                (t >>= 1);
+          0 == --l && ((l = Math.pow(2, h)), h++),
+            (s[p] = f++),
+            (c = String(a));
+        }
+      if ("" !== c) {
+        if (Object.prototype.hasOwnProperty.call(u, c)) {
+          if (c.charCodeAt(0) < 256) {
+            for (e = 0; e < h; e++)
+              (m <<= 1), v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++;
+            for (t = c.charCodeAt(0), e = 0; e < 8; e++)
+              (m = (m << 1) | (1 & t)),
+                v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+                (t >>= 1);
+          } else {
+            for (t = 1, e = 0; e < h; e++)
+              (m = (m << 1) | t),
+                v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+                (t = 0);
+            for (t = c.charCodeAt(0), e = 0; e < 16; e++)
+              (m = (m << 1) | (1 & t)),
+                v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+                (t >>= 1);
+          }
+          0 == --l && ((l = Math.pow(2, h)), h++), delete u[c];
+        } else
+          for (t = s[c], e = 0; e < h; e++)
+            (m = (m << 1) | (1 & t)),
+              v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+              (t >>= 1);
+        0 == --l && ((l = Math.pow(2, h)), h++);
+      }
+      for (t = 2, e = 0; e < h; e++)
+        (m = (m << 1) | (1 & t)),
+          v == o - 1 ? ((v = 0), d.push(n(m)), (m = 0)) : v++,
+          (t >>= 1);
+      for (;;) {
+        if (((m <<= 1), v == o - 1)) {
+          d.push(n(m));
+          break;
+        }
+        v++;
+      }
+      return d.join("");
+    },
+    decompress: function (r) {
+      return null == r
+        ? ""
+        : "" == r
+        ? null
+        : i._decompress(r.length, 32768, function (o) {
+            return r.charCodeAt(o);
+          });
+    },
+    _decompress: function (o, n, e) {
+      var t,
+        i,
+        s,
+        u,
+        a,
+        p,
+        c,
+        l = [],
+        f = 4,
+        h = 4,
+        d = 3,
+        m = "",
+        v = [],
+        g = { val: e(0), position: n, index: 1 };
+      for (t = 0; t < 3; t += 1) l[t] = t;
+      for (s = 0, a = Math.pow(2, 2), p = 1; p != a; )
+        (u = g.val & g.position),
+          (g.position >>= 1),
+          0 == g.position && ((g.position = n), (g.val = e(g.index++))),
+          (s |= (u > 0 ? 1 : 0) * p),
+          (p <<= 1);
+      switch (s) {
+        case 0:
+          for (s = 0, a = Math.pow(2, 8), p = 1; p != a; )
+            (u = g.val & g.position),
+              (g.position >>= 1),
+              0 == g.position && ((g.position = n), (g.val = e(g.index++))),
+              (s |= (u > 0 ? 1 : 0) * p),
+              (p <<= 1);
+          c = r(s);
+          break;
+        case 1:
+          for (s = 0, a = Math.pow(2, 16), p = 1; p != a; )
+            (u = g.val & g.position),
+              (g.position >>= 1),
+              0 == g.position && ((g.position = n), (g.val = e(g.index++))),
+              (s |= (u > 0 ? 1 : 0) * p),
+              (p <<= 1);
+          c = r(s);
+          break;
+        case 2:
+          return "";
+      }
+      for (l[3] = c, i = c, v.push(c); ; ) {
+        if (g.index > o) return "";
+        for (s = 0, a = Math.pow(2, d), p = 1; p != a; )
+          (u = g.val & g.position),
+            (g.position >>= 1),
+            0 == g.position && ((g.position = n), (g.val = e(g.index++))),
+            (s |= (u > 0 ? 1 : 0) * p),
+            (p <<= 1);
+        switch ((c = s)) {
+          case 0:
+            for (s = 0, a = Math.pow(2, 8), p = 1; p != a; )
+              (u = g.val & g.position),
+                (g.position >>= 1),
+                0 == g.position && ((g.position = n), (g.val = e(g.index++))),
+                (s |= (u > 0 ? 1 : 0) * p),
+                (p <<= 1);
+            (l[h++] = r(s)), (c = h - 1), f--;
+            break;
+          case 1:
+            for (s = 0, a = Math.pow(2, 16), p = 1; p != a; )
+              (u = g.val & g.position),
+                (g.position >>= 1),
+                0 == g.position && ((g.position = n), (g.val = e(g.index++))),
+                (s |= (u > 0 ? 1 : 0) * p),
+                (p <<= 1);
+            (l[h++] = r(s)), (c = h - 1), f--;
+            break;
+          case 2:
+            return v.join("");
+        }
+        if ((0 == f && ((f = Math.pow(2, d)), d++), l[c])) m = l[c];
+        else {
+          if (c !== h) return null;
+          m = i + i.charAt(0);
+        }
+        v.push(m),
+          (l[h++] = i + m.charAt(0)),
+          (i = m),
+          0 == --f && ((f = Math.pow(2, d)), d++);
+      }
+    },
+  };
+  return i;
+})();
+"function" == typeof define && define.amd
+  ? define(function () {
+      return LZString;
+    })
+  : "undefined" != typeof module && null != module
+  ? (module.exports = LZString)
+  : "undefined" != typeof angular &&
+    null != angular &&
+    angular.module("LZString", []).factory("LZString", function () {
+      return LZString;
+    });
 
 window.addEventListener("online", () => {
   hasInternet = true;
-  successtoast("<b>INTERNET CONNECTED</b>")
+  successtoast("<b>INTERNET CONNECTED</b>");
 });
 
 window.addEventListener("offline", () => {
   hasInternet = false;
-  errortoast("<b>INTERNET DISCONNECTED</b>")
+  errortoast("<b>INTERNET DISCONNECTED</b>");
 });
 
-window.addEventListener('load', function () {
-
+window.addEventListener("load", function () {
   setTimeout(() => {
     try {
-
       const firebaseConfig = {
         apiKey: "AIzaSyCLhWTc_4e5rGJeXV8qGCWZdZLTP0YrjCA",
         authDomain: "dextroux-technologies.firebaseapp.com",
@@ -41,7 +341,7 @@ window.addEventListener('load', function () {
         appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
         measurementId: "G-QWNY4DPSNH",
       };
-      const app = firebase.initializeApp(firebaseConfig)
+      const app = firebase.initializeApp(firebaseConfig);
       const messaging = firebase.messaging();
 
       // Listen for incoming messages (when app is in foreground)
@@ -49,7 +349,7 @@ window.addEventListener('load', function () {
         // notification data receive here, use it however you want
         // keep in mind if message receive here, it will not notify in background
 
-        console.log('in app notify ', payload);
+        console.log("in app notify ", payload);
         const notificationTitle = payload.notification.title;
         const notificationOptions = {
           body: payload.notification.body,
@@ -66,17 +366,17 @@ window.addEventListener('load', function () {
         //   }
         // });
 
-
-        notificationDialog(payload.notification.title, payload.notification.body);
+        notificationDialog(
+          payload.notification.title,
+          payload.notification.body
+        );
         successSound.play();
-
       });
     } catch (err) {
-      console.log('eFCM initialization failed:', err);
+      console.log("eFCM initialization failed:", err);
     }
-
   }, 5000); // Adjust delay if needed
-})
+});
 
 getSchoolDetails();
 getCurrentSession();
@@ -375,14 +675,16 @@ function loadDashBoardInformation() {
     student_id +
     `.png?timestamp=${timestamp}`;
 
-  document.getElementById("user_name").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.first_name +
+  document.getElementById("user_name").innerHTML = `<b>${
+    JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
-    }</b>`;
-  document.getElementById("user_name1").innerHTML = `<b>${JSON.parse(localStorage["user_data"]).data.first_name +
+  }</b>`;
+  document.getElementById("user_name1").innerHTML = `<b>${
+    JSON.parse(localStorage["user_data"]).data.first_name +
     " " +
     JSON.parse(localStorage["user_data"]).data.last_name
-    }</b>`;
+  }</b>`;
 
   document.getElementById("cbt_no").innerHTML = JSON.parse(
     localStorage["user_data"]
@@ -421,9 +723,11 @@ function getProfileData() {
       document.getElementById("profile_data").innerHTML += ` 
           <tr>
                   <td>${data_key[i].toUpperCase().replace("_", " ")}:</td>
-                  <td id="${data_key[i]
-        }" name="profile_data" class="font-medium text-dark-medium">${user_data[data_key[i]].class_name
-        }</td>
+                  <td id="${
+                    data_key[i]
+                  }" name="profile_data" class="font-medium text-dark-medium">${
+        user_data[data_key[i]].class_name
+      }</td>
           </tr>
           
           `;
@@ -431,9 +735,11 @@ function getProfileData() {
       document.getElementById("profile_data").innerHTML += ` 
           <tr>
                   <td>${data_key[i].toUpperCase().replace("_", " ")}:</td>
-                  <td id="${data_key[i]
-        }" name="profile_data" class="font-medium text-dark-medium">${user_data[data_key[i]]
-        }</td>
+                  <td id="${
+                    data_key[i]
+                  }" name="profile_data" class="font-medium text-dark-medium">${
+        user_data[data_key[i]]
+      }</td>
           </tr>
           
           `;
@@ -522,13 +828,14 @@ function signIn() {
           //deviceToken = await initFirebaseMessagingRegistration();
 
           // Get or initialize device token
-          const deviceToken = localStorage.getItem('sshub_fcm_token') || null;
-          const needsRegistration = localStorage.getItem('register_device') == '1';
+          const deviceToken = localStorage.getItem("sshub_fcm_token") || null;
+          const needsRegistration =
+            localStorage.getItem("register_device") == "1";
 
           // Register new/changed token
           if (!deviceToken || data.data.device_token != deviceToken) {
             if (!needsRegistration) {
-              localStorage.setItem('register_device', '1');
+              localStorage.setItem("register_device", "1");
               errortoast("Device not registered.");
             }
           }
@@ -538,10 +845,10 @@ function signIn() {
             try {
               const userType = data.isParent ? "PARENT" : "STUDENT";
               await sendTokenToServer(deviceToken, userType, data.data.id);
-              localStorage.setItem('isParent', data.isParent);
-              localStorage.setItem('register_device', '0'); // Mark as completed
+              localStorage.setItem("isParent", data.isParent);
+              localStorage.setItem("register_device", "0"); // Mark as completed
             } catch (error) {
-              console.error('Failed to register token:', error);
+              console.error("Failed to register token:", error);
               // Consider keeping register_device=1 to retry later
             }
           }
@@ -688,21 +995,23 @@ function getCBTForSubject() {
           <td>
           ${data[i].start_time}</td>
           <td>
-          ${data[i].cbt_status == "OPEN"
+          ${
+            data[i].cbt_status == "OPEN"
               ? `<span class="badge bg-success text-white"><b>${data[i].cbt_status}</b></span>`
               : `<span class="badge bg-danger text-white"><b>${data[i].cbt_status}</b></span>`
-            }</td>
+          }</td>
         
           
   
           <td>
-              <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary"   ${data[i].cbt_status == "OPEN"
-              ? `onclick="startCBT(${JSON.stringify(data[i])
-                .replace(/'/g, "")
-                .replace(/"/g, "'")
-                .replace(/&#39;/g, "™")})"`
-              : `onclick="alert('CBT Closed!')"`
-            }
+              <button style="text-decoration: none; cursor: pointer;" class="btn-sm btn-primary"   ${
+                data[i].cbt_status == "OPEN"
+                  ? `onclick="startCBT(${JSON.stringify(data[i])
+                      .replace(/'/g, "")
+                      .replace(/"/g, "'")
+                      .replace(/&#39;/g, "™")})"`
+                  : `onclick="alert('CBT Closed!')"`
+              }
                  ><i class="fas fa-play"></i> START CBT</button>
               
           </td>
@@ -727,10 +1036,10 @@ function startCBT(cbt) {
 
   fetch(
     ip +
-    "/api/student/taken-cbt/" +
-    cbt.id +
-    "/" +
-    JSON.parse(localStorage["user_data"]).data.id,
+      "/api/student/taken-cbt/" +
+      cbt.id +
+      "/" +
+      JSON.parse(localStorage["user_data"]).data.id,
     {
       method: "GET",
       headers: {
@@ -809,9 +1118,9 @@ async function getCBTdetails() {
   ) {
     n = Math.floor(
       Math.random() *
-      JSON.parse(localStorage["cbt_detail"]).cbt_questions_number.split(",")
-        .length +
-      0
+        JSON.parse(localStorage["cbt_detail"]).cbt_questions_number.split(",")
+          .length +
+        0
     );
     if (!randomQuestion.includes(n)) {
       randomQuestion.push(n);
@@ -840,65 +1149,82 @@ async function getCBTdetails() {
     // carousel-item
     document.getElementById("cbt_view").innerHTML += ` <div class="mb-3 ">
    <p  class="mb-1"><b id="Q${questions_number[n]}">Question ${c}</b> <br><br>
-    <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${questions_number[n]
-      }" >${question[questions_number[n]]
-        .replace(/⌑/g, ",")
-        .replace(/™/g, "'")}</span></p>
+    <span oninput="saveQuestion(this.id,this.innerHTML)"  id="${
+      questions_number[n]
+    }" >${question[questions_number[n]]
+      .replace(/⌑/g, ",")
+      .replace(/™/g, "'")}</span></p>
  <div class="pl-2">
-           <div id="optionA${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                   id="A${questions_number[n]
-      }" value="A"> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="A${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[0]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+           <div id="optionA${
+             questions_number[n]
+           }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                   id="A${
+                     questions_number[n]
+                   }" value="A"> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="A${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[0]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
              </label> </input></div>
 
-             <div id="optionB${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                     id="B${questions_number[n]
-      }" value="B" > <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="B${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[1]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+             <div id="optionB${
+               questions_number[n]
+             }" class="form-check"> <input onclick="saveAnswer(this.id)"  class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                     id="B${
+                       questions_number[n]
+                     }" value="B" > <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="B${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[1]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                </label></input> </div>
 
-               <div id="optionC${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                       id="C${questions_number[n]
-      }" value="C"> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="C${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[2]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+               <div id="optionC${
+                 questions_number[n]
+               }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                       id="C${
+                         questions_number[n]
+                       }" value="C"> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="C${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[2]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                  </label> </input> </div>
 
-                 <div id="optionD${questions_number[n]
-      }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${questions_number[n]
-      }"
-                         id="D${questions_number[n]
-      }" value="D"> <label oninput="saveOptions(this.id)" id="${questions_number[n]
-      }" class="form-check-label" for="D${questions_number[n]}" >${options[
-        questions_number[n]
-      ]
-        .split("~")[3]
-        .replace(/⌑/g, ",")
-        .replace(/®/g, "~")
-        .replace(/™/g, "'")}
+                 <div id="optionD${
+                   questions_number[n]
+                 }" class="form-check"> <input onclick="saveAnswer(this.id)" class="form-check-input" type="radio" name="${
+      questions_number[n]
+    }"
+                         id="D${
+                           questions_number[n]
+                         }" value="D"> <label oninput="saveOptions(this.id)" id="${
+      questions_number[n]
+    }" class="form-check-label" for="D${questions_number[n]}" >${options[
+      questions_number[n]
+    ]
+      .split("~")[3]
+      .replace(/⌑/g, ",")
+      .replace(/®/g, "~")
+      .replace(/™/g, "'")}
                    </label></input> </div>
             </div>
   </div>
@@ -920,7 +1246,9 @@ function saveAnswer(text) {
 
 function submitCBT(timeup) {
   if (!hasInternet) {
-    alert("No internet connection available ... Please connect and try again <>DO NOT REFRESH</>");
+    alert(
+      "No internet connection available ... Please connect and try again <>DO NOT REFRESH</>"
+    );
     return 0;
   }
 
@@ -955,9 +1283,11 @@ function submitCBT(timeup) {
         document.getElementById("result").innerHTML = data.result;
       })
       .catch((err) => {
-        alert("Check that you are connected to the internet and try again ... DO NOT REFRESH");
+        alert(
+          "Check that you are connected to the internet and try again ... DO NOT REFRESH"
+        );
         document.getElementById("submitCBT").innerHTML = `Click to submit`;
-        console.log(err)
+        console.log(err);
       });
   } else {
     if (confirm("ARE YOU SURE YOU WANT TO SUBMIT NOW ?")) {
@@ -998,10 +1328,11 @@ function submitCBT(timeup) {
           document.getElementById("result").innerHTML = data.result;
         })
         .catch((err) => {
-          alert("Check that you are connected to the internet and try again ... DO NOT REFRESH");
+          alert(
+            "Check that you are connected to the internet and try again ... DO NOT REFRESH"
+          );
           document.getElementById("submitCBT").innerHTML = `Click to submit`;
-          console.log(err)
-
+          console.log(err);
         });
     }
   }
@@ -1161,15 +1492,17 @@ function getAllSubjectForTable() {
                       </td>
         
                       <td>${c}.</td>
-                      <td><i class="fa fa-shapes"></i> ${data[i].subject_name
-              }</td>
+                      <td><i class="fa fa-shapes"></i> ${
+                        data[i].subject_name
+                      }</td>
                       <td>ELECTIVE</td>
-                      <td>${data[i].teacher.title +
-              " " +
-              data[i].teacher.first_name +
-              " " +
-              data[i].teacher.last_name
-              }</td>
+                      <td>${
+                        data[i].teacher.title +
+                        " " +
+                        data[i].teacher.first_name +
+                        " " +
+                        data[i].teacher.last_name
+                      }</td>
                       
                       
             
@@ -1201,9 +1534,9 @@ function registerSubject() {
     if (
       confirm(
         "Kindly confirm you would like to register the selected subject for session " +
-        localStorage["current_session"] +
-        " " +
-        localStorage["current_term"]
+          localStorage["current_session"] +
+          " " +
+          localStorage["current_term"]
       )
     ) {
       document.getElementById("register_subject").innerHTML = `<i
@@ -1289,18 +1622,23 @@ function getRegisteredSubjectForTable() {
             <tr>
     
                   <td>${c}.</td>
-                  <td> <small><i class="${data[i].subject_type == "COMPULSORY"
-            ? `fa fa-star`
-            : `fa fa-shapes`
-          }" aria-hidden="true"></i></small> ${data[i].subject_name
-          }</td>
+                  <td> <small><i class="${
+                    data[i].subject_type == "COMPULSORY"
+                      ? `fa fa-star`
+                      : `fa fa-shapes`
+                  }" aria-hidden="true"></i></small> ${
+          data[i].subject_name
+        }</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   <td>
-                  <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${data[i].subject_id
-          }'); localStorage.setItem('LH_SUBJECT_CLASS','${data[i].subject_name
-          }'); getLearningHubMaterials('${data[i].subject_id
-          }'); getScheduledClass();" type="button" class="btn btn-primary btn-block"
+                  <a  onclick="localStorage.setItem('LH_SUBJECT_ID','${
+                    data[i].subject_id
+                  }'); localStorage.setItem('LH_SUBJECT_CLASS','${
+          data[i].subject_name
+        }'); getLearningHubMaterials('${
+          data[i].subject_id
+        }'); getScheduledClass();" type="button" class="btn btn-primary btn-block"
                   data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                   Materials
               </a     >
@@ -1365,16 +1703,19 @@ function getRegisteredSubjectForTableCBT() {
             <tr>
     
                   <td>${c}.</td>
-                  <td> <small><i class="${data[i].subject_type == "COMPULSORY"
-            ? `fa fa-star`
-            : `fa fa-shapes`
-          }" aria-hidden="true"></i></small> ${data[i].subject_name
-          }</td>
+                  <td> <small><i class="${
+                    data[i].subject_type == "COMPULSORY"
+                      ? `fa fa-star`
+                      : `fa fa-shapes`
+                  }" aria-hidden="true"></i></small> ${
+          data[i].subject_name
+        }</td>
                   <td>${data[i].subject_type}</td>
                   <td>${data[i].teacher}</td>
                   <td>
-                      <button onclick="showCBTList('${data[i].subject_name}',${data[i].subject_id
-          })" type="button" class="btn btn-primary">
+                      <button onclick="showCBTList('${data[i].subject_name}',${
+          data[i].subject_id
+        })" type="button" class="btn btn-primary">
                       <span id="" class="badge bg-white"
                       style="color:blue">${count}</span> CBT AVAILABLE
                       </button>
@@ -1484,9 +1825,9 @@ async function getTranscript() {
       data.forEach((data) => {
         var term = {};
         if (session_list[data.session]) {
-          session_list[data.session][data.term] = { "loaded": false };
+          session_list[data.session][data.term] = { loaded: false };
         } else {
-          term[data.term] = { "loaded": false };
+          term[data.term] = { loaded: false };
           session_list[data.session] = term;
         }
       });
@@ -1501,7 +1842,6 @@ async function getTranscript() {
         // LOOP THROUGH EACH SESSION AND TERM
         for (const session in session_list) {
           if (session_list.hasOwnProperty(session)) {
-
             for (const term in session_list[session]) {
               if (session_list[session].hasOwnProperty(term)) {
                 // CREATE RESULT TEMPLATE
@@ -1589,8 +1929,9 @@ async function getTranscript() {
 
                                      <th id="total_header_${session}_${term}" class="vertical-header" style="font-size: 14px;">TOTAL</th>
 
-                                     ${term == "THIRD TERM" ?
-                    `
+                                     ${
+                                       term == "THIRD TERM"
+                                         ? `
                                           <th id="first_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">FIRST TERM</th>
 
                                           <th id="second_term_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">SECOND TERM</th>
@@ -1600,9 +1941,8 @@ async function getTranscript() {
                                           <th id="mean_score_header_${session}_${term}" class="vertical-header" style="font-size: 14px; color:green">MEAN SCORE</th>
                                         
                                         `
-                    :
-                    ``
-                  }
+                                         : ``
+                                     }
 
 
 
@@ -1785,7 +2125,6 @@ async function getTranscript() {
             }
           }
         }
-
       } else {
         document.getElementById(
           "result_div"
@@ -1818,7 +2157,6 @@ async function processContainers() {
 
     // ACADEMIC PERFORMANCE
     await getResult(containerName);
-
   }
 
   removeSpinnerModal();
@@ -1904,7 +2242,12 @@ function getResult(value) {
             "scores_" + value.split("_")[1] + "_" + value.split("_")[2]
           ).innerHTML += `
            <tr>
-              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = data.settings.sn.status == 'hidden' ? true : false}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${(document.getElementById(
+            `sn_header_${session}_${term}`
+          ).hidden =
+            data.settings.sn.status == "hidden"
+              ? true
+              : false)}  style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
                 ${c}.
               </td>
 
@@ -1912,77 +2255,129 @@ function getResult(value) {
                 ${result.subject.subject_name}
               </td>
 
-              <td ${data.settings.first_test.status} ${document.getElementById(`first_test_header_${session}_${term}`).hidden = data.settings.first_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.first_test.status} ${(document.getElementById(
+            `first_test_header_${session}_${term}`
+          ).hidden =
+            data.settings.first_test.status == "hidden"
+              ? true
+              : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.first_ca}
               </td>
 
-              <td ${data.settings.second_test.status} ${document.getElementById(`second_test_header_${session}_${term}`).hidden = data.settings.second_test.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${
+                data.settings.second_test.status
+              } ${(document.getElementById(
+            `second_test_header_${session}_${term}`
+          ).hidden =
+            data.settings.second_test.status == "hidden"
+              ? true
+              : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.second_ca}
               </td>
 
-                <td ${data.settings.project.status} ${document.getElementById(`project_header_${session}_${term}`).hidden = data.settings.project.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
-              ${result.project}
-              </td>
-
-              <td ${data.settings.note_ass.status} ${document.getElementById(`note_ass_header_${session}_${term}`).hidden = data.settings.note_ass.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+             <td ${data.settings.note_ass.status} ${(document.getElementById(
+              `note_ass_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.note_ass.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.note_assignment}
               </td>
 
-              <td ${data.settings.cbt.status} ${document.getElementById(`cbt_header_${session}_${term}`).hidden = data.settings.cbt.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.cbt.status} ${(document.getElementById(
+              `cbt_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.cbt.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.cbt}
               </td>
 
-              <td ${data.settings.exam.status} ${document.getElementById(`exam_header_${session}_${term}`).hidden = data.settings.exam.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+                <td ${data.settings.project.status} ${(document.getElementById(
+              `project_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.project.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ${result.project}
+              </td>
+
+              <td ${data.settings.exam.status} ${(document.getElementById(
+              `exam_header_${session}_${term}${studentIdSuffix}`
+            ).hidden =
+              data.settings.exam.status == "hidden"
+                ? true
+                : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.examination}
               </td>
 
-              <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.total.status} ${(document.getElementById(
+            `total_header_${session}_${term}`
+          ).hidden =
+            data.settings.total.status == "hidden"
+              ? true
+              : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.total}
               </td>
 
-              ${term == "THIRD TERM" ?
-              `
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
-                ? "red"
-                : result.grade.includes("A")
+              ${
+                term == "THIRD TERM"
+                  ? `
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
                   ? "blue"
                   : "black"
               } ;">
                 ${result.first_term}
               </td>
               
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
-                ? "red"
-                : result.grade.includes("A")
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
                   ? "blue"
                   : "black"
               } ;">
                 ${result.second_term}
               </td>
 
-              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${result.grade.includes("F")
-                ? "red"
-                : result.grade.includes("A")
+              <td style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;" color: ${
+                result.grade.includes("F")
+                  ? "red"
+                  : result.grade.includes("A")
                   ? "blue"
                   : "black"
               } ;">
                 ${result.third_term}
               </td>
               
-               <td ${data.settings.total.status} ${document.getElementById(`total_header_${session}_${term}`).hidden = data.settings.total.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${result.grade.includes("F")
-                ? "red"
-                : result.grade.includes("A")
-                  ? "blue"
-                  : "black"
-              } ;">
+               <td ${data.settings.total.status} ${(document.getElementById(
+                      `total_header_${session}_${term}`
+                    ).hidden =
+                      data.settings.total.status == "hidden"
+                        ? true
+                        : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center; color: ${
+                      result.grade.includes("F")
+                        ? "red"
+                        : result.grade.includes("A")
+                        ? "blue"
+                        : "black"
+                    } ;">
                 ${result.mean_score}
               </td>
               
               `
-              : ``
-            }
+                  : ``
+              }
 
-              <td ${data.settings.sn.status} ${document.getElementById(`sn_header_${session}_${term}`).hidden = data.settings.sn.status == 'hidden' ? true : false} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              <td ${data.settings.sn.status} ${(document.getElementById(
+            `sn_header_${session}_${term}`
+          ).hidden =
+            data.settings.sn.status == "hidden"
+              ? true
+              : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${parseFloat(result.class_average).toFixed(0)}
               </td>
 
@@ -1998,21 +2393,33 @@ function getResult(value) {
               <b>${result.position}</b>
               </td>
 
-              <td ${data.settings.grade.status} ${document.getElementById(`grade_header_${session}_${term}`).hidden = data.settings.grade.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
+              <td ${data.settings.grade.status} ${(document.getElementById(
+            `grade_header_${session}_${term}`
+          ).hidden =
+            data.settings.grade.status == "hidden"
+              ? true
+              : false)} style="color: ${
+            result.grade.includes("F")
               ? "red"
               : result.grade.includes("A")
-                ? "blue"
-                : "black"
-            } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
+              ? "blue"
+              : "black"
+          } ; font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; text-align:center;">
               ${result.grade}
               </td>
 
-              <td ${data.settings.remark.status} ${document.getElementById(`remark_header_${session}_${term}`).hidden = data.settings.remark.status == 'hidden' ? true : false} style="color: ${result.grade.includes("F")
+              <td ${data.settings.remark.status} ${(document.getElementById(
+            `remark_header_${session}_${term}`
+          ).hidden =
+            data.settings.remark.status == "hidden"
+              ? true
+              : false)} style="color: ${
+            result.grade.includes("F")
               ? "red"
               : result.grade.includes("A")
-                ? "blue"
-                : "black"
-            } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
+              ? "blue"
+              : "black"
+          } ;  font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
               ${result.remark}
               </td>
 
@@ -2223,12 +2630,13 @@ function getLessonPlan(week) {
       document.getElementById("lesson_plan_for").innerHTML =
         "LESSON PLAN FOR " + localStorage["LESSON-PLAN"].split("-")[1];
 
-      document.getElementById("lp_status").innerHTML = `<span class="badge ${data.status == "APPROVED"
-        ? `bg-success`
-        : data.status == "DISAPPROVED"
+      document.getElementById("lp_status").innerHTML = `<span class="badge ${
+        data.status == "APPROVED"
+          ? `bg-success`
+          : data.status == "DISAPPROVED"
           ? `bg-danger`
           : `bg-warning`
-        }"><b>${data.status}</b></span>`;
+      }"><b>${data.status}</b></span>`;
 
       document.getElementById("week1").innerHTML =
         ` <option value="${data.week}">${data.week}</option>` +
@@ -2257,9 +2665,7 @@ function loadLessonPage(value) {
 }
 
 function getLearningHubMaterials(subject_id) {
-
-  openSpinnerModal('Load Material(s)');
-
+  openSpinnerModal("Load Material(s)");
 
   document.getElementById("subject").innerHTML =
     "LEARNING HUB FOR " + localStorage["LH_SUBJECT_CLASS"];
@@ -2295,7 +2701,10 @@ function getLearningHubMaterials(subject_id) {
         document.getElementById("download_note").hidden = false;
 
         // SAVE NOTE TO LOCAL STORAGE
-        localStorage.setItem("NOTES", LZString.compress(JSON.stringify(data.note)));
+        localStorage.setItem(
+          "NOTES",
+          LZString.compress(JSON.stringify(data.note))
+        );
 
         document.getElementById("notes-content-main").innerHTML = ``;
         data.note.forEach((note) => {
@@ -2319,7 +2728,6 @@ function getLearningHubMaterials(subject_id) {
               </div>
               </div>`;
         });
-
       } else {
         document.getElementById("download_note").hidden = true;
 
@@ -2341,31 +2749,36 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "uploads-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-        <div onclick="collapseContent('upload_${upload.id
-            }')" class="card-header">
-            <small id="date_time" class="m-0 text-primary">${upload.date
+        <div onclick="collapseContent('upload_${
+          upload.id
+        }')" class="card-header">
+            <small id="date_time" class="m-0 text-primary">${
+              upload.date
             }</small>
             <br>
             <span class="m-0 text-primary">
-                <a  id="topic" data-toggle="collapse" href="#demo">${upload.url
-            }</a>
+                <a  id="topic" data-toggle="collapse" href="#demo">${
+                  upload.url
+                }</a>
             </span>
         </div>
         <div id="upload_${upload.id}" class="collapse"
             class="card-body text-dark bg-light">
            
- <object data="${domain +
-            "/backend/storage/app/public/fileupload/" +
-            localStorage["school"] +
-            "/learninghub/" +
-            upload.url
-            }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
+ <object data="${
+   domain +
+   "/backend/storage/app/public/fileupload/" +
+   localStorage["school"] +
+   "/learninghub/" +
+   upload.url
+ }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
         <embed
-            src="${domain +
-            "/backend/storage/app/public/fileupload/" +
-            localStorage["school"] +
-            "/learninghub/" +
-            upload.url
+            src="${
+              domain +
+              "/backend/storage/app/public/fileupload/" +
+              localStorage["school"] +
+              "/learninghub/" +
+              upload.url
             }"
             type="application/pdf" class="img-fluid">
     </object>
@@ -2425,10 +2838,12 @@ function getLearningHubMaterials(subject_id) {
           document.getElementById(
             "assignments-content-main"
           ).innerHTML += `  <div class="card shadow mb-3">
-              <div onclick="collapseContent('assignment_${assignment.id
-            }')" class="card-header">
-                  <small id="date_time" class="m-0 text-primary">${assignment.date
-            }</small>
+              <div onclick="collapseContent('assignment_${
+                assignment.id
+              }')" class="card-header">
+                  <small id="date_time" class="m-0 text-primary">${
+                    assignment.date
+                  }</small>
 
                  <!--<a  onclick="" target="_blank"
                       class="btn  btn-circle btn-sm float-right">
@@ -2438,14 +2853,16 @@ function getLearningHubMaterials(subject_id) {
                 <div class="">
                         <div class="left">
                               <span class="m-0 text-primary">
-                                  <a  id="topic" data-toggle="collapse" href="#demo">${assignment.topic
-            } 
+                                  <a  id="topic" data-toggle="collapse" href="#demo">${
+                                    assignment.topic
+                                  } 
                                   
                                   <sup> 
-                                  ${assignment.status == "OPEN"
-              ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
-              : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
-            }
+                                  ${
+                                    assignment.status == "OPEN"
+                                      ? ` <span class="badge bg-success" style="color: white;"><b> open </b></span>`
+                                      : ` <span class="badge bg-danger" style="color: white;"><b> closed</b></span>`
+                                  }
                                   </sup>
                                   </a>
                               </span>
@@ -2453,9 +2870,11 @@ function getLearningHubMaterials(subject_id) {
 
                         <div class="right">
                           <!--<input type="number" placeholder="score" class="input-field no-arrow" min="0">-->
-                          <button ${assignment.status == "CLOSE" ? `hidden` : ``
-            } onclick="takeAssignment('${assignment.topic}','${assignment.mark_obtainable
-            }','${assignment.id}')" class="submit-btn">Take Assignment</button> 
+                          <button ${
+                            assignment.status == "CLOSE" ? `hidden` : ``
+                          } onclick="takeAssignment('${assignment.topic}','${
+            assignment.mark_obtainable
+          }','${assignment.id}')" class="submit-btn">Take Assignment</button> 
                         </div>
 
                         
@@ -2532,10 +2951,10 @@ function getNote() {
 
   downloadAsPDF(
     localStorage["LH_SUBJECT_CLASS"] +
-    " " +
-    JSON.parse(localStorage["user_data"]).data.class.class_name +
-    "_" +
-    getDate().split("-")[0],
+      " " +
+      JSON.parse(localStorage["user_data"]).data.class.class_name +
+      "_" +
+      getDate().split("-")[0],
     "noteContainer"
   );
 }
@@ -2710,24 +3129,28 @@ function loadFeeBreakdown() {
   data.fee_breakdown.forEach((fee) => {
     document.getElementById("fee_table").innerHTML += `
     <tr>
-         ${fee.type == "COMPULSORY" ||
-        approved_optional_fee.includes(fee.id.toString())
-        ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
+         ${
+           fee.type == "COMPULSORY" ||
+           approved_optional_fee.includes(fee.id.toString())
+             ? ` <td><input type="checkbox" class="form-check-input ml-0" name="fee_compulsory"
          value="${fee.id}" checked  onclick="this.checked = !this.checked">`
-        : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
-             value="${fee.id}"  ${optional_fee.includes(fee.id.toString()) ? `checked` : ``
-        }>`
-      }
+             : `<td><input type="checkbox" class="form-check-input ml-0" name="fee_optional"
+             value="${fee.id}"  ${
+                 optional_fee.includes(fee.id.toString()) ? `checked` : ``
+               }>`
+         }
          <td>${c}.</td>
          <td>${fee.description}</td>
-         <td>${approved_optional_fee.includes(fee.id.toString())
-        ? `OPTIONAL (Approved)`
-        : fee.type
-      }</td>
-         <td>${fee.class == JSON.parse(localStorage["user_data"]).data.class.id
-        ? JSON.parse(localStorage["user_data"]).data.class.class_name
-        : fee.class
-      }</td>
+         <td>${
+           approved_optional_fee.includes(fee.id.toString())
+             ? `OPTIONAL (Approved)`
+             : fee.type
+         }</td>
+         <td>${
+           fee.class == JSON.parse(localStorage["user_data"]).data.class.id
+             ? JSON.parse(localStorage["user_data"]).data.class.class_name
+             : fee.class
+         }</td>
         <td>₦${formatNumber(fee.amount)}</td>
     </tr>
     `;
@@ -2820,9 +3243,9 @@ function generatePayment() {
     if (
       !confirm(
         "Kindly confirm you would like to add the selected optional fee for " +
-        localStorage["current_session"] +
-        " " +
-        localStorage["current_term"]
+          localStorage["current_session"] +
+          " " +
+          localStorage["current_term"]
       )
     ) {
       return 0;
@@ -2957,10 +3380,11 @@ async function getPaymentSlip(loadPage) {
          <td>${c}.</td>
          <td>${fee.description}</td>
          <td>${fee.type}</td>
-         <td>${fee.class == JSON.parse(localStorage["user_data"]).data.class.id
-          ? JSON.parse(localStorage["user_data"]).data.class.class_name
-          : fee.class
-        }</td>
+         <td>${
+           fee.class == JSON.parse(localStorage["user_data"]).data.class.id
+             ? JSON.parse(localStorage["user_data"]).data.class.class_name
+             : fee.class
+         }</td>
         <td>₦${formatNumber(fee.amount)}</td>
     </tr>
     `;
@@ -3236,12 +3660,12 @@ function getMessage(message_type, user_type) {
 
   fetch(
     ip +
-    "/api/admin/communication/" +
-    id +
-    "/" +
-    message_type +
-    "/" +
-    user_type,
+      "/api/admin/communication/" +
+      id +
+      "/" +
+      message_type +
+      "/" +
+      user_type,
     {
       method: "GET",
       headers: {
@@ -3283,24 +3707,31 @@ function getMessage(message_type, user_type) {
                       <td><b>${data[i].date}</b></td>
                       <td>
   
-                          ${`<span class="badge ${read ? `bg-success` : `bg-danger`
-              }"><b>${read ? `READ` : `UNREAD`}</b></span>`}
+                          ${`<span class="badge ${
+                            read ? `bg-success` : `bg-danger`
+                          }"><b>${read ? `READ` : `UNREAD`}</b></span>`}
   
                           <br>
   
-                          ${`<span class="badge ${replied ? `bg-success` : `bg-danger`
-              }"><b>${replied ? `REPLIED` : `NOT REPLIED`
-              }</b></span>`}
+                          ${`<span class="badge ${
+                            replied ? `bg-success` : `bg-danger`
+                          }"><b>${
+                            replied ? `REPLIED` : `NOT REPLIED`
+                          }</b></span>`}
   
                        </td>
   
                         <td>
-                          <button onclick="saveDataInLocalStorage('communication','${data[i]
-              }'); 
-                          editMessage('${data[i].id}','${data[i].sender
-              }','VIEW'); populateViewMessageModal('${data[i].sender_name}','${data[i].sender
-              }','${data[i].receiver_name}','${data[i].message_type}','${data[i].id
-              }'); openModal('viewMessageModal');" type="button" class="btn btn-primary btn-block  btn-sm">
+                          <button onclick="saveDataInLocalStorage('communication','${
+                            data[i]
+                          }'); 
+                          editMessage('${data[i].id}','${
+              data[i].sender
+            }','VIEW'); populateViewMessageModal('${data[i].sender_name}','${
+              data[i].sender
+            }','${data[i].receiver_name}','${data[i].message_type}','${
+              data[i].id
+            }'); openModal('viewMessageModal');" type="button" class="btn btn-primary btn-block  btn-sm">
                               <i class="fa fa-eye"></i> View Message
                           </button>
                         </td>
@@ -3353,24 +3784,28 @@ function populateViewMessageModal(
     <div class="form-group">
         <label for="message-text" class="col-form-label">Message:</label>
         <textarea style="height:180px" id="view_message" class="form-control" id="message-text"
-            disabled>${JSON.stringify(localStorage["communication"]).message
-    }</textarea>
+            disabled>${
+              JSON.stringify(localStorage["communication"]).message
+            }</textarea>
     </div>
 
     <div class="form-group">
         <label for="message-text" class="col-form-label">Reply:</label>
-        <textarea style="height:180px" id="reply" class="form-control" id="message-text" ${receiver != JSON.parse(localStorage["user_data"]).data.id
-      ? `disabled`
-      : ``
-    }>${reply == "null"
+        <textarea style="height:180px" id="reply" class="form-control" id="message-text" ${
+          receiver != JSON.parse(localStorage["user_data"]).data.id
+            ? `disabled`
+            : ``
+        }>${
+    reply == "null"
       ? `No response yet ... `
       : JSON.stringify(localStorage["communication"]).reply
-    }</textarea>
+  }</textarea>
     </div>
 </form>
 </div>
-<div class="modal-footer" ${receiver != JSON.parse(localStorage["user_data"]).data.id ? `hidden` : ``
-    }>
+<div class="modal-footer" ${
+    receiver != JSON.parse(localStorage["user_data"]).data.id ? `hidden` : ``
+  }>
 <button onclick="editMessage(document.getElementById('communication_id').value,'REPLY')" class="btn btn-primary btn-block  btn-sm">
 
     <i class="fa fa-comments"></i> Reply Message
@@ -3506,14 +3941,17 @@ function loadCustomSessionTerm() {
     })
 
     .then((data) => {
-      document.getElementById("session_term0").innerHTML = `<option value="${localStorage["current_session"] + "-" + localStorage["current_term"]
-        }">${localStorage["current_session"] + "-" + localStorage["current_term"]
-        }</option>`;
+      document.getElementById("session_term0").innerHTML = `<option value="${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }">${
+        localStorage["current_session"] + "-" + localStorage["current_term"]
+      }</option>`;
       if (data.length > 0) {
         data.forEach((sessions) => {
           document.getElementById(
             "session_term0"
-          ).innerHTML += `<option value="${sessions.session + "-" + sessions.term
+          ).innerHTML += `<option value="${
+            sessions.session + "-" + sessions.term
           }">${sessions.session + "-" + sessions.term}</option>`;
         });
       }
@@ -3678,17 +4116,19 @@ function getScheduledClass() {
             document.getElementById("upcoming_class").innerHTML += `
            <tr>
                   <td>${uc}.</td>
-                  <td><small>${LC.topic} ${LC.status == "LIVE"
+                  <td><small>${LC.topic} ${
+              LC.status == "LIVE"
                 ? ` <span class="badge bg-success"
                   style="color: white;"><b> LIVE </b></span>`
                 : ``
-              }</small></td>
+            }</small></td>
                   <td><small>${LC.date}</small></td>
                   <td><small>${LC.time}</small></td>
                   <td>
 
-                      <a onclick="openLiveClass('${LC.topic}')" ${LC.status != "LIVE" ? `hidden` : ``
-              } class="btn btn-sm btn-primary btn-block"><i
+                      <a onclick="openLiveClass('${LC.topic}')" ${
+              LC.status != "LIVE" ? `hidden` : ``
+            } class="btn btn-sm btn-primary btn-block"><i
                                   class="fas fa-video"></i></a>
 
                   </td>
@@ -3775,8 +4215,8 @@ function getContinuousAssessment() {
   openSpinnerModal("Continuous Assessment");
   fetch(
     ip +
-    "/api/student/continuous-assessment/" +
-    JSON.parse(localStorage["user_data"]).data.id,
+      "/api/student/continuous-assessment/" +
+      JSON.parse(localStorage["user_data"]).data.id,
     {
       method: "GET",
       headers: {
@@ -3812,11 +4252,12 @@ function getContinuousAssessment() {
                   <td>${uc}.</td>
                   <td><small>${assignment.subject}</small></td>
                   <td><small>${assignment.date}</small></td>
-                  <td><b><small>${assignment.graded == "FALSE"
-            ? ` <span class="badge bg-danger"
+                  <td><b><small>${
+                    assignment.graded == "FALSE"
+                      ? ` <span class="badge bg-danger"
                   style="color: white;"><b> NOT GRADED </b></span>`
-            : assignment.score
-          }</small></b></td>
+                      : assignment.score
+                  }</small></b></td>
             </tr>
            `;
         uc = uc + 1;
@@ -4186,7 +4627,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-
 // // Select the <body> element
 // const body = document.querySelector("body");
 
@@ -4238,7 +4678,6 @@ if ("serviceWorker" in navigator) {
 // // Start observing the <body> element for changes
 // observer.observe(body, observerConfig);
 
-
 function notificationDialog(title, message) {
   // Create the modal HTML
   const modalHTML = `
@@ -4280,7 +4719,7 @@ function closeNotification() {
 
 // Action handler
 function handleAction() {
-  alert('Redirecting to messages...');
+  alert("Redirecting to messages...");
   closeNotification();
   // Add your actual action here
 }
@@ -4348,7 +4787,7 @@ function addNotificationStyles() {
 
 // Initialize when needed
 $(document).ready(function () {
-  addNotificationStyles()
+  addNotificationStyles();
   if (!$(".notification-modal").length) {
     addNotificationStyles();
   }
