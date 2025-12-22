@@ -834,12 +834,13 @@ class AdminService
         $results = [];
         $wrong_class = "N/A";
 
-        \Log::info($studentWhoRegisteredForSessionTerm);
+        //\Log::info($studentWhoRegisteredForSessionTerm);
 
         foreach ($studentWhoRegisteredForSessionTerm as $registration) {
             $student = StudentModel::with('class')->find($registration->student_id);
 
             if ($student) {
+                \Log::info($student);
                 $correct_class = $student->class->id;
             } else {
                 continue;
