@@ -833,10 +833,18 @@ class AdminService
 
         $results = [];
         $wrong_class = "N/A";
+
+        \Log::info($studentWhoRegisteredForSessionTerm);
+
         foreach ($studentWhoRegisteredForSessionTerm as $registration) {
             $student = StudentModel::with('class')->find($registration->student_id);
 
-            $correct_class = $student->class->id;
+            if ($student) {
+                $correct_class = $student->class->id;
+            } else {
+                continue;
+            }
+
 
             $wrong_class = SubjectRegistrationModel::where("class_id", "!=", $correct_class)->where(['session' => $session, 'term' => $term])->first();
             if ($wrong_class) {
