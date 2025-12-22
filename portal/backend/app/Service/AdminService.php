@@ -826,9 +826,6 @@ class AdminService
         $session = $request->session;
         $term = $request->term;
 
-        $session = $request->session;
-        $term = $request->term;
-
         $studentWhoRegisteredForSessionTerm = SubjectRegistrationModel::select('student_id')->distinct()->where(['session' => $session, 'term' => $term])->get();
 
         $results = [];
@@ -837,7 +834,7 @@ class AdminService
         //\Log::info($studentWhoRegisteredForSessionTerm);
 
         foreach ($studentWhoRegisteredForSessionTerm as $registration) {
-            $student = StudentModel::with('class')->find($registration->student_id);
+            $student = StudentModel::find($registration->student_id);
 
             if ($student && $student->class) {
                 //\Log::info($student);
@@ -848,12 +845,12 @@ class AdminService
             }
 
 
-            $wrong_class = SubjectRegistrationModel::where("class_id", "!=", $correct_class)->where(['session' => $session, 'term' => $term])->first();
+            $wrong_class = SubjectRegistrationModel::where("class_id", "!=", $correct_class->id)->where(['session' => $session, 'term' => $term])->first();
             if ($wrong_class) {
                 $wrong_class = $wrong_class->class_id;
             }
 
-            $correct_class_registration =  SubjectRegistrationModel::select("id")->where(["class_id" => $correct_class, "user_id" => $student->id, 'session' => $session, 'term' => $term])->get();
+            $correct_class_registration =  SubjectRegistrationModel::select("id")->where(["class_id" => $correct_class->id, "user_id" => $student->id, 'session' => $session, 'term' => $term])->get();
 
             $wrong_class_registration = SubjectRegistrationModel::select("id")->where(["class_id" => $wrong_class, "user_id" => $student->id, 'session' => $session, 'term' => $term])->get();
 
