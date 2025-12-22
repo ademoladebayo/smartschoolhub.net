@@ -839,10 +839,11 @@ class AdminService
         foreach ($studentWhoRegisteredForSessionTerm as $registration) {
             $student = StudentModel::with('class')->find($registration->student_id);
 
-            if ($student) {
-                \Log::info($student);
+            if ($student && $student->class) {
+                //\Log::info($student);
                 $correct_class = $student->class->id;
             } else {
+                 \Log::info("N0 CLASS ... " . $student->id);
                 continue;
             }
 
