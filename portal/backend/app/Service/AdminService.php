@@ -754,6 +754,7 @@ class AdminService
         # GET POSITION
 
         // 1. Sort the array by percentage (descending order)
+        //\Log::info($subjectslist);
         if (count($subjectslist) > 0) {
             usort($broadsheet, function ($a, $b) {
                 return $b['scoreTotal'] <=> $a['scoreTotal'];
@@ -816,5 +817,146 @@ class AdminService
             'session' => $session,
             'term' => $term
         ])->update(['class_position' => $position]);
+    }
+
+    public function getStudentWithMultipleResult(Request $request)
+    {
+        config(['database.default' => $request->school]);
+
+        $session = $request->session;
+        $term = $request->term;
+
+        // OPTIMIZATION 1: Use chunking for large datasets
+        $results = [];
+        $batchSize = 100;
+
+        SubjectRegistrationModel::select('student_id')
+            ->distinct()
+            ->where(['session' => $session, 'term' => $term])
+            ->chunk($batchSize, function ($registrations) use (&$results, $session, $term) {
+
+                $studentIds = $registrations->pluck('student_id')->toArray();
+
+                // OPTIMIZATION 2: Eager load students with their classes in batch
+                $students = StudentModel::with('class')
+                    ->whereIn('id', $studentIds)
+                    ->get()
+                    ->keyBy('id');
+
+                // OPTIMIZATION 3: Batch query for wrong classes
+                $wrongClassRegistrations = SubjectRegistrationModel::whereIn('student_id', $studentIds)
+                    ->where(['session' => $session, 'term' => $term])
+                    ->select('student_id', 'class_id')
+                    ->get()
+                    ->groupBy('student_id');
+
+                foreach ($registrations as $registration) {
+                    $student = $students[$registration->student_id] ?? null;
+
+                    if (!$student || !$student->class) {
+                        continue; // Skip if student or class not found
+                    }
+
+                    $correctClass = $student->class->id;
+                    $wrongClass = null;
+
+                    // Find wrong class for this student
+                    if (isset($wrongClassRegistrations[$student->id])) {
+                        foreach ($wrongClassRegistrations[$student->id] as $wrongReg) {
+                            if ($wrongReg->class_id != $correctClass) {
+                                $wrongClass = $wrongReg->class_id;
+                                break;
+                            }
+                        }
+                    }
+
+                    // OPTIMIZATION 4: Avoid N+1 queries
+                    $correctRegIds = [];
+                    $wrongRegIds = [];
+
+                    if ($wrongClass) {
+                        // Get both correct and wrong registrations in one query
+                        $allRegistrations = SubjectRegistrationModel::where('student_id', $student->id)
+                            ->where(['session' => $session, 'term' => $term])
+                            ->whereIn('class_id', [$correctClass, $wrongClass])
+                            ->select('id', 'class_id')
+                            ->get();
+
+                        foreach ($allRegistrations as $reg) {
+                            if ($reg->class_id == $correctClass) {
+                                $correctRegIds[] = $reg->id;
+                            } else {
+                                $wrongRegIds[] = $reg->id;
+                            }
+                        }
+                    } else {
+                        // Only get correct registrations
+                        $correctRegIds = SubjectRegistrationModel::where([
+                            'class_id' => $correctClass,
+                            'student_id' => $student->id,
+                            'session' => $session,
+                            'term' => $term
+                        ])->pluck('id')->toArray();
+                    }
+
+                    $results[] = [
+                        "student_id" => $student->id,
+                        "student_name" => $student->first_name . " " . $student->last_name,
+                        "class" => $student->class->class_name,
+                        "correct_class" => $correctClass,
+                        "wrong_class" => $wrongClass,
+                        "correct_registration" => $correctRegIds,
+                        "wrong_registration" => $wrongRegIds,
+                    ];
+                }
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $results,
+            'count' => count($results)
+        ]);
+
+
+
+
+        //     $session = $request->session;
+        //     $term = $request->term;
+
+        //     $studentWhoRegisteredForSessionTerm = SubjectRegistrationModel::select()->distinct('student_id')->where(['session' => $session, 'term' => $term])->get();
+
+        //     $results = [];
+        //     $wrong_class = "N/A";
+        //     foreach ($studentWhoRegisteredForSessionTerm as $registration) {
+        //         $student = StudentModel::with('class')->find($registration->student_id);
+
+        //         $correct_class = $student->class->id;
+
+        //         $wrong_class = SubjectRegistrationModel::where("class_id", "!=", $correct_class)->where(['session' => $session, 'term' => $term])->first();
+        //         if ($wrong_class) {
+        //             $wrong_class = $wrong_class->class_id;
+        //         }
+
+        //         $correct_class_registration =  SubjectRegistrationModel::select("id")->where(["class_id" => $correct_class, "user_id" => $student->id, 'session' => $session, 'term' => $term])->get();
+
+        //         $wrong_class_registration = SubjectRegistrationModel::select("id")->where(["class_id" => $wrong_class, "user_id" => $student->id, 'session' => $session, 'term' => $term])->get();
+
+        //         $object =
+        //             [
+        //                 "student_id" => $student->id,
+        //                 "student_name" => $student->first_name . " " . $student->last_name,
+        //                 "class" => $student->class->class_name,
+        //                 "correct_class" => $correct_class,
+        //                 "wrong_class" => $wrong_class,
+        //                 "correct_registration" => $correct_class_registration,
+        //                 "wrong_registration" => $wrong_class_registration,
+
+        //             ];
+
+        //         array_push($results, $object);
+        //     }
+
+        //     return $results;
+        // }
     }
 }

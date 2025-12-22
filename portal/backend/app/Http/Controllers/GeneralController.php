@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repository\SessionRepository;
+use App\Service\AdminService;
 use App\Service\TeacherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -29,11 +30,10 @@ class GeneralController extends Controller
     function allSession($sort)
     {
         if (str_contains($sort, 'STD')) {
-            $result_session = DB::select('SELECT distinct session,  term FROM subject_registration where student_id =' . explode("-", $sort)[1] .' AND deleted_at is null');
+            $result_session = DB::select('SELECT distinct session,  term FROM subject_registration where student_id =' . explode("-", $sort)[1] . ' AND deleted_at is null');
             return $result_session;
-
         } else if (str_contains($sort, 'PAY')) {
-            $payment_session = DB::select('SELECT distinct session,  term FROM payment_history where student_id =' . explode("-", $sort)[1].' AND deleted_at is null');
+            $payment_session = DB::select('SELECT distinct session,  term FROM payment_history where student_id =' . explode("-", $sort)[1] . ' AND deleted_at is null');
             return $payment_session;
         } else {
             if ($sort == "DESC") {
@@ -76,15 +76,17 @@ class GeneralController extends Controller
 
     public function doTask(Request $request)
     {
+        $adminService = new AdminService();
 
         if ($request->task == "RUN_MIGRATION") {
             return $this->runMigration();
         } else if ($request->task == "SEND_NOTIFICATION") {
             return $this->sendNotification();
+        } else if ($request->task == "DUPLICATE_RESULT_CHECK") {
+            return  $adminService->getStudentWithMultipleResult($request);
         } else {
             return response()->json(['success' => false, 'message' => 'Invalid task']);
         }
-
     }
 
 
@@ -114,11 +116,9 @@ class GeneralController extends Controller
                     \Log::error("Error running migration for ... " . $school['alias']);
                     \Log::error($th->getMessage());
                 }
-
             }
 
             return "Migration completed successfully for all schools";
-
         } catch (\Exception $e) {
             Log::error('Migration failed: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Migration failed.']);
@@ -139,8 +139,6 @@ class GeneralController extends Controller
         }
     }
 
-
-
     public static function getSchools()
     {
         // CALL ENDPOINT
@@ -156,11 +154,9 @@ class GeneralController extends Controller
             ]);
 
             return json_decode($response->getBody(), true);
-
         } catch (\Throwable $th) {
             \Log::info($th->getMessage());
             return [];
         }
-
     }
 }
