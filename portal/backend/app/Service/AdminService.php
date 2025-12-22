@@ -672,6 +672,7 @@ class AdminService
         $subjectslist = [];
         $subjectslist1 = [];
         $broadsheet = [];
+        $subjectNames = [];
 
         // Process each student
         foreach ($students as $student) {
@@ -779,11 +780,14 @@ class AdminService
                 # STORE POSITION IN STUDENT
                 self::updateStudentPosition($student['student_id'], $student['position'], $session, $term);
             }
+
+
+            $subjectNames = $subjectslist->map(function ($item) {
+                return strtoupper(\Str::substr($item->subject->subject_name, 0, 12));
+            })->toArray();
         }
 
-        $subjectNames = $subjectslist->map(function ($item) {
-            return strtoupper(\Str::substr($item->subject->subject_name, 0, 12));
-        })->toArray();
+
 
         //Log::info("classInSessionTerm ::: ", ["classInSessionTerm" => $classInSessionTerm, "session" => $session, "term" => $term, "subjects" => $subjectslist]);
 
