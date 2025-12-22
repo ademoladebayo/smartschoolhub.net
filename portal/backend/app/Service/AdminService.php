@@ -838,7 +838,7 @@ class AdminService
 
             if ($student && $student->class) {
                 //\Log::info($student);
-                $correct_class = ClassModel::find($student->class_id);
+                $correct_class = ClassModel::find($student->class);
             } else {
                 \Log::info("N0 CLASS ... " . $student->id);
                 continue;
