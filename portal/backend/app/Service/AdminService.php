@@ -846,9 +846,11 @@ class AdminService
 
             //\Log::info($correct_class);
             $wrong_class = SubjectRegistrationModel::where('class_id', '!=', $correct_class->id)
-                ->where('session', $session)
-                ->where('term', $term)
-                ->first();
+                ->where([
+                    "student_id" => $student->id,
+                    'session' => $session,
+                    'term' => $term
+                ]) ->first();
 
             if ($wrong_class) {
                 $wrong_class = $wrong_class->class_id;
