@@ -849,14 +849,29 @@ class AdminService
                 ->where('session', $session)
                 ->where('term', $term)
                 ->first();
-                
+
             if ($wrong_class) {
                 $wrong_class = $wrong_class->class_id;
             }
 
-            $correct_class_registration =  SubjectRegistrationModel::pluck("id")->where(["class_id" => $correct_class->id, "student_id" => $student->id, 'session' => $session, 'term' => $term])->toArray();
+            // CORRECT: Apply where() BEFORE pluck()
+            $correct_class_registration = SubjectRegistrationModel::where([
+                "class_id" => $correct_class->id,
+                "student_id" => $student->id,
+                'session' => $session,
+                'term' => $term
+            ])
+                ->pluck("id")  // Conditions come FIRST
+                ->toArray();
 
-            $wrong_class_registration = SubjectRegistrationModel::pluck("id")->where("class_id", "!=", $correct_class->id)->where(["student_id" => $student->id, 'session' => $session, 'term' => $term])->toArray();
+            $wrong_class_registration = SubjectRegistrationModel::where("class_id", "!=", $correct_class->id)
+                ->where([
+                    "student_id" => $student->id,
+                    'session' => $session,
+                    'term' => $term
+                ])
+                ->pluck("id")  // Pluck comes LAST
+                ->toArray();
 
             $object =
                 [
