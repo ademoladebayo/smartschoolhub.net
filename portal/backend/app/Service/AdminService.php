@@ -844,15 +844,19 @@ class AdminService
                 continue;
             }
 
-            \Log::info($correct_class);
-            $wrong_class = SubjectRegistrationModel::where("class_id", "!=", $correct_class->id)->where(['session' => $session, 'term' => $term])->first();
+            //\Log::info($correct_class);
+            $wrong_class = SubjectRegistrationModel::where('class_id', '!=', $correct_class->id)
+                ->where('session', $session)
+                ->where('term', $term)
+                ->first();
+                
             if ($wrong_class) {
                 $wrong_class = $wrong_class->class_id;
             }
 
-            $correct_class_registration =  SubjectRegistrationModel::select("id")->where(["class_id" => $correct_class->id, "student_id" => $student->id, 'session' => $session, 'term' => $term])->get();
+            $correct_class_registration =  SubjectRegistrationModel::pluck("id")->where(["class_id" => $correct_class->id, "student_id" => $student->id, 'session' => $session, 'term' => $term])->toArray();
 
-            $wrong_class_registration = SubjectRegistrationModel::select("id")->where(["class_id" => $wrong_class, "student_id" => $student->id, 'session' => $session, 'term' => $term])->get();
+            $wrong_class_registration = SubjectRegistrationModel::pluck("id")->where("class_id", "!=", $correct_class->id)->where(["student_id" => $student->id, 'session' => $session, 'term' => $term])->toArray();
 
             $object =
                 [
