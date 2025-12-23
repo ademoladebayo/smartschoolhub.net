@@ -850,7 +850,7 @@ class AdminService
                     "student_id" => $student->id,
                     'session' => $session,
                     'term' => $term
-                ]) ->first();
+                ])->first();
 
             if ($wrong_class) {
                 $wrong_class = $wrong_class->class_id;
@@ -875,19 +875,24 @@ class AdminService
                 ->pluck("id")  // Pluck comes LAST
                 ->toArray();
 
-            $object =
-                [
-                    "student_id" => $student->id,
-                    "student_name" => $student->first_name . " " . $student->last_name,
-                    "class" => $correct_class->class_name,
-                    "correct_class" => $correct_class->id,
-                    "wrong_class" => $wrong_class,
-                    "correct_registration" => $correct_class_registration,
-                    "wrong_registration" => $wrong_class_registration,
 
-                ];
+            if (count($wrong_class_registration) > 0) {
+                $object =
+                    [
+                        "student_id" => $student->id,
+                        "student_name" => $student->first_name . " " . $student->last_name,
+                        "class" => $correct_class->class_name,
+                        "correct_class" => $correct_class->id,
+                        "wrong_class" => $wrong_class,
+                        "correct_registration" => $correct_class_registration,
+                        "wrong_registration" => $wrong_class_registration,
 
-            array_push($results, $object);
+                    ];
+
+                array_push($results, $object);
+            } else {
+                continue;
+            }
         }
 
         return $results;
