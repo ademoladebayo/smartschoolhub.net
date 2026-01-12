@@ -2279,7 +2279,7 @@ function getResult(value) {
               </td>
 
              <td ${data.settings.note_ass.status} ${(document.getElementById(
-            `note_ass_header_${session}_${term}${studentIdSuffix}`
+            `note_ass_header_${session}_${term}` //${studentIdSuffix}`
           ).hidden =
             data.settings.note_ass.status == "hidden"
               ? true
@@ -2288,7 +2288,7 @@ function getResult(value) {
               </td>
 
               <td ${data.settings.cbt.status} ${(document.getElementById(
-            `cbt_header_${session}_${term}${studentIdSuffix}`
+            `cbt_header_${session}_${term}` //${studentIdSuffix}`
           ).hidden =
             data.settings.cbt.status == "hidden"
               ? true
@@ -2297,7 +2297,7 @@ function getResult(value) {
               </td>
 
                 <td ${data.settings.project.status} ${(document.getElementById(
-            `project_header_${session}_${term}${studentIdSuffix}`
+            `project_header_${session}_${term}` //${studentIdSuffix}`
           ).hidden =
             data.settings.project.status == "hidden"
               ? true
@@ -2306,7 +2306,7 @@ function getResult(value) {
               </td>
 
               <td ${data.settings.exam.status} ${(document.getElementById(
-            `exam_header_${session}_${term}${studentIdSuffix}`
+            `exam_header_${session}_${term}` //${studentIdSuffix}`
           ).hidden =
             data.settings.exam.status == "hidden"
               ? true
