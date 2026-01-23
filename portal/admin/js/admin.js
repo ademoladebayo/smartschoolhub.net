@@ -3501,7 +3501,7 @@ async function getResultsByClass() {
 
 
 
-
+      <div class="page-break"></div>
         `;
 
       // Process student result data
