@@ -2911,11 +2911,15 @@ function getBroadsheet() {
     });
 }
 
-async function getStudentResult() {
+async function getStudentResult(countMessage = "") {
   user_data = JSON.parse(localStorage["student_result"]);
 
   openSpinnerModal(
-    "Result for " + user_data.first_name + " " + user_data.last_name
+    "Result for " +
+      user_data.first_name +
+      " " +
+      user_data.last_name +
+      countMessage
   );
 
   // IMAGE URL
@@ -3407,6 +3411,8 @@ async function getResultsByClass() {
     const resultList = document.getElementById("result-list");
     resultList.innerHTML = ""; // Clear existing content
 
+    let currentCount = 1;
+    let studentCount = data.broadsheet.length;
     for (const student of data.broadsheet) {
       // Create result section
       // const studentSection = document.createElement('section');
@@ -3509,9 +3515,11 @@ async function getResultsByClass() {
 
       localStorage.setItem("student_result", JSON.stringify(student.student));
 
-      await delay(10000);
+      await delay(5000);
       studentIdSuffix = `_${student.student_id}`;
-      await getStudentResult(student.student_id);
+      let countMessage = ` (${currentCount} of ${studentCount})`;
+      await getStudentResult(student.student_id, countMessage);
+      currentCount = currentCount + 1;
     }
   } catch (error) {
     console.error("Error fetching results:", error);
