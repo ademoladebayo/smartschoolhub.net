@@ -2262,7 +2262,7 @@ function getTranscript() {
  </div>
 
  </div>
- 
+
  <div class="page-break"></div>
 `;
               }
@@ -3428,8 +3428,8 @@ async function getResultsByClass() {
 
                     </div>
                     <div class="col-md-4 col-lg-6">
-                        <div class="text-center" style="margin-top: 2px;margin-bottom: 10px;"><img id="school_logo_${student.student_id}"
-                                src="../assets/img/sample_logo.png" height="150px" width="130px"></div>
+                        <div class="text-center" style="margin-top: 0.5px;margin-bottom: 1px;"><img id="school_logo_${student.student_id}"
+                                src="../assets/img/sample_logo.png" height="120px" width="100px"></div>
 
                     </div>
                     <div class="col-md-4 col-lg-3">
@@ -3463,13 +3463,13 @@ async function getResultsByClass() {
 
                     <div class="col-md-4" style="display: flex;
                     justify-content: center;">
-                        <div class="text-center" style="margin-top: 30px;">
+                        <div class="text-center" style="margin-top: 5px;">
                             <p id="full_name_${student.student_id}" style="font-size: 14px;">_____________________________</p>
                             <p id="student_id_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
                                 _____________________________</p>
-                            <p id="class_sector_${student.student_id}" style="font-size: 14px;font-family: Quicksand, sans-serif;">
+                            <p id="class_sector_${student.student_id}" style="font-size: 12px;font-family: Quicksand, sans-serif;">
                                 _____________________________</p>
-                            <p id="school_details_${student.student_id}" style="font-size: 14px;font-family: Poppins;">
+                            <p id="school_details_${student.student_id}" style="font-size: 10px;font-family: Poppins;">
                                 <b>_____________________________</b>
                             </p>
                         </div>
