@@ -2911,7 +2911,7 @@ function getBroadsheet() {
     });
 }
 
-async function getStudentResult(countMessage = "") {
+async function getStudentResult(studentId = null, countMessage = "") {
   user_data = JSON.parse(localStorage["student_result"]);
 
   openSpinnerModal(
@@ -3516,10 +3516,10 @@ async function getResultsByClass() {
 
       localStorage.setItem("student_result", JSON.stringify(student.student));
 
-      await delay(5000);
+      await delay(4000);
       studentIdSuffix = `_${student.student_id}`;
       let countMessage = ` (${currentCount} of ${studentCount})`;
-      console.log(countMessage)
+      //console.log(countMessage)
       await getStudentResult(student.student_id, countMessage);
       currentCount = currentCount + 1;
     }
