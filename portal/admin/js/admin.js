@@ -2919,6 +2919,7 @@ async function getStudentResult(countMessage = "") {
       user_data.first_name +
       " " +
       user_data.last_name +
+      " " +
       countMessage
   );
 
