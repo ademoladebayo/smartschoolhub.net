@@ -3519,6 +3519,7 @@ async function getResultsByClass() {
       await delay(5000);
       studentIdSuffix = `_${student.student_id}`;
       let countMessage = ` (${currentCount} of ${studentCount})`;
+      console.log(countMessage)
       await getStudentResult(student.student_id, countMessage);
       currentCount = currentCount + 1;
     }
