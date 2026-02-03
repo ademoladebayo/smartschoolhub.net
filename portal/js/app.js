@@ -1,8 +1,7 @@
 const version = "2.0.0"; // Change this to a new value whenever you update the service worker
-const installButton = document.getElementById('install-pwa-button');
+const installButton = document.getElementById("install-pwa-button");
 let deferredPrompt;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
 
 if ("serviceWorker" in navigator) {
   try {
@@ -17,11 +16,15 @@ if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register(`./serviceWorker.js?v=${version}`)
         .then((res) => {
-          console.log("service worker registered v" + version)
+          console.log("service worker registered v" + version);
           setTimeout(() => {
             //alert("App js onload");
             // localStorage.setItem('register_device', '1');
-            if (localStorage["register_device"] == '1' || localStorage["register_device"] == undefined || localStorage["register_device"] == null) {
+            if (
+              localStorage["register_device"] == "1" ||
+              localStorage["register_device"] == undefined ||
+              localStorage["register_device"] == null
+            ) {
               // if (true) {
 
               //Check for iPhone (iOS)
@@ -35,21 +38,17 @@ if ("serviceWorker" in navigator) {
               //   return "Android";
               // }
 
-
               getSchools();
-             // initFirebaseMessagingRegistration();
+              // initFirebaseMessagingRegistration();
             } else {
               getSchools();
             }
-          }
-            , 3000);
+          }, 3000);
         })
         .catch((err) => console.log("service worker not registered", err));
     });
 
-
-
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener("beforeinstallprompt", (e) => {
       // Prevent the browser's default install prompt
       e.preventDefault();
       // Store the event for later use
@@ -60,13 +59,10 @@ if ("serviceWorker" in navigator) {
       openInstallModal();
       //}
     });
-
   } catch (err) {
     console.error("Error registering service worker:", err);
   }
-
 }
-
 
 function installApp() {
   try {
@@ -75,28 +71,27 @@ function installApp() {
 
     // Wait for the user to respond to the prompt
     deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        localStorage.setItem("sshub_app_installed", true)
-        console.log('User accepted the PWA installation');
+      if (choiceResult.outcome === "accepted") {
+        localStorage.setItem("sshub_app_installed", true);
+        console.log("User accepted the PWA installation");
       } else {
-        console.log('User declined the PWA installation');
-        localStorage.setItem("sshub_app_installed", false)
+        console.log("User declined the PWA installation");
+        localStorage.setItem("sshub_app_installed", false);
       }
 
       // Reset the prompt
       deferredPrompt = null;
 
-
       // ASK FOR PERMISSION FOR NOTIFICATION
-      if ('Notification' in window) {
+      if ("Notification" in window) {
         Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            console.log('Notification permission granted');
+          if (permission === "granted") {
+            console.log("Notification permission granted");
             // You can now send notifications
-          } else if (permission === 'denied') {
-            console.log('Notification permission denied');
-          } else if (permission === 'default') {
-            console.log('Notification permission dismissed');
+          } else if (permission === "denied") {
+            console.log("Notification permission denied");
+          } else if (permission === "default") {
+            console.log("Notification permission dismissed");
           }
         });
       }
@@ -105,8 +100,6 @@ function installApp() {
     console.error("Error during app installation:", err);
   }
 }
-
-
 
 function openInstallModal() {
   var modal = `<div class="modal fade show" id="installModal" tabindex="-1" role="dialog" aria-labelledby="endModalTitle" data-backdrop="static" data-keyboard="false" style="display: block;">
@@ -177,9 +170,7 @@ function openInstallModal() {
   }
 
   parent.$("body").append(modal);
-  parent
-    .$("#installModal")
-    .modal({ backdrop: "static", keyboard: false });
+  parent.$("#installModal").modal({ backdrop: "static", keyboard: false });
   parent.$("#installModal").modal("show");
 }
 
@@ -188,21 +179,25 @@ function closeInstallModal() {
   parent.document.getElementById("installModal").remove();
 }
 
-
-
 async function initFirebaseMessagingRegistration() {
   try {
     //alert("App js initFirebaseMessagingRegistration");
 
-    if ('Notification' in window) {
+    if ("Notification" in window) {
       Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          console.log('Notification permission granted - initFirebaseMessagingRegistration');
+        if (permission === "granted") {
+          console.log(
+            "Notification permission granted - initFirebaseMessagingRegistration"
+          );
           // You can now send notifications
-        } else if (permission === 'denied') {
-          console.log('Notification permission denied - initFirebaseMessagingRegistration');
-        } else if (permission === 'default') {
-          console.log('Notification permission dismissed - initFirebaseMessagingRegistration');
+        } else if (permission === "denied") {
+          console.log(
+            "Notification permission denied - initFirebaseMessagingRegistration"
+          );
+        } else if (permission === "default") {
+          console.log(
+            "Notification permission dismissed - initFirebaseMessagingRegistration"
+          );
         }
       });
     }
@@ -216,18 +211,18 @@ async function initFirebaseMessagingRegistration() {
       appId: "1:1099192792266:web:2da00b0f913d84ec4ef033",
       measurementId: "G-QWNY4DPSNH",
     };
-    const app = firebase.initializeApp(firebaseConfig)
+    const app = firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
 
     const fcmSwRegistration = await navigator.serviceWorker.register(
-      '/firebase-messaging-sw.js',
-      { scope: '/firebase-cloud-messaging-push-scope/' } // Custom scope to avoid conflicts
+      "/firebase-messaging-sw.js",
+      { scope: "/firebase-cloud-messaging-push-scope/" } // Custom scope to avoid conflicts
     );
 
     // Get FCM token
     const token = await messaging.getToken();
     localStorage.setItem("sshub_fcm_token", token);
-    console.log('FCM Token:', token);
+    console.log("FCM Token:", token);
     //alert("FCM Token: " + token);
     getSchools();
 
@@ -236,35 +231,36 @@ async function initFirebaseMessagingRegistration() {
       // notification data receive here, use it however you want
       // keep in mind if message receive here, it will not notify in background
 
-      console.log('in app notify ', payload);
+      console.log("in app notify ", payload);
       const notificationTitle = payload.notification.title;
       const notificationOptions = {
         body: payload.notification.body,
         icon: "https://portal.smartschoolhub.net/icons/120.png",
         sound: "https://portal.smartschoolhub.net/asset/sound/verified.mp3",
       };
-      var notification = new Notification(notificationTitle, notificationOptions);
-      console.log('Notification created:', notification)
-
+      var notification = new Notification(
+        notificationTitle,
+        notificationOptions
+      );
+      console.log("Notification created:", notification);
     });
   } catch (err) {
-    console.error('eFCM initialization failed:', err);
+    console.error("eFCM initialization failed: -- " + err);
   }
 }
 
-
 console.log = function (message) {
   message = "INFO ::: " + message + " --- (`userAgent: " + userAgent + "`)";
-  fetch('https://webhook.site/cfdf1229-31b7-45d2-ab9a-ed0bf9a44265', {
-    method: 'POST',
-    body: JSON.stringify({ message })
+  fetch("https://webhook.site/cfdf1229-31b7-45d2-ab9a-ed0bf9a44265", {
+    method: "POST",
+    body: JSON.stringify({ message }),
   });
 };
 
 console.error = function (message) {
   message = "ERROR ::: " + message + " --- (`userAgent: " + userAgent + "`)";
-  fetch('https://webhook.site/cfdf1229-31b7-45d2-ab9a-ed0bf9a44265', {
-    method: 'POST',
-    body: JSON.stringify({ message })
+  fetch("https://webhook.site/cfdf1229-31b7-45d2-ab9a-ed0bf9a44265", {
+    method: "POST",
+    body: JSON.stringify({ message }),
   });
 };
