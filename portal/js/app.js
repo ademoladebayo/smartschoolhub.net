@@ -1,4 +1,4 @@
-const version = "1.1.9"; // Change this to a new value whenever you update the service worker
+const version = "2.0.0"; // Change this to a new value whenever you update the service worker
 const installButton = document.getElementById('install-pwa-button');
 let deferredPrompt;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -255,7 +255,7 @@ async function initFirebaseMessagingRegistration() {
 
 console.log = function (message) {
   message = "INFO ::: " + message + " --- (`userAgent: " + userAgent + "`)";
-  fetch('https://webhook.site/e510d8d6-50e7-4fae-859b-972326fe2a7b', {
+  fetch('https://webhook.site/cfdf1229-31b7-45d2-ab9a-ed0bf9a44265', {
     method: 'POST',
     body: JSON.stringify({ message })
   });
@@ -263,7 +263,7 @@ console.log = function (message) {
 
 console.error = function (message) {
   message = "ERROR ::: " + message + " --- (`userAgent: " + userAgent + "`)";
-  fetch('https://webhook.site/e510d8d6-50e7-4fae-859b-972326fe2a7b', {
+  fetch('https://webhook.site/cfdf1229-31b7-45d2-ab9a-ed0bf9a44265', {
     method: 'POST',
     body: JSON.stringify({ message })
   });
