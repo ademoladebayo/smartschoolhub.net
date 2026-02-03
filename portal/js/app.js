@@ -39,7 +39,7 @@ if ("serviceWorker" in navigator) {
               // }
 
               getSchools();
-              // initFirebaseMessagingRegistration();
+              initFirebaseMessagingRegistration();
             } else {
               getSchools();
             }
