@@ -518,10 +518,9 @@ aria-labelledby="endModalTitle" aria-hidden="true" data-backdrop="static" data-k
             localStorage.removeItem('school');
             // alert("Removed School");
         } else {
-            const timestamp = new Date().getTime();
             if ("school" in localStorage) {
                 getSchoolDetails(localStorage["school"] + "~" + localStorage["school_logo"])
-                document.getElementById("banner_img").src = localStorage["school_logo"] + `?timestamp=${timestamp}`
+                document.getElementById("banner_img").src = localStorage["school_logo"]     
                 document.getElementById("select_school").hidden = true;
                 document.getElementById("sign_in_as").hidden = false;
             }
