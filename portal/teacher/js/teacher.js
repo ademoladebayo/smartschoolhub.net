@@ -21,6 +21,7 @@ collapseSidebar();
 
 // VAR
 result_list = {};
+var studentIdSuffix = "";
 
 window.addEventListener("online", () =>
   successtoast("<b>INTERNET CONNECTED</b>")
@@ -1563,8 +1564,8 @@ function getResult(value) {
               </td>
 
                <td ${data.settings.note_ass.status} ${(document.getElementById(
-              `note_ass_header_${session}_${term}${studentIdSuffix}`
-            ).hidden =
+            `note_ass_header_${session}_${term}${studentIdSuffix}`
+          ).hidden =
               data.settings.note_ass.status == "hidden"
                 ? true
                 : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
@@ -1572,8 +1573,8 @@ function getResult(value) {
               </td>
 
               <td ${data.settings.cbt.status} ${(document.getElementById(
-              `cbt_header_${session}_${term}${studentIdSuffix}`
-            ).hidden =
+                  `cbt_header_${session}_${term}${studentIdSuffix}`
+                ).hidden =
               data.settings.cbt.status == "hidden"
                 ? true
                 : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
@@ -1581,8 +1582,8 @@ function getResult(value) {
               </td>
 
                 <td ${data.settings.project.status} ${(document.getElementById(
-              `project_header_${session}_${term}${studentIdSuffix}`
-            ).hidden =
+                  `project_header_${session}_${term}${studentIdSuffix}`
+                ).hidden =
               data.settings.project.status == "hidden"
                 ? true
                 : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
@@ -1590,8 +1591,8 @@ function getResult(value) {
               </td>
 
               <td ${data.settings.exam.status} ${(document.getElementById(
-              `exam_header_${session}_${term}${studentIdSuffix}`
-            ).hidden =
+                  `exam_header_${session}_${term}${studentIdSuffix}`
+                ).hidden =
               data.settings.exam.status == "hidden"
                 ? true
                 : false)} style="font-size: 13px;font-family: Open Sans, sans-serif;font-weight: bold; padding: 0px; text-align:center;">
@@ -3049,7 +3050,7 @@ function getResultForCBT() {
       }
     })
     .catch((err) => console.log(err));
-    removeSpinnerModal();
+  removeSpinnerModal();
 }
 
 function useCBTResultFor() {
@@ -4136,11 +4137,11 @@ function getLearningHubMaterials(subject_id) {
         <div id="upload_${upload.id}" class="collapse"
             class="card-body text-dark bg-light">
            
- <object data="${domain + "/backend/storage/app/public/fileupload/"+ localStorage["school"] +"learninghub/" + upload.url
+ <object data="${domain + "/backend/storage/app/public/fileupload/" + localStorage["school"] + "learninghub/" + upload.url
             }"  type="application/pdf" class="img-fluid"style="width: 100vw; height: 65vh; border:1px solid black; background: lightgrey">
         <embed
             src="${domain +
-            "/backend/storage/app/public/fileupload/"+ localStorage["school"] +"/learninghub/" +
+            "/backend/storage/app/public/fileupload/" + localStorage["school"] + "/learninghub/" +
             upload.url
             }"
             type="application/pdf" class="img-fluid">
