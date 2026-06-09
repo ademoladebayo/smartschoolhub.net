@@ -24,7 +24,19 @@ class ExportStudentList implements FromCollection, ShouldAutoSize, WithEvents, W
 
         $data =  DB::table('student')
             ->join('class', 'student.class', '=', 'class.id')
-            ->select('student.student_id', DB::raw('CONCAT(student.first_name, " ", student.last_name) as student'), 'class.class_name', 'student.gender', 'student.profile_status')
+            ->select(
+                'student.student_id',
+                DB::raw('CONCAT(student.first_name, " ", student.last_name) as student'),
+                'class.class_name',
+                'student.joining_date',
+                'student.gender',
+                'student.religion',
+                'student.state',
+                'student.guardian_name',
+                'student.guardian_phone',
+                'student.address',
+                'student.profile_status'
+            )
             ->get();
 
         $this->row_lenght = count($data) + 1;
@@ -34,7 +46,7 @@ class ExportStudentList implements FromCollection, ShouldAutoSize, WithEvents, W
 
     public function headings(): array
     {
-        return ['STUDENT ID', 'FULLNAME', 'CLASS', 'GENDER', 'STATUS'];
+        return ['STUDENT ID', 'FULLNAME', 'CLASS', 'JOINING DATE', 'GENDER', 'RELIGION', 'STATE OF ORIGIN', 'GUARDIAN NAME', 'GUARDIAN PHONE', 'ADDRESS', 'STATUS'];
     }
 
 
