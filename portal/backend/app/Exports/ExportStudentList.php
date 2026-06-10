@@ -34,7 +34,7 @@ class ExportStudentList implements FromCollection, ShouldAutoSize, WithEvents, W
                 'student.state',
                 'student.guardian_name',
                 'student.guardian_phone',
-                'student.address',
+                'student.home_address',
                 'student.profile_status'
             )
             ->get();
