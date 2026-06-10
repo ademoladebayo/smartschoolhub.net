@@ -54,7 +54,7 @@ class ExportStudentList implements FromCollection, ShouldAutoSize, WithEvents, W
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $cell_range = [1, 1, 5, $this->row_lenght];
+                $cell_range = [1, 1, 11, $this->row_lenght];
                 $sheet = $event->sheet->getDelegate();
                 $sheet->getStyle($cell_range)->applyFromArray([
                     'font' => [
