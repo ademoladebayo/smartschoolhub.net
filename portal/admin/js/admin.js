@@ -3544,7 +3544,7 @@ function generateStudentResultHTML(student) {
             <div class="col-md-4 col-lg-3"></div>
             <div class="col-md-4 col-lg-6">
               <div class="text-center" style="margin-top: 2px; margin-bottom: 10px;">
-                <img id="school_logo_${student.student_id}" src="../assets/img/sample_logo.png" height="150px" width="130px">
+                <img id="school_logo_${student.student_id}" src="../assets/img/sample_logo.png"  height="200px" width="250px">
               </div>
             </div>
             <div class="col-md-4 col-lg-3"></div>
