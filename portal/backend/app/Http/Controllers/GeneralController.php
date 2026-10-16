@@ -79,7 +79,7 @@ class GeneralController extends Controller
         $adminService = new AdminService();
 
         if ($request->task == "RUN_MIGRATION") {
-            return $this->runMigration();
+            return $this->runMigration($request);
         } else if ($request->task == "SEND_NOTIFICATION") {
             return $this->sendNotification();
         } else if ($request->task == "DUPLICATE_RESULT_CHECK") {
@@ -90,10 +90,11 @@ class GeneralController extends Controller
     }
 
 
-    public function runMigration()
+    public function runMigration(Request $request)
     {
         try {
             $data = self::getSchools();
+            $school = $request->school;
 
             foreach ($data as $school) {
                 //$school = $data[0];
@@ -101,6 +102,13 @@ class GeneralController extends Controller
                 // if (in_array($school['alias'], ['mss'])) {
                 //     continue;
                 // }
+
+                if (isset($school)) {
+                    if ($school['alias'] != $school) {
+                        continue;
+                    }
+                }
+                
 
                 try {
                     \Log::info("Running migration for ... " . $school['alias']);
