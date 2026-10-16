@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class GeneralController extends Controller
 {
@@ -115,7 +116,9 @@ class GeneralController extends Controller
                     config(['database.default' => $school['alias']]);
 
                     # RESET LAST MIGRATION
-                    DB::table('migrations')->truncate();
+                    if (Schema::hasTable('migrations')) {
+                        DB::table('migrations')->truncate();
+                    }
 
                     //Artisan::call('queue:table');
                     Artisan::call('migrate');
