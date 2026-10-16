@@ -94,7 +94,7 @@ class GeneralController extends Controller
     {
         try {
             $data = self::getSchools();
-            $school = $request->school;
+            $sch = $request->school;
 
             foreach ($data as $school) {
                 //$school = $data[0];
@@ -103,8 +103,8 @@ class GeneralController extends Controller
                 //     continue;
                 // }
 
-                if (isset($school)) {
-                    if ($school['alias'] != $school) {
+                if (isset($sch)) {
+                    if ($school['alias'] != $sch) {
                         continue;
                     }
                 }
